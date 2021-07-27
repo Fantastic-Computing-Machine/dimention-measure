@@ -1,6 +1,5 @@
-import pymongo
+# import pymongo
 from pymongo import MongoClient
-import json
 
 import CONFIG
 
@@ -62,8 +61,6 @@ class MongoDatabase:
         try:
             print(query)
             response = collection.insert_one(query)
-            output = {'query_Status': 'Successfully Inserted',
-                      'Document_ID': str(response.inserted_id)}
             query_status = True
             return query_status
 
@@ -181,16 +178,17 @@ class MongoDocumentCreator:
 
 
 # # Main
-md = MongoDatabase()
+# md = MongoDatabase()
 
-print(md.connecting())
-print(md.disconnecting())
+# # print(md.connecting())
+# # print(md.disconnecting())
 
-print("**************************")
-result = md.find()
-for i in result:
-    print(i["projectName"])
+# print("**************************")
+# result = md.find()
+# for i in result:
+#     print(i["projectName"])
+
 # mdb = MongoDocumentCreator()
-# md.postQuery(mdb.projectInitialization(
-#       'Hello_world'))
+
+
 
