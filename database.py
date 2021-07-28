@@ -72,24 +72,6 @@ class MongoDatabase:
         finally:
             self.__disconnect()
 
-    def readData(self, userId=None):
-        query_status = None
-        collection = self.__connect()
-        try:
-            if userId is None:
-                output = collection.find({})
-            else:
-                output = collection.find({"userId": userId})
-            query_status = True
-            return output
-        except Exception as ex:
-            query_status = False
-            print("MongoDB: Exception occured while Reading to the database.")
-            print(ex)
-            return query_status
-        finally:
-            self.__disconnect()
-
     def findOne(self, query):
         query_status = None
         collection = self.__connect()
@@ -136,11 +118,11 @@ class MongoDatabase:
         finally:
             self.__disconnect()
 
-    def find(self,query = None,projection =None):
+    def find(self, query=None, projection=None):
         query_status = None
         collection = self.__connect()
         try:
-            result = collection.find(query,projection)
+            result = collection.find(query, projection)
             query_status = True
             print(result)
             return result
@@ -153,12 +135,13 @@ class MongoDatabase:
         finally:
             self.__disconnect()
 
+
 class MongoDocumentCreator:
 
     def __init__(self):
         pass
 
-    def projectInitialization(self, projectName,dims =[]):
+    def projectInitialization(self, projectName, dims=[]):
         post = {
             "projectName": projectName,
             "dims": dims,
@@ -166,11 +149,13 @@ class MongoDocumentCreator:
 
         return post
 
-    def dimsCreator(self,dimId,name, length, width, rate):
+    def dimsCreator(self, dimId, name, length, sqm, sqrt, width, rate):
         post = {
             "dimId": dimId,
             "name": name,
             "length": length,
+            "sqm": sqm,
+            "sqrt": sqrt,
             "width": width,
             "rate": rate,
         }
@@ -178,17 +163,14 @@ class MongoDocumentCreator:
 
 
 # # Main
-# md = MongoDatabase()
+md = MongoDatabase()
 
 # # print(md.connecting())
 # # print(md.disconnecting())
 
 # print("**************************")
-# result = md.find()
-# for i in result:
-#     print(i["projectName"])
+result = md.findOne({"projectName": "potato"})
+
+print(result["dims"])
 
 # mdb = MongoDocumentCreator()
-
-
-
