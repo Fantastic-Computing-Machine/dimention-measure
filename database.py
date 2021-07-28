@@ -59,7 +59,7 @@ class MongoDatabase:
         query_status = None
         collection = self.__connect()
         try:
-            print(query)
+            # print(query)
             response = collection.insert_one(query)
             query_status = True
             return query_status
@@ -78,7 +78,7 @@ class MongoDatabase:
         try:
             result = collection.find_one(query)
             query_status = True
-            print(query_status)
+            # print(query_status)
             return result
 
         except Exception as ex:
@@ -89,11 +89,13 @@ class MongoDatabase:
         finally:
             self.__disconnect()
 
-    def updateData(self, userId):
+    def updateData(self, projectName, projection):
         query_status = None
         try:
             collection = self.__connect()
-            collection.update_one({"userId": userId}, {"$set": {}})
+            collection.update_one({"projectName": projectName}, {
+                                  "$set": projection})
+            query_status = True
         except Exception as ex:
             output, query_status = False
             print("MongoDB: Exception occured while Updating to the database.")
@@ -102,11 +104,11 @@ class MongoDatabase:
         finally:
             self.__disconnect()
 
-    def deleteData(self, userId):
+    def deleteData(self, projectName):
         query_status = None
         collection = self.__connect()
         try:
-            query = {"userId": userId}
+            query = {"projectName": projectName}
             collection.delete_one(query)
             query_status = True
             return query_status
@@ -149,28 +151,36 @@ class MongoDocumentCreator:
 
         return post
 
-    def dimsCreator(self, dimId, name, length, sqm, sqrt, width, rate):
+    def dimsCreator(self, dimId, name, length, sqm, sqft, width, rate):
         post = {
             "dimId": dimId,
             "name": name,
             "length": length,
-            "sqm": sqm,
-            "sqrt": sqrt,
             "width": width,
+            "sqm": sqm,
+            "sqft": sqft,
             "rate": rate,
         }
         return post
 
 
 # # Main
-md = MongoDatabase()
+# md = MongoDatabase()
 
 # # print(md.connecting())
 # # print(md.disconnecting())
 
-# print("**************************")
-result = md.findOne({"projectName": "potato"})
 
-print(result["dims"])
+# dims = md.findOne({"projectName": "peru"})["dims"]
+
+# dims.append({'dimId': 0, 'name': 'codezero', 'length': 10.0, 'sqm': 10.0,
+#              'sqft': 100.0, 'width': 1076.4, 'rate': 1000000.0})
+
+
+# result = md.updateData("peru", {"dims": dims})
+
+
+# print(md.findOne({"projectName": "peru"}))
+# print(result)
 
 # mdb = MongoDocumentCreator()
