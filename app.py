@@ -1,4 +1,5 @@
-from flask import Flask, render_template, session
+from flask import Flask, render_template, session,request,flash
+from werkzeug.utils import redirect
 
 from views import index_view, records_view
 import helper
@@ -7,15 +8,16 @@ app = Flask(__name__)
 app.secret_key = "fantasticcomputingmachine"
 
 
-@app.route('/')
+@app.route('/' ,methods=["POST", "GET"])
 def index():
     # Homepage
-    return index_view()
+     return index_view()
 
 
-@app.route('/record/')
-def record():
-    return records_view()
+
+@app.route('/record/<projectName>/' ,methods=["POST", "GET"])
+def record(projectName):
+    return records_view(projectName)
 
 
 if __name__ == "__main__":
