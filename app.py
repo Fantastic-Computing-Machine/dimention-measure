@@ -16,10 +16,10 @@ def index():
 
 
 
-@app.route('/record/' ,methods=["POST", "GET"])
-def record():
+@app.route('/record/<projectName>/' ,methods=["POST", "GET"])
+def record(projectName):
     helper.initialization()
-    return records_view()
+    return records_view(projectName)
 
 
 if __name__ == "__main__":
