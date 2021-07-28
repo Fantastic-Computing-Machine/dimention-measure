@@ -39,10 +39,10 @@
 
 
 
-                
 
-            
-                $(InputsWrapper).append('<div class="row p-1 text-light"><div class= "col"><input class="form-control form-control-sm" id="name_" '  +
+
+
+                $(InputsWrapper).append('<div class="row p-1 text-light"><div class= "col"><input class="form-control form-control-sm" id="name_" ' +
                     FieldCount + '" type="text" name = "name" placeholder="Tag it" aria-label=".form-control-sm"></div><div class="col"><input class="form-control form-control-sm" id="length_' +
                     FieldCount + '" type="text" name = "length"" placeholder="in meters" aria-label=".form-control-sm"></div><div class="col"><input class="form-control form-control-sm" id="width6_' +
                     FieldCount + '" type="text" name = "width placeholder="in meters" aria-label=".form-control-sm"></div><div class="col"><input class="form-control form-control-sm" id="sqm_' +
@@ -83,9 +83,9 @@
 <div class="container p-5">
     <div class="">
 
-        <form action="{{url_for('record',projectName = projectName)}}" method="POST" name="add_skills" id="add_skills">
-            
-            <!-- <table class=" table">
+        <form action="/record/" method="POST" name="add_skills" id="add_skills">
+
+            <table class=" table">
                 <tr class="table text-light">
                     <th> Name Tag</th>
                     <th>Length (in meters)</th>
@@ -96,43 +96,72 @@
                     <th></th>
                 </tr>
 
-                <tr id="">
-                    <th><input class="form-control form-control-sm" id="name" type="text" placeholder="Tag it"
-                            aria-label=".form-control-sm">
-                    </th>
-                    <th><input class="form-control form-control-sm" id="length" type="text" placeholder="in meters"
-                            aria-label=".form-control-sm">
-                    </th>
-                    <th><input class="form-control form-control-sm" id="width" type="text" placeholder="in meters"
-                            aria-label=".form-control-sm">
+                {% if 'live' in session %}
 
+                {% for item in range(5) %}
+
+                <tr class="table text-light">
+
+                    <td>item</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td><a disable><img src="https://img.icons8.com/cotton/30/000000/delete-sign--v2.png" /></a></td>
+
+
+                </tr>
+                {% endfor %}
+                {% endif %}
+
+
+
+                <tr id="">
+                    <th><input class="form-control form-control-sm" id="name" name="name" type="text"
+                            placeholder="Tag it" aria-label=".form-control-sm">
                     </th>
-                    <th><input class="form-control form-control-sm" id="sqm" type="text" placeholder="Sqm"
+                    <th><input class="form-control form-control-sm" id="length" name="length" type="number"
+                            placeholder="in meters" aria-label=".form-control-sm">
+                    </th>
+                    <th><input class="form-control form-control-sm" id="width" name="width" type="number"
+                            placeholder="in meters" aria-label=".form-control-sm">
+                    </th>
+                    <th><input class="form-control form-control-sm" id="sqm" name="sqm" type="number" placeholder="Sqm"
                             aria-label=".form-control-sm" readonly>
                     </th>
-                    <th><input class="form-control form-control-sm" id="sqft" type="text" placeholder="Sqft"
-                            aria-label=".form-control-sm" readonly>
+                    <th><input class="form-control form-control-sm" id="sqft" name="sqft" type="number"
+                            placeholder="Sqft" aria-label=".form-control-sm" readonly>
                     </th>
-                    <th><input class="form-control form-control-sm" id="rate" type="text" placeholder="rate"
-                            aria-label=".form-control-sm">
+                    <th><input class="form-control form-control-sm" id="rate" name="rate" type="number"
+                            placeholder="rate" aria-label=".form-control-sm">
                     </th>
                     <td></td>
                 </tr>
 
-                <div id="InputsWrapper">
+                <!-- <div id="InputsWrapper">
 
 
-                </div>
-                <tr>
+                </div> -->
+                <!-- <tr>
                     <td style="text-align: left;" colspan="7"><button type="submit" class="btn btn-outline-primary"><img
                                 src="https://img.icons8.com/fluent/20/000000/calculator.png" /> Calculate</button>
                         <button type="button" id="AddMoreFileBoxInput" class="btn btn-outline-success"><img
                                 src="https://img.icons8.com/ios-glyphs/20/26e07f/plus-math.png" /> Add item</button>
                     </td>
-                </tr>
-            </table> -->
+                </tr> -->
+            </table>
 
 
+            <div class="my-2">
+                <button type="submit" class="btn btn-outline-primary"><img
+                        src="https://img.icons8.com/color/20/000000/save--v2.png" /> Save</button>
+                <button type="button" id="AddMoreFileBoxInput" class="btn btn-outline-success"><img
+                        src="https://img.icons8.com/ios-glyphs/20/26e07f/plus-math.png" /> Add item</button>
+            </div>
+
+            <br> <br> <br> <br> <br> <br>
+            <!-- 
 
             <div>
 
@@ -144,60 +173,81 @@
                     <div class="col">Area- Sqft</div>
                     <div class="col">Rate</div>
                     <hr class="my-2">
-                </div>
-
-                <!-- <div id="InputsWrapper">
-
-                    <div class="row p-1 text-light">
-
-                        <div class="col">
-                            <input class="form-control form-control-sm" id="name" name = "name" type="text" placeholder="Tag it"
-                                aria-label=".form-control-sm" hidden>
-                        </div>
-                        <div class="col">
-                            <input class="form-control form-control-sm" id="length" name = "length" type="text" placeholder="in meters"
-                                aria-label=".form-control-sm" hidden>
-                        </div>
-                        <div class="col">
-                            <input class="form-control form-control-sm" id="width" name = "width" type="text" placeholder="in meters"
-                                aria-label=".form-control-sm" hidden>
-                        </div>
-                        <div class="col">
-                            <input class="form-control form-control-sm" id="sqm" type="text" name = "sqm" placeholder="Sqm"
-                                aria-label=".form-control-sm" readonly hidden>
-                        </div>
-                        <div class="col">
-                            <input class="form-control form-control-sm" id="sqft" type="text" name = "sqft" placeholder="Sqft"
-                                aria-label=".form-control-sm" readonly hidden>
-                        </div>
-                        <div class="col">
-                            <input class="form-control form-control-sm" id="rate" name = "rate" type="text" placeholder="rate"
-                                aria-label=".form-control-sm" hidden>
-                        </div>
-                        <div class=col-auto>
-                            <a disable hidden><img src="https://img.icons8.com/cotton/30/000000/delete-sign--v2.png" /></a>
-                        </div>
-
-                    </div>
                 </div> -->
 
-                <!-- <hr class="my-2 text-light"> -->
-                <div id="InputsWrapper">
+
+
+            <!-- 
+                <div class="row p-1 text-light">
+                    <div class="col">Name/Tag</div>
+                    <div class="col">Length (in meters)</div>
+                    <div class="col">Width (in meters)</div>
+                    <div class="col">Area- Sqm</div>
+                    <div class="col">Area- Sqft</div>
+                    <div class="col">Rate</div>
+
+                </div> -->
+
+
+            <!-- <div id="InputsWrapper">
+
+                <div class="row p-1 text-light">
+
+                    <div class="col">
+                        <input class="form-control form-control-sm" id="name" name="name" type="text"
+                            placeholder="Tag it" aria-label=".form-control-sm" hidden>
+                    </div>
+                    <div class="col">
+                        <input class="form-control form-control-sm" id="length" name="length" type="text"
+                            placeholder="in meters" aria-label=".form-control-sm" hidden>
+                    </div>
+                    <div class="col">
+                        <input class="form-control form-control-sm" id="width" name="width" type="text"
+                            placeholder="in meters" aria-label=".form-control-sm" hidden>
+                    </div>
+                    <div class="col">
+                        <input class="form-control form-control-sm" id="sqm" type="text" name="sqm" placeholder="Sqm"
+                            aria-label=".form-control-sm" readonly hidden>
+                    </div>
+                    <div class="col">
+                        <input class="form-control form-control-sm" id="sqft" type="text" name="sqft" placeholder="Sqft"
+                            aria-label=".form-control-sm" readonly hidden>
+                    </div>
+                    <div class="col">
+                        <input class="form-control form-control-sm" id="rate" name="rate" type="text" placeholder="rate"
+                            aria-label=".form-control-sm" hidden>
+                    </div>
+                    <div class=col-auto>
+                        <a disable hidden><img src="https://img.icons8.com/cotton/30/000000/delete-sign--v2.png" /></a>
+                    </div>
 
                 </div>
-                <div class="my-2">
-                    <button type="submit" class="btn btn-outline-primary"><img
-                            src="https://img.icons8.com/color/20/000000/save--v2.png" /> Save</button>
-                    <button type="button" id="AddMoreFileBoxInput" class="btn btn-outline-success"><img
-                            src="https://img.icons8.com/ios-glyphs/20/26e07f/plus-math.png" /> Add item</button>
-                </div>
-                
-            </div>
+            </div> -->
+
+            <!-- <hr class="my-2 text-light"> -->
+            <!-- <div id="InputsWrapper"></div> -->
+
+            <!-- <div class="my-2">
+                <button type="submit" class="btn btn-outline-primary"><img
+                        src="https://img.icons8.com/color/20/000000/save--v2.png" /> Save</button>
+                <button type="button" id="AddMoreFileBoxInput" class="btn btn-outline-success"><img
+                        src="https://img.icons8.com/ios-glyphs/20/26e07f/plus-math.png" /> Add item</button>
+            </div> -->
 
         </form>
     </div>
+</div>
+
 <div>
-        
+
+    <div class="text-light">
+
+        SESSION: {{session}}
+        <br>
+        PROJECT NAME: {{projectName}}
+        <br>
+        METRICS: {{metrics}}
+    </div>
 
 </div>
 </div>

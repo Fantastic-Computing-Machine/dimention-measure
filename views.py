@@ -4,7 +4,8 @@ import string
 
 import database
 import app
-import helper
+
+
 app = user_auth = Flask(__name__)
 
 
@@ -37,21 +38,24 @@ def records_view(projectName):
     try:
         if request.method == "POST":
             name = str(request.form['name'])
-            length = int(request.form['length'])
-            width = int(request.form['width'])
-            rate = int(request.form['rate'])
-            namearr = request.form.getlist('name')
-            lengtharr = request.form.getlist('length')
-            widtharr = request.form.getlist('width')
-            sqmarr = request.form.getlist('sqm')
-            sqftarr = request.form.getlist('sqft')
-            ratearr = request.form.getlist('rate')
-            sqm = length*width
-            sqft = sqm * 10.764
+            length = float(int(request.form['length']))
+            width = float(int(request.form['width']))
+            rate = float(int(request.form['rate']))
+            sqm = round(length*width, 2)
+            sqft = round(sqm * 10.764, 2)
 
-            print(namearr, lengtharr, widtharr, sqmarr, sqftarr, ratearr)
-            return render_template('records.html', projectName=projectName, metrics={"name": name, "length": length, "sqm": sqm, "sqft": sqft, "width":
-                                                                                         width, "rate": rate})
+            md = database.MongoDatabase()
+            mdb = database.MongoDocumentCreator()
+
+            dimentions = mdb.dimsCreator(name, length, width, sqm, sqft, rate)
+
+            if "live" in session:
+                result = md.findOne({"projectName": session["live"]})["dims"]
+
+                print(result)
+            print(dimentions)
+
+            return render_template('records.html', dims=result, projectName=session["live"])
 
         else:
             return render_template('records.html', metrics={})
