@@ -39,16 +39,16 @@
 
 
 
+                
 
-
-
-                $(InputsWrapper).append('<div class="row p-1 text-light"><div class= "col"><input class="form-control form-control-sm" id="name_' +
-                    FieldCount + '" type="text" placeholder="Tag it" aria-label=".form-control-sm"></div><div class="col"><input class="form-control form-control-sm" id="length_' +
-                    FieldCount + '" type="text" placeholder="in meters" aria-label=".form-control-sm"></div><div class="col"><input class="form-control form-control-sm" id="width_' +
-                    FieldCount + '" type="text" placeholder="in meters" aria-label=".form-control-sm"></div><div class="col"><input class="form-control form-control-sm" id="sqm_' +
-                    FieldCount + '" type="text" placeholder="Sqm" aria-label=".form-control-sm" readonly></div><div class="col"><input class="form-control form-control-sm" id="sqft_' +
-                    FieldCount + '" type="text" placeholder="Sqft" aria-label=".form-control-sm" readonly></div><div class="col"><input class="form-control form-control-sm" id="rate_' +
-                    FieldCount + '" type="text" placeholder="rate" aria-label=".form-control-sm"></div><div class="col-auto removeclass"><a type="button" id="AddMoreFileBoxInput" ><img src="https://img.icons8.com/cotton/30/000000/delete-sign--v2.png" /></a></div></div>')
+            
+                $(InputsWrapper).append('<div class="row p-1 text-light"><div class= "col"><input class="form-control form-control-sm" id="name_" '  +
+                    FieldCount + '" type="text" name = "name" placeholder="Tag it" aria-label=".form-control-sm"></div><div class="col"><input class="form-control form-control-sm" id="length_' +
+                    FieldCount + '" type="text" name = "length"" placeholder="in meters" aria-label=".form-control-sm"></div><div class="col"><input class="form-control form-control-sm" id="width6_' +
+                    FieldCount + '" type="text" name = "width placeholder="in meters" aria-label=".form-control-sm"></div><div class="col"><input class="form-control form-control-sm" id="sqm_' +
+                    FieldCount + '" type="text" name = "sqm" placeholder="Sqm" aria-label=".form-control-sm" readonly></div><div class="col"><input class="form-control form-control-sm" id="sqft_' +
+                    FieldCount + '" type="text" name = "sqft" placeholder="Sqft" aria-label=".form-control-sm" readonly></div><div class="col"><input class="form-control form-control-sm" id="rate_' +
+                    FieldCount + '" type="text" name = "rate" placeholder="rate" aria-label=".form-control-sm"></div><div class="col-auto removeclass"><a type="button" id="AddMoreFileBoxInput" ><img src="https://img.icons8.com/cotton/30/000000/delete-sign--v2.png" /></a></div></div>')
 
                 x++; //text box increment
             }
@@ -89,7 +89,7 @@
     <div class="">
 
         <form action="/record/" method="POST" name="add_skills" id="add_skills">
-
+            
             <!-- <table class=" table">
                 <tr class="table text-light">
                     <th> Name Tag</th>
@@ -142,7 +142,7 @@
             <div>
 
                 <div class="row text-light h6">
-                    <div class="col">Tag</div>
+                    <div class="col">Name/Tag</div>
                     <div class="col">Length (in meters)</div>
                     <div class="col">Width (in meters)</div>
                     <div class="col">Area- Sqm</div>
@@ -156,27 +156,27 @@
                     <div class="row p-1 text-light">
 
                         <div class="col">
-                            <input class="form-control form-control-sm" id="name" type="text" placeholder="Tag it"
+                            <input class="form-control form-control-sm" id="name" name = "name" type="text" placeholder="Tag it"
                                 aria-label=".form-control-sm">
                         </div>
                         <div class="col">
-                            <input class="form-control form-control-sm" id="length" type="text" placeholder="in meters"
+                            <input class="form-control form-control-sm" id="length" name = "length" type="text" placeholder="in meters"
                                 aria-label=".form-control-sm">
                         </div>
                         <div class="col">
-                            <input class="form-control form-control-sm" id="width" type="text" placeholder="in meters"
+                            <input class="form-control form-control-sm" id="width" name = "width" type="text" placeholder="in meters"
                                 aria-label=".form-control-sm">
                         </div>
                         <div class="col">
-                            <input class="form-control form-control-sm" id="sqm" type="text" placeholder="Sqm"
+                            <input class="form-control form-control-sm" id="sqm" type="text" name = "sqm" placeholder="Sqm"
                                 aria-label=".form-control-sm" readonly>
                         </div>
                         <div class="col">
-                            <input class="form-control form-control-sm" id="sqft" type="text" placeholder="Sqft"
+                            <input class="form-control form-control-sm" id="sqft" type="text" name = "sqft" placeholder="Sqft"
                                 aria-label=".form-control-sm" readonly>
                         </div>
                         <div class="col">
-                            <input class="form-control form-control-sm" id="rate" type="text" placeholder="rate"
+                            <input class="form-control form-control-sm" id="rate" name = "rate" type="text" placeholder="rate"
                                 aria-label=".form-control-sm">
                         </div>
                         <div class=col-auto>
@@ -194,17 +194,15 @@
                     <button type="button" id="AddMoreFileBoxInput" class="btn btn-outline-success"><img
                             src="https://img.icons8.com/ios-glyphs/20/26e07f/plus-math.png" /> Add item</button>
                 </div>
+                
 
             </div>
 
-
-
-
-
-
         </form>
     </div>
+<div>
+        
+
 </div>
-
-
+</div>
 {% endblock %}
