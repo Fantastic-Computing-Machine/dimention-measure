@@ -5,9 +5,6 @@
 {% endblock %}
 
 
-
-
-
 {% block body %}
 
 
@@ -28,28 +25,23 @@
                     <th></th>
                 </tr>
 
-                {% if 'live' in session %}
 
-                {% for item in range(5) %}
+                {% for item in project_json %}
 
                 <tr class="table text-light">
 
-                    <td>item</td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td><a disable><img src="https://img.icons8.com/cotton/30/000000/delete-sign--v2.png" /></a></td>
-
+                    <td>{{item["name"]}}</td>
+                    <td>{{item["length"]}}</td>
+                    <td>{{item["width"]}}</td>
+                    <td>{{item["sqm"]}}</td>
+                    <td>{{item["sqft"]}}</td>
+                    <td>{{item["rate"]}}</td>
+                    <td><a disable><img src="https://img.icons8.com/cotton/25/000000/delete-sign--v2.png" /></a></td>
 
                 </tr>
                 {% endfor %}
-                {% endif %}
 
-
-
-                <tr id="">
+                <tr>
                     <th><input class="form-control form-control-sm" id="name" name="name" type="text"
                             placeholder="Tag it" aria-label=".form-control-sm">
                     </th>
@@ -71,17 +63,6 @@
                     <td></td>
                 </tr>
 
-                <!-- <div id="InputsWrapper">
-
-
-                </div> -->
-                <!-- <tr>
-                    <td style="text-align: left;" colspan="7"><button type="submit" class="btn btn-outline-primary"><img
-                                src="https://img.icons8.com/fluent/20/000000/calculator.png" /> Calculate</button>
-                        <button type="button" id="AddMoreFileBoxInput" class="btn btn-outline-success"><img
-                                src="https://img.icons8.com/ios-glyphs/20/26e07f/plus-math.png" /> Add item</button>
-                    </td>
-                </tr> -->
             </table>
 
 
@@ -172,13 +153,13 @@
 
 <div>
 
-    <div class="text-light">
+    <div class="container text-light">
 
         SESSION: {{session}}
         <br>
         PROJECT NAME: {{projectName}}
         <br>
-        METRICS: {{metrics}}
+        METRICS: {{project_json}}
     </div>
 
 </div>

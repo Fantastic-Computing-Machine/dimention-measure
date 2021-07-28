@@ -1,12 +1,10 @@
 from flask import Flask, render_template, redirect, session, request, flash, url_for
-import random
-import string
 
 import database
 import app
 
 
-app = user_auth = Flask(__name__)
+app = Flask(__name__)
 
 
 def index_view():
@@ -27,7 +25,6 @@ def index_view():
                 print(e)
                 # add 404 page
             session["projectNameList"].append(str(projectName))
-            # session["live"] = projectName
             print(session)
             return render_template('records.html', projectName=projectName)
 
@@ -38,25 +35,44 @@ def records_view(projectName):
     try:
         md = database.MongoDatabase()
         mdb = database.MongoDocumentCreator()
-        result = md.findOne({"projectName": projectName})["dims"]
+
+        project_json = md.findOne({"projectName": projectName})
+        project_dimentions = project_json["dims"]
+
+        print()
+        print("PROJECT JSON: ", project_json)
+        print()
+        print("PROJECT DIMS: ", project_dimentions)
+
         if request.method == "POST":
             name = str(request.form['name'])
             length = float(int(request.form['length']))
             width = float(int(request.form['width']))
             rate = float(int(request.form['rate']))
+
             sqm = round(length*width, 2)
             sqft = round(sqm * 10.764, 2)
-            print(result)
 
-            dimentions = mdb.dimsCreator(len(result), name, length, width, sqm, sqft, rate)
-            
-            print(dimentions)
-            return render_template('records.html', dims=result, projectName=projectName)
+            print()
+            print(name, length, width, sqm, sqft, rate)
+
+            new_dimentions = mdb.dimsCreator(
+                len(project_dimentions), name, length, width, sqm, sqft, rate)
+            print()
+            print(new_dimentions)
+
+            project_dimentions.append(new_dimentions)
+            update = md.updateData("peru", {"dims": project_dimentions})
+
+            print()
+            print("UPDATE", update)
+
+            return render_template('records.html', project_json=project_dimentions, projectName=projectName)
 
         else:
-            return render_template('records.html',dims=result)
+            return render_template('records.html', project_json=project_dimentions, projectName=projectName)
 
     except Exception as ex:
         print("EXCEPTION OCCURED: \n")
         print(ex)
-        return render_template('records.html',dims=result)
+        return render_template('records.html', project_json=project_dimentions, projectName=projectName)
