@@ -60,7 +60,7 @@
 
     <div class="row row-cols-4">
 
-        {% for item in session["projectNameList"]%}
+        {% for item in session["projectNameList"][::-1]%}
         <div class="col">
             <div class="card my-2 index_project_card">
                 <div class="card-body">
