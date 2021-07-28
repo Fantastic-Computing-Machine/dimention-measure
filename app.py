@@ -10,16 +10,18 @@ app.secret_key = "fantasticcomputingmachine"
 
 @app.route('/' ,methods=["POST", "GET"])
 def index():
+    
     # Homepage
-     return index_view()
+    helper.initialization()
+    return index_view()
 
 
 
 @app.route('/record/<projectName>/' ,methods=["POST", "GET"])
 def record(projectName):
+    helper.initialization()
     return records_view(projectName)
 
 
 if __name__ == "__main__":
-    helper.initialization()
     app.run(host="0.0.0.0", port=8000, debug=True)

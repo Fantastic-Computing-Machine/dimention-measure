@@ -4,6 +4,51 @@
 <title>Home</title>
 {% endblock %}
 
+{% block header %}
+
+<div class="collapse navbar-collapse justify-content-end" id="navbarSupportedContent">
+    <form class="d-flex">
+        <button type="button" class="btn btn-light" data-bs-toggle="modal" data-bs-target="#newProject"
+            data-bs-whatever="@mdo">New Project</button>
+    </form>
+
+</div>
+
+{% endblock %}
+
+
+{% block modal %}
+<form action="" method="post">
+
+    <div class="modal fade" id="newProject" tabindex="-1" aria-labelledby="newProjectLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="newProjectLabel">Project Initialization</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="mb-3">
+                            <label for="recipient-name" class="col-form-label">Project Title</label>
+                            <input type="text" id="new_project_name" class="form-control"
+                                placeholder="Give your project a cool name" id="recipient-name">
+                        </div>
+                        <a class="btn align-items-end btn-outline-success" href="{{ url_for('record')}}"
+                            type="submit">Launch</a>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+{% endblock %}
+
+
+
 
 
 
