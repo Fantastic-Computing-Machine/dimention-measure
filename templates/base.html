@@ -25,9 +25,9 @@
 
 <body style="background-color: #111827">
     <!-- Flask alert -->
-    
+
     <!-- Flask alert -->
-    <main style="width: 100%; height: 100vh;">
+    <main style="width: 100%; min-height: 100vh;">
         <header class="container text-white h3">
             <nav class="navbar navbar-expand-lg navbar-light nav_bg_translucent m-2">
 
@@ -41,8 +41,9 @@
                     </button>
 
                     <strong>
-                        <a class="navbar-brand justify-content-center h2 text-white fs-4" href="#">Dime<img
-                                src="https://img.icons8.com/ios/20/000000/drafting-compass2.png" />tions</a>
+                        <a class="navbar-brand justify-content-center h2 text-white fs-4"
+                            href="{{ url_for('index') }}">Dime<img
+                                src="https://img.icons8.com/ios/20/ffffff/drafting-compass2.png" />tions</a>
                     </strong>
 
 
@@ -74,7 +75,7 @@
             </div>
             <!-- ===== Content ===== -->
             {% block body %}
-            
+
             {% endblock %}
             <!-- ===== Content ===== -->
 
