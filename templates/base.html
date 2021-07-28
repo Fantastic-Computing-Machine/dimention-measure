@@ -39,20 +39,21 @@
                     </button>
 
                     <strong>
-                        <a class="navbar-brand justify-content-center h2 text-white fs-4" href="#">Dimentions</a>
+                        <a class="navbar-brand justify-content-center h2 text-white fs-4" href="#">Dime<img
+                                src="https://img.icons8.com/ios/20/000000/drafting-compass2.png" />tions</a>
                     </strong>
-                    <div class="collapse navbar-collapse justify-content-end" id="navbarSupportedContent">
-                        <form class="d-flex">
-                            <button type="button" class="btn btn-light" data-bs-toggle="modal"
-                                data-bs-target="#newProject" data-bs-whatever="@mdo">New Project</button>
-                            <!-- <a class="btn btn-light" href="{{ url_for('record')}}" type="submit">New Project</a> -->
-                        </form>
 
-                    </div>
+
+                    {% block header %} {% endblock %}
+
                 </div>
             </nav>
 
         </header>
+
+
+        {% block modal %}{% endblock %}
+
         <div class="modal fade" id="newProject" tabindex="-1" aria-labelledby="newProjectLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -96,7 +97,7 @@
 <!--===== MAIN JS =====-->
 
 {% block scripts %} {% endblock %}
-<script src="{{ url_for('static', filename='js/main.css') }}"></script>
+<script src="{{ url_for('static', filename='js/main.js') }}"></script>
 <!-- Option 1: Bootstrap Bundle with Popper -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
     integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
