@@ -10,80 +10,12 @@
 
 {% block body %}
 
-<script>
-    $(document).ready(function () {
-
-        var MaxInputs = 15; //maximum input boxes allowed
-        var InputsWrapper = $("#InputsWrapper"); //Input boxes wrapper ID
-        var AddButton = $("#AddMoreFileBoxInput"); //Add button ID
-
-        var x = InputsWrapper.length; //initlal text box count  
-        var FieldCount = 1; //to keep track of text box added
-
-        $(AddButton).click(function (e)  //on add input button click
-        {
-            if (x <= MaxInputs) //max input box allowed
-            {
-                FieldCount++; //text box added increment
-                //add input box
-                // $(InputsWrapper).append('<div class="form-floating mb-3 row g-2 row-cols-auto"><div div class= "col-md"> <div class="form-floating"><select class="form-select bg-transparent text-light" id="field_'
-                //     + FieldCount + '" name="inputType"><option value="text" class="text-dark">String type</option><option option value = "float" class= "text-dark" > Float type</option ><option value="number" class="text-dark">Integer type</option><option value="image" class="text-dark">Image type</option><option value="video" class="text-dark">Video type</option><option value="audio" class="text-dark">Audio type</option></select><label for="inputType">Type of Input(s)</label> </div> </div><div class="col-md"><div class="form-floating"><input type="input" class="form-control bg-transparent text-light" id="fieldTypeName_'
-                //     + FieldCount + '"placeholder="Field Name" name="inputTypeName"><label for="inputTypeName">Field Name</label></div></div><div class="col align-self-center removeclass"> <a href="#" class="btn btn-outline-danger">Remove</a></div></div>')
-                // $(InputsWrapper).append('<tr><th> <input class="form-control form-control-sm" id="name_' +
-                //     FieldCount + '" type="text" placeholder="Tag it" aria-label=".form-control-sm"> </th><th> <input class="form-control form-control-sm" id="length_' +
-                //     FieldCount + '" type="text" placeholder="in meters" aria-label=".form-control-sm"> </th><th> <input class="form-control form-control-sm" id="width_' +
-                //     FieldCount + '" type="text" placeholder="in meters" aria-label=".form-control-sm"> </th><th> <input class="form-control form-control-sm" id="sqm_' +
-                //     FieldCount + '" type="text" placeholder="Sqm" aria-label=".form-control-sm" readonly> </th><th> <input class="form-control form-control-sm" id="sqft_' +
-                //     FieldCount + '" type="text" placeholder="Sqft" aria-label=".form-control-sm" readonly> </th><th> <input class="form-control form-control-sm" id="rate_' +
-                //     FieldCount + '" type="text" placeholder="rate" aria-label=".form-control-sm"> </th> <th> <button type="button" id="AddMoreFileBoxInput" class="btn btn-outline-danger removeclass">X Add item</button> </th> </tr>')
-
-
-
-
-
-
-                $(InputsWrapper).append('<div class="row p-1 text-light"><div class= "col"><input class="form-control form-control-sm" id="name_" ' +
-                    FieldCount + '" type="text" name = "name" placeholder="Tag it" aria-label=".form-control-sm"></div><div class="col"><input class="form-control form-control-sm" id="length_' +
-                    FieldCount + '" type="text" name = "length"" placeholder="in meters" aria-label=".form-control-sm"></div><div class="col"><input class="form-control form-control-sm" id="width6_' +
-                    FieldCount + '" type="text" name = "width placeholder="in meters" aria-label=".form-control-sm"></div><div class="col"><input class="form-control form-control-sm" id="sqm_' +
-                    FieldCount + '" type="text" name = "sqm" placeholder="Sqm" aria-label=".form-control-sm" readonly></div><div class="col"><input class="form-control form-control-sm" id="sqft_' +
-                    FieldCount + '" type="text" name = "sqft" placeholder="Sqft" aria-label=".form-control-sm" readonly></div><div class="col"><input class="form-control form-control-sm" id="rate_' +
-                    FieldCount + '" type="text" name = "rate" placeholder="rate" aria-label=".form-control-sm"></div><div class="col-auto removeclass"><a type="button" id="AddMoreFileBoxInput" ><img src="https://img.icons8.com/cotton/30/000000/delete-sign--v2.png" /></a></div></div>')
-
-                x++; //text box increment
-            }
-            return false;
-        });
-
-        $("body").on("click", ".removeclass", function (e) { //user click on remove text
-            if (x > 1) {
-                $(this).parent('div').remove(); //remove text box
-                x--; //decrement textbox
-            }
-            return false;
-        })
-        $('#submit').click(function () {
-            $.ajax({
-                url: "/record/",
-                method: "POST",
-                data: $('#add_skills').serialize(),
-                success: function (data) {
-                    alert(data)
-                    $('#resultbox').html(data);
-                    $('#add_skills')[0].reset();
-                }
-            });
-        });
-    });
-
-</script>
-
 
 
 <div class="container p-5">
     <div class="">
 
-        <form action="/record/" method="POST" name="add_skills" id="add_skills">
+        <form action="" method="POST" name="add_skills" id="add_skills">
 
             <table class=" table">
                 <tr class="table text-light">
