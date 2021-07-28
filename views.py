@@ -1,4 +1,4 @@
-from flask import Flask, render_template, redirect, session, request,flash,url_for
+from flask import Flask, render_template, redirect, session, request, flash, url_for
 import random
 import string
 
@@ -10,7 +10,7 @@ app = user_auth = Flask(__name__)
 
 def index_view():
     print("INDEX-VIEW:", session)
-    session["projectNameList"] = ["asd","qqq"]
+    # session["projectNameList"] = ["asd","qqq"]
     if request.method == "POST":
         projectName = str(request.form['new_project_name']).replace(" ", "-")
         print(projectName)
@@ -28,8 +28,8 @@ def index_view():
             session["projectNameList"].append(str(projectName))
             session["live"] = projectName
             print(session)
-            return render_template('records.html',projectName=session["live"])
-            
+            return render_template('records.html', projectName=session["live"])
+
     return render_template('index.html')
 
 
@@ -49,9 +49,9 @@ def records_view():
             sqm = length*width
             sqft = sqm * 10.764
 
-            print(namearr,lengtharr,widtharr,sqmarr,sqftarr,ratearr)
-            return render_template('records.html',projectName=session["live"], metrics={"name":name, "length": length, "sqm": sqm, "sqft": sqft, "width":
-                                                            width, "rate": rate})
+            print(namearr, lengtharr, widtharr, sqmarr, sqftarr, ratearr)
+            return render_template('records.html', projectName=session["live"], metrics={"name": name, "length": length, "sqm": sqm, "sqft": sqft, "width":
+                                                                                         width, "rate": rate})
 
         else:
             return render_template('records.html', metrics={})

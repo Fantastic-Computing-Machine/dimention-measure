@@ -18,44 +18,67 @@
 
 
 {% block modal %}
-    <div class="modal fade" id="newProject" tabindex="-1" aria-labelledby="newProjectLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="newProjectLabel">Project Initialization</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <form action="/" method="POST">
-                        <div class="mb-3">
-                            
-                            <label for="recipient-name" class="col-form-label">Project Title</label>
-                            <input type="text" id="new_project_name" class="form-control" name = "new_project_name"
-                                placeholder="Give your project a cool name">
-                        </div>
-                        <button class="btn align-items-end btn-outline-success"
-                            type="submit">Launch</button>
-                    </form>
-                </div>
-                <div class="modal-footer">
-                </div>
+<div class="modal fade" id="newProject" tabindex="-1" aria-labelledby="newProjectLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="newProjectLabel">Project Initialization</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form action="/" method="POST">
+                    <div class="mb-3">
+
+                        <label for="recipient-name" class="col-form-label">Project Title</label>
+                        <input type="text" id="new_project_name" class="form-control" name="new_project_name"
+                            placeholder="Give your project a cool name">
+                    </div>
+                    <button class="btn align-items-end btn-outline-success" type="submit">Launch</button>
+                </form>
+            </div>
+            <div class="modal-footer">
             </div>
         </div>
     </div>
+</div>
 
 
 {% endblock %}
 
 
 
-
-
-
-
 {% block body %}
 
+<div class="container px-5 pb-4">
+
+    <div class="text-light py-2 display-4">
+
+        My Projects
+
+    </div>
 
 
+    <div class="row row-cols-4">
+
+        {% for item in session["projectNameList"]%}
+        <div class="col">
+            <div class="card my-2 index_project_card">
+                <div class="card-body">
+                    <h5 class="card-title" href="#">{{ item }}
+                        <span style="float : right;">
+                            <!-- ===== DELETE ===== -->
+                            <a href="">
+                                <img src="https://img.icons8.com/color/28/000000/delete-forever.png" />
+                            </a>
+                        </span>
+                    </h5>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+
+    </div>
+</div>
 
 
 {% endblock %}
