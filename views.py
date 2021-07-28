@@ -26,14 +26,14 @@ def index_view():
                 print(e)
                 # add 404 page
             session["projectNameList"].append(str(projectName))
-            session["live"] = projectName
+            # session["live"] = projectName
             print(session)
             return render_template('records.html', projectName=session["live"])
 
     return render_template('index.html')
 
 
-def records_view():
+def records_view(projectName):
     try:
         if request.method == "POST":
             name = str(request.form['name'])
@@ -50,7 +50,7 @@ def records_view():
             sqft = sqm * 10.764
 
             print(namearr, lengtharr, widtharr, sqmarr, sqftarr, ratearr)
-            return render_template('records.html', projectName=session["live"], metrics={"name": name, "length": length, "sqm": sqm, "sqft": sqft, "width":
+            return render_template('records.html', projectName=projectName, metrics={"name": name, "length": length, "sqm": sqm, "sqft": sqft, "width":
                                                                                          width, "rate": rate})
 
         else:
