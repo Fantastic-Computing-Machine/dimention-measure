@@ -29,13 +29,16 @@ def index_view():
             session["projectNameList"].append(str(projectName))
             # session["live"] = projectName
             print(session)
-            return render_template('records.html', projectName=session["live"])
+            return render_template('records.html', projectName=projectName)
 
     return render_template('index.html')
 
 
 def records_view(projectName):
     try:
+        md = database.MongoDatabase()
+        mdb = database.MongoDocumentCreator()
+        result = md.findOne({"projectName": projectName})["dims"]
         if request.method == "POST":
             name = str(request.form['name'])
             length = float(int(request.form['length']))
@@ -43,24 +46,17 @@ def records_view(projectName):
             rate = float(int(request.form['rate']))
             sqm = round(length*width, 2)
             sqft = round(sqm * 10.764, 2)
+            print(result)
 
-            md = database.MongoDatabase()
-            mdb = database.MongoDocumentCreator()
-
-            dimentions = mdb.dimsCreator(name, length, width, sqm, sqft, rate)
-
-            if "live" in session:
-                result = md.findOne({"projectName": session["live"]})["dims"]
-
-                print(result)
+            dimentions = mdb.dimsCreator(len(result), name, length, width, sqm, sqft, rate)
+            
             print(dimentions)
-
-            return render_template('records.html', dims=result, projectName=session["live"])
+            return render_template('records.html', dims=result, projectName=projectName)
 
         else:
-            return render_template('records.html', metrics={})
+            return render_template('records.html',dims=result)
 
     except Exception as ex:
         print("EXCEPTION OCCURED: \n")
         print(ex)
-        return render_template('records.html', metrics={})
+        return render_template('records.html',dims=result)
