@@ -1,4 +1,5 @@
 from flask import Flask, render_template, redirect, session, request, flash, url_for
+from pymongo.message import query
 
 import database
 import app
@@ -62,17 +63,29 @@ def records_view(projectName):
             print(new_dimentions)
 
             project_dimentions.append(new_dimentions)
-            update = md.updateData(projectName, {"dims": project_dimentions})
+            print(project_dimentions)
+            query = {"projectName": projectName}
+            update = md.updateData(query, "$set",{"dims": project_dimentions})
 
             # print()
             print("UPDATE", update)
 
-            return render_template('records.html', project_json=project_dimentions, projectName=projectName)
+            return redirect(url_for('success',projectName=projectName))
 
         else:
-            return render_template('records.html', project_json=project_dimentions, projectName=projectName)
+            return render_template('records.html',project_json=project_dimentions, projectName=projectName)
 
     except Exception as ex:
         print("EXCEPTION OCCURED: \n")
         print(ex)
-        return render_template('records.html', project_json=project_dimentions, projectName=projectName)
+        return render_template('records.html',project_json=project_dimentions, projectName=projectName)
+
+def delete_view(projectName,rowNumber):
+    print("------------")
+    md = database.MongoDatabase()
+    query = {"projectName":projectName}
+    print("query",query)
+    update = md.updateData(query, "$pull",{"dims":{"dimId": rowNumber}})
+    print(update)
+    return redirect(url_for('record',projectName=projectName))
+    # update({'_id': ObjectId("5150a1199fac0e6910000002")}, {$pull: {dimId: 23}})
