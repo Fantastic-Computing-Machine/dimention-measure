@@ -24,41 +24,38 @@
 </head>
 
 <body style="background-color: #111827">
-    <!-- Flask alert -->
 
-    <!-- Flask alert -->
     <main style="width: 100%; min-height: 100vh;">
         <header class="container text-white h3">
             <nav class="navbar navbar-expand-lg navbar-light nav_bg_translucent m-2">
-
                 <div class="container-fluid">
 
-                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                    <!-- <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
                         data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
 
                         <span class="navbar-toggler-icon"></span>
-                    </button>
+                    </button> -->
 
                     <strong>
                         <a class="navbar-brand justify-content-center h2 text-white fs-4"
                             href="{{ url_for('index') }}">Dime<img
-                                src="https://img.icons8.com/ios/20/ffffff/drafting-compass2.png" />tions</a>
+                                src="https://img.icons8.com/ios/15/ffffff/drafting-compass2.png" />tions</a>
                     </strong>
 
-
-                    {% block header %} {% endblock %}
+                    <div class="p-1">
+                        {% block header %} {% endblock %}
+                    </div>
 
                 </div>
             </nav>
-
         </header>
 
 
         {% block modal %}{% endblock %}
 
         <div id="content">
-
+            <!-- Flask alert -->
             <div class="container">
                 {% with messages = get_flashed_messages(with_categories=true) %}
                 {% if messages %}
@@ -73,6 +70,7 @@
                 {% endif %}
                 {% endwith %}
             </div>
+            <!-- Flask alert -->
             <!-- ===== Content ===== -->
             {% block body %}
 

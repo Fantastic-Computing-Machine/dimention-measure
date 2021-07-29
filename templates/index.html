@@ -5,15 +5,8 @@
 {% endblock %}
 
 {% block header %}
-
-<div class="collapse navbar-collapse justify-content-end" id="navbarSupportedContent">
-    <form class="d-flex">
-        <button type="button" class="btn btn-light" data-bs-toggle="modal" data-bs-target="#newProject"
-            data-bs-whatever="@mdo">New Project</button>
-    </form>
-
-</div>
-
+<button type="button" class="btn btn-light" data-bs-toggle="modal" data-bs-target="#newProject"
+    data-bs-whatever="@mdo">New Project</button>
 {% endblock %}
 
 
@@ -28,7 +21,6 @@
             <div class="modal-body">
                 <form action="/" method="POST">
                     <div class="mb-3">
-
                         <label for="recipient-name" class="col-form-label">Project Title</label>
                         <input type="text" id="new_project_name" class="form-control" name="new_project_name"
                             placeholder="Give your project a cool name">
@@ -36,13 +28,9 @@
                     <button class="btn align-items-end btn-outline-success" type="submit">Launch</button>
                 </form>
             </div>
-            <div class="modal-footer">
-            </div>
         </div>
     </div>
 </div>
-
-
 {% endblock %}
 
 
@@ -50,14 +38,7 @@
 {% block body %}
 
 <div class="container px-5 pb-4">
-
-    <div class="text-light py-2 display-4">
-
-        My Projects
-
-    </div>
-
-
+    <div class="text-light py-2 display-4">My Projects</div>
     <div class="row row-cols-4">
 
         {% for item in session["projectNameList"][::-1]%}
@@ -69,7 +50,7 @@
                             style="text-decoration:none">{{ item|capitalize }}</a>
                         <span style="float : right;">
                             <!-- ===== DELETE ===== -->
-                            <a href="">
+                            <a href="{{ url_for('deleteProject',projectName = item)}}">
                                 <img src="https://img.icons8.com/color/28/000000/delete-forever.png" />
                             </a>
                         </span>
@@ -81,6 +62,5 @@
 
     </div>
 </div>
-
 
 {% endblock %}
