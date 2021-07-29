@@ -64,7 +64,7 @@ def records_view(projectName):
             print(name, length, width, sqm, sqft, rate)
 
             new_dimentions = mdb.dimsCreator(
-                len(project_dimentions), name, length, width, sqm, sqft, rate)
+                len(project_dimentions)-1, name, length, width, sqm, sqft, rate)
 
             print(new_dimentions)
 
@@ -90,14 +90,12 @@ def error_404_view():
 
 
 def delete_view(projectName, rowNumber):
-    print("------------")
     md = database.MongoDatabase()
-    query = {"projectName": projectName}
+    query = {'projectName': projectName}
     print("query", query)
-    update = md.updateData(query, "$pull", {"dims": {"dimId": rowNumber}})
-    print(update)
+    update = md.updateData(query, '$pull', {'dims': {'dimId': int(rowNumber)}})
     return redirect(url_for('record', projectName=projectName))
-    # update({'_id': ObjectId("5150a1199fac0e6910000002")}, {$pull: {dimId: 23}})
+    
 
 
 def deleteProject_view(projectName):
