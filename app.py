@@ -1,7 +1,7 @@
 from flask import Flask, session
 from werkzeug.utils import redirect
 
-from views import index_view, records_view
+from views import index_view, records_view, error_404_view
 import helper
 
 app = Flask(__name__)
@@ -20,6 +20,11 @@ def index():
 def record(projectName):
     helper.initialization()
     return records_view(projectName)
+
+
+@app.route('/error_404/')
+def error_404():
+    return error_404_view()
 
 
 if __name__ == "__main__":
