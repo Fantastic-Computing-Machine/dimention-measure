@@ -36,7 +36,7 @@
                     <td>{{item["sqm"]}}</td>
                     <td>{{item["sqft"]}}</td>
                     <td>{{item["rate"]}}</td>
-                    <td><a disable><img src="https://img.icons8.com/cotton/25/000000/delete-sign--v2.png" /></a></td>
+                    <td><a href='{{url_for("delete",projectName = projectName, rowNumber=item["dimId"])}}'><img src="https://img.icons8.com/cotton/25/000000/delete-sign--v2.png" /></a></td>
 
                 </tr>
                 {% endfor %}
@@ -146,7 +146,6 @@
                 <button type="button" id="AddMoreFileBoxInput" class="btn btn-outline-success"><img
                         src="https://img.icons8.com/ios-glyphs/20/26e07f/plus-math.png" /> Add item</button>
             </div> -->
-
         </form>
     </div>
 </div>
