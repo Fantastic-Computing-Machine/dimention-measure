@@ -151,7 +151,7 @@ class MongoDocumentCreator:
 
         return post
 
-    def dimsCreator(self, dimId, name, length, sqm, sqft, width, rate):
+    def dimsCreator(self, dimId, name, length, width,sqm, sqft, rate):
         post = {
             "dimId": dimId,
             "name": name,
