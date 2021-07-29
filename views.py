@@ -98,3 +98,10 @@ def delete_view(projectName, rowNumber):
     print(update)
     return redirect(url_for('record', projectName=projectName))
     # update({'_id': ObjectId("5150a1199fac0e6910000002")}, {$pull: {dimId: 23}})
+
+
+def deleteProject_view(projectName):
+    md = database.MongoDatabase()
+
+    if md.deleteData(projectName):
+        return redirect(url_for('index'))

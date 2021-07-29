@@ -2,7 +2,7 @@ from flask import Flask, session
 from flask.helpers import url_for
 from werkzeug.utils import redirect
 
-from views import index_view, records_view, error_404_view, delete_view
+from views import index_view, records_view, error_404_view, delete_view, deleteProject_view
 import helper
 
 app = Flask(__name__)
@@ -33,6 +33,11 @@ def delete(projectName, rowNumber):
 def success(projectName):
     print("success")
     return redirect(url_for('record', projectName=projectName))
+
+
+@app.route('/delete/<projectName>/', methods=["POST", "GET"])
+def deleteProject(projectName):
+    return deleteProject_view(projectName)
 
 
 @app.route('/error_404/')
