@@ -11,28 +11,6 @@ class MongoDatabase:
         self.connectionId = str(CONFIG.MONGO[2])
         print(self.connectionId)
 
-    def connecting(self):
-        try:
-            self.client = MongoClient(self.connectionId)
-            db = self.client[self.databaseName]
-            collection = db[self.clusterName]
-            return collection
-        except Exception as ex:
-            print("MongoDB: Exception occured while Connecting to the database.")
-            print(ex)
-            return False
-
-    def disconnecting(self):
-        try:
-            self.client = MongoClient(self.connectionId)
-            self.client.close()
-            return True
-        except Exception as ex:
-            print(
-                "MongoDB: Exception occured while disconnecting to the database. \nTrying...")
-            print(ex)
-            return False
-
     def __connect(self):
         try:
             self.client = MongoClient(self.connectionId)
@@ -56,79 +34,75 @@ class MongoDatabase:
             return False
 
     def postQuery(self, query):
+        # Insert/Post One
         query_status = None
         collection = self.__connect()
         try:
-            # print(query)
-            response = collection.insert_one(query)
+            collection.insert_one(query)
             query_status = True
-            return query_status
-
         except Exception as ex:
             query_status = False
             print("MongoDB: Exception occured while Inserting to the database.")
             print(ex)
-            return query_status
         finally:
             self.__disconnect()
+            return query_status
 
     def findOne(self, query):
+        # Find one
         query_status = None
         collection = self.__connect()
         try:
             result = collection.find_one(query)
-            query_status = True
-            # print(query_status)
-            return result
-
         except Exception as ex:
             query_status = False
             print("MongoDB: Exception occured while performing FindAll in the database.")
             print(ex)
-            return query_status
         finally:
             self.__disconnect()
+            if query_status == False:
+                return query_status
+            return result
 
     def updateData(self, query, operation, projection):
+        # Update
         query_status = None
+        collection = self.__connect()
         try:
-            collection = self.__connect()
             collection.update(query, {
-                                  operation : projection})
+                operation: projection})
             query_status = True
         except Exception as ex:
-            output, query_status = False
+            query_status = False
             print("MongoDB: Exception occured while Updating to the database.")
             print(ex)
-            return query_status
         finally:
             self.__disconnect()
+            return query_status
 
     def deleteData(self, projectName):
+        # Delete one
         query_status = None
         collection = self.__connect()
         try:
             query = {"projectName": projectName}
             collection.delete_one(query)
             query_status = True
-            return query_status
         except Exception as ex:
-            output, query_status = False
+            query_status = False
             print("MongoDB: Exception occured while Deleting to the database.")
             print(ex)
-            return query_status
         finally:
             self.__disconnect()
+            return query_status
 
     def find(self, query=None, projection=None):
+        # Find Many
         query_status = None
         collection = self.__connect()
         try:
             result = collection.find(query, projection)
-            query_status = True
-            print(result)
             return result
-
         except Exception as ex:
             query_status = False
             print("MongoDB: Exception occured while performing Find in the database.")
@@ -136,6 +110,9 @@ class MongoDatabase:
             return query_status
         finally:
             self.__disconnect()
+            if query_status == False:
+                return query_status
+            return result
 
 
 class MongoDocumentCreator:
@@ -148,10 +125,9 @@ class MongoDocumentCreator:
             "projectName": projectName,
             "dims": dims,
         }
-
         return post
 
-    def dimsCreator(self, dimId, name, length, width,sqm, sqft, rate):
+    def dimsCreator(self, dimId, name, length, width, sqm, sqft, rate):
         post = {
             "dimId": dimId,
             "name": name,
@@ -166,9 +142,6 @@ class MongoDocumentCreator:
 
 # # Main
 # md = MongoDatabase()
-
-# # print(md.connecting())
-# # print(md.disconnecting())
 
 
 # dims = md.findOne({"projectName": "peru"})["dims"]
