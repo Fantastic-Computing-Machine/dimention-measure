@@ -39,6 +39,12 @@ def records_view(projectName):
         project_json = md.findOne({"projectName": projectName})
         project_dimentions = project_json["dims"]
 
+        sum_sqm = 0
+        sum_sqft = 0
+        for _ in project_dimentions:
+            sum_sqm = sum_sqm + _["sqm"]
+            sum_sqft = sum_sqm + _["sqft"]
+
         print()
         print("PROJECT JSON: ", project_json)
         print()
@@ -58,7 +64,7 @@ def records_view(projectName):
 
             new_dimentions = mdb.dimsCreator(
                 len(project_dimentions), name, length, width, sqm, sqft, rate)
-           
+
             print(new_dimentions)
 
             project_dimentions.append(new_dimentions)
@@ -67,12 +73,17 @@ def records_view(projectName):
             # print()
             print("UPDATE", update)
 
-            return render_template('records.html', project_json=project_dimentions, projectName=projectName)
-
-        else:
-            return render_template('records.html', project_json=project_dimentions, projectName=projectName)
+        #     return render_template('records.html', project_json=project_dimentions, projectName=projectName, sum_sqm=sum_sqm, sum_sqft=sum_sqft)
+            new_dimentions = None
+        # else:
+        return render_template('records.html', project_json=project_dimentions, projectName=projectName, sum_sqm=sum_sqm, sum_sqft=sum_sqft)
 
     except Exception as ex:
-        print("EXCEPTION OCCURED: \n")
+        print("EXCEPTION OCCURED:")
         print(ex)
-        return render_template('records.html', project_json=project_dimentions, projectName=projectName)
+        # return render_template('records.html', project_json=project_dimentions, projectName=projectName)
+        return redirect('/error_404/')
+
+
+def error_404_view():
+    return render_template('error_404.html')

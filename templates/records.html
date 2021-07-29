@@ -5,17 +5,23 @@
 {% endblock %}
 
 
+{% block header %}
+
+<div class="collapse navbar-collapse justify-content-end" id="navbarSupportedContent">
+    <a type="button" href="{{ url_for('index') }}" class="btn btn-primary">Home</a>
+</div>
+
+{% endblock %}
+
+
 {% block body %}
 
-
-
-<div class="container p-5">
-    <div class="">
-
+<div class="container pt-2 px-5 pb-4">
+    <h2 class="text-light">{{projectName|capitalize}}</h2>
+    <div>
         <form action="" method="POST" name="add_skills" id="add_skills">
-
-            <table class=" table">
-                <tr class="table text-light">
+            <table class="table table-hover table-sm">
+                <tr class="table text-light row-cols-auto">
                     <th> Name Tag</th>
                     <th>Length (in meters)</th>
                     <th>Width (in meters)</th>
@@ -25,12 +31,10 @@
                     <th></th>
                 </tr>
 
-
                 {% for item in project_json %}
-
                 <tr class="table text-light">
 
-                    <td>{{item["name"]}}</td>
+                    <td>{{item["name"]|capitalize}}</td>
                     <td>{{item["length"]}}</td>
                     <td>{{item["width"]}}</td>
                     <td>{{item["sqm"]}}</td>
@@ -42,29 +46,28 @@
                 {% endfor %}
 
                 <tr>
-                    <th><input class="form-control form-control-sm" id="name" name="name" type="text"
+                    <th><input class="form-control form-control-sm" style="width:70%" id="name" name="name" type="text"
                             placeholder="Tag it" aria-label=".form-control-sm">
                     </th>
-                    <th><input class="form-control form-control-sm" id="length" name="length" type="number"
-                            placeholder="in meters" aria-label=".form-control-sm">
+                    <th><input class="form-control form-control-sm" style="width:70%" id="length" name="length"
+                            type="number" placeholder="Length (meter)" aria-label=".form-control-sm">
                     </th>
-                    <th><input class="form-control form-control-sm" id="width" name="width" type="number"
-                            placeholder="in meters" aria-label=".form-control-sm">
+                    <th><input class="form-control form-control-sm" style="width:70%" id="width" name="width"
+                            type="number" placeholder="Width (meter)" aria-label=".form-control-sm">
                     </th>
-                    <th><input class="form-control form-control-sm" id="sqm" name="sqm" type="number" placeholder="Sqm"
-                            aria-label=".form-control-sm" readonly>
+                    <th><input class="form-control form-control-sm" style="width:70%" id="sqm" name="sqm" type="number"
+                            placeholder="Sqm" aria-label=".form-control-sm" readonly>
                     </th>
-                    <th><input class="form-control form-control-sm" id="sqft" name="sqft" type="number"
-                            placeholder="Sqft" aria-label=".form-control-sm" readonly>
+                    <th><input class="form-control form-control-sm" style="width:70%" id="sqft" name="sqft"
+                            type="number" placeholder="Sqft" aria-label=".form-control-sm" readonly>
                     </th>
-                    <th><input class="form-control form-control-sm" id="rate" name="rate" type="number"
-                            placeholder="rate" aria-label=".form-control-sm">
+                    <th><input class="form-control form-control-sm" style="width:70%" id="rate" name="rate"
+                            type="number" placeholder="Rate" aria-label=".form-control-sm">
                     </th>
                     <td></td>
                 </tr>
 
             </table>
-
 
             <div class="my-2">
                 <button type="submit" class="btn btn-outline-primary"><img
@@ -73,88 +76,18 @@
                         src="https://img.icons8.com/ios-glyphs/20/26e07f/plus-math.png" /> Add item</button>
             </div>
 
-            <br> <br> <br> <br> <br> <br>
-            <!-- 
-
-            <div>
-
-                <div class="row text-light h6">
-                    <div class="col">Name/Tag</div>
-                    <div class="col">Length (in meters)</div>
-                    <div class="col">Width (in meters)</div>
-                    <div class="col">Area- Sqm</div>
-                    <div class="col">Area- Sqft</div>
-                    <div class="col">Rate</div>
-                    <hr class="my-2">
-                </div> -->
-
-
-
-            <!-- 
-                <div class="row p-1 text-light">
-                    <div class="col">Name/Tag</div>
-                    <div class="col">Length (in meters)</div>
-                    <div class="col">Width (in meters)</div>
-                    <div class="col">Area- Sqm</div>
-                    <div class="col">Area- Sqft</div>
-                    <div class="col">Rate</div>
-
-                </div> -->
-
-
-            <!-- <div id="InputsWrapper">
-
-                <div class="row p-1 text-light">
-
-                    <div class="col">
-                        <input class="form-control form-control-sm" id="name" name="name" type="text"
-                            placeholder="Tag it" aria-label=".form-control-sm" hidden>
-                    </div>
-                    <div class="col">
-                        <input class="form-control form-control-sm" id="length" name="length" type="text"
-                            placeholder="in meters" aria-label=".form-control-sm" hidden>
-                    </div>
-                    <div class="col">
-                        <input class="form-control form-control-sm" id="width" name="width" type="text"
-                            placeholder="in meters" aria-label=".form-control-sm" hidden>
-                    </div>
-                    <div class="col">
-                        <input class="form-control form-control-sm" id="sqm" type="text" name="sqm" placeholder="Sqm"
-                            aria-label=".form-control-sm" readonly hidden>
-                    </div>
-                    <div class="col">
-                        <input class="form-control form-control-sm" id="sqft" type="text" name="sqft" placeholder="Sqft"
-                            aria-label=".form-control-sm" readonly hidden>
-                    </div>
-                    <div class="col">
-                        <input class="form-control form-control-sm" id="rate" name="rate" type="text" placeholder="rate"
-                            aria-label=".form-control-sm" hidden>
-                    </div>
-                    <div class=col-auto>
-                        <a disable hidden><img src="https://img.icons8.com/cotton/30/000000/delete-sign--v2.png" /></a>
-                    </div>
-
-                </div>
-            </div> -->
-
-            <!-- <hr class="my-2 text-light"> -->
-            <!-- <div id="InputsWrapper"></div> -->
-
-            <!-- <div class="my-2">
-                <button type="submit" class="btn btn-outline-primary"><img
-                        src="https://img.icons8.com/color/20/000000/save--v2.png" /> Save</button>
-                <button type="button" id="AddMoreFileBoxInput" class="btn btn-outline-success"><img
-                        src="https://img.icons8.com/ios-glyphs/20/26e07f/plus-math.png" /> Add item</button>
-            </div> -->
-
+            <div class="record_total_card mt-5" style="width:30%">
+                <p class="card-body">
+                    Total<b class="fs-5"> {{sum_sqm}} Sqm</b><br>
+                    Total<b class="fs-5"> {{sum_sqft}} Sqft</b>
+                </p>
+            </div>
         </form>
     </div>
 </div>
-
+<br><br><br><br><br>
 <div>
-
-    <div class="container text-light">
-
+    <div class=" container text-light">
         SESSION: {{session}}
         <br>
         PROJECT NAME: {{projectName}}
@@ -163,5 +96,5 @@
     </div>
 
 </div>
-</div>
+
 {% endblock %}
