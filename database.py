@@ -89,12 +89,12 @@ class MongoDatabase:
         finally:
             self.__disconnect()
 
-    def updateData(self, projectName, projection):
+    def updateData(self, query, operation, projection):
         query_status = None
         try:
             collection = self.__connect()
-            collection.update_one({"projectName": projectName}, {
-                                  "$set": projection})
+            collection.update(query, {
+                                  operation : projection})
             query_status = True
         except Exception as ex:
             output, query_status = False
