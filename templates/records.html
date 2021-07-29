@@ -12,59 +12,61 @@
 
 {% block body %}
 
-<div class="container pt-2 px-5 pb-4">
+<div class="container pt-2 px-3 pb-4">
     <h2 class="py-2 text-light">{{projectName|capitalize}}</h2>
     <div>
         <form action="" method="POST" name="add_skills" id="add_skills">
-            <table class="table table-hover table-sm">
-                <tr class="table text-light row-cols-auto">
-                    <th> Name Tag</th>
-                    <th>Length (in meters)</th>
-                    <th>Width (in meters)</th>
-                    <th>Area- Sqm</th>
-                    <th>Area- Sqft</th>
-                    <th>Rate</th>
-                    <th></th>
-                </tr>
+            <div class="table-responsive">
+                <table class="table table-hover table-sm">
+                    <tr class="table text-light row-cols-auto">
+                        <th> Name Tag</th>
+                        <th>Length (in meters)</th>
+                        <th>Width (in meters)</th>
+                        <th>Area- Sqm</th>
+                        <th>Area- Sqft</th>
+                        <th>Rate</th>
+                        <th></th>
+                    </tr>
 
-                {% for item in project_json %}
-                <tr class="table text-light">
+                    {% for item in project_json %}
+                    <tr class="table text-light">
 
-                    <td>{{item["name"]|capitalize}}</td>
-                    <td>{{item["length"]}}</td>
-                    <td>{{item["width"]}}</td>
-                    <td>{{item["sqm"]}}</td>
-                    <td>{{item["sqft"]}}</td>
-                    <td>{{item["rate"]}}</td>
-                    <td><a href='{{url_for("delete",projectName = projectName, rowNumber=item["dimId"])}}'><img
-                                src="https://img.icons8.com/cotton/25/000000/delete-sign--v2.png" /></a></td>
+                        <td>{{item["name"]|capitalize}}</td>
+                        <td>{{item["length"]}}</td>
+                        <td>{{item["width"]}}</td>
+                        <td>{{item["sqm"]}}</td>
+                        <td>{{item["sqft"]}}</td>
+                        <td>{{item["rate"]}}</td>
+                        <td><a href='{{url_for("delete",projectName = projectName, rowNumber=item["dimId"])}}'><img
+                                    src="https://img.icons8.com/cotton/25/000000/delete-sign--v2.png" /></a></td>
 
-                </tr>
-                {% endfor %}
+                    </tr>
+                    {% endfor %}
 
-                <tr>
-                    <th><input class="form-control form-control-sm" id="name" name="name" type="text"
-                            placeholder="Tag it" aria-label=".form-control-sm">
-                    </th>
-                    <th><input class="form-control form-control-sm" id="length" name="length" type="number"
-                            placeholder="Length (meter)" aria-label=".form-control-sm">
-                    </th>
-                    <th><input class="form-control form-control-sm" id="width" name="width" type="number"
-                            placeholder="Width (meter)" aria-label=".form-control-sm">
-                    </th>
-                    <th><input class="form-control form-control-sm" id="sqm" name="sqm" type="number" placeholder="Sqm"
-                            aria-label=".form-control-sm" readonly>
-                    </th>
-                    <th><input class="form-control form-control-sm" id="sqft" name="sqft" type="number"
-                            placeholder="Sqft" aria-label=".form-control-sm" readonly>
-                    </th>
-                    <th><input class="form-control form-control-sm" id="rate" name="rate" type="number"
-                            placeholder="Rate" aria-label=".form-control-sm">
-                    </th>
-                    <td></td>
-                </tr>
+                    <tr>
+                        <th><input class="form-control form-control-sm" id="name" name="name" type="text"
+                                placeholder="Tag it" aria-label=".form-control-sm">
+                        </th>
+                        <th><input class="form-control form-control-sm" id="length" name="length" type="number"
+                                placeholder="Length (meter)" aria-label=".form-control-sm">
+                        </th>
+                        <th><input class="form-control form-control-sm" id="width" name="width" type="number"
+                                placeholder="Width (meter)" aria-label=".form-control-sm">
+                        </th>
+                        <th><input class="form-control form-control-sm" id="sqm" name="sqm" type="number"
+                                placeholder="Sqm" aria-label=".form-control-sm" readonly>
+                        </th>
+                        <th><input class="form-control form-control-sm" id="sqft" name="sqft" type="number"
+                                placeholder="Sqft" aria-label=".form-control-sm" readonly>
+                        </th>
+                        <th><input class="form-control form-control-sm" id="rate" name="rate" type="number"
+                                placeholder="Rate" aria-label=".form-control-sm">
+                        </th>
+                        <td></td>
+                    </tr>
 
-            </table>
+                </table>
+            </div>
 
             <div class="my-2">
                 <button type="submit" class="btn btn-outline-primary"><img
