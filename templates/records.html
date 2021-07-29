@@ -27,8 +27,9 @@
                         <th>Rate</th>
                         <th></th>
                     </tr>
-
+                    {% set i=0 %}
                     {% for item in project_json %}
+                    {{i}}
                     <tr class="table text-light">
 
                         <td>{{item["name"]|capitalize}}</td>
@@ -37,10 +38,11 @@
                         <td>{{item["sqm"]}}</td>
                         <td>{{item["sqft"]}}</td>
                         <td>{{item["rate"]}}</td>
-                        <td><a href='{{url_for("delete",projectName = projectName, rowNumber=item["dimId"])}}'><img
+                        <td><a href='{{url_for("delete",projectName = projectName, rowNumber=project_json[i]["dimId"])}}'><img
                                     src="https://img.icons8.com/cotton/25/000000/delete-sign--v2.png" /></a></td>
 
                     </tr>
+                    {%set i=i+1%}
                     {% endfor %}
 
                     <tr>
