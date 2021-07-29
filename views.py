@@ -58,13 +58,13 @@ def records_view(projectName):
 
             new_dimentions = mdb.dimsCreator(
                 len(project_dimentions), name, length, width, sqm, sqft, rate)
-            print()
+           
             print(new_dimentions)
 
             project_dimentions.append(new_dimentions)
-            update = md.updateData("peru", {"dims": project_dimentions})
+            update = md.updateData(projectName, {"dims": project_dimentions})
 
-            print()
+            # print()
             print("UPDATE", update)
 
             return render_template('records.html', project_json=project_dimentions, projectName=projectName)
