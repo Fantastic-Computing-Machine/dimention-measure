@@ -1,13 +1,13 @@
 from flask import Flask, session
+from flask.helpers import url_for
 from werkzeug.utils import redirect
 
-from views import index_view, records_view
+from views import index_view, records_view, delete_view
 import helper
 
 app = Flask(__name__)
 
 app.secret_key = "fantasticcomputingmachine"
-
 
 @app.route('/', methods=["POST", "GET"])
 def index():
@@ -21,6 +21,15 @@ def record(projectName):
     helper.initialization()
     return records_view(projectName)
 
+@app.route('/delete/<projectName>/<rowNumber>/', methods=["POST", "GET"])
+def delete(projectName,rowNumber):
+    helper.initialization()
+    return delete_view(projectName,rowNumber)
+
+@app.route('/success/<projectName>/', methods=["POST", "GET"])
+def success(projectName):
+    print("success")
+    return redirect(url_for('record',projectName=projectName))
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=8000, debug=True)
