@@ -1,8 +1,8 @@
-from flask import Flask, session
+from flask import Flask, session,render_template
 from flask.helpers import url_for
 from werkzeug.utils import redirect
 
-from views import index_view, records_view, error_404_view, delete_view, deleteProject_view
+from views import index_view, records_view,delete_view, deleteProject_view
 import helper
 
 app = Flask(__name__)
@@ -40,10 +40,12 @@ def deleteProject(projectName):
     return deleteProject_view(projectName)
 
 
-@app.route('/error_404/')
-def error_404():
-    return error_404_view()
+# @app.route('/error_404/')
+# def error_404():
+#     return error_404_view()
 
-
+@app.errorhandler(404)
+def not_found(e):
+    return render_template("error_404.html")
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=8000, debug=True)
