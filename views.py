@@ -78,7 +78,7 @@ def records_view(projectName):
     except Exception as ex:
         print("EXCEPTION OCCURED:")
         print(ex)
-        # return redirect('/error_404/')
+        return render_template("error_404.html")
 
 
 def delete_view(projectName, rowNumber):
