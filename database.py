@@ -9,7 +9,7 @@ class MongoDatabase:
         self.databaseName = CONFIG.MONGO[0]
         self.clusterName = CONFIG.MONGO[1]
         self.connectionId = str(CONFIG.MONGO[2])
-        print(self.connectionId)
+        #print(self.connectionId)
 
     def __connect(self):
         try:
