@@ -52,14 +52,23 @@ def records_view(projectName):
             name = str(request.form['name'])
             length = float(request.form['length'])
             width = float(request.form['width'])
+            sqm = float(request.form['sqm'])
+            sqft = float(request.form['sqft'])
+
             if request.form['rate'] == '':
                 rate = float(0)
             else:
                 rate = float(request.form['rate'])
+            if request.form['amount'] == '':
+                amount = float(0)
+            else:
+                amount = float(request.form['amount'])
 
-            sqm = round(length*width, 2)
-            sqft = round(sqm * 10.764, 2)
-            amount = round(rate * sqft)
+            # sqm = round(length*width, 2)
+            # sqft = round(sqm * 10.764, 2)
+            # amount = round(rate * sqft)
+
+            print(name, length, width, sqm, sqft, rate, amount)
 
             max = 0
             for i in project_dimentions:
@@ -67,7 +76,7 @@ def records_view(projectName):
                     max = i['dimId']
 
             new_dimentions = mdb.dimsCreator(
-                max+1, name, length, width, sqm, sqft, rate, float(amount))
+                max+1, name, length, width, round(sqm, 2), round(sqft, 2), rate, round(float(amount), 2))
 
             project_dimentions.append(new_dimentions)
             print(project_dimentions)
