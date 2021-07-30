@@ -50,10 +50,11 @@
                                 placeholder="Tag it" aria-label=".form-control-sm" required>
                         </th>
                         <th><input class="form-control form-control-sm" id="length" step=".01" name="length"
-                                type="number" placeholder="Length (meter)" aria-label=".form-control-sm" required>
+                                type="number" placeholder="Length (meter)" oninput="areas()"
+                                aria-label=".form-control-sm" required>
                         </th>
                         <th><input class="form-control form-control-sm" id="width" step=".01" name="width" type="number"
-                                placeholder="Width (meter)" aria-label=".form-control-sm" required>
+                                placeholder="Width (meter)" oninput="areas()" aria-label=".form-control-sm" required>
                         </th>
                         <th><input class="form-control form-control-sm" id="sqm" name="sqm" type="number"
                                 placeholder="Sqm" aria-label=".form-control-sm" readonly>
@@ -62,10 +63,10 @@
                                 placeholder="Sqft" aria-label=".form-control-sm" readonly>
                         </th>
                         <th><input class="form-control form-control-sm" id="rate" step=".01" name="rate" type="number"
-                                placeholder="Rate" aria-label=".form-control-sm">
+                                placeholder="Rate" oninput="areas()" aria-label=".form-control-sm">
                         </th>
-                        <th><input class="form-control form-control-sm" id="sqft" name="sqft" type="number"
-                                placeholder="Sqft" aria-label=".form-control-sm" readonly>
+                        <th><input class="form-control form-control-sm" id="amount" name="amount" type="number"
+                                placeholder="Amount" aria-label=".form-control-sm" readonly>
                         </th>
                         <td></td>
                     </tr>
