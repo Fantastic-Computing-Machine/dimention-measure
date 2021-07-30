@@ -1,16 +1,15 @@
 from flask import session
 
 import database
+
+
 def initialization():
     if("projectNameList" not in session):
         projectNameList = []
         md = database.MongoDatabase()
-        result = md.find({}, {"projectName": 1,"_id":0})
+        result = md.find({}, {"projectName": 1, "_id": 0})
         print(result)
         for i in result:
             # print(i)
             projectNameList.append(i["projectName"])
         session["projectNameList"] = projectNameList
-        
-        
-        

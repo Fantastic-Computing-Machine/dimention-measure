@@ -9,7 +9,6 @@ class MongoDatabase:
         self.databaseName = CONFIG.MONGO[0]
         self.clusterName = CONFIG.MONGO[1]
         self.connectionId = str(CONFIG.MONGO[2])
-        #print(self.connectionId)
 
     def __connect(self):
         try:
@@ -138,22 +137,3 @@ class MongoDocumentCreator:
             "rate": rate,
         }
         return post
-
-
-# # Main
-# md = MongoDatabase()
-
-
-# dims = md.findOne({"projectName": "peru"})["dims"]
-
-# dims.append({'dimId': 0, 'name': 'codezero', 'length': 10.0, 'sqm': 10.0,
-#              'sqft': 100.0, 'width': 1076.4, 'rate': 1000000.0})
-
-
-# result = md.updateData("peru", {"dims": dims})
-
-
-# print(md.findOne({"projectName": "peru"}))
-# print(result)
-
-# mdb = MongoDocumentCreator()

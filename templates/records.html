@@ -37,7 +37,8 @@
                         <td>{{item["sqm"]}}</td>
                         <td>{{item["sqft"]}}</td>
                         <td>{{item["rate"]}}</td>
-                        <td><a href='{{url_for("delete",projectName = projectName, rowNumber=project_json[ns.count]["dimId"])}}'><img
+                        <td><a
+                                href='{{url_for("delete",projectName = projectName, rowNumber=project_json[ns.count]["dimId"])}}'><img
                                     src="https://img.icons8.com/cotton/25/000000/delete-sign--v2.png" /></a></td>
 
                     </tr>
@@ -86,17 +87,6 @@
 
         </form>
     </div>
-</div>
-<br><br><br><br><br>
-<div>
-    <div class=" container text-light">
-        SESSION: {{session}}
-        <br>
-        PROJECT NAME: {{projectName}}
-        <br>
-        METRICS: {{project_json}}
-    </div>
-
 </div>
 
 {% endblock %}
