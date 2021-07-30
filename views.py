@@ -9,11 +9,11 @@ app = Flask(__name__)
 
 
 def index_view():
-    print("INDEX-VIEW:", session)
+    #print("INDEX-VIEW:", session)
     # session["projectNameList"] = ["asd","qqq"]
     if request.method == "POST":
         projectName = str(request.form['new_project_name']).replace(" ", "-")
-        print(projectName)
+        print("ProjectName->",projectName)
         if projectName in session["projectNameList"]:
             flash("Project name already exists! Please try with different name :)")
             return redirect(request.url)
@@ -22,12 +22,17 @@ def index_view():
             mdb = database.MongoDocumentCreator()
             try:
                 md.postQuery(mdb.projectInitialization(projectName))
+                #print("request.session['projectNameList']",session['projectNameList'])
+                sessionlist = session['projectNameList']
+                sessionlist.append(projectName)
+                #print("sessionlist",sessionlist)
+                session['projectNameList'] = sessionlist
+                #print("request.session['projectNameList']",session['projectNameList'])
+                #print("a",session)
             except Exception as e:
                 print(e)
-                # add 404 page
-            session["projectNameList"].append(str(projectName))
-            print(session)
-            return render_template('records.html', projectName=projectName)
+            #print("session",session)
+            return redirect(url_for('record',projectName=projectName))
 
     return render_template('index.html')
 
@@ -62,9 +67,14 @@ def records_view(projectName):
 
             # print()
             # print(name, length, width, sqm, sqft, rate)
+            max=0
+            for i in project_dimentions:
+                if(i['dimId']>=max):
+                    max = i['dimId']
+            # print(max)
 
             new_dimentions = mdb.dimsCreator(
-                len(project_dimentions)-1, name, length, width, sqm, sqft, rate)
+                max+1, name, length, width, sqm, sqft, rate)
 
             # print(new_dimentions)
 
@@ -73,7 +83,7 @@ def records_view(projectName):
             query = {"projectName": projectName}
             update = md.updateData(query, "$set", {"dims": project_dimentions})
 
-            print("UPDATE", update)
+            print("Update-Status", update)
 
             new_dimentions = None
             return redirect(url_for('success',projectName=projectName))
@@ -93,9 +103,14 @@ def records_view(projectName):
 def delete_view(projectName, rowNumber):
     md = database.MongoDatabase()
     query = {'projectName': projectName}
-    print("query", query)
-    update = md.updateData(query, '$pull', {'dims': {'dimId': int(rowNumber)}})
-    return redirect(url_for('record', projectName=projectName))
+    # print("query", query)
+    try:
+        md.updateData(query, '$pull', {'dims': {'dimId': int(rowNumber)}})
+        return redirect(url_for('record', projectName=projectName))
+    except Exception as e:
+        print("EXCEPTION OCCURED:")
+        print(e)
+        return render_template("error_404.html")
     
 
 
