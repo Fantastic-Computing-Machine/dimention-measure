@@ -46,10 +46,10 @@ def records_view(projectName):
             sum_sqm = sum_sqm + _["sqm"]
             sum_sqft = sum_sqm + _["sqft"]
 
-        print()
-        print("PROJECT JSON: ", project_json)
-        print()
-        print("PROJECT DIMS: ", project_dimentions)
+        # print()
+        # print("PROJECT JSON: ", project_json)
+        # print()
+        # print("PROJECT DIMS: ", project_dimentions)
 
         if request.method == "POST":
             name = str(request.form['name'])
@@ -60,13 +60,13 @@ def records_view(projectName):
             sqm = round(length*width, 2)
             sqft = round(sqm * 10.764, 2)
 
-            print()
-            print(name, length, width, sqm, sqft, rate)
+            # print()
+            # print(name, length, width, sqm, sqft, rate)
 
             new_dimentions = mdb.dimsCreator(
                 len(project_dimentions)-1, name, length, width, sqm, sqft, rate)
 
-            print(new_dimentions)
+            # print(new_dimentions)
 
             project_dimentions.append(new_dimentions)
             print(project_dimentions)
@@ -76,8 +76,9 @@ def records_view(projectName):
             print("UPDATE", update)
 
             new_dimentions = None
-
-        return render_template('records.html', project_json=project_dimentions, projectName=projectName, sum_sqm=sum_sqm, sum_sqft=sum_sqft)
+            return redirect(url_for('success',projectName=projectName))
+        else:
+            return render_template('records.html', project_json=project_dimentions, projectName=projectName, sum_sqm=sum_sqm, sum_sqft=sum_sqft)
 
     except Exception as ex:
         print("EXCEPTION OCCURED:")
