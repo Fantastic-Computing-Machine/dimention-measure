@@ -1,14 +1,10 @@
 from flask import session
 
 import database
-
-
 def initialization():
-    print()
-    print("**********HELPER**************")
     projectNameList = []
-    print(session)
-    if("projectNameList" in session):
+    
+    if(not "projectNameList" in session):
         md = database.MongoDatabase()
         result = md.find({}, {"projectName": 2})
         # print(result)
@@ -16,6 +12,8 @@ def initialization():
             # print(i)
             projectNameList.append(i["projectName"])
         session["projectNameList"] = projectNameList
+        print("session created")
+        return True
     else:
-        print(session)
-    print("********************************")
+        print("session exists")
+        return False
