@@ -1,4 +1,4 @@
-from flask import Flask, session, render_template
+from flask import Flask, session, render_template, request
 from flask.helpers import url_for
 from werkzeug.utils import redirect
 
@@ -13,6 +13,8 @@ app.secret_key = "fantasticcomputingmachine"
 @app.route('/', methods=["POST", "GET"])
 def index():
     # Homepage
+    ip_address = request.remote_addr
+    print("Current IP: ", ip_address)
     helper.initialization()
     return index_view()
 
