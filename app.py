@@ -32,11 +32,15 @@ def delete(projectName, rowNumber):
 @app.route('/success/<projectName>/', methods=["POST", "GET"])
 def success(projectName):
     print("success")
+    
     return redirect(url_for('record', projectName=projectName))
 
 
 @app.route('/delete/<projectName>/', methods=["POST", "GET"])
 def deleteProject(projectName):
+    sessionlist = session['projectNameList']
+    sessionlist.remove(projectName)
+    session['projectNameList'] = sessionlist
     return deleteProject_view(projectName)
 
 
