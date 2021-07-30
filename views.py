@@ -13,7 +13,7 @@ def index_view():
     # session["projectNameList"] = ["asd","qqq"]
     if request.method == "POST":
         projectName = str(request.form['new_project_name']).replace(" ", "-")
-        print("ProjectName->",projectName)
+        print("ProjectName->", projectName)
         if projectName in session["projectNameList"]:
             flash("Project name already exists! Please try with different name :)")
             return redirect(request.url)
@@ -22,17 +22,17 @@ def index_view():
             mdb = database.MongoDocumentCreator()
             try:
                 md.postQuery(mdb.projectInitialization(projectName))
-                #print("request.session['projectNameList']",session['projectNameList'])
+                # print("request.session['projectNameList']",session['projectNameList'])
                 sessionlist = session['projectNameList']
                 sessionlist.append(projectName)
-                #print("sessionlist",sessionlist)
+                # print("sessionlist",sessionlist)
                 session['projectNameList'] = sessionlist
-                #print("request.session['projectNameList']",session['projectNameList'])
-                #print("a",session)
+                # print("request.session['projectNameList']",session['projectNameList'])
+                # print("a",session)
             except Exception as e:
                 print(e)
-            #print("session",session)
-            return redirect(url_for('record',projectName=projectName))
+            # print("session",session)
+            return redirect(url_for('record', projectName=projectName))
 
     return render_template('index.html')
 
@@ -49,7 +49,7 @@ def records_view(projectName):
         sum_sqft = 0
         for _ in project_dimentions:
             sum_sqm = sum_sqm + _["sqm"]
-            sum_sqft = sum_sqm + _["sqft"]
+            sum_sqft = sum_sqft + _["sqft"]
 
         # print()
         # print("PROJECT JSON: ", project_json)
@@ -67,9 +67,9 @@ def records_view(projectName):
 
             # print()
             # print(name, length, width, sqm, sqft, rate)
-            max=0
+            max = 0
             for i in project_dimentions:
-                if(i['dimId']>=max):
+                if(i['dimId'] >= max):
                     max = i['dimId']
             # print(max)
 
@@ -86,9 +86,9 @@ def records_view(projectName):
             print("Update-Status", update)
 
             new_dimentions = None
-            return redirect(url_for('success',projectName=projectName))
+            return redirect(url_for('success', projectName=projectName))
         else:
-            return render_template('records.html', project_json=project_dimentions, projectName=projectName, sum_sqm=sum_sqm, sum_sqft=sum_sqft)
+            return render_template('records.html', project_json=project_dimentions, projectName=projectName, sum_sqm=round(sum_sqm, 2), sum_sqft=round(sum_sqft, 2))
 
     except Exception as ex:
         print("EXCEPTION OCCURED:")
@@ -111,7 +111,6 @@ def delete_view(projectName, rowNumber):
         print("EXCEPTION OCCURED:")
         print(e)
         return render_template("error_404.html")
-    
 
 
 def deleteProject_view(projectName):
