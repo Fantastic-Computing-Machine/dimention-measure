@@ -22,3 +22,22 @@ function areas() {
     var amount = sqfeet * third_number
     document.getElementById("amount").value = amount;
 }
+
+var meter = document.getElementById("mt");
+var feet = document.getElementById("ft");
+
+function mtr_ft() {
+    var first_number = parseFloat(meter.value);
+    if (isNaN(first_number)) { first_number = 0; }
+
+    var to_ft = first_number * 3.28;
+    document.getElementById("ft").value = to_ft;
+}
+
+function ft_mtr() {
+    var first_number = parseFloat(feet.value);
+    if (isNaN(first_number)) { first_number = 0; }
+
+    var to_mt = first_number * 0.3048;
+    document.getElementById("mt").value = to_mt;
+}
