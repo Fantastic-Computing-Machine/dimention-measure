@@ -32,8 +32,7 @@
 
                     <strong>
                         <a class="navbar-brand justify-content-center h2 text-white fs-4"
-                            href="{{ url_for('index') }}">Dime<img
-                                src="https://img.icons8.com/ios/15/ffffff/drafting-compass2.png" />tions</a>
+                            href="{{ url_for('index') }}">Dimentions</a>
                     </strong>
 
                     <div class="p-1">
@@ -74,6 +73,48 @@
 
 
     </main>
+
+
+    <!-- Button trigger modal -->
+    <div id="mybutton">
+
+        <button type="button" class="btn btn-primary btn-lg" data-bs-toggle="modal" data-bs-target="#exampleModal">
+            <img src="https://img.icons8.com/ios/30/ffffff/design--v2.png" />
+        </button>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Calculate</h5>
+                    <!-- <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button> -->
+                </div>
+                <div class="modal-body">
+
+                    <div class="row">
+                        <div class="col">
+                            Meter
+                            <input class="form-control form-control-sm" oninput="mtr_ft()" id="mt" name="mt"
+                                type="number" placeholder="Meter" aria-label=".form-control-sm">
+                        </div>
+                        <div class="col">
+                            Feet
+                            <input class="form-control form-control-sm" oninput="ft_mtr()" id="ft" name="ft"
+                                type="number" placeholder="Feet" aria-label=".form-control-sm">
+                        </div>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
     <footer style="margin: 0; padding:0;">
         {% include "footer.html" %}
     </footer>

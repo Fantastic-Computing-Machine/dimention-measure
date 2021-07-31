@@ -11,7 +11,7 @@ app = Flask(__name__)
 def index_view():
     if request.method == "POST":
         projectName = str(request.form['new_project_name']).replace(" ", "-")
-        print("ProjectName->", projectName)
+        # print("ProjectName->", projectName)
         if projectName in session["projectNameList"]:
             flash("Project name already exists! Please try with different name :)")
             return redirect(request.url)
@@ -42,18 +42,33 @@ def records_view(projectName):
 
         sum_sqm = 0
         sum_sqft = 0
+        sum_amt = 0
         for _ in project_dimentions:
             sum_sqm = sum_sqm + _["sqm"]
             sum_sqft = sum_sqft + _["sqft"]
+            sum_amt = sum_amt + _["amount"]
 
         if request.method == "POST":
             name = str(request.form['name'])
-            length = float(int(request.form['length']))
-            width = float(int(request.form['width']))
-            rate = float(int(request.form['rate']))
+            length = float(request.form['length'])
+            width = float(request.form['width'])
+            sqm = float(request.form['sqm'])
+            sqft = float(request.form['sqft'])
 
-            sqm = round(length*width, 2)
-            sqft = round(sqm * 10.764, 2)
+            if request.form['rate'] == '':
+                rate = float(0)
+            else:
+                rate = float(request.form['rate'])
+            if request.form['amount'] == '':
+                amount = float(0)
+            else:
+                amount = float(request.form['amount'])
+
+            # sqm = round(length*width, 2)
+            # sqft = round(sqm * 10.764, 2)
+            # amount = round(rate * sqft)
+
+            # print(name, length, width, sqm, sqft, rate, amount)
 
             max = 0
             for i in project_dimentions:
@@ -61,19 +76,22 @@ def records_view(projectName):
                     max = i['dimId']
 
             new_dimentions = mdb.dimsCreator(
-                max+1, name, length, width, sqm, sqft, rate)
+                max+1, name, length, width, round(sqm, 2), round(sqft, 2), rate, round(float(amount), 2))
 
             project_dimentions.append(new_dimentions)
-            print(project_dimentions)
+            # print(project_dimentions)
+
+            # print("**************************************")
+            # print(name, length, width, sqm, sqft, rate, amount)
+
             query = {"projectName": projectName}
             update = md.updateData(query, "$set", {"dims": project_dimentions})
-
-            print("Update-Status", update)
+            # print("Update-Status", update)
 
             new_dimentions = None
             return redirect(url_for('success', projectName=projectName))
         else:
-            return render_template('records.html', project_json=project_dimentions, projectName=projectName, sum_sqm=round(sum_sqm, 2), sum_sqft=round(sum_sqft, 2))
+            return render_template('records.html', project_json=project_dimentions, projectName=projectName, sum_sqm=round(sum_sqm, 2), sum_sqft=round(sum_sqft, 2), sum_amt=round(sum_amt, 2))
 
     except Exception as ex:
         print("EXCEPTION OCCURED:")

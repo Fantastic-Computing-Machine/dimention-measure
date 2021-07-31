@@ -126,7 +126,7 @@ class MongoDocumentCreator:
         }
         return post
 
-    def dimsCreator(self, dimId, name, length, width, sqm, sqft, rate):
+    def dimsCreator(self, dimId, name, length, width, sqm, sqft, rate, amount):
         post = {
             "dimId": dimId,
             "name": name,
@@ -135,5 +135,6 @@ class MongoDocumentCreator:
             "sqm": sqm,
             "sqft": sqft,
             "rate": rate,
+            "amount": amount
         }
         return post
