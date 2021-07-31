@@ -21,7 +21,8 @@ def index():
 
 @app.route('/record/<projectName>/', methods=["POST", "GET"])
 def record(projectName):
-    helper.initialization()
+    if("projectNameList" not in session):
+        helper.initialization()
     if projectName in session["projectNameList"]:
         return records_view(projectName)
     return render_template("error_404.html")
@@ -29,7 +30,8 @@ def record(projectName):
 
 @app.route('/delete/<projectName>/<rowNumber>/', methods=["POST", "GET"])
 def delete(projectName, rowNumber):
-    helper.initialization()
+    if("projectNameList" not in session):
+        helper.initialization()
     return delete_view(projectName, rowNumber)
 
 

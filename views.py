@@ -11,7 +11,7 @@ app = Flask(__name__)
 def index_view():
     if request.method == "POST":
         projectName = str(request.form['new_project_name']).replace(" ", "-")
-        print("ProjectName->", projectName)
+        # print("ProjectName->", projectName)
         if projectName in session["projectNameList"]:
             flash("Project name already exists! Please try with different name :)")
             return redirect(request.url)
@@ -68,7 +68,7 @@ def records_view(projectName):
             # sqft = round(sqm * 10.764, 2)
             # amount = round(rate * sqft)
 
-            print(name, length, width, sqm, sqft, rate, amount)
+            # print(name, length, width, sqm, sqft, rate, amount)
 
             max = 0
             for i in project_dimentions:
@@ -79,14 +79,14 @@ def records_view(projectName):
                 max+1, name, length, width, round(sqm, 2), round(sqft, 2), rate, round(float(amount), 2))
 
             project_dimentions.append(new_dimentions)
-            print(project_dimentions)
+            # print(project_dimentions)
 
-            print("**************************************")
-            print(name, length, width, sqm, sqft, rate, amount)
+            # print("**************************************")
+            # print(name, length, width, sqm, sqft, rate, amount)
 
             query = {"projectName": projectName}
             update = md.updateData(query, "$set", {"dims": project_dimentions})
-            print("Update-Status", update)
+            # print("Update-Status", update)
 
             new_dimentions = None
             return redirect(url_for('success', projectName=projectName))
