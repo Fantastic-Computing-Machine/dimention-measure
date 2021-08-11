@@ -11,7 +11,6 @@ app = Flask(__name__)
 def index_view():
     if request.method == "POST":
         projectName = str(request.form['new_project_name']).replace(" ", "-")
-        # print("ProjectName->", projectName)
         if projectName in session["projectNameList"]:
             flash("Project name already exists! Please try with different name :)")
             return redirect(request.url)
@@ -33,6 +32,7 @@ def index_view():
 
 
 def records_view(projectName):
+    print("hello project")
     try:
         md = database.MongoDatabase()
         mdb = database.MongoDocumentCreator()
@@ -44,31 +44,34 @@ def records_view(projectName):
         sum_sqft = 0
         sum_amt = 0
         for _ in project_dimentions:
-            sum_sqm = sum_sqm + _["sqm"]
-            sum_sqft = sum_sqft + _["sqft"]
+            if not isinstance(_["sqm"], str) or not isinstance(_["sqft"], str):
+                sum_sqm = sum_sqm + _["sqm"]
+                sum_sqft = sum_sqft + _["sqft"]
+
             sum_amt = sum_amt + _["amount"]
 
         if request.method == "POST":
-            name = str(request.form['name'])
+            print("hello POST")
+            name = str(request.form['name']).replace(" ", "-")
             length = float(request.form['length'])
-            width = float(request.form['width'])
-            sqm = float(request.form['sqm'])
-            sqft = float(request.form['sqft'])
+            width = request.form['width']
+            if width == "":
+                width = 0
+            width = float(width)
+            sqm = request.form['sqm']
+            sqft = request.form['sqft']
+
+            print(sqm, sqft)
+            if not isinstance(sqm, str) or not isinstance(sqft, str):
+                sqm = round(float(sqm), 2)
+                sqft = round(float(sqft), 2)
 
             if request.form['rate'] == '':
                 rate = float(0)
-            else:
-                rate = float(request.form['rate'])
-            if request.form['amount'] == '':
                 amount = float(0)
             else:
+                rate = float(request.form['rate'])
                 amount = float(request.form['amount'])
-
-            # sqm = round(length*width, 2)
-            # sqft = round(sqm * 10.764, 2)
-            # amount = round(rate * sqft)
-
-            # print(name, length, width, sqm, sqft, rate, amount)
 
             max = 0
             for i in project_dimentions:
@@ -76,13 +79,9 @@ def records_view(projectName):
                     max = i['dimId']
 
             new_dimentions = mdb.dimsCreator(
-                max+1, name, length, width, round(sqm, 2), round(sqft, 2), rate, round(float(amount), 2))
+                max+1, name, length, width, sqm, sqft, rate, round(float(amount), 2))
 
             project_dimentions.append(new_dimentions)
-            # print(project_dimentions)
-
-            # print("**************************************")
-            # print(name, length, width, sqm, sqft, rate, amount)
 
             query = {"projectName": projectName}
             update = md.updateData(query, "$set", {"dims": project_dimentions})
