@@ -32,7 +32,6 @@ def index_view():
 
 
 def records_view(projectName):
-    print("hello project")
     try:
         md = database.MongoDatabase()
         mdb = database.MongoDocumentCreator()
@@ -40,9 +39,9 @@ def records_view(projectName):
         project_json = md.findOne({"projectName": projectName})
         project_dimentions = project_json["dims"]
 
-        sum_sqm = 0
-        sum_sqft = 0
-        sum_amt = 0
+        sum_sqm = 0.0
+        sum_sqft = 0.0
+        sum_amt = 0.0
         for _ in project_dimentions:
             if not isinstance(_["sqm"], str) or not isinstance(_["sqft"], str):
                 sum_sqm = sum_sqm + _["sqm"]
@@ -51,7 +50,6 @@ def records_view(projectName):
             sum_amt = sum_amt + _["amount"]
 
         if request.method == "POST":
-            print("hello POST")
             name = str(request.form['name']).replace(" ", "-")
             length = float(request.form['length'])
             width = request.form['width']
@@ -61,10 +59,11 @@ def records_view(projectName):
             sqm = request.form['sqm']
             sqft = request.form['sqft']
 
-            print(sqm, sqft)
-            if not isinstance(sqm, str) or not isinstance(sqft, str):
+            # print(sqm, sqft)
+            if sqm.replace('.', '', 1).isdigit() and sqft.replace('.', '', 1).isdigit():
                 sqm = round(float(sqm), 2)
                 sqft = round(float(sqft), 2)
+
 
             if request.form['rate'] == '':
                 rate = float(0)

@@ -34,7 +34,8 @@
                         <td>{{item["name"]|capitalize}}</td>
                         <td>{{item["length"]}} m ({{'%0.2f' | format(item["length"]*3.281 | float) }} ft) </td>
                         <td>{{item["width"]}} m ({{'%0.2f' | format(item["width"]*3.281 | float) }} ft) </td>
-                        {% if 'Dummy' == item["sqm"] %}
+                        {% if 'N/A' == item["sqm"] %}
+                        <!-- if you change "N/A" here then change the value in js file also -->
                         <td>{{item["sqm"]}}</td>
                         <td>{{item["sqft"]}}</td>
                         {% else %}

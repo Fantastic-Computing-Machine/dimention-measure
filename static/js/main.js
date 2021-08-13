@@ -23,8 +23,9 @@ function areas() {
     document.getElementById("amount").value = amount;
 
     if (flag == true) {
-        document.getElementById("sqm").value = 'Dummy';
-        document.getElementById("sqft").value = 'Dummy';
+        document.getElementById("sqm").value = 'N/A';
+        // <!-- if you change "N/A" here then change the value in records.html file also -->
+        document.getElementById("sqft").value = 'N/A';
     }
 
 }
