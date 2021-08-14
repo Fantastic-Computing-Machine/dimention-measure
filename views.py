@@ -1,4 +1,9 @@
+from datetime import datetime
+from logging import FileHandler
+import os
+from openpyxl import Workbook
 from flask import Flask, render_template, redirect, session, request, flash, url_for
+from flask import send_file, after_this_request
 from pymongo.message import query
 
 import database
@@ -60,10 +65,11 @@ def records_view(projectName):
             sqft = request.form['sqft']
 
             # print(sqm, sqft)
-            if sqm.replace('.', '', 1).isdigit() and sqft.replace('.', '', 1).isdigit():
+            if sqm.replace('.', '', 1).isdigit():
                 sqm = round(float(sqm), 2)
-                sqft = round(float(sqft), 2)
 
+            if sqft.replace('.', '', 1).isdigit():
+                sqft = round(float(sqft), 2)
 
             if request.form['rate'] == '':
                 rate = float(0)
@@ -89,7 +95,14 @@ def records_view(projectName):
             new_dimentions = None
             return redirect(url_for('success', projectName=projectName))
         else:
-            return render_template('records.html', project_json=project_dimentions, projectName=projectName, sum_sqm=round(sum_sqm, 2), sum_sqft=round(sum_sqft, 2), sum_amt=round(sum_amt, 2))
+            sum_sqm = round(sum_sqm, 2)
+            sum_sqft = round(sum_sqft, 2)
+            sum_amt = round(sum_amt, 2)
+
+            session["proj_info"] = [projectName,
+                                    project_dimentions, sum_sqm, sum_sqft, sum_amt]
+
+            return render_template('records.html', project_json=project_dimentions, projectName=projectName, sum_sqm=sum_sqm, sum_sqft=sum_sqft, sum_amt=sum_amt)
 
     except Exception as ex:
         print("EXCEPTION OCCURED:")
@@ -114,3 +127,62 @@ def deleteProject_view(projectName):
 
     if md.deleteData(projectName):
         return redirect(url_for('index'))
+
+
+def download_excel_view(projectName):
+    date_time_obj = datetime.now()
+    current_date = date_time_obj.strftime('%x')
+    current_time = date_time_obj.strftime('%X')
+
+    filename = "downloads/excel/" + projectName + '_' + str(current_date).replace('/', "-") + \
+        '_' + str(current_time).replace(":", "-") + ".xlsx"
+
+    # create a workbook object
+    workbook = Workbook()
+    # create a worksheet
+    sheet = workbook.active
+    sheet.title = projectName
+
+    sheet.append(["Project Name", projectName])
+    sheet.append([""])
+    sheet.append(["Tag", "Length", "Width", "Area | sqm",
+                  "Area | sqft", "Rate", "Amount"])
+
+    for item in session['proj_info'][1]:
+
+        item["length"] = str(item["length"]) + " m (" + \
+            str(round(item["length"]*3.281, 2)) + " ft.)"
+        item["width"] = str(item["width"]) + " m (" + \
+            str(round(item["width"]*3.281, 2)) + " ft.)"
+
+        sheet.append([item["name"], item["length"],
+                      item["width"], item["sqm"], item["sqft"], item["rate"], item["amount"]])
+
+    sheet.append([""])
+    sheet.append(['Total sqm', session['proj_info'][2]])
+    sheet.append(['Total sqft', session['proj_info'][3]])
+    sheet.append(['Total amount*', session['proj_info'][4]])
+
+    sheet.append([""])
+    sheet.append(['*Calculated using metrics in sqft.'])
+
+    print(filename)
+    workbook.save(filename=str(filename))
+
+    session.pop('proj_info')
+
+    @after_this_request
+    def remove_file(response):
+        try:
+            os.remove(filename)
+            FileHandler.close()
+        except Exception as error:
+            app.logger.error(
+                "Error removing or closing downloaded file handle", error)
+        return response
+
+    return send_file(filename, as_attachment=True)
+
+
+def download_pdf_view():
+    return

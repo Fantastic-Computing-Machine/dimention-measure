@@ -80,9 +80,17 @@
                 </table>
             </div>
 
-            <div class="my-2">
-                <button type="submit" class="btn btn-outline-primary"><img
-                        src="https://img.icons8.com/color/20/000000/save--v2.png" /> Add Item</button>
+            <div class="my-2" style="text-align:center">
+                <button type="submit" class="btn btn-primary m-1"><img
+                        src="https://img.icons8.com/ios-filled/25/000000/save--v1.png" /> Add Item</button>
+
+                <a class="btn btn-success m-1" href='{{url_for("download_excel",projectName=projectName)}}'>
+                    <img src="https://img.icons8.com/ios-glyphs/25/000000/ms-excel.png">
+                    Save Excel</a>
+
+                <button class="btn btn-danger m-1" disabled><img
+                        src="https://img.icons8.com/material-rounded/25/000000/pdf.png"> Save pdf</button>
+
             </div>
 
             <div class="px-5">
@@ -90,7 +98,7 @@
                     <p class="card-body" style="text-align:center">
                         Total<b class="fs-5"> {{sum_sqm}} Sqm</b><br>
                         Total<b class="fs-5"> {{sum_sqft}} Sqft</b><br>
-                        Total<b class="fs-5"> Rs. {{sum_amt}} </b>(calculated using area in sqft.)
+                        Total<b class="fs-5"> Rs. {{sum_amt}} </b>(Calculated using metrics in sqft.)
                     </p>
 
                 </div>

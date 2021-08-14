@@ -3,6 +3,7 @@ from flask.helpers import url_for
 from werkzeug.utils import redirect
 
 from views import index_view, records_view, delete_view, deleteProject_view
+from views import download_excel_view
 import helper
 
 app = Flask(__name__)
@@ -47,6 +48,13 @@ def deleteProject(projectName):
     sessionlist.remove(projectName)
     session['projectNameList'] = sessionlist
     return deleteProject_view(projectName)
+
+
+@app.route('/download_excel/<projectName>/', methods=["POST", "GET"])
+def download_excel(projectName):
+    # route to download to excel
+    print("Downloades-->", projectName)
+    return download_excel_view(projectName)
 
 
 @app.errorhandler(404)
