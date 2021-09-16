@@ -5,12 +5,12 @@ var rate = document.getElementById("rate");
 
 function areas() {
     var first_number = parseFloat(length.value);
-    if (isNaN(first_number)) { first_number = 0; }
-
     var second_number = parseFloat(width.value);
-    if (isNaN(second_number)) { second_number = 0; }
-
     var third_number = parseFloat(rate.value);
+    var flag = false;
+
+    if (isNaN(first_number)) { first_number = 0; }
+    if (isNaN(second_number)) { second_number = 1; flag = true; }
     if (isNaN(third_number)) { third_number = 0; }
 
     var sqmtr = first_number * second_number;
@@ -21,6 +21,13 @@ function areas() {
 
     var amount = sqfeet * third_number
     document.getElementById("amount").value = amount;
+
+    if (flag == true) {
+        document.getElementById("sqm").value = 'N/A';
+        // <!-- if you change "N/A" here then change the value in records.html file also -->
+        document.getElementById("sqft").value = 'N/A';
+    }
+
 }
 
 var meter = document.getElementById("mt");

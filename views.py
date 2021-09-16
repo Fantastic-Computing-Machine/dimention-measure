@@ -1,4 +1,9 @@
+from datetime import datetime
+from logging import FileHandler
+import os
+from openpyxl import Workbook
 from flask import Flask, render_template, redirect, session, request, flash, url_for
+from flask import send_file, after_this_request
 from pymongo.message import query
 
 import database
@@ -11,7 +16,6 @@ app = Flask(__name__)
 def index_view():
     if request.method == "POST":
         projectName = str(request.form['new_project_name']).replace(" ", "-")
-        # print("ProjectName->", projectName)
         if projectName in session["projectNameList"]:
             flash("Project name already exists! Please try with different name :)")
             return redirect(request.url)
@@ -40,35 +44,39 @@ def records_view(projectName):
         project_json = md.findOne({"projectName": projectName})
         project_dimentions = project_json["dims"]
 
-        sum_sqm = 0
-        sum_sqft = 0
-        sum_amt = 0
+        sum_sqm = 0.0
+        sum_sqft = 0.0
+        sum_amt = 0.0
         for _ in project_dimentions:
-            sum_sqm = sum_sqm + _["sqm"]
-            sum_sqft = sum_sqft + _["sqft"]
+            if not isinstance(_["sqm"], str) or not isinstance(_["sqft"], str):
+                sum_sqm = sum_sqm + _["sqm"]
+                sum_sqft = sum_sqft + _["sqft"]
+
             sum_amt = sum_amt + _["amount"]
 
         if request.method == "POST":
-            name = str(request.form['name'])
+            name = str(request.form['name']).replace(" ", "-")
             length = float(request.form['length'])
-            width = float(request.form['width'])
-            sqm = float(request.form['sqm'])
-            sqft = float(request.form['sqft'])
+            width = request.form['width']
+            if width == "":
+                width = 0
+            width = float(width)
+            sqm = request.form['sqm']
+            sqft = request.form['sqft']
+
+            # print(sqm, sqft)
+            if sqm.replace('.', '', 1).isdigit():
+                sqm = round(float(sqm), 2)
+
+            if sqft.replace('.', '', 1).isdigit():
+                sqft = round(float(sqft), 2)
 
             if request.form['rate'] == '':
                 rate = float(0)
-            else:
-                rate = float(request.form['rate'])
-            if request.form['amount'] == '':
                 amount = float(0)
             else:
+                rate = float(request.form['rate'])
                 amount = float(request.form['amount'])
-
-            # sqm = round(length*width, 2)
-            # sqft = round(sqm * 10.764, 2)
-            # amount = round(rate * sqft)
-
-            # print(name, length, width, sqm, sqft, rate, amount)
 
             max = 0
             for i in project_dimentions:
@@ -76,13 +84,9 @@ def records_view(projectName):
                     max = i['dimId']
 
             new_dimentions = mdb.dimsCreator(
-                max+1, name, length, width, round(sqm, 2), round(sqft, 2), rate, round(float(amount), 2))
+                max+1, name, length, width, sqm, sqft, rate, round(float(amount), 2))
 
             project_dimentions.append(new_dimentions)
-            # print(project_dimentions)
-
-            # print("**************************************")
-            # print(name, length, width, sqm, sqft, rate, amount)
 
             query = {"projectName": projectName}
             update = md.updateData(query, "$set", {"dims": project_dimentions})
@@ -91,7 +95,14 @@ def records_view(projectName):
             new_dimentions = None
             return redirect(url_for('success', projectName=projectName))
         else:
-            return render_template('records.html', project_json=project_dimentions, projectName=projectName, sum_sqm=round(sum_sqm, 2), sum_sqft=round(sum_sqft, 2), sum_amt=round(sum_amt, 2))
+            sum_sqm = round(sum_sqm, 2)
+            sum_sqft = round(sum_sqft, 2)
+            sum_amt = round(sum_amt, 2)
+
+            session["proj_info"] = [projectName,
+                                    project_dimentions, sum_sqm, sum_sqft, sum_amt]
+
+            return render_template('records.html', project_json=project_dimentions, projectName=projectName, sum_sqm=sum_sqm, sum_sqft=sum_sqft, sum_amt=sum_amt)
 
     except Exception as ex:
         print("EXCEPTION OCCURED:")
@@ -116,3 +127,62 @@ def deleteProject_view(projectName):
 
     if md.deleteData(projectName):
         return redirect(url_for('index'))
+
+
+def download_excel_view(projectName):
+    date_time_obj = datetime.now()
+    current_date = date_time_obj.strftime('%x')
+    current_time = date_time_obj.strftime('%X')
+
+    filename = "downloads/excel/" + projectName + '_' + str(current_date).replace('/', "-") + \
+        '_' + str(current_time).replace(":", "-") + ".xlsx"
+
+    # create a workbook object
+    workbook = Workbook()
+    # create a worksheet
+    sheet = workbook.active
+    sheet.title = projectName
+
+    sheet.append(["Project Name", projectName])
+    sheet.append([""])
+    sheet.append(["Tag", "Length", "Width", "Area | sqm",
+                  "Area | sqft", "Rate", "Amount"])
+
+    for item in session['proj_info'][1]:
+
+        item["length"] = str(item["length"]) + " m (" + \
+            str(round(item["length"]*3.281, 2)) + " ft.)"
+        item["width"] = str(item["width"]) + " m (" + \
+            str(round(item["width"]*3.281, 2)) + " ft.)"
+
+        sheet.append([item["name"], item["length"],
+                      item["width"], item["sqm"], item["sqft"], item["rate"], item["amount"]])
+
+    sheet.append([""])
+    sheet.append(['Total sqm', session['proj_info'][2]])
+    sheet.append(['Total sqft', session['proj_info'][3]])
+    sheet.append(['Total amount*', session['proj_info'][4]])
+
+    sheet.append([""])
+    sheet.append(['*Calculated using metrics in sqft.'])
+
+    print(filename)
+    workbook.save(filename=str(filename))
+
+    session.pop('proj_info')
+
+    @after_this_request
+    def remove_file(response):
+        try:
+            os.remove(filename)
+            FileHandler.close()
+        except Exception as error:
+            app.logger.error(
+                "Error removing or closing downloaded file handle", error)
+        return response
+
+    return send_file(filename, as_attachment=True)
+
+
+def download_pdf_view():
+    return

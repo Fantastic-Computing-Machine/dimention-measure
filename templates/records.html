@@ -19,11 +19,11 @@
             <div class="table-responsive">
                 <table class="table table-hover table-sm">
                     <tr class="table text-light row-cols-auto">
-                        <th> Name Tag</th>
-                        <th>Length (in meters)</th>
-                        <th>Width (in meters)</th>
-                        <th>Area- Sqm</th>
-                        <th>Area- Sqft</th>
+                        <th>Tag</th>
+                        <th>Length</th>
+                        <th>Width</th>
+                        <th>Area | Sqm</th>
+                        <th>Area | Sqft</th>
                         <th>Rate</th>
                         <th>Amount</th>
                         <th></th>
@@ -32,10 +32,16 @@
                     {% for item in project_json %}
                     <tr class="table text-light">
                         <td>{{item["name"]|capitalize}}</td>
-                        <td>{{item["length"]}}</td>
-                        <td>{{item["width"]}}</td>
+                        <td>{{item["length"]}} m ({{'%0.2f' | format(item["length"]*3.281 | float) }} ft) </td>
+                        <td>{{item["width"]}} m ({{'%0.2f' | format(item["width"]*3.281 | float) }} ft) </td>
+                        {% if 'N/A' == item["sqm"] %}
+                        <!-- if you change "N/A" here then change the value in js file also -->
                         <td>{{item["sqm"]}}</td>
                         <td>{{item["sqft"]}}</td>
+                        {% else %}
+                        <td>{{'%0.2f' | format(item["sqm"] | float) }}</td>
+                        <td>{{'%0.2f' | format(item["sqft"] | float) }}</td>
+                        {% endif %}
                         <td>{{item["rate"]}}</td>
                         <td>{{item["amount"]}}</td>
                         <td><a
@@ -54,12 +60,12 @@
                                 aria-label=".form-control-sm" required>
                         </th>
                         <th><input class="form-control form-control-sm" id="width" step=".01" name="width" type="number"
-                                placeholder="Width (meter)" oninput="areas()" aria-label=".form-control-sm" required>
+                                placeholder="Width (meter)" oninput="areas()" aria-label=".form-control-sm">
                         </th>
-                        <th><input class="form-control form-control-sm" id="sqm" name="sqm" type="number"
+                        <th><input class="form-control form-control-sm" id="sqm" name="sqm" type="text"
                                 placeholder="Sqm" aria-label=".form-control-sm" readonly>
                         </th>
-                        <th><input class="form-control form-control-sm" id="sqft" name="sqft" type="number"
+                        <th><input class="form-control form-control-sm" id="sqft" name="sqft" type="text"
                                 placeholder="Sqft" aria-label=".form-control-sm" readonly>
                         </th>
                         <th><input class="form-control form-control-sm" id="rate" step=".01" name="rate" type="number"
@@ -74,9 +80,17 @@
                 </table>
             </div>
 
-            <div class="my-2">
-                <button type="submit" class="btn btn-outline-primary"><img
-                        src="https://img.icons8.com/color/20/000000/save--v2.png" /> Add Item</button>
+            <div class="my-2" style="text-align:center">
+                <button type="submit" class="btn btn-primary m-1"><img
+                        src="https://img.icons8.com/ios-filled/25/000000/save--v1.png" /> Add Item</button>
+
+                <a class="btn btn-success m-1" href='{{url_for("download_excel",projectName=projectName)}}'>
+                    <img src="https://img.icons8.com/ios-glyphs/25/000000/ms-excel.png">
+                    Save Excel</a>
+
+                <button class="btn btn-danger m-1" disabled><img
+                        src="https://img.icons8.com/material-rounded/25/000000/pdf.png"> Save pdf</button>
+
             </div>
 
             <div class="px-5">
@@ -84,7 +98,7 @@
                     <p class="card-body" style="text-align:center">
                         Total<b class="fs-5"> {{sum_sqm}} Sqm</b><br>
                         Total<b class="fs-5"> {{sum_sqft}} Sqft</b><br>
-                        Total<b class="fs-5"> Rs. {{sum_amt}} </b>(calculated using area in sqft.)
+                        Total<b class="fs-5"> Rs. {{sum_amt}} </b>(Calculated using metrics in sqft.)
                     </p>
 
                 </div>
