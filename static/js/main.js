@@ -16,18 +16,23 @@ function areas() {
     var sqmtr = first_number * second_number;
     document.getElementById("sqm").value = sqmtr;
 
-    var sqfeet = first_number * second_number * 10.764;
-    document.getElementById("sqft").value = sqfeet;
-
-    var amount = sqfeet * third_number
-    document.getElementById("amount").value = amount;
-
     if (flag == true) {
+        var sqfeet = first_number * second_number * 3.28;
+        document.getElementById("sqft").value = sqfeet;
+
+        var amount = sqfeet * third_number
+        document.getElementById("amount").value = amount;
+
         document.getElementById("sqm").value = 'N/A';
         // <!-- if you change "N/A" here then change the value in records.html file also -->
         document.getElementById("sqft").value = 'N/A';
-    }
+    } else {
+        var sqfeet = first_number * second_number * 10.764;
+        document.getElementById("sqft").value = sqfeet;
 
+        var amount = sqfeet * third_number
+        document.getElementById("amount").value = amount;
+    }
 }
 
 var meter = document.getElementById("mt");
