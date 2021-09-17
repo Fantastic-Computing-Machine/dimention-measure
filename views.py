@@ -184,5 +184,5 @@ def download_excel_view(projectName):
     return send_file(filename, as_attachment=True)
 
 
-def download_pdf_view(projectName):
+def download_pdf_view():
     return
