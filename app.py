@@ -5,10 +5,21 @@ from werkzeug.utils import redirect
 from views import index_view, records_view, delete_view, deleteProject_view
 from views import download_excel_view
 import helper
+# from models import db
+from CONFIG import SECRET_KEY, DATABASE_URI
+
 
 app = Flask(__name__)
 
-app.secret_key = "fantasticcomputingmachine"
+app.config['SQLALCHEMY_DATABASE_URI'] = DATABASE_URI
+app.config['SECRET_KEY'] = SECRET_KEY
+# app.secret_key = SECRET_KEY
+
+
+# def init_db():
+#     db.init_app(app)
+#     db.app = app
+#     db.create_all()
 
 
 @app.route('/', methods=["POST", "GET"])
@@ -63,4 +74,5 @@ def not_found(e):
 
 
 if __name__ == "__main__":
+    # app.init_db()
     app.run(host="0.0.0.0", port=8000, debug=True)
