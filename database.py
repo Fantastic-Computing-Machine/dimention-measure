@@ -1,5 +1,6 @@
 # import pymongo
 from pymongo import MongoClient
+import certifi
 
 import CONFIG
 
@@ -12,7 +13,8 @@ class MongoDatabase:
 
     def __connect(self):
         try:
-            self.client = MongoClient(self.connectionId)
+            self.client = MongoClient(
+                self.connectionId, tlsCAFile=certifi.where())
             db = self.client[self.databaseName]
             collection = db[self.clusterName]
             return collection
