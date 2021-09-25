@@ -8,15 +8,15 @@
 
 <!-- Add new user modal trigger -->
 <button type="button" class="btn btn-light" data-bs-toggle="modal" data-bs-target="#userModal">
-    <img src="https://img.icons8.com/ios/30/000000/wallet--v1.png" />
+    <img src="https://img.icons8.com/ios/30/000000/user--v3.png" />
 </button>
 <!-- Add new user modal trigger -->
 
-<!-- Add new Category modal trigger -->
-<button type="button" class="btn btn-light" data-bs-toggle="modal" data-bs-target="#expenseModal">
-    <img src="https://img.icons8.com/ios/30/000000/user--v3.png" />
+<!-- Add new Expense modal trigger -->
+<button type="button" class="btn btn-light" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+    <img src="https://img.icons8.com/ios/30/000000/wallet--v1.png" />
 </button>
-<!-- Add new Category modal trigger -->
+<!-- Add new Expense modal trigger -->
 
 {% endblock %}
 
@@ -25,24 +25,35 @@
 
 <!-- Add new user modal trigger -->
 <div class="modal fade" id="userModal" tabindex="-1" aria-labelledby="userModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
-        <form action="{{ url_for('expense_urls.expense_home')}}" method="POST" id="userModal">
+    <div class="modal-dialog">
+        <form action="" method="POST" id="userModal">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="userModalLabel">New Payee</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <div class="form-floating">
-                        <input type="text" class="form-control" id="floatingPassword"
-                            placeholder="Eg: Carpenter, plumbing...">
-                        <label for="floatingPassword">Payee Name</label>
+
+                    <div class="input-group my-3">
+                        <input type="text" class="form-control" id="newPayeeName" name="newPayeeName" ,
+                            aria-label="Recipient's username" aria-describedby="button-addon2">
+                        <button class="btn btn-outline-success" type="submit" name="userModal" value="userModal"
+                            id="userModal" id="button-addon2">Add</button>
                     </div>
-                </div>
-                <div class="modal-footer">
-                    <!-- <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button> -->
-                    <button type="submit" name="userModal" value="userModal" class="btn btn-success">Save
-                    </button>
+
+                    <div class="my-2">
+                        <div class="text-center">
+                            <a class="btn btn-primary" data-bs-toggle="collapse" href="#collapseExample" role="button"
+                                aria-expanded="false" aria-controls="collapseExample">Show Payee</a>
+                        </div>
+                        <div class="collapse my-2" id="collapseExample">
+                            <ul class="list-group">
+                                {% for item in payee_list %}
+                                <li class="list-group-item">{{item.get('payeeName')}}</li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </div>
                 </div>
             </div>
         </form>
@@ -50,75 +61,114 @@
 </div>
 <!-- Add new user modal trigger -->
 
-<!-- Add new Category modal -->
-<div class="modal fade" id="expenseModal" tabindex="-1" aria-labelledby="expenseModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
-        <form action="{{ url_for('expense_urls.expense_home')}}" method="POST" id="expense">
+<!-- Add new Expense modal -->
 
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="expenseModalLabel">Modal title</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    ...
-                </div>
-                <div class="modal-footer">
-                    <!-- <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button> -->
-                    <button type="submit" name="expenseModal" value="expenseModal" class="btn btn-success">Save
-                    </button>
+<div class="modal fade" id="staticBackdrop" tabindex="-1" aria-labelledby="expenseModalLabel" width="75%"
+    aria-hidden="true">
+    <div class="modal-dialog">
+        <form action="" method="POST" id="expense">
+            <div class="mx-auto">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="staticBackdropLabel">Add Expense</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+
+                    <div class="modal-body">
+                        <div class="my-3 mx-4">
+                            <select class="form-select" name="payee_list" aria-label="Default select example">
+                                <option selected>Select Payee</option>
+                                {% for item in payee_list %}
+                                <option value="{{item.get('payeeName')}}">{{item.get('payeeName')}}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <div class="my-3 mx-4">
+                            <div class="form-floating">
+                                <input type="number" step=".01" class="form-control" id="amount" name="amount">
+                                <label for="newPayeeName">Amount</label>
+                            </div>
+                        </div>
+                        <div class="my-3 mx-4">
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="status_radio" id="paidRadio"
+                                    value="Paid">
+                                <label class="badge bg-danger rounded-pill" for="paidRadio">Paid</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="status_radio" id="recievedradio"
+                                    value="Recieved">
+                                <label class="badge bg-success rounded-pill" for="recievedradio">Recieved</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" name="expenseModal" value="expenseModal" id="expenseModal"
+                            class="btn btn-success">Save</button>
+                    </div>
                 </div>
             </div>
         </form>
     </div>
 </div>
-<!-- Add new Category modal -->
+<!-- Add new Expense modal -->
 
 
 <div class="container px-5 pb-4">
     <div class="text-light py-2 display-4">My Expences</div>
-
 
     <div class="container col-xxl-8 px-4 py-5">
         <div class="row flex-lg-row-reverse align-items-center g-5 py-5">
 
             <div class="col-10 col-sm-8 col-lg-6">
 
-                <div class="card my-2 index_project_card">
+                <div class="card my-2">
                     <div class="card-body">
-
                         <!-- <img src="static/img/link_shortener.svg" class="d-block user-select-none mx-lg-auto img-fluid"
                             alt="Bootstrap Themes" width="700" height="500" loading="lazy"> -->
                     </div>
-
                 </div>
             </div>
 
 
             <div class="col-lg-6">
-                <div class="card index_project_card">
+                <div class="card">
                     <div class="card-body">
                         <!-- <h5 class="card-title"> </h5> -->
 
+                        <ol class="list-group list-group-numbered">
+                            {% for item in expense_list %}
+                            <li class="list-group-item d-flex justify-content-between align-items-start">
+                                <div class="ms-2 me-auto">
+                                    <div class="fw-bold">{{item.get('payee') | capitalize}}</div>
+                                    {{item.get('date_created')}}
+                                </div>
+                                {% if item.get('payment_status')=='Paid' %}
+                                <span class="badge bg-success rounded-pill">{{item.get('amount')}}</span>
+                                {% else %}
+                                <span class="badge bg-danger rounded-pill">{{item.get('amount')}}</span>
+                                {% endif %}
+                            </li>
+                            {% endfor %}
+                        </ol>
 
-                        <h1 class="display-4 user-select-none fw-bold lh-1 text-light mb-3">Pancake- Tiny URL's</h1>
+                        <!-- <h1 class="display-4 user-select-none fw-bold lh-1 text-light mb-3">Pancake- Tiny URL's</h1>
                         <p class="lead user-select-none text-light">
+                            Quickly create and manage your tiny links and start earning form the links.
+                        </p> -->
+                        <!-- <div class="d-grid gap-2 pt-2 d-md-flex justify-content-md-start"> -->
 
-                            Quickly create and manage your tiny links and start earning form the links.</p>
-                        <div class="d-grid gap-2 pt-2 d-md-flex justify-content-md-start">
-                            <input class="form-control form-control-lg" type="text" placeholder="www.pcake.url/xxxxxx"
-                                aria-label=".form-control-lg example">
-
-                            <button type="button" class="btn btn-primary btn-lg px-4 me-md-2">Generate</button>
-                        </div>
                     </div>
-
                 </div>
             </div>
 
         </div>
     </div>
-
 </div>
+
+<!-- </div> -->
 
 {% endblock %}

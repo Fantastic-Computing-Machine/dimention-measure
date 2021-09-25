@@ -10,6 +10,6 @@ def expense_home():
     return expense_home_view()
 
 
-@expense_urls.route('/expense_home/success/', methods=["POST", "GET"])
+@expense_urls.route('/expense_home/success/')
 def expense_success():
-    return redirect(url_for('expense_home'))
+    return redirect(url_for('expense_urls.expense_home'))
