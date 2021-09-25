@@ -27,3 +27,19 @@ Deploying ML models
         FLASK_APP=app.py FLASK_ENV=development flask run
 
 #
+
+CREATE TABLE PAYEES(
+	payeeId int not null auto_increment,
+        payeeName varchar(220) not null unique,
+        primary key(payeeId)
+);
+
+create table expenses(
+	expId int not null auto_increment,
+        payee varchar(220) not null,
+        amount float,
+        date_created datetime,
+        payment_status varchar(10),
+        primary key(expId),
+        foreign key(payee) references payees(payeeName)
+);
