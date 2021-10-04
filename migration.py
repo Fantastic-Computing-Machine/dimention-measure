@@ -1,10 +1,9 @@
 # to migrate data from mongodb to mysql database
 
-import sql
-import database
+from database import MongoDatabase, SqlDatabase
 
-mongo_obj = database.MongoDatabase()
-sql_obj = sql.CrudDatabase()
+mongo_obj = MongoDatabase()
+sql_obj = SqlDatabase()
 
 
 def fetch_tables(query='SHOW TABLES;'):

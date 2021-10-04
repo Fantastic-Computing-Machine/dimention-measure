@@ -4,6 +4,8 @@ from werkzeug.utils import redirect
 
 from views import index_view, records_view, delete_view, deleteProject_view
 from views import download_excel_view
+
+from expense_urls import expense_urls
 import helper
 # from models import db
 from CONFIG import SECRET_KEY, DATABASE_URI
@@ -11,15 +13,11 @@ from CONFIG import SECRET_KEY, DATABASE_URI
 
 app = Flask(__name__)
 
+app.register_blueprint(expense_urls, url_prefix="/expense/")
+
 app.config['SQLALCHEMY_DATABASE_URI'] = DATABASE_URI
 app.config['SECRET_KEY'] = SECRET_KEY
 # app.secret_key = SECRET_KEY
-
-
-# def init_db():
-#     db.init_app(app)
-#     db.app = app
-#     db.create_all()
 
 
 @app.route('/', methods=["POST", "GET"])
