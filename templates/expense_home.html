@@ -34,10 +34,8 @@
                 </div>
                 <div class="modal-body">
 
-                    <!-- <div class="input-group my-3"> -->
                     <input type="text" class="form-control my-2" id="newPayeeName" name="newPayeeName" ,
                         aria-label="Recipient's username" aria-describedby="button-addon2" placeholder="Payee name">
-                    <!-- </div> -->
 
                     <div class="mb-3">
                         <textarea class="form-control my-2" id="exampleFormControlTextarea1" name="about" rows="3"
@@ -67,8 +65,15 @@
                                         </div>
                                         <div>
                                             <span class="align-items-start">
-                                                <img src="https://img.icons8.com/ios/20/000000/edit--v2.png" />
-                                                <img src="https://img.icons8.com/ios/20/000000/delete-forever.png" />
+                                                <a class="btn btn-light"
+                                                    href="{{ url_for('expense_urls.payee_update', payee_id=item.get('payeeId')) }}">
+                                                    <img src="https://img.icons8.com/ios/20/000000/edit--v2.png" />
+                                                </a>
+                                                <a class="btn btn-light"
+                                                    href="{{ url_for('expense_urls.payee_delete', payee_id=item.get('payeeId')) }}">
+                                                    <img
+                                                        src="https://img.icons8.com/ios/20/000000/delete-forever.png" />
+                                                </a>
                                             </span>
                                         </div>
                                     </div>
@@ -141,60 +146,176 @@
 <!-- Add new Expense modal -->
 
 
-<div class="container px-3 pb-4">
+
+
+<div class="container px-3">
     <div class="text-light py-2 display-4">My Expences</div>
 
-    <div class="row flex-lg-row-reverse g-5 py-5">
-        <!-- align-items-center  -->
-        <div class="col-lg-6">
-
-            <div class="card">
+    <div class="row flex-md-row-reverse py-3" dir="rtl">
+        <div class="col-md-6 col_height">
+            <!-- TOTAL TRANSACTIONS -->
+            <div class="order-md-1 card my-2">
                 <div class="card-body">
-                    <dl class="row">
-                        <div class="d-flex justify-content-between">
-                            <dt class="">Sum Paid</dt>
-                            <dd class="">Rs. {{sum_result[0].get('sum_paid') | round(2)}}</dd>
-                        </div>
-
-                        <div class="d-flex justify-content-between">
-                            <dt class="">Sum Recieved</dt>
-                            <dd class="">Rs. {{sum_result[0].get('sum_gained')}}</dd>
-                        </div>
-                        <!-- col-sm-7 -->
-                    </dl>
+                    <h4>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            Total Entries:
+                            <span class="badge bg-primary"># {{expense_list|length}}</span>
+                        </li>
+                    </h4>
                 </div>
             </div>
+            <!-- TOTAL TRANSACTIONS -->
+            <!-- SUM CARD -->
+            <div class="order-md-2 card my-2">
+                <div class="card-body">
+                    <ul class="list-group">
+                        <h5>
+                            <li class="list-group-item d-flex justify-content-between list-group-item-danger">
+                                Sum Paid
+                                <span class="badge bg-danger">₹ {{sum_result[0].get('sum_paid') |
+                                    round(2)}}</span>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between list-group-item-success">
+                                Sum Recieved
+                                <span class="badge bg-success">₹ {{sum_result[0].get('sum_gained')}}</span>
+                            </li>
+                        </h5>
+                    </ul>
+                </div>
+            </div>
+            <!-- SUM CARD -->
+            <!-- PAYEES CARD -->
+            <div class="order-md-4 card my-2">
+                <div class="card-body payee_card">
+                    <ul class="list-group">
+                        {% for item in payee_list %}
+                        <li class="list-group-item">
+
+                            <div class="d-flex justify-content-between">
+                                <div>
+                                    <a href="">
+                                        <b>{{item.get('payeeName')| capitalize}}</b>
+                                    </a>
+
+                                    {% if item.get('about')!=None %}
+                                    : {{item.get('about')}}
+                                    {% endif %}
+                                </div>
+                                <div>
+                                    <span class="align-items-start">
+                                        <a class="btn btn-light"
+                                            href="{{ url_for('expense_urls.payee_update', payee_id=item.get('payeeId')) }}">
+                                            <img src="https://img.icons8.com/ios/20/000000/edit--v2.png" />
+                                        </a>
+                                        <a class="btn btn-light"
+                                            href="{{ url_for('expense_urls.payee_delete', payee_id=item.get('payeeId')) }}">
+                                            <img src="https://img.icons8.com/ios/20/000000/delete-forever.png" />
+                                        </a>
+                                    </span>
+                                </div>
+                            </div>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+            <!-- PAYEES CARD -->
         </div>
 
 
-        <div class="col-lg-6">
-            <div class="card" style="min-height: 20rem;">
-                <div class="card-body">
+        <!-- PAYEE LIST CARD  -->
+        <div class="col-md-6 col_height">
+
+            <div class="order-md-3 card my-2">
+                <div class="card-body scroll_card_expense">
 
                     <ol class="list-group list-group-numbered">
-                        {% for item in expense_list %}
-                        <li class="list-group-item d-flex justify-content-between align-items-start">
+                        {% for item in expense_list[::-1] %}
+                        <!-- PAYEE LIST -->
+                        <li class="list-group-item d-flex justify-content-between align-items-start"
+                            data-bs-toggle="modal" data-bs-target="#{{item.get('payee')}}{{item.get('expId')}}">
                             <div class="ms-2 me-auto">
                                 <div class="fw-bold">{{item.get('payee') | capitalize}}</div>
-                                {{item.get('date_created')}}
+                                <span class="badge bg-secondary">
+                                    {{item.get('date_created').date().strftime('%b %d, %Y')}}</span>
                             </div>
-                            {% if item.get('payment_status')=='Paid' %}
-                            <span class="badge bg-danger rounded-pill">{{item.get('amount')}}</span>
-                            {% else %}
-                            <span class="badge bg-success rounded-pill">{{item.get('amount')}}</span>
-                            {% endif %}
+                            <h4>
+                                {% if item.get('payment_status')=='Paid' %}
+                                <span class="badge bg-danger">₹ {{item.get('amount')}}</span>
+                                {% else %}
+                                <span class="badge bg-success">₹ {{item.get('amount')}}</span>
+                                {% endif %}
+                            </h4>
                         </li>
+                        <!-- PAYEE LIST -->
+
+                        <!-- PAYEE MODAL -->
+                        <div class="modal fade" id="{{item.get('payee')}}{{item.get('expId')}}" tabindex="-1"
+                            aria-labelledby="{{item.get('payee')}}{{item.get('expId')}}Label" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <!-- PAYEE MODAL HEADER -->
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="{{item.get('payee')}}{{item.get('expId')}}Label">
+                                            {{item.get('payee') | capitalize}}</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                            aria-label="Close"></button>
+                                    </div>
+                                    <!-- PAYEE MODAL HEADER -->
+
+                                    <!-- PAYEE MODAL BODY -->
+                                    <form action="" method="POST" id="expense_update">
+
+                                        <div class="modal-body">
+                                            <div class="my-3 mx-4">
+                                                <select class="form-select" name="payee_list"
+                                                    aria-label="Default select example">
+                                                    <option value="{{item.get('payee')}}" selected>
+                                                        {{item.get('payee')}}
+                                                    </option>
+                                                    {% for payee in payee_list %}
+                                                    <option value="{{payee.get('payeeName')}}">
+                                                        {{payee.get('payeeName')}}
+                                                    </option>
+                                                    {% endfor %}
+                                                </select>
+                                            </div>
+                                            <div class="my-3 mx-4">
+                                                <div class="form-floating">
+                                                    <input type="number" step=".01" class="form-control" id="amount"
+                                                        value="{{item.get('amount')}}" name="amount">
+                                                    <label for="newPayeeName">Amount</label>
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <input class="form-control" type="text" name='expId' id='expId'
+                                                    value="{{item.get('expId')}}" hidden />
+                                            </div>
+                                        </div>
+                                        <!-- PAYEE MODAL BODY -->
+
+                                        <!-- PAYEE MODAL FOOTER -->
+                                        <div class="modal-footer">
+                                            <a type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</a>
+                                            <button type="submit" class="btn btn-primary" name="expense_update"
+                                                value="expense_update" id="expense_update">Save
+                                                changes</button>
+                                            <a class="btn btn-danger"
+                                                href="{{ url_for('expense_urls.expense_delete', expId=item.get('expId')) }}">Delete</a>
+                                        </div>
+                                        <!-- PAYEE MODAL FOOTER -->
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- PAYEE MODAL -->
                         {% endfor %}
                     </ol>
                 </div>
             </div>
         </div>
-
-
+        <!-- PAYEE LIST CARD  -->
     </div>
 </div>
-<!-- </div> -->
-
-<!-- </div> -->
 
 {% endblock %}

@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+
+
+{% block body %}
+
+<div class="container px-3">
+    <div class="text-light py-2 display-4">{{payee|capitalize}}</div>
+
+
+    <div class="row flex-md-row py-3">
+        <div class="col col_height">
+
+            <div class=" card my-2">
+                <div class="card-body">
+                    {% for item in result %}
+                    <li class="list-group-item d-flex justify-content-between ">
+
+                        <div class="d-flex justify-content-between">
+
+                            <b>{{item.get('date_created').date().strftime('%b %d, %Y')}}</b>
+
+                            <span class="badge bg-primary">{{item.get('amount')}}</span>
+
+                            <div>
+
+                            </div>
+                        </div>
+                    </li>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}

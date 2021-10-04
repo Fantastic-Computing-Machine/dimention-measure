@@ -29,3 +29,18 @@
   bottom: 10px;
   right: 10px;
 }
+
+.scroll_card_expense {
+  overflow-y: scroll;
+  height: 700px;
+}
+
+.payee_card {
+  overflow-y: scroll;
+  max-height: 465px;
+}
+
+.col_height {
+  max-height: 800px;
+  direction: ltr;
+}
