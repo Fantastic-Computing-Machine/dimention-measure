@@ -1,4 +1,5 @@
 from flask import request, render_template, redirect, url_for
+import time
 from datetime import datetime
 
 from database import SqlDatabase
@@ -7,7 +8,7 @@ from database import SqlDatabase
 def expense_home_view():
     sql_obj = SqlDatabase()
 
-    payee_list_query = "SELECT * FROM payees;"
+    payee_list_query = "SELECT payeeId, payeeName FROM payees;"
     payee_list = sql_obj.fetchRead(payee_list_query)
     print("PAYEE LIST: ", payee_list)
     expense_list_query = "SELECT * FROM expenses;"
@@ -46,6 +47,34 @@ def expense_home_view():
 
             return redirect(url_for('expense_urls.expense_success'))
 
+        elif "expense_update" in request.form:
+            expId = request.form.get('expId')
+            amount_update = request.form.get('amount')
+            payee_update = request.form.get('payee_list')
+            ts = time.time()
+            timestamp = datetime.fromtimestamp(
+                ts).strftime('%Y-%m-%d %H:%M:%S')
+            print(timestamp)
+
+            print(expId, amount_update, payee_update)
+            update_query = "UPDATE expenses SET amount=%f, payee='%s', date_created='%s' WHERE expId=%i;" % (
+                float(amount_update), str(payee_update), str(timestamp), int(expId))
+
+            print(update_query)
+            update_value = sql_obj.executeWrite(update_query)
+            if update_value is False:
+                print("FAILED")
+                # Flashing message (unsuccessful)
+                return render_template("error_404.html")
+            print("TRUE")
+            return redirect(url_for('expense_urls.expense_success'))
+
+        elif "payee_update" in request.form:
+            payee_update = request.form.get('payee_list')
+            print(amount_update, payee_update)
+
+            return redirect(url_for('expense_urls.expense_success'))
+
     return render_template('expense_home.html', payee_list=payee_list, expense_list=expense_list, sum_result=sum_result)
 
 
@@ -55,7 +84,29 @@ def payee_update_view(payee_id):
 
 def payee_delete_view(payee_id):
     sql_obj = SqlDatabase()
-    delete_payee_query = "DELETE FROM 'payees' WHERE payeeId='%i'" % (
+    delete_payee_query = "DELETE FROM payees WHERE payeeId=%i" % (
         int(payee_id))
     delete_payee = sql_obj.executeWrite(delete_payee_query)
+    print("******DELETE STATUS: ", delete_payee)
     return redirect(url_for('expense_urls.expense_home'))
+
+
+def expense_delete_view(expId):
+    sql_obj = SqlDatabase()
+    delete_payee_query = "DELETE FROM expenses WHERE expId=%i" % (
+        int(expId))
+    delete_payee = sql_obj.executeWrite(delete_payee_query)
+    print("******DELETE STATUS: ", delete_payee)
+    return redirect(url_for('expense_urls.expense_home'))
+
+
+def expense_update_view(expId):
+    return redirect(url_for('expense_urls.expense_home'))
+
+
+def payee_expense_view(payee):
+    sql_obj = SqlDatabase()
+    query = "select * from expenses where payee='%s';" % (str(payee))
+    result = sql_obj.fetchRead(query)
+    print(query, result)
+    return render_template("payee_exp.html", result=result, payee=payee)
