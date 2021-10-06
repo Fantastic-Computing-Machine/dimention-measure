@@ -1,4 +1,4 @@
-# to migrate data from mongodb to mysql database
+# to migrate dimention-data from mongodb to mysql database
 
 from database import MongoDatabase, SqlDatabase
 
@@ -30,30 +30,35 @@ def check_sql_tables():
         if 'dimention' in tables_to_create:
             query = '''create table dimention(dimid int not null auto_increment, 
                                               tag varchar(225) not null, 
-                                              length decimal(10,2) not null, 
-                                              width decimal(10,2), 
-                                              area_sqm decimal(10,2), 
-                                              area_sqft decimal(10,2), 
-                                              rate decimal(10,2), 
-                                              amount decimal(10,2), 
+                                              length float not null, 
+                                              width float, 
+                                              area_sqm float, 
+                                              area_sqft float, 
+                                              rate float, 
+                                              amount float, 
                                               PID int not null, 
                                               primary key(dimid), 
                                               foreign key(PID) references projects(PID));'''
             sql_obj.executeWrite(query)
             print("CREATED DIMENTION TABLE...")
-
     return True
 
 
 def migrate():
-    if check_sql_tables():
-
+    if True:
         for item in mongo_obj.find():
+            print(item)
             projectName = item["projectName"]
+            add_proj_to_db_query = "insert into projects(PNAME) values('%s');" % (
+                str(projectName))
+            print(add_proj_to_db_query)
+            sql_obj.executeWrite(add_proj_to_db_query)
+
             fetch_pid_query = "select pid from projects where pname='%s';" % (
                 projectName)
+            print(fetch_pid_query)
 
-            project_id = sql_obj.fetchRead(fetch_pid_query)[0]['pid']
+            project_id = sql_obj.fetchRead(fetch_pid_query)[0]["pid"]
             print(projectName, project_id)
 
             for dim in range(len(item["dims"])):
@@ -76,4 +81,4 @@ def migrate():
             print("-->###<--")
 
 
-# migrate()
+migrate()
