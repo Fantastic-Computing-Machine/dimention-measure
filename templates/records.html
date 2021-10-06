@@ -13,99 +13,274 @@
 {% block body %}
 
 <div class="container pt-2 px-3 pb-4">
-    <h2 class="py-2 text-light">{{projectName|capitalize}}</h2>
-    <div>
-        <form action="" method="POST" name="add_skills" id="add_skills">
-            <div class="table-responsive">
-                <table class="table table-hover table-sm">
-                    <tr class="table text-light row-cols-auto">
-                        <th>Tag</th>
-                        <th>Length</th>
-                        <th>Width</th>
-                        <th>Area | Sqm</th>
-                        <th>Area | Sqft</th>
-                        <th>Rate</th>
-                        <th>Amount</th>
-                        <th></th>
-                    </tr>
-                    {% set ns = namespace(count=0) %}
-                    {% for item in project_json %}
-                    <tr class="table text-light">
-                        <td>{{item["name"]|capitalize}}</td>
-                        <td>{{item["length"]}} m ({{'%0.2f' | format(item["length"]*3.281 | float) }} ft) </td>
-                        <td>{{item["width"]}} m ({{'%0.2f' | format(item["width"]*3.281 | float) }} ft) </td>
-                        {% if 'N/A' == item["sqm"] %}
-                        <!-- if you change "N/A" here then change the value in js file also -->
-                        <td>{{item["sqm"]}}</td>
-                        <td>{{item["sqft"]}}</td>
-                        {% else %}
-                        <td>{{'%0.2f' | format(item["sqm"] | float) }}</td>
-                        <td>{{'%0.2f' | format(item["sqft"] | float) }}</td>
-                        {% endif %}
-                        <td>{{item["rate"]}}</td>
-                        <td>{{item["amount"]}}</td>
-                        <td><a
-                                href='{{url_for("delete",projectName = projectName, rowNumber=project_json[ns.count]["dimId"])}}'><img
-                                    src="https://img.icons8.com/cotton/25/000000/delete-sign--v2.png" /></a></td>
-                    </tr>
-                    {% set ns.count = ns.count + 1%}
-                    {% endfor %}
+    <div class="d-flex justify-content-between align-middle">
+        <h2 class="py-2 text-light">
+            {{projectName|capitalize}}
+        </h2>
+        <span>
+            <!-- <button class="btn btn-light" style="z-index:2;" data-bs-toggle="modal" data-bs-target="#updateProject">
+                <img src="https://img.icons8.com/ios/20/000000/edit.png" />
+            </button> -->
 
-                    <tr>
-                        <th><input class="form-control form-control-sm" id="name" name="name" type="text"
-                                placeholder="Tag it" aria-label=".form-control-sm" required>
-                        </th>
-                        <th><input class="form-control form-control-sm" id="length" step=".01" name="length"
-                                type="number" placeholder="Length (meter)" oninput="areas()"
-                                aria-label=".form-control-sm" required>
-                        </th>
-                        <th><input class="form-control form-control-sm" id="width" step=".01" name="width" type="number"
-                                placeholder="Width (meter)" oninput="areas()" aria-label=".form-control-sm">
-                        </th>
-                        <th><input class="form-control form-control-sm" id="sqm" name="sqm" type="text"
-                                placeholder="Sqm" aria-label=".form-control-sm" readonly>
-                        </th>
-                        <th><input class="form-control form-control-sm" id="sqft" name="sqft" type="text"
-                                placeholder="Sqft" aria-label=".form-control-sm" readonly>
-                        </th>
-                        <th><input class="form-control form-control-sm" id="rate" step=".01" name="rate" type="number"
-                                placeholder="Rate" oninput="areas()" aria-label=".form-control-sm">
-                        </th>
-                        <th><input class="form-control form-control-sm" id="amount" name="amount" type="number"
-                                placeholder="Amount" aria-label=".form-control-sm" readonly>
-                        </th>
-                        <td></td>
-                    </tr>
-
-                </table>
-            </div>
-
-            <div class="my-2" style="text-align:center">
-                <button type="submit" class="btn btn-primary m-1"><img
-                        src="https://img.icons8.com/ios-filled/25/000000/save--v1.png" /> Add Item</button>
-
-                <a class="btn btn-success m-1" href='{{url_for("download_excel",projectName=projectName)}}'>
-                    <img src="https://img.icons8.com/ios-glyphs/25/000000/ms-excel.png">
-                    Save Excel</a>
-
-                <button class="btn btn-danger m-1" disabled><img
-                        src="https://img.icons8.com/material-rounded/25/000000/pdf.png"> Save pdf</button>
-
-            </div>
-
-            <div class="px-5">
-                <div class="record_total_card mt-5">
-                    <p class="card-body" style="text-align:center">
-                        Total<b class="fs-5"> {{sum_sqm}} Sqm</b><br>
-                        Total<b class="fs-5"> {{sum_sqft}} Sqft</b><br>
-                        Total<b class="fs-5"> Rs. {{sum_amt}} </b>(Calculated using metrics in sqft.)
-                    </p>
-
+            <!-- project update Modal -->
+            <div class="modal fade" id="updateProject" tabindex="-1" aria-labelledby="updateProjectLabel"
+                aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="updateProjectLabel">Update {{projectName|capitalize}}</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            ...
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-primary">Save changes</button>
+                        </div>
+                    </div>
                 </div>
             </div>
 
-        </form>
+            <a class="btn btn-light" style="z-index:2;" href="{{ url_for('deleteProject',projectName = projectName)}}">
+                <img src="https://img.icons8.com/color/20/000000/delete-forever.png" />
+            </a>
+        </span>
     </div>
+    <form action="" method="POST" name="add_skills" id="add_skills">
+        <div class="card">
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover table-sm">
+                        <thead class="table-primary align-middle row-cols-auto">
+                            <th>Tag</th>
+                            <th>Length</th>
+                            <th>Width</th>
+                            <th style="white-space: nowrap">Area | Sqm</th>
+                            <th style="white-space: nowrap">Area | Sqft</th>
+                            <th>Rate</th>
+                            <th>Amount</th>
+                            <th>Action</th>
+                        </thead>
+
+                        {% for item in project_json %}
+                        <tr class="table align-middle">
+                            <td style="white-space: nowrap">{{item["tag"]|capitalize}}</td>
+                            <td style="white-space: nowrap">{{item["length"]}} m ({{'%0.2f' |
+                                format(item["length"]*3.281 |
+                                float) }} ft) </td>
+                            <td style="white-space: nowrap">{{item["width"]}} m ({{'%0.2f' |
+                                format(item["width"]*3.281 |
+                                float) }} ft) </td>
+                            {% if 'N/A' == item["sqm"] %}
+                            <!-- if you change "N/A" here then change the value in js file also -->
+                            <td>{{item["area_sqm"]}}</td>
+                            <td>{{item["area_sqft"]}}</td>
+                            {% else %}
+                            <td>{{'%0.2f' | format(item["area_sqm"] | float) }}</td>
+                            <td>{{'%0.2f' | format(item["area_sqft"] | float) }}</td>
+                            {% endif %}
+                            <td>{{item["rate"]}}</td>
+                            <td>{{item["amount"]}}</td>
+                            <td class="d-flex justify-content-between">
+                                <!-- <a class="align-bottom" href=''>
+                                    <img src="https://img.icons8.com/ios/20/000000/edit-row.png" />
+                                </a> -->
+
+                                <!-- update dimention modal -->
+                                <a type="button" class="align-bottom" data-bs-toggle="modal"
+                                    data-bs-target="#updateDimention">
+                                    <img src="https://img.icons8.com/ios/20/000000/edit-row.png" />
+                                </a>
+
+                                <!-- update dimention Modal -->
+                                <div class="modal fade" id="updateDimention" tabindex="-1"
+                                    aria-labelledby="updateDimentionLabel" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="updateDimentionLabel">Update
+                                                    {{item["tag"]|capitalize}}</h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                    aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <div class="align-middle">
+                                                    <div class="my-1"><input class="form-control" id="name" name="name"
+                                                            type="text" placeholder="Tag" aria-label=".form-control-sm"
+                                                            required>
+                                                    </div>
+                                                    <div class="my-1"><input class="form-control" id="length" step=".01"
+                                                            name="length" type="number" placeholder="Length (meter)"
+                                                            oninput="areas()" aria-label=".form-control-sm" required>
+                                                    </div>
+                                                    <div class="my-1"><input class="form-control" id="width" step=".01"
+                                                            name="width" type="number" placeholder="Width (meter)"
+                                                            oninput="areas()" aria-label=".form-control-sm">
+                                                    </div>
+                                                    <div class="my-1"><input class="form-control" id="sqm" name="sqm"
+                                                            type="text" placeholder="Sqm" aria-label=".form-control-sm"
+                                                            readonly>
+                                                    </div>
+                                                    <div class="my-1"><input class="form-control" id="sqft" name="sqft"
+                                                            type="text" placeholder="Sqft" aria-label=".form-control-sm"
+                                                            readonly>
+                                                    </div>
+                                                    <div class="my-1"><input class="form-control" id="rate" step=".01"
+                                                            name="rate" type="number" placeholder="Rate"
+                                                            oninput="areas()" aria-label=".form-control-sm">
+                                                    </div>
+                                                    <div class="my-1"><input class="form-control" id="amount"
+                                                            name="amount" type="number" placeholder="Amount"
+                                                            aria-label=".form-control-sm" readonly>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary"
+                                                    data-bs-dismiss="modal">Close</button>
+                                                <button type="button" class="btn btn-primary">Save changes</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                                <a class="align-bottom"
+                                    href='{{url_for("delete",projectName=projectName, pid=pid, rowNumber=item["dimid"])}}'>
+                                    <img src="https://img.icons8.com/ios/20/000000/delete-sign--v1.png" /></a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+
+                        <!-- <tfoot class="align-middle"> -->
+
+
+                        <!-- Button trigger modal -->
+
+                        <!-- Modal -->
+                        <div class="modal fade" id="newDimention" tabindex="-1" aria-labelledby="newDimentionLabel"
+                            aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="newDimentionLabel">New Dimention</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                            aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="my-2"><input class="form-control" id="name" name="name" type="text"
+                                                placeholder="Tag" aria-label=".form-control-sm" required>
+                                        </div>
+                                        <div class="my-2"><input class="form-control" id="length" step=".01"
+                                                name="length" type="number" placeholder="Length (meter)"
+                                                oninput="areas()" aria-label=".form-control-sm" required>
+                                        </div>
+                                        <div class="my-2"><input class="form-control" id="width" step=".01" name="width"
+                                                type="number" placeholder="Width (meter)" oninput="areas()"
+                                                aria-label=".form-control-sm">
+                                        </div>
+                                        <div class="my-2"><input class="form-control" id="sqm" name="sqm" type="text"
+                                                placeholder="Sqm" aria-label=".form-control-sm" readonly>
+                                        </div>
+                                        <div class="my-2"><input class="form-control" id="sqft" name="sqft" type="text"
+                                                placeholder="Sqft" aria-label=".form-control-sm" readonly>
+                                        </div>
+                                        <div class="my-2"><input class="form-control" id="rate" step=".01" name="rate"
+                                                type="number" placeholder="Rate" oninput="areas()"
+                                                aria-label=".form-control-sm">
+                                        </div>
+                                        <div class="my-2"><input class="form-control" id="amount" name="amount"
+                                                type="number" placeholder="Amount" aria-label=".form-control-sm"
+                                                readonly>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary"
+                                            data-bs-dismiss="modal">Close</button>
+                                        <button type="submit" class="btn btn-primary m-1">
+                                            <img src="https://img.icons8.com/ios-filled/25/000000/save--v1.png" />
+                                            Add Item</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 
+                            <th><input class="form-control form-control-sm" id="name" name="name" type="text"
+                                    placeholder="Tag" aria-label=".form-control-sm" required>
+                            </th>
+                            <th><input class="form-control form-control-sm" id="length" step=".01" name="length"
+                                    type="number" placeholder="Length (meter)" oninput="areas()"
+                                    aria-label=".form-control-sm" required>
+                            </th>
+                            <th><input class="form-control form-control-sm" id="width" step=".01" name="width"
+                                    type="number" placeholder="Width (meter)" oninput="areas()"
+                                    aria-label=".form-control-sm">
+                            </th>
+                            <th><input class="form-control form-control-sm" id="sqm" name="sqm" type="text"
+                                    placeholder="Sqm" aria-label=".form-control-sm" readonly>
+                            </th>
+                            <th><input class="form-control form-control-sm" id="sqft" name="sqft" type="text"
+                                    placeholder="Sqft" aria-label=".form-control-sm" readonly>
+                            </th>
+                            <th><input class="form-control form-control-sm" id="rate" step=".01" name="rate"
+                                    type="number" placeholder="Rate" oninput="areas()" aria-label=".form-control-sm">
+                            </th>
+                            <th><input class="form-control form-control-sm" id="amount" name="amount" type="number"
+                                    placeholder="Amount" aria-label=".form-control-sm" readonly>
+                            </th>
+                            <td></td> -->
+
+                        <!-- </tfoot> -->
+
+                    </table>
+                </div>
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#newDimention">
+                    <img class="px-1" src="https://img.icons8.com/ios-filled/25/000000/save--v1.png" />ADD DIMENTION
+                </button>
+
+            </div>
+        </div>
+
+        <div class="row flex-md-row py-3">
+            <div class="col-md-6">
+                <div class="card my-3" style="text-align:center; min-height: 140px;">
+                    <div class="card-body align-middle" style="text-align:center;">
+                        <!-- <button type="submit" class="btn btn-primary m-1">
+                            <img src="https://img.icons8.com/ios-filled/25/000000/save--v1.png" /> Add Item</button>
+
+                        <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                            data-bs-target="#newDimention">
+                            ADD DIMENTION
+                        </button> -->
+
+                        <a class="btn btn-success m-1" href='{{url_for("download_excel",projectName=projectName)}}'>
+                            <img src="https://img.icons8.com/ios-glyphs/25/000000/ms-excel.png">
+                            Save Excel</a>
+
+                        <button class="btn btn-danger m-1" disabled>
+                            <img src="https://img.icons8.com/material-rounded/25/000000/pdf.png"> Save pdf</button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6" style="height: 200px;">
+                <div class="card my-3">
+                    <div class="card-body">
+                        <p style="text-align:center">
+                            Total<b class="fs-5"> {{sum_sqm}} Sqm</b><br>
+                            Total<b class="fs-5"> {{sum_sqft}} Sqft</b><br>
+                            Total<b class="fs-5"> Rs. {{sum_amt}} </b>(Calculated using metrics in sqft.)
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+
+
 </div>
+
+<!-- {{project_json}} -->
 
 {% endblock %}
