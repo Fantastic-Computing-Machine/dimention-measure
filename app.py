@@ -7,7 +7,7 @@ from views import download_excel_view
 
 from expense_urls import expense_urls
 import helper
-# from models import db
+
 from CONFIG import SECRET_KEY, DATABASE_URI
 
 
@@ -29,26 +29,26 @@ def index():
     return index_view()
 
 
-@app.route('/record/<projectName>/', methods=["POST", "GET"])
-def record(projectName):
+@app.route('/record/<string:projectName>/<int:pid>', methods=["POST", "GET"])
+def record(projectName, pid):
     if("projectNameList" not in session):
         helper.initialization()
     if projectName in session["projectNameList"]:
-        return records_view(projectName)
+        return records_view(projectName, pid)
     return render_template("error_404.html")
 
 
-@app.route('/delete/<projectName>/<rowNumber>/', methods=["POST", "GET"])
-def delete(projectName, rowNumber):
+@app.route('/delete/<string:projectName>/<int:pid>/<rowNumber>/', methods=["POST", "GET"])
+def delete(projectName, pid, rowNumber):
     if("projectNameList" not in session):
         helper.initialization()
-    return delete_view(projectName, rowNumber)
+    return delete_view(projectName, pid, rowNumber)
 
 
-@app.route('/success/<projectName>/', methods=["POST", "GET"])
-def success(projectName):
+@app.route('/success/<string:projectName>/<int:pid>', methods=["POST", "GET"])
+def success(projectName, pid):
     print("success")
-    return redirect(url_for('record', projectName=projectName))
+    return redirect(url_for('record', projectName=projectName, pid=pid))
 
 
 @app.route('/delete/<projectName>/', methods=["POST", "GET"])
@@ -56,6 +56,7 @@ def deleteProject(projectName):
     sessionlist = session['projectNameList']
     sessionlist.remove(projectName)
     session['projectNameList'] = sessionlist
+    helper.initialization()
     return deleteProject_view(projectName)
 
 

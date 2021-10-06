@@ -1,14 +1,21 @@
 from flask import session
 
-import database
+from sql import CrudDatabase
 
 
 def initialization():
-    projectNameList = []
-    md = database.MongoDatabase()
-    result = md.find({}, {"projectName": 1, "_id": 0})
-    print(result)
-    for i in result:
-        # print(i)
-        projectNameList.append(i["projectName"])
-    session["projectNameList"] = projectNameList
+    project_names_list = []
+    sql = CrudDatabase()
+    query = "select * from projects order by PID;"
+
+    project_names = sql.fetchRead(query)
+
+    for project in project_names:
+        project_names_list.append(project.get('PNAME'))
+    # print(project_names_list)
+    print("@@@@@@@@@@@@@@@@@@@@@@@@@@")
+    print(project_names)
+    print("@@@@@@@@@@@@@@@@@@@@@@@@@@")
+
+    session["projectNameList"] = project_names_list
+    session["allProjects"] = project_names
