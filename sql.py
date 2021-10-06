@@ -31,11 +31,6 @@ class CrudDatabase:
         #Create, Update, Delete
         try:
             self.__connect()
-            # if isinstance(sql, list):
-            #     for query in sql:
-            #         self.cur.execute(query)
-            # if isinstance(sql, str):
-            #     self.cur.execute(sql)
             self.cur.execute(sql)
             self.__commit()
             return True
@@ -45,18 +40,22 @@ class CrudDatabase:
         finally:
             self.__disconnect()
 
-    # def executeWrite(self, sql):
-    #     # Multiple Create, Update, Delete
-    #     try:
-    #         self.__connect()
-    #         self.cur.execute(sql)
-    #         self.__commit()
-    #         return True
-    #     except pymysql.MySQLError as e:
-    #         print("Mysql Error:", e)
-    #         return False
-    #     finally:
-    #         self.__disconnect()
+    def multipleExecuteWrite(self, queries: list):
+        # Multiple Create, Update, Delete
+        if isinstance(queries, list):
+            try:
+                self.__connect()
+                for query in queries:
+                    self.cur.execute(query)
+                    self.__commit()
+                return True
+            except pymysql.MySQLError as e:
+                print("Mysql Error:", e)
+                return False
+            finally:
+                self.__disconnect()
+        else:
+            return False
 
     def fetchRead(self, sql):
         # Read
