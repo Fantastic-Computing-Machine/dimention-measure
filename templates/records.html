@@ -12,7 +12,7 @@
 
 {% block body %}
 
-<div class="container pt-2 px-3 pb-4">
+<div class="container-lg pt-2 px-3 pb-4">
     <div class="d-flex justify-content-between align-middle">
         <h2 class="py-2 text-light">
             {{projectName|capitalize}}
@@ -47,116 +47,126 @@
             </a>
         </span>
     </div>
+
     <form action="" method="POST" name="add_skills" id="add_skills">
         <div class="card">
             <div class="card-body">
                 <div class="table-responsive">
                     <table class="table table-hover table-sm">
                         <thead class="table-primary align-middle row-cols-auto">
-                            <th>Tag</th>
-                            <th>Length</th>
-                            <th>Width</th>
-                            <th style="white-space: nowrap">Area | Sqm</th>
-                            <th style="white-space: nowrap">Area | Sqft</th>
-                            <th>Rate</th>
-                            <th>Amount</th>
-                            <th>Action</th>
+                            <th class="text-center mx-2">Tag</th>
+                            <th class="text-center mx-2">Length (m)</th>
+                            <th class="text-center mx-2">Width(m)</th>
+                            <th class="text-center mx-2" style="white-space: nowrap">Area: Sqm</th>
+                            <th class="text-center mx-2" style="white-space: nowrap">Area: Sqft</th>
+                            <th class="text-center mx-2">Rate</th>
+                            <th class="text-center mx-2" style="white-space: nowrap">Amount (₹)</th>
+                            <th class="text-center mx-2" style="white-space: nowrap">Action</th>
                         </thead>
 
                         {% for item in project_json %}
                         <tr class="table align-middle">
-                            <td style="white-space: nowrap">{{item["tag"]|capitalize}}</td>
-                            <td style="white-space: nowrap">{{item["length"]}} m ({{'%0.2f' |
+                            <td class="mx-2" style="white-space: nowrap">{{item["tag"]|capitalize}}</td>
+                            <td class="text-center mx-2" style="white-space: nowrap">{{item["length"]}} m ({{'%0.2f' |
                                 format(item["length"]*3.281 |
                                 float) }} ft) </td>
-                            <td style="white-space: nowrap">{{item["width"]}} m ({{'%0.2f' |
+                            <td class="text-center mx-2" style="white-space: nowrap">{{item["width"]}} m ({{'%0.2f' |
                                 format(item["width"]*3.281 |
                                 float) }} ft) </td>
                             {% if 'N/A' == item["sqm"] %}
                             <!-- if you change "N/A" here then change the value in js file also -->
-                            <td>{{item["area_sqm"]}}</td>
-                            <td>{{item["area_sqft"]}}</td>
+                            <td class="text-end mx-2">{{item["area_sqm"]}}</td>
+                            <td class="text-end mx-2">{{item["area_sqft"]}}</td>
                             {% else %}
-                            <td>{{'%0.2f' | format(item["area_sqm"] | float) }}</td>
-                            <td>{{'%0.2f' | format(item["area_sqft"] | float) }}</td>
+                            <td class="text-end mx-2">{{'%0.2f' | format(item["area_sqm"] | float) }}</td>
+                            <td class="text-end mx-2">{{'%0.2f' | format(item["area_sqft"] | float) }}</td>
                             {% endif %}
-                            <td>{{item["rate"]}}</td>
-                            <td>{{item["amount"]}}</td>
-                            <td class="d-flex justify-content-between">
-                                <!-- <a class="align-bottom" href=''>
-                                    <img src="https://img.icons8.com/ios/20/000000/edit-row.png" />
-                                </a> -->
+                            <td class="text-end mx-2">{{item["rate"]}}</td>
+                            <td class="text-end mx-2">{{item["amount"]}}</td>
+                            <td class="text-end mx-2" style="white-space: nowrap">
 
-                                <!-- update dimention modal -->
-                                <a type="button" class="align-bottom" data-bs-toggle="modal"
-                                    data-bs-target="#updateDimention">
-                                    <img src="https://img.icons8.com/ios/20/000000/edit-row.png" />
+                                <!-- Button trigger modal -->
+                                <a data-bs-toggle="modal" data-bs-target="#{{item['tag']}}{{item['dimid']}}_dimention">
+                                    <img style="border-radius: 10%;"
+                                        src="https://img.icons8.com/ios/20/000000/edit-row.png" />
                                 </a>
 
-                                <!-- update dimention Modal -->
-                                <div class="modal fade" id="updateDimention" tabindex="-1"
-                                    aria-labelledby="updateDimentionLabel" aria-hidden="true">
+                                <!-- Modal -->
+                                <div class="modal fade" id="{{item['tag']}}{{item['dimid']}}_dimention" tabindex="-1"
+                                    aria-labelledby="{{item['tag']}}{{item['dimid']}}_dimentionLabel"
+                                    aria-hidden="true">
                                     <div class="modal-dialog">
                                         <div class="modal-content">
                                             <div class="modal-header">
-                                                <h5 class="modal-title" id="updateDimentionLabel">Update
-                                                    {{item["tag"]|capitalize}}</h5>
+                                                <h5 class="modal-title"
+                                                    id="{{item['tag']}}{{item['dimid']}}_dimentionLabel">Update:
+                                                    {{item['tag'] | capitalize}}</h5>
                                                 <button type="button" class="btn-close" data-bs-dismiss="modal"
                                                     aria-label="Close"></button>
                                             </div>
                                             <div class="modal-body">
-                                                <div class="align-middle">
-                                                    <div class="my-1"><input class="form-control" id="name" name="name"
-                                                            type="text" placeholder="Tag" aria-label=".form-control-sm"
-                                                            required>
-                                                    </div>
-                                                    <div class="my-1"><input class="form-control" id="length" step=".01"
-                                                            name="length" type="number" placeholder="Length (meter)"
-                                                            oninput="areas()" aria-label=".form-control-sm" required>
-                                                    </div>
-                                                    <div class="my-1"><input class="form-control" id="width" step=".01"
-                                                            name="width" type="number" placeholder="Width (meter)"
-                                                            oninput="areas()" aria-label=".form-control-sm">
-                                                    </div>
-                                                    <div class="my-1"><input class="form-control" id="sqm" name="sqm"
-                                                            type="text" placeholder="Sqm" aria-label=".form-control-sm"
-                                                            readonly>
-                                                    </div>
-                                                    <div class="my-1"><input class="form-control" id="sqft" name="sqft"
-                                                            type="text" placeholder="Sqft" aria-label=".form-control-sm"
-                                                            readonly>
-                                                    </div>
-                                                    <div class="my-1"><input class="form-control" id="rate" step=".01"
-                                                            name="rate" type="number" placeholder="Rate"
-                                                            oninput="areas()" aria-label=".form-control-sm">
-                                                    </div>
-                                                    <div class="my-1"><input class="form-control" id="amount"
-                                                            name="amount" type="number" placeholder="Amount"
-                                                            aria-label=".form-control-sm" readonly>
-                                                    </div>
+                                                <div class="form-floating mb-3">
+                                                    <input name="update_tag" id="update_tag"
+                                                        value="{{item['tag'] | capitalize}}" class="form-control"
+                                                        type="text" placeholder="Tag">
+                                                    <label for="update_tag">Tag</label>
                                                 </div>
+                                                <div class="form-floating mb-3">
+                                                    <input name="update_length" id="update_length"
+                                                        value="{{item['length']}}" class="form-control" type="number"
+                                                        oninput="update_areas()" step=".01" placeholder="Length">
+                                                    <label for="update_length">Length (meter)</label>
+                                                </div>
+                                                <div class="form-floating mb-3">
+                                                    <input name="update_width" id="update_width"
+                                                        value="{{item['width']}}" class="form-control" type="number"
+                                                        oninput="update_areas()" step=".01" placeholder="Width">
+                                                    <label for="update_width">Width (meter)</label>
+                                                </div>
+
+                                                <div class="form-floating mb-3">
+                                                    <input name="update_sqm" id="update_sqm"
+                                                        value="{{item['area_sqm']}}" class="form-control" type="text"
+                                                        placeholder="Area Sqm." readonly>
+                                                    <label for="update_sqm">Area Sqm.</label>
+                                                </div>
+
+                                                <div class="form-floating mb-3">
+                                                    <input name="update_sqft" id="update_sqft"
+                                                        value="{{item['area_sqft']}}" class="form-control" type="text"
+                                                        placeholder="Area Sqft." readonly>
+                                                    <label for="update_sqft">Area Sqft.</label>
+                                                </div>
+
+                                                <div class="form-floating mb-3">
+                                                    <input name="update_rate" id="update_rate" value="{{item['rate']}}"
+                                                        class="form-control" type="number" oninput="update_areas()"
+                                                        step=".01" placeholder="Rate">
+                                                    <label for="update_rate">Rate</label>
+                                                </div>
+
+                                                <div class="form-floating mb-3">
+                                                    <input name="update_amount" id="update_amount"
+                                                        value="{{item['amount']}}" class="form-control" type="number"
+                                                        placeholder="Amount" readonly>
+                                                    <label for="update_amount">Amount</label>
+                                                </div>
+
                                             </div>
                                             <div class="modal-footer">
-                                                <button type="button" class="btn btn-secondary"
-                                                    data-bs-dismiss="modal">Close</button>
-                                                <button type="button" class="btn btn-primary">Save changes</button>
+                                                <button type="submit" class="btn btn-primary">Save changes</button>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
 
-
                                 <a class="align-bottom"
                                     href='{{url_for("delete",projectName=projectName, pid=pid, rowNumber=item["dimid"])}}'>
-                                    <img src="https://img.icons8.com/ios/20/000000/delete-sign--v1.png" /></a>
+                                    <img style="border-radius: 10%;"
+                                        src="https://img.icons8.com/ios/20/000000/delete-sign--v1.png" /></a>
                             </td>
                         </tr>
                         {% endfor %}
-
-                        <!-- <tfoot class="align-middle"> -->
-
-
-                        <!-- Button trigger modal -->
 
                         <!-- Modal -->
                         <div class="modal fade" id="newDimention" tabindex="-1" aria-labelledby="newDimentionLabel"
@@ -164,7 +174,9 @@
                             <div class="modal-dialog">
                                 <div class="modal-content">
                                     <div class="modal-header">
-                                        <h5 class="modal-title" id="newDimentionLabel">New Dimention</h5>
+                                        <h5 class="modal-title" id="newDimentionLabel">
+                                            New Dimention
+                                        </h5>
                                         <button type="button" class="btn-close" data-bs-dismiss="modal"
                                             aria-label="Close"></button>
                                     </div>
@@ -198,89 +210,66 @@
                                     <div class="modal-footer">
                                         <button type="button" class="btn btn-secondary"
                                             data-bs-dismiss="modal">Close</button>
-                                        <button type="submit" class="btn btn-primary m-1">
+                                        <button type="submit" name="new_dimention" value="new_dimention"
+                                            class="btn btn-primary m-1">
                                             <img src="https://img.icons8.com/ios-filled/25/000000/save--v1.png" />
                                             Add Item</button>
                                     </div>
                                 </div>
                             </div>
                         </div>
-
-                        <!-- 
-                            <th><input class="form-control form-control-sm" id="name" name="name" type="text"
-                                    placeholder="Tag" aria-label=".form-control-sm" required>
-                            </th>
-                            <th><input class="form-control form-control-sm" id="length" step=".01" name="length"
-                                    type="number" placeholder="Length (meter)" oninput="areas()"
-                                    aria-label=".form-control-sm" required>
-                            </th>
-                            <th><input class="form-control form-control-sm" id="width" step=".01" name="width"
-                                    type="number" placeholder="Width (meter)" oninput="areas()"
-                                    aria-label=".form-control-sm">
-                            </th>
-                            <th><input class="form-control form-control-sm" id="sqm" name="sqm" type="text"
-                                    placeholder="Sqm" aria-label=".form-control-sm" readonly>
-                            </th>
-                            <th><input class="form-control form-control-sm" id="sqft" name="sqft" type="text"
-                                    placeholder="Sqft" aria-label=".form-control-sm" readonly>
-                            </th>
-                            <th><input class="form-control form-control-sm" id="rate" step=".01" name="rate"
-                                    type="number" placeholder="Rate" oninput="areas()" aria-label=".form-control-sm">
-                            </th>
-                            <th><input class="form-control form-control-sm" id="amount" name="amount" type="number"
-                                    placeholder="Amount" aria-label=".form-control-sm" readonly>
-                            </th>
-                            <td></td> -->
-
-                        <!-- </tfoot> -->
-
                     </table>
                 </div>
-                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#newDimention">
-                    <img class="px-1" src="https://img.icons8.com/ios-filled/25/000000/save--v1.png" />ADD DIMENTION
-                </button>
-
+                <div class="d-flex justify-content-center my-1">
+                    <button type="button" class="btn btn-outline-primary align-middle" data-bs-toggle="modal"
+                        data-bs-target="#newDimention">Add Dimention
+                    </button>
+                </div>
             </div>
         </div>
 
         <div class="row flex-md-row py-3">
+
             <div class="col-md-6">
-                <div class="card my-3" style="text-align:center; min-height: 140px;">
-                    <div class="card-body align-middle" style="text-align:center;">
-                        <!-- <button type="submit" class="btn btn-primary m-1">
-                            <img src="https://img.icons8.com/ios-filled/25/000000/save--v1.png" /> Add Item</button>
-
-                        <button type="button" class="btn btn-primary" data-bs-toggle="modal"
-                            data-bs-target="#newDimention">
-                            ADD DIMENTION
-                        </button> -->
-
-                        <a class="btn btn-success m-1" href='{{url_for("download_excel",projectName=projectName)}}'>
-                            <img src="https://img.icons8.com/ios-glyphs/25/000000/ms-excel.png">
-                            Save Excel</a>
-
-                        <button class="btn btn-danger m-1" disabled>
-                            <img src="https://img.icons8.com/material-rounded/25/000000/pdf.png"> Save pdf</button>
+                <div class="card my-3" style="text-align:center; min-height: 164px;">
+                    <div class="card-body d-flex align-items-center align-self-center" style="text-align:center;">
+                        <button style="white-space: nowrap" type="button" class="btn btn-primary align-middle"
+                            data-bs-toggle="modal" data-bs-target="#newDimention">
+                            <img src="https://img.icons8.com/ios-filled/25/000000/save--v1.png" />
+                            Add Dimention
+                        </button>
+                        <a style="white-space: nowrap" class="btn btn-success m-1"
+                            href='{{url_for("download_excel",projectName=projectName)}}'>
+                            <img class="px-2" src="https://img.icons8.com/ios-glyphs/25/000000/ms-excel.png">Save Excel
+                        </a>
+                        <button style="white-space: nowrap" class="btn btn-danger m-1" disabled>
+                            <img class="px-2" src="https://img.icons8.com/material-rounded/25/000000/pdf.png">
+                            Save PDF
+                        </button>
                     </div>
                 </div>
             </div>
+
             <div class="col-md-6" style="height: 200px;">
                 <div class="card my-3">
                     <div class="card-body">
                         <p style="text-align:center">
-                            Total<b class="fs-5"> {{sum_sqm}} Sqm</b><br>
-                            Total<b class="fs-5"> {{sum_sqft}} Sqft</b><br>
-                            Total<b class="fs-5"> Rs. {{sum_amt}} </b>(Calculated using metrics in sqft.)
+                            Total<b class="fs-5"> {{sum_sqm}} Sqm.</b><br>
+                            Total<b class="fs-5"> {{sum_sqft}} Sqft.</b><br>
+                            Total<b class="fs-5"> ₹ {{sum_amt}} </b><br>
+                            <span style="white-space: nowrap; text-align:center;">
+                                *Amount calculated using Dimentions in <span
+                                    class="badge bg-primary rounded-pill">ft./sqft.
+                                </span>
+                            </span>
                         </p>
                     </div>
                 </div>
             </div>
+
         </div>
     </form>
-
-
 </div>
 
-<!-- {{project_json}} -->
 
 {% endblock %}

@@ -35,6 +35,43 @@ function areas() {
     }
 }
 
+var update_length = document.getElementById("update_length");
+var update_width = document.getElementById("update_width");
+var update_rate = document.getElementById("update_rate");
+
+function update_areas() {
+    var len = parseFloat(update_length.value);
+    var wid = parseFloat(update_width.value);
+    var rt = parseFloat(update_rate.value);
+    var flag = false;
+
+    if (isNaN(len)) { len = 0; }
+    if (isNaN(wid)) { wid = 1; flag = true; }
+    if (isNaN(rt)) { rt = 0; }
+
+    var sqmtr = len * wid;
+    document.getElementById("update_sqm").value = sqmtr;
+
+    if (flag == true) {
+        var sqfeet = len * wid * 3.28;
+        document.getElementById("update_sqft").value = sqfeet;
+
+        var amount = sqfeet * rt
+        document.getElementById("update_amount").value = amount;
+
+        document.getElementById("update_sqm").value = 'N/A';
+        // <!-- if you change "N/A" here then change the value in records.html file also -->
+        document.getElementById("update_sqft").value = 'N/A';
+    } else {
+        var sqfeet = len * wid * 10.764;
+        document.getElementById("update_sqft").value = sqfeet;
+
+        var amount = sqfeet * rt
+        document.getElementById("update_amount").value = amount;
+    }
+}
+
+
 var meter = document.getElementById("mt");
 var feet = document.getElementById("ft");
 
