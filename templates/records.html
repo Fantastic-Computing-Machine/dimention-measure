@@ -18,30 +18,6 @@
             {{projectName|capitalize}}
         </h2>
         <span>
-            <!-- <button class="btn btn-light" style="z-index:2;" data-bs-toggle="modal" data-bs-target="#updateProject">
-                <img src="https://img.icons8.com/ios/20/000000/edit.png" />
-            </button> -->
-
-            <!-- project update Modal -->
-            <div class="modal fade" id="updateProject" tabindex="-1" aria-labelledby="updateProjectLabel"
-                aria-hidden="true">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="updateProjectLabel">Update {{projectName|capitalize}}</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <div class="modal-body">
-                            ...
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                            <button type="button" class="btn btn-primary">Save changes</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
             <a class="btn btn-light" style="z-index:2;" href="{{ url_for('deleteProject',projectName = projectName)}}">
                 <img src="https://img.icons8.com/color/20/000000/delete-forever.png" />
             </a>
@@ -51,15 +27,15 @@
     <div class="card">
         <div class="card-body">
             <div class="table-responsive">
-                <table class="table table-hover table-sm">
+                <table class="table table-bordered table-hover table-sm">
                     <thead class="table-primary align-middle row-cols-auto">
-                        <th class="text-center mx-2">Tag</th>
+                        <th class="text-start mx-2">Tag</th>
                         <th class="text-center mx-2">Length (m)</th>
                         <th class="text-center mx-2">Width(m)</th>
                         <th class="text-center mx-2" style="white-space: nowrap">Area: Sqm</th>
                         <th class="text-center mx-2" style="white-space: nowrap">Area: Sqft</th>
-                        <th class="text-center mx-2">Rate</th>
-                        <th class="text-center mx-2" style="white-space: nowrap">Amount (₹)</th>
+                        <th class="text-end mx-2">Rate</th>
+                        <th class="text-end mx-2" style="white-space: nowrap">Amount (₹)</th>
                         <th class="text-center mx-2" style="white-space: nowrap">Action</th>
                     </thead>
 
@@ -67,29 +43,31 @@
 
                         {% for item in project_json %}
                         <tr class="table align-middle">
-                            <td class="mx-2" style="white-space: nowrap">{{item["tag"]|capitalize}}</td>
-                            <td class="text-center mx-2" style="white-space: nowrap">{{item["length"]}} m ({{'%0.2f'
-                                |
-                                format(item["length"]*3.281 |
-                                float) }} ft) </td>
-                            <td class="text-center mx-2" style="white-space: nowrap">{{item["width"]}} m ({{'%0.2f'
-                                |
-                                format(item["width"]*3.281 |
-                                float) }} ft) </td>
-                            {% if 'N/A' == item["sqm"] %}
+                            <td class="mx-2 font-monospace" style="white-space: nowrap">{{item.get('tag')|capitalize}}
+                            </td>
+                            <td class="text-center mx-2 font-monospace" style="white-space: nowrap">
+                                {{item.get('length')}} m
+                                ({{'%0.2f' | format(item.get('length')*3.281 | float) }} ft) </td>
+                            <td class="text-center mx-2 font-monospace" style="white-space: nowrap">
+                                {{item.get('width')}}
+                                m
+                                ({{'%0.2f' | format(item.get('width')*3.281 | float) }} ft) </td>
+
                             <!-- if you change "N/A" here then change the value in js file also -->
-                            <td class="text-end mx-2">{{item["sqm"]}}</td>
-                            <td class="text-end mx-2">{{item["sqft"]}}</td>
-                            {% else %}
-                            <td class="text-end mx-2">{{'%0.2f' | format(item["sqm"] | float) }}</td>
-                            <td class="text-end mx-2">{{'%0.2f' | format(item["sqft"] | float) }}</td>
-                            {% endif %}
-                            <td class="text-end mx-2">{{item["rate"]}}</td>
-                            <td class="text-end mx-2">{{item["amount"]}}</td>
-                            <td class="text-end mx-2" style="white-space: nowrap">
+                            <!-- <td class="text-end mx-2 font-monospace">{{item["sqm"]}}</td> -->
+                            <!-- <td class="text-end mx-2 font-monospace">{{item["sqft"]}}</td> -->
 
+                            <td class="text-end mx-2 font-monospace">{{'%0.2f' | format(item.get('sqm') | float) }}</td>
+                            <td class="text-end mx-2 font-monospace">{{'%0.2f' | format(item.get('sqft') | float) }}
+                            </td>
 
-                                <a href="{{url_for('update_dimention', projectName=projectName, pid=pid, dimid=item['dimid'])}}"
+                            <td class="text-end mx-2 font-monospace">{{'%0.2f' | format(item.get('rate') | float) }}
+                            </td>
+                            <td class="text-end mx-2 font-monospace">{{'%0.2f' | format(item.get('amount') | float) }}
+                            </td>
+                            <td class="text-center mx-2" style="white-space: nowrap">
+
+                                <a href="{{url_for('update_dimention', projectName=projectName, pid=pid, dimid=item.get('dimid'))}}"
                                     style="text-decoration: none;">
                                     <img style="border-radius: 10%;"
                                         src="https://img.icons8.com/ios/20/fff/edit-row.png" />
@@ -99,24 +77,24 @@
 
                                 <!-- Delete modal -->
                                 <a class="align-bottom" data-bs-toggle="modal"
-                                    data-bs-target="#delete{{item['dimid']}}Modal">
+                                    data-bs-target="#delete{{item.get('dimid')}}Modal">
                                     <img style="border-radius: 10%;"
                                         src="https://img.icons8.com/ios/20/000000/delete-sign--v1.png" />
                                 </a>
-                                <div class="modal fade" id="delete{{item['dimid']}}Modal" tabindex="-1"
-                                    aria-labelledby="delete{{item['dimid']}}ModalLabel" aria-hidden="true">
+                                <div class="modal fade" id="delete{{item.get('dimid')}}Modal" tabindex="-1"
+                                    aria-labelledby="delete{{item.get('dimid')}}ModalLabel" aria-hidden="true">
                                     <div class="modal-dialog">
                                         <div class="modal-content">
                                             <div class="modal-header">
-                                                <h5 class="modal-title" id="delete{{item['dimid']}}ModalLabel">Confirm
-                                                    delete dimention "{{item["tag"]|capitalize}}"</h5>
+                                                <h5 class="modal-title" id="delete{{item.get('dimid')}}ModalLabel">
+                                                    Confirm
+                                                    delete dimention "{{item.get('tag')|capitalize}}"</h5>
                                                 <button type="button" class="btn-close" data-bs-dismiss="modal"
                                                     aria-label="Close"></button>
                                             </div>
                                             <div class="modal-body text-start">
                                                 You wish to permanently delete dimention&rarr;
-                                                <b>"{{item["tag"]|capitalize}}"</b>?<br>
-                                                <!-- <i>We wont be responsible for anything deleted here.</i><br> -->
+                                                <b>"{{item.get('tag')|capitalize}}"</b>?<br>
                                                 <b class="my-1">Be Careful!</b>
                                             </div>
                                             <div class="modal-footer">
@@ -124,7 +102,7 @@
                                                     data-bs-dismiss="modal">Get
                                                     back to safety</button>
                                                 <a class="btn btn-danger align-bottom"
-                                                    href='{{url_for("delete",projectName=projectName, pid=pid, dimid=item["dimid"])}}'>
+                                                    href='{{url_for("delete",projectName=projectName, pid=pid, dimid=item.get("dimid"))}}'>
                                                     Chop Chop!
                                                 </a>
                                             </div>
@@ -231,12 +209,15 @@
         <div class="col-md-6" style="height: 200px;">
             <div class="card my-3">
                 <div class="card-body">
-                    <p style="text-align:center">
-                        Total<b class="fs-5"> {{sum_sqm}} Sqm.</b><br>
-                        Total<b class="fs-5"> {{sum_sqft}} Sqft.</b><br>
+                    <p class="" style="text-align:center">
+                        Total area <b class="fs-5"> {{sum_sqm}} Sqm</b><br>
+                        Total area <b class="fs-5"> {{sum_sqft}} SqFt.</b><br>
                         Total<b class="fs-5"> ₹ {{sum_amt}} </b><br>
-                        <span style="text-align:center;">
-                            *Amount calculated using Dimentions in <span class="badge bg-primary rounded-pill">ft./sqft.
+                        <span class="small" style="text-align:center;">
+                            <em>
+                                *Amount calculated using Dimentions in </em><span
+                                class="badge bg-primary rounded-pill">ft./sqft.
+
                             </span>
                         </span>
                     </p>

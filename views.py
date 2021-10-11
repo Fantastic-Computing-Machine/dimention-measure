@@ -65,7 +65,7 @@ def dim_checker(form_dict):
     if 'dimid' in form_dict:
         checked_dict['dimid'] = form_dict['dimid']
 
-    print("\n\tNEW CHECKED DICT", checked_dict)
+    # print("\n\tNEW CHECKED DICT", checked_dict)
     return checked_dict
 
 
@@ -73,18 +73,28 @@ def records_view(projectName, pid):
     try:
         sql = CrudDatabase()
         project_dimentions = sql.fetchRead(
-            "SELECT * FROM dimention WHERE PID=%i" % (int(pid)))
+            f"SELECT * FROM dimention WHERE PID={pid};")
         if project_dimentions is None:
             project_dimentions = []
 
-        sum_sqm, sum_sqft, sum_amt = Decimal(0.0), Decimal(0.0),Decimal(0.0)
+        # sum_query = f'''SELECT SUM(d1.sqm) AS sum_sqm, SUM(d2.sqft) AS sum_sqft, SUM(d3.amount) AS sum_amount
+        #                 FROM dimention d1, dimention d2, dimention d3
+        #                 WHERE d1.pid={pid} AND d2.pid={pid} AND d3.pid={pid};'''
+
+        # print("\nSUM QUERY", sum_query)
+
+        # sum_of_fields = sql.fetchRead(sum_query)
+
+        # print("\nSUM OF FIELDS: ", sum_of_fields)
+
+        sum_sqm, sum_sqft, sum_amt = 0.0, 0.0, 0.0
 
         for _ in project_dimentions:
             if not isinstance(_["sqm"], str) or not isinstance(_["sqft"], str):
-                sum_sqm = sum_sqm + _["sqm"]
-                sum_sqft = sum_sqft + _["sqft"]
+                sum_sqm = sum_sqm + float(_["sqm"])
+                sum_sqft = sum_sqft + float(_["sqft"])
 
-            sum_amt = sum_amt + _["amount"]
+            sum_amt = sum_amt + float(_["amount"])
 
         if request.method == "POST":
             print("REQUEST.FORM--> ", request.form)
@@ -106,19 +116,12 @@ def records_view(projectName, pid):
             #     return redirect(url_for('update_dimention', form_fields=request.form))
 
         else:
-            a=[]
+            a = []
             for i in project_dimentions:
                 checked_list = dim_checker(i)
                 a.append(checked_list)
 
-            project_dimentions =a
-
-            sum_sqm = round(sum_sqm, 2)
-            sum_sqft = round(sum_sqft, 2)
-            sum_amt = round(sum_amt, 2)
-
-            session["proj_info"] = [projectName,
-                                    project_dimentions, sum_sqm, sum_sqft, sum_amt]
+            project_dimentions = a
 
             context = {
                 "project_json": project_dimentions,
@@ -126,10 +129,9 @@ def records_view(projectName, pid):
                 "pid": pid,
                 "sum_sqm": float(sum_sqm),
                 "sum_sqft": float(sum_sqft),
-                "sum_amt": float(sum_amt)
+                "sum_amt": float(sum_amt),
             }
 
-            # return render_template('records.html', project_json=project_dimentions, projectName=projectName, pid=pid, sum_sqm=sum_sqm, sum_sqft=sum_sqft, sum_amt=sum_amt)
             return render_template('records.html', **context)
 
     except Exception as ex:
