@@ -26,22 +26,35 @@ def check_sql_tables():
     if len(tables_to_create) != len(tables_required):
 
         if 'projects' in tables_to_create:
-            query = "CREATE TABLE PROJECTS(PID INT NOT NULL AUTO_INCREMENT, PNAME VARCHAR(30) NOT NULL UNIQUE, PRIMARY KEY (PID));"
+            query = '''CREATE TABLE `projects` (
+                    `PID` int NOT NULL AUTO_INCREMENT,
+                    `PNAME` varchar(30) NOT NULL,
+                    `date_created` datetime DEFAULT CURRENT_TIMESTAMP,
+                    `userId` int NOT NULL DEFAULT '1',
+                    PRIMARY KEY (`PID`),
+                    UNIQUE KEY `PNAME` (`PNAME`),
+                    KEY `userId` (`userId`),
+                    CONSTRAINT `projects_ibfk_1` FOREIGN KEY (`userId`) REFERENCES `users` (`userId`)
+                    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci'''
             sql_obj.executeWrite(query)
             print("CREATED PROJECTS TABLE...")
 
         if 'dimention' in tables_to_create:
-            query = '''create table dimention(dimid int not null auto_increment, 
-                                              tag varchar(225) not null, 
-                                              length float not null, 
-                                              width float, 
-                                              area_sqm float, 
-                                              area_sqft float, 
-                                              rate float, 
-                                              amount float, 
-                                              PID int not null, 
-                                              primary key(dimid), 
-                                              foreign key(PID) references projects(PID));'''
+            query = '''CREATE TABLE `dimention` (
+                    `dimid` int NOT NULL AUTO_INCREMENT,
+                    `tag` varchar(225) NOT NULL,
+                    `length` DECIMAL(11,2) NOT NULL,
+                    `width` DECIMAL(11,2) DEFAULT NULL,
+                    `area_sqm` DECIMAL(11,2) DEFAULT NULL,
+                    `area_sqft` DECIMAL(11,2) DEFAULT NULL,
+                    `rate` DECIMAL(11,2) DEFAULT NULL,
+                    `amount` DECIMAL(11,2) DEFAULT NULL,
+                    `PID` int NOT NULL,
+                    `date_created` datetime DEFAULT CURRENT_TIMESTAMP,
+                    PRIMARY KEY (`dimid`),
+                    KEY `dimention_ibfk_1` (`PID`),
+                    CONSTRAINT `dimention_ibfk_1` FOREIGN KEY (`PID`) REFERENCES `projects` (`PID`) ON DELETE CASCADE
+                    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci'''
             sql_obj.executeWrite(query)
             print("CREATED DIMENTION TABLE...")
     return True
