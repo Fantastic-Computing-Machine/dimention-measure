@@ -109,4 +109,9 @@ def payee_expense_view(payee):
     query = "select * from expenses where payee='%s';" % (str(payee))
     result = sql_obj.fetchRead(query)
     print(query, result)
-    return render_template("payee_exp.html", result=result, payee=payee)
+    context = {
+        "result": result,
+        "payee": payee
+    }
+    # return render_template("payee_exp.html", result=result, payee=payee)
+    return render_template("payee_exp.html", **context)
