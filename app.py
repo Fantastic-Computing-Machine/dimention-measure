@@ -23,9 +23,10 @@ app.config['SECRET_KEY'] = SECRET_KEY
 @app.route('/', methods=["POST", "GET"])
 def index():
     # Homepage
-    ip_address = request.remote_addr
-    print("Current IP: ", ip_address)
-    helper.initialization()
+    if request.method == "GET":
+        ip_address = request.remote_addr
+        print("Current IP: ", ip_address)
+        helper.initialization()
     return index_view()
 
 
@@ -40,8 +41,6 @@ def record(projectName, pid):
 
 @app.route('/delete/<string:projectName>/<int:pid>/<rowNumber>/', methods=["POST", "GET"])
 def delete(projectName, pid, rowNumber):
-    if("projectNameList" not in session):
-        helper.initialization()
     return delete_view(projectName, pid, rowNumber)
 
 
@@ -53,10 +52,6 @@ def success(projectName, pid):
 
 @app.route('/delete/<projectName>/', methods=["POST", "GET"])
 def deleteProject(projectName):
-    sessionlist = session['projectNameList']
-    sessionlist.remove(projectName)
-    session['projectNameList'] = sessionlist
-    helper.initialization()
     return deleteProject_view(projectName)
 
 
