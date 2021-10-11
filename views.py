@@ -26,17 +26,10 @@ def index_view():
                 query = "insert into projects(PNAME) values('%s');" % str(
                     projectName)
                 if sql.executeWrite(query):
-                    helper.initialization()
-                    sessionlist = session['projectNameList']
-                    sessionlist.append(projectName)
-                    session['projectNameList'] = sessionlist
+                    return redirect(url_for('index'))
                 else:
                     print("Not working Executing write")
                     # flash
-                pid = sql.readFetch(
-                    "select PID from projects where PNAME='%s;" % (str(projectName)))[0]["PID"]
-
-                return redirect(url_for('record', projectName=projectName, pid=pid))
             except Exception as e:
                 print(e)
 
@@ -50,9 +43,9 @@ def records_view(projectName, pid):
         project_dimentions = sql.fetchRead(
             "Select * from dimention where PID=%i" % (int(pid)))
 
-        print("###################################")
-        print(project_dimentions)
-        print("###################################")
+        # print("###################################")
+        # print(project_dimentions)
+        # print("###################################")
         if project_dimentions is None:
             project_dimentions = []
 
@@ -133,7 +126,7 @@ def deleteProject_view(projectName):
         # return redirect(url_for('record', projectName=projectName, pid=pid))
 
     else:
-        print("ERROR: Unsuccessful dimention delete.")
+        print("ERROR: Unsuccessful Project delete.")
 
 
 def download_excel_view(projectName):
