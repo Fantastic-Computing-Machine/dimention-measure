@@ -78,11 +78,11 @@
                                 float) }} ft) </td>
                             {% if 'N/A' == item["sqm"] %}
                             <!-- if you change "N/A" here then change the value in js file also -->
-                            <td class="text-end mx-2">{{item["area_sqm"]}}</td>
-                            <td class="text-end mx-2">{{item["area_sqft"]}}</td>
+                            <td class="text-end mx-2">{{item["sqm"]}}</td>
+                            <td class="text-end mx-2">{{item["sqft"]}}</td>
                             {% else %}
-                            <td class="text-end mx-2">{{'%0.2f' | format(item["area_sqm"] | float) }}</td>
-                            <td class="text-end mx-2">{{'%0.2f' | format(item["area_sqft"] | float) }}</td>
+                            <td class="text-end mx-2">{{'%0.2f' | format(item["sqm"] | float) }}</td>
+                            <td class="text-end mx-2">{{'%0.2f' | format(item["sqft"] | float) }}</td>
                             {% endif %}
                             <td class="text-end mx-2">{{item["rate"]}}</td>
                             <td class="text-end mx-2">{{item["amount"]}}</td>
