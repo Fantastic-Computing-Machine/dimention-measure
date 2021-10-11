@@ -8,9 +8,12 @@ sql_obj = SqlDatabase()
 
 def fetch_tables(query='SHOW TABLES;'):
     result = sql_obj.fetchRead(query)
-    tables = []
-    for item in result:
-        tables.append(item['Tables_in_dimention_db'])
+
+    tables = [item['Tables_in_dimention_db'] for item in result]
+    # tables=[]
+    # for item in result:
+    #     tables.append(item['Tables_in_dimention_db'])
+
     print(tables)
     return tables
 
@@ -54,14 +57,17 @@ def migrate():
             print(add_proj_to_db_query)
             sql_obj.executeWrite(add_proj_to_db_query)
 
-            fetch_pid_query = "select pid from projects where pname='%s';" % (
-                projectName)
+            # fetch_pid_query = "select pid from projects where pname='%s';" % (
+            #     projectName)
+            fetch_pid_query =  f"select pid from projects where pname='{projectName}';"
+
             print(fetch_pid_query)
 
             project_id = sql_obj.fetchRead(fetch_pid_query)[0]["pid"]
             print(projectName, project_id)
 
-            for dim in range(len(item["dims"])):
+            # for dim in range(len(item["dims"])):
+            for index, dim in enumerate((item["dims"])):
                 curr_dim = item["dims"][dim]
                 print("Current Dimention: #", dim)
 

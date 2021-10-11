@@ -4,18 +4,17 @@ from sql import CrudDatabase
 
 
 def initialization():
-    project_names_list = []
     sql = CrudDatabase()
-    query = "select * from projects order by PID;"
+    # query = "select * from projects order by PID;"
+    query = f"select * from projects order by PID;"
 
     project_names = sql.fetchRead(query)
 
-    for project in project_names:
-        project_names_list.append(project.get('PNAME'))
-    # print(project_names_list)
-    print("@@@@@@@@@@@@@@@@@@@@@@@@@@")
-    print(project_names)
-    print("@@@@@@@@@@@@@@@@@@@@@@@@@@")
+    project_names_list = [project.get('PNAME') for project in project_names]
+    # print("@@@@@@@@@@@@@@@@@@@@@@@@@@")
+    # print(project_names)
+    # print("\nproject_names_list: ", project_names_list)
+    # print("@@@@@@@@@@@@@@@@@@@@@@@@@@")
 
     session["projectNameList"] = project_names_list
     session["allProjects"] = project_names
