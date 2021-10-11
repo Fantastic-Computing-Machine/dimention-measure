@@ -5,12 +5,13 @@ from openpyxl import Workbook
 from flask import Flask, render_template, redirect, session, request, flash, url_for
 from flask import send_file, after_this_request
 from pymongo.message import query
+from decimal import Decimal
 
 import database
 from sql import CrudDatabase
 import app
 import helper
-
+import json
 app = Flask(__name__)
 
 
@@ -76,12 +77,12 @@ def records_view(projectName, pid):
         if project_dimentions is None:
             project_dimentions = []
 
-        sum_sqm, sum_sqft, sum_amt = 0.0, 0.0, 0.0
+        sum_sqm, sum_sqft, sum_amt = Decimal(0.0), Decimal(0.0),Decimal(0.0)
 
         for _ in project_dimentions:
-            if not isinstance(_["area_sqm"], str) or not isinstance(_["area_sqft"], str):
-                sum_sqm = sum_sqm + _["area_sqm"]
-                sum_sqft = sum_sqft + _["area_sqft"]
+            if not isinstance(_["sqm"], str) or not isinstance(_["sqft"], str):
+                sum_sqm = sum_sqm + _["sqm"]
+                sum_sqft = sum_sqft + _["sqft"]
 
             sum_amt = sum_amt + _["amount"]
 
@@ -91,7 +92,7 @@ def records_view(projectName, pid):
 
                 checked_dict = dim_checker(request.form)
 
-                query = "INSERT into dimention(tag, length, width, area_sqm, area_sqft, rate, amount, pid) values('%s', %f, %f, %f, %f, %f, %f, %i);" % (
+                query = "INSERT into dimention(tag, length, width, sqm, sqft, rate, amount, pid) values('%s', %f, %f, %f, %f, %f, %f, %i);" % (
                     str(checked_dict['tag']), float(checked_dict['length']), float(checked_dict['width']), float(checked_dict['sqm']), float(checked_dict['sqft']), float(checked_dict['rate']), float(checked_dict['amount']), int(pid))
 
                 if sql.executeWrite(query):
@@ -105,6 +106,13 @@ def records_view(projectName, pid):
             #     return redirect(url_for('update_dimention', form_fields=request.form))
 
         else:
+            a=[]
+            for i in project_dimentions:
+                checked_list = dim_checker(i)
+                a.append(checked_list)
+
+            project_dimentions =a
+
             sum_sqm = round(sum_sqm, 2)
             sum_sqft = round(sum_sqft, 2)
             sum_amt = round(sum_amt, 2)
@@ -116,9 +124,9 @@ def records_view(projectName, pid):
                 "project_json": project_dimentions,
                 "projectName": projectName,
                 "pid": pid,
-                "sum_sqm": sum_sqm,
-                "sum_sqft": sum_sqft,
-                "sum_amt": sum_amt
+                "sum_sqm": float(sum_sqm),
+                "sum_sqft": float(sum_sqft),
+                "sum_amt": float(sum_amt)
             }
 
             # return render_template('records.html', project_json=project_dimentions, projectName=projectName, pid=pid, sum_sqm=sum_sqm, sum_sqft=sum_sqft, sum_amt=sum_amt)
@@ -143,7 +151,7 @@ def update_dimention_view(projectName, pid, dimid):
         checked_dict = dim_checker(request.form)
         print("\nCHECKED DICT: ", checked_dict)
 
-        update_query = "UPDATE dimention SET tag='%s', length=%f, width=%f, area_sqm=%f, area_sqft=%f, rate=%f, amount=%f WHERE dimid=%i;" % (str(checked_dict.get('tag')), float(checked_dict.get('length')), float(
+        update_query = "UPDATE dimention SET tag='%s', length=%f, width=%f, sqm=%f, sqft=%f, rate=%f, amount=%f WHERE dimid=%i;" % (str(checked_dict.get('tag')), float(checked_dict.get('length')), float(
             checked_dict.get('width')), float(checked_dict.get('sqm')), float(checked_dict.get('sqft')), float(checked_dict.get('rate')), float(checked_dict.get('amount')), int(dimid))
         print(update_query)
         query = sql.executeWrite(update_query)
@@ -212,7 +220,7 @@ def download_excel_view(projectName):
             str(round(item["width"]*3.281, 2)) + " ft.)"
 
         sheet.append([item["tag"], item["length"],
-                      item["width"], item["area_sqm"], item["area_sqft"], item["rate"], item["amount"]])
+                      item["width"], item["sqm"], item["sqft"], item["rate"], item["amount"]])
 
     sheet.append([""])
     sheet.append(['Total sqm', session['proj_info'][2]])
