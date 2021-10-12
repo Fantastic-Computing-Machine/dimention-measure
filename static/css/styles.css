@@ -44,3 +44,9 @@
   max-height: 800px;
   direction: ltr;
 }
+
+.icon_ud {
+  border-radius: 10%;
+  border-color: black;
+  border: 1px;
+}

@@ -37,7 +37,7 @@
 
 {% block body %}
 
-<div class="container-lg container-md container-sm pb-4">
+<div class="container-lg pb-4">
     <div class="text-light py-2 display-4">My Projects</div>
     <div class="row">
 
@@ -45,18 +45,19 @@
         <div class="col-lg-4 col-md-6 sm-10">
             <div class="card my-2 index_project_card">
                 <div class="card-body">
-                    <a href="{{ url_for('record',projectName = item['PNAME'], pid=item['PID'])}}" class="text-dark"
-                        style="text-decoration:none">
+                    <a href="{{ url_for('record',projectName = item.get('PNAME'), pid=item.get('PID'))}}"
+                        class="text-dark" style="text-decoration:none">
                         <div class="d-flex justify-content-between align-items-start">
                             <div class="ms-2 me-auto">
-                                <div class="fw-bold" style="white-space: nowrap">{{ item['PNAME']|capitalize }}</div>
+                                <div class="fw-bold" style="white-space: nowrap">{{ item.get('PNAME')|capitalize }}
+                                </div>
                                 <span class="badge bg-secondary mt-1">
-                                    {{item["date_created"].date().strftime('%b %d, %Y')}}
+                                    {{item.get("date_created").date().strftime('%b %d, %Y')}}
                                 </span>
                             </div>
                             <span>
                                 <a class="badge bg-light" style="z-index:2;"
-                                    href="{{ url_for('deleteProject',projectName = item['PNAME'])}}">
+                                    href="{{ url_for('deleteProject',projectName = item.get('PNAME'))}}">
                                     <img src="https://img.icons8.com/color/28/000000/delete-forever.png" />
                                 </a>
                             </span>

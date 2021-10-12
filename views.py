@@ -30,7 +30,7 @@ def index_view():
                 else:
                     print("Not working Executing write")
                     # flash
-                pid = sql.readFetch(
+                pid = sql.fetchRead(
                     f"select PID from projects where PNAME='{str(projectName)[0]['PID']}';")
 
                 return redirect(url_for('record', projectName=projectName, pid=pid))
@@ -77,16 +77,6 @@ def records_view(projectName, pid):
         if project_dimentions is None:
             project_dimentions = []
 
-        # sum_query = f'''SELECT SUM(d1.sqm) AS sum_sqm, SUM(d2.sqft) AS sum_sqft, SUM(d3.amount) AS sum_amount
-        #                 FROM dimention d1, dimention d2, dimention d3
-        #                 WHERE d1.pid={pid} AND d2.pid={pid} AND d3.pid={pid};'''
-
-        # print("\nSUM QUERY", sum_query)
-
-        # sum_of_fields = sql.fetchRead(sum_query)
-
-        # print("\nSUM OF FIELDS: ", sum_of_fields)
-
         sum_sqm, sum_sqft, sum_amt = 0.0, 0.0, 0.0
 
         for _ in project_dimentions:
@@ -111,9 +101,6 @@ def records_view(projectName, pid):
                 else:
                     print("ERROR: Unsuccessful dimention append.")
                 # Flash
-
-            # if "update_dimention" in request.form:
-            #     return redirect(url_for('update_dimention', form_fields=request.form))
 
         else:
             a = []
@@ -148,10 +135,10 @@ def update_dimention_view(projectName, pid, dimid):
         f"SELECT * FROM dimention WHERE dimid={dimid}")
 
     if request.method == "POST":
-        print("REQUEST.FORM--> ", request.form)
+        # print("REQUEST.FORM--> ", request.form)
 
         checked_dict = dim_checker(request.form)
-        print("\nCHECKED DICT: ", checked_dict)
+        # print("\nCHECKED DICT: ", checked_dict)
 
         update_query = "UPDATE dimention SET tag='%s', length=%f, width=%f, sqm=%f, sqft=%f, rate=%f, amount=%f WHERE dimid=%i;" % (str(checked_dict.get('tag')), float(checked_dict.get('length')), float(
             checked_dict.get('width')), float(checked_dict.get('sqm')), float(checked_dict.get('sqft')), float(checked_dict.get('rate')), float(checked_dict.get('amount')), int(dimid))

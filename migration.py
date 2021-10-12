@@ -19,14 +19,14 @@ def fetch_tables(query='SHOW TABLES;'):
 
 
 def check_sql_tables():
-    tables_required = ['projects', 'dimention']
-    tables_in_db = fetch_tables()
-    tables_to_create = list(set(tables_required) - set(tables_in_db))
-    print(tables_to_create)
-    if len(tables_to_create) != len(tables_required):
+    # tables_required = ['projects', 'dimention']
+    # tables_in_db = fetch_tables()
+    # tables_to_create = list(set(tables_required) - set(tables_in_db))
+    # print(tables_to_create)
+    # if len(tables_to_create) != len(tables_required):
 
-        if 'projects' in tables_to_create:
-            query = '''CREATE TABLE `projects` (
+    #     if 'projects' in tables_to_create:
+    query = '''CREATE TABLE `projects` (
                     `PID` int NOT NULL AUTO_INCREMENT,
                     `PNAME` varchar(30) NOT NULL,
                     `date_created` datetime DEFAULT CURRENT_TIMESTAMP,
@@ -36,17 +36,17 @@ def check_sql_tables():
                     KEY `userId` (`userId`),
                     CONSTRAINT `projects_ibfk_1` FOREIGN KEY (`userId`) REFERENCES `users` (`userId`)
                     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci'''
-            sql_obj.executeWrite(query)
-            print("CREATED PROJECTS TABLE...")
+    sql_obj.executeWrite(query)
+    print("CREATED PROJECTS TABLE...\n")
 
-        if 'dimention' in tables_to_create:
-            query = '''CREATE TABLE `dimention` (
+    # if 'dimention' in tables_to_create:
+    query = '''CREATE TABLE `dimention` (
                     `dimid` int NOT NULL AUTO_INCREMENT,
                     `tag` varchar(225) NOT NULL,
                     `length` DECIMAL(11,2) NOT NULL,
                     `width` DECIMAL(11,2) DEFAULT NULL,
-                    `area_sqm` DECIMAL(11,2) DEFAULT NULL,
-                    `area_sqft` DECIMAL(11,2) DEFAULT NULL,
+                    `sqm` DECIMAL(11,2) DEFAULT NULL,
+                    `sqft` DECIMAL(11,2) DEFAULT NULL,
                     `rate` DECIMAL(11,2) DEFAULT NULL,
                     `amount` DECIMAL(11,2) DEFAULT NULL,
                     `PID` int NOT NULL,
@@ -55,13 +55,15 @@ def check_sql_tables():
                     KEY `dimention_ibfk_1` (`PID`),
                     CONSTRAINT `dimention_ibfk_1` FOREIGN KEY (`PID`) REFERENCES `projects` (`PID`) ON DELETE CASCADE
                     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci'''
-            sql_obj.executeWrite(query)
-            print("CREATED DIMENTION TABLE...")
+    sql_obj.executeWrite(query)
+    print("CREATED DIMENTION TABLE...\n")
     return True
 
 
 def migrate():
-    if True:
+    # valu = check_sql_tables()
+    valu = True
+    if valu:
         for item in mongo_obj.find():
             print(item)
             projectName = item["projectName"]
@@ -72,15 +74,15 @@ def migrate():
 
             # fetch_pid_query = "select pid from projects where pname='%s';" % (
             #     projectName)
-            fetch_pid_query =  f"select pid from projects where pname='{projectName}';"
+            fetch_pid_query = f"select pid from projects where pname='{projectName}';"
 
             print(fetch_pid_query)
 
             project_id = sql_obj.fetchRead(fetch_pid_query)[0]["pid"]
             print(projectName, project_id)
 
-            # for dim in range(len(item["dims"])):
-            for index, dim in enumerate((item["dims"])):
+            for dim in range(len(item["dims"])):
+                # for index, dim in enumerate((item["dims"])):
                 curr_dim = item["dims"][dim]
                 print("Current Dimention: #", dim)
 
@@ -93,7 +95,7 @@ def migrate():
                 curr_dim["amount"] = str(
                     curr_dim["amount"]).replace("N/A", "0")
 
-                query = '''insert into dimention(tag, length, width, area_sqm, area_sqft, rate, amount, pid) 
+                query = '''insert into dimention(tag, length, width, sqm, sqft, rate, amount, pid) 
                                             VALUES('%s', '%f', '%f', '%f', '%f', '%f', '%f', '%i');''' % (str(curr_dim["name"]), float(curr_dim["length"]), float(curr_dim["width"]), float(curr_dim["sqm"]), float(curr_dim["sqft"]), float(curr_dim["rate"]), float(curr_dim["amount"]), project_id)
                 sql_obj.executeWrite(query)
                 print(curr_dim)
