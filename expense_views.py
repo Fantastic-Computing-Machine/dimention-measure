@@ -128,7 +128,11 @@ def expense_home_project_view(pid):
     expense_list = sql_obj.fetchRead(expense_list_query)
     print("EXPENSE LIST: ", expense_list)
 
-    sum_query = f"SELECT SUM(p1.amount) as sum_paid, SUM(p2.amount) as sum_gained FROM expenses p1, expenses p2 WHERE p1.payment_status='Paid' AND p2.payment_status='Recieved' AND p1.pid = {pid} AND p2.pid = {pid} ;"
+    sum_query = f'''SELECT T1.sum_paid as sum_paid, T2.sum_recieved as sum_recieved FROM(
+(SELECT SUM(amount) as sum_paid, @rn1 := @rn1 + 1 AS row_number1 
+FROM expenses,(SELECT @rn1 := 0 ) var WHERE payment_status='Paid' and pid ={pid}) as T1 inner join 
+(SELECT SUM(amount) as sum_recieved, @rn2 := @rn2 + 1 AS row_number2 
+FROM expenses ,(SELECT @rn2 := 0 ) var WHERE payment_status='Recieved' and pid ={pid}) as T2 ON T1.row_number1 = T2.row_number2);'''
     sum_result = sql_obj.fetchRead(sum_query)
 
     if request.method == 'POST':
@@ -139,8 +143,8 @@ def expense_home_project_view(pid):
             status = request.form.get('status_radio')
             print("EXPENSE MODAL: ", amount, payee, status)
 
-            insert_expense_query = "insert into expenses(payee, amount, payment_status) values('%s', '%f', '%s');" % (
-                str(payee), float(amount), str(status))
+            insert_expense_query = "insert into expenses(payee, amount, payment_status,pid) values('%s', %f, '%s',%i);" % (
+                str(payee), float(amount), str(status), int(pid))
             insert_value = sql_obj.executeWrite(insert_expense_query)
             # Flashing message (successful and unsuccessful)
 
