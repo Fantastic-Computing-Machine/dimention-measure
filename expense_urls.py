@@ -1,7 +1,7 @@
 from flask import Blueprint, redirect, url_for
 
 from expense_views import expense_home_view, payee_update_view, payee_delete_view
-from expense_views import expense_update_view, expense_delete_view, payee_expense_view
+from expense_views import expense_update_view, expense_delete_view, payee_expense_view,expense_home_project_view
 
 expense_urls = Blueprint(__name__, "expense")
 
@@ -10,6 +10,9 @@ expense_urls = Blueprint(__name__, "expense")
 def expense_home():
     return expense_home_view()
 
+@expense_urls.route("/project/<int:pid>", methods=["POST", "GET"])
+def expense_home_project(pid):
+    return expense_home_project_view(pid)
 
 @expense_urls.route('/expense/success/')
 def expense_success():

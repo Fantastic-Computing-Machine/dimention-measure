@@ -115,3 +115,79 @@ def payee_expense_view(payee):
     }
     # return render_template("payee_exp.html", result=result, payee=payee)
     return render_template("payee_exp.html", **context)
+
+
+def expense_home_project_view(pid):
+    sql_obj = SqlDatabase()
+
+    payee_list_query = "SELECT payeeId, payeeName FROM payees;"
+    payee_list = sql_obj.fetchRead(payee_list_query)
+    print("PAYEE LIST: ", payee_list)
+    expense_list_query = "SELECT * FROM expenses where pid = %i;" %(int(pid))
+
+    expense_list = sql_obj.fetchRead(expense_list_query)
+    print("EXPENSE LIST: ", expense_list)
+
+    sum_query = f'''SELECT T1.sum_paid as sum_paid, T2.sum_recieved as sum_recieved FROM(
+(SELECT SUM(amount) as sum_paid, @rn1 := @rn1 + 1 AS row_number1 
+FROM expenses,(SELECT @rn1 := 0 ) var WHERE payment_status='Paid' and pid ={pid}) as T1 inner join 
+(SELECT SUM(amount) as sum_recieved, @rn2 := @rn2 + 1 AS row_number2 
+FROM expenses ,(SELECT @rn2 := 0 ) var WHERE payment_status='Recieved' and pid ={pid}) as T2 ON T1.row_number1 = T2.row_number2);'''
+    sum_result = sql_obj.fetchRead(sum_query)
+
+    if request.method == 'POST':
+        print(request.form)
+        if "expenseModal" in request.form:
+            amount = request.form.get('amount')
+            payee = request.form.get('payee_list')
+            status = request.form.get('status_radio')
+            print("EXPENSE MODAL: ", amount, payee, status)
+
+            insert_expense_query = "insert into expenses(payee, amount, payment_status,pid) values('%s', %f, '%s',%i);" % (
+                str(payee), float(amount), str(status), int(pid))
+            insert_value = sql_obj.executeWrite(insert_expense_query)
+            # Flashing message (successful and unsuccessful)
+
+            return redirect(url_for('expense_urls.expense_success'))
+
+        elif "userModal" in request.form:
+            new_payee = request.form.get(
+                'newPayeeName').strip().replace(' ', "-")
+            about = request.form.get('about')
+            print("USER MODAL: ", new_payee, about)
+
+            insert_expense_query = "insert into payees(payeeName, about) values('%s', '%s');" % (
+                str(new_payee), str(about))
+            insert_value = sql_obj.executeWrite(insert_expense_query)
+            # Flashing message (successful and unsuccessful)
+
+            return redirect(url_for('expense_urls.expense_success'))
+
+        elif "expense_update" in request.form:
+            expId = request.form.get('expId')
+            amount_update = request.form.get('amount')
+            payee_update = request.form.get('payee_list')
+            ts = time.time()
+            timestamp = datetime.fromtimestamp(
+                ts).strftime('%Y-%m-%d %H:%M:%S')
+            print(timestamp)
+
+            print(expId, amount_update, payee_update)
+            update_query = "UPDATE expenses SET amount=%f, payee='%s', date_created='%s' WHERE expId=%i;" % (
+                float(amount_update), str(payee_update), str(timestamp), int(expId))
+
+            print(update_query)
+            update_value = sql_obj.executeWrite(update_query)
+            if update_value is False:
+                print("FAILED")
+                # Flashing message (unsuccessful)
+                return render_template("error_404.html")
+            print("TRUE")
+            return redirect(url_for('expense_urls.expense_success'))
+
+        elif "payee_update" in request.form:
+            payee_update = request.form.get('payee_list')
+            print(amount_update, payee_update)
+
+            return redirect(url_for('expense_urls.expense_success'))
+    return render_template('expense_home.html', payee_list=payee_list, expense_list=expense_list, sum_result=sum_result)
