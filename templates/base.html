@@ -37,6 +37,7 @@
 
                     <div class="p-1">
                         {% block header %} {% endblock %}
+                        <button type="button" class="btn btn-light" onclick="history.back()">Back</button>
                     </div>
 
                 </div>
@@ -71,16 +72,17 @@
     </main>
 
 
-    <!-- Button trigger modal -->
     <div id="mybutton">
 
+        <!-- Converter button modal -->
         <button type="button" class="btn btn-primary btn-lg" data-bs-toggle="modal" data-bs-target="#calculatorModal">
             <img src="https://img.icons8.com/ios/30/ffffff/design--v2.png" />
         </button>
+        <!-- Converter button modal -->
 
-        <a href="{{ url_for('expense_urls.expense_home') }}" type="button" class="btn btn-success btn-lg">
-            <img src="https://img.icons8.com/ios/30/ffffff/money-bag-rupee.png" />
-        </a>
+        {% block expense_button %}
+        {% endblock %}
+
     </div>
 
     <!-- Modal -->
