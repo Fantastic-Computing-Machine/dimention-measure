@@ -110,6 +110,9 @@ def records_view(projectName, pid):
 
             project_dimentions = a
 
+            session["proj_info"] = [projectName,
+                                    project_dimentions, sum_sqm, sum_sqft, sum_amt]
+
             context = {
                 "project_json": project_dimentions,
                 "projectName": projectName,
@@ -221,6 +224,7 @@ def download_excel_view(projectName):
 
     print(filename)
     workbook.save(filename=str(filename))
+    workbook.close()
 
     session.pop('proj_info')
 
