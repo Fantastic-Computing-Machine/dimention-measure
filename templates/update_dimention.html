@@ -19,48 +19,48 @@
                 <div class="card">
 
                     <div class="card-header">
-                        <h5 class="card-title" id="{{item['tag']}}dimentionLabel">Update:
+                        <h5 class="card-title" id="{{item.get('tag')}}dimentionLabel">Update:
                             {{projectName| capitalize}}/ {{item.get('tag')}}</h5>
                     </div>
                     <form action="" method="POST" name="update_dimention" id="update_dimention">
                         <div class="card-body">
 
                             <div class="form-floating mb-3">
-                                <input name="tag" id="tag" value="{{item['tag'] | capitalize}}" class="form-control"
+                                <input name="tag" id="tag" value="{{item.get('tag') | capitalize}}" class="form-control"
                                     type="text" placeholder="Tag">
                                 <label for="tag">Tag</label>
                             </div>
                             <div class="form-floating mb-3">
-                                <input name="length" id="length" value="{{item['length']}}" class="form-control"
+                                <input name="length" id="length" value="{{item.get('length')}}" class="form-control"
                                     type="number" oninput=areas() step=".01" placeholder="Length">
                                 <label for="length">Length (meter)</label>
                             </div>
                             <div class="form-floating mb-3">
-                                <input name="width" id="width" value="{{item['width']}}" class="form-control"
+                                <input name="width" id="width" value="{{item.get('width')}}" class="form-control"
                                     type="number" oninput=areas() step=".01" placeholder="Width">
                                 <label for="width">Width (meter)</label>
                             </div>
 
                             <div class="form-floating mb-3">
-                                <input name="sqm" id="sqm" value="{{item['sqm']}}" class="form-control" type="text"
+                                <input name="sqm" id="sqm" value="{{item.get('sqm')}}" class="form-control" type="text"
                                     placeholder="Area Sqm." readonly>
                                 <label for="sqm">Area Sqm.</label>
                             </div>
 
                             <div class="form-floating mb-3">
-                                <input name="sqft" id="sqft" value="{{item['sqft']}}" class="form-control"
+                                <input name="sqft" id="sqft" value="{{item.get('sqft')}}" class="form-control"
                                     type="text" placeholder="Area Sqft." readonly>
                                 <label for="sqft">Area Sqft.</label>
                             </div>
 
                             <div class="form-floating mb-3">
-                                <input name="rate" id="rate" value="{{item['rate']}}" class="form-control" type="number"
-                                    oninput=areas() step=".01" placeholder="Rate">
+                                <input name="rate" id="rate" value="{{item.get('rate')}}" class="form-control"
+                                    type="number" oninput=areas() step=".01" placeholder="Rate">
                                 <label for="rate">Rate</label>
                             </div>
 
                             <div class="form-floating mb-3">
-                                <input name="amount" id="amount" value="{{item['amount']}}" class="form-control"
+                                <input name="amount" id="amount" value="{{item.get('amount')}}" class="form-control"
                                     type="number" placeholder="Amount" readonly>
                                 <label for="amount">Amount</label>
                             </div>

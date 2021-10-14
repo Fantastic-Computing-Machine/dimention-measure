@@ -37,6 +37,7 @@ def record(projectName, pid):
         return records_view(projectName, pid)
     return render_template("error_404.html")
 
+
 @app.route('/<string:projectName>/delete/<int:pid>_<int:dimid>/', methods=["POST", "GET"])
 def delete(projectName, pid, dimid):
     return delete_view(projectName, pid, dimid)

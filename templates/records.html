@@ -52,11 +52,6 @@
                                 {{item.get('width')}}
                                 m
                                 ({{'%0.2f' | format(item.get('width')*3.281 | float) }} ft) </td>
-
-                            <!-- if you change "N/A" here then change the value in js file also -->
-                            <!-- <td class="text-end mx-2 font-monospace">{{item["sqm"]}}</td> -->
-                            <!-- <td class="text-end mx-2 font-monospace">{{item["sqft"]}}</td> -->
-
                             <td class="text-end mx-2 font-monospace">{{'%0.2f' | format(item.get('sqm') | float) }}</td>
                             <td class="text-end mx-2 font-monospace">{{'%0.2f' | format(item.get('sqft') | float) }}
                             </td>
@@ -167,22 +162,34 @@
                                 </div>
                             </div>
                         </div>
+
                     </form>
                 </table>
             </div>
-            <div class="d-flex justify-content-center my-1">
-                <button type="button" class="btn btn-outline-primary align-middle" data-bs-toggle="modal"
-                    data-bs-target="#newDimention">Add Dimention
+            <div class="my-1">
+                <button type="button" class="btn btn-outline-primary m-1" data-bs-toggle="modal"
+                    data-bs-target="#newDimention">
+                    <span style="white-space: nowrap">
+                        <img class="px-2" src="https://img.icons8.com/ios/25/000000/add--v2.png" />
+                        Add Dimention
+                    </span>
                 </button>
+                <a class="btn btn-outline-success m-1" href='{{url_for("download_excel",projectName=projectName)}}'
+                    download>
+                    <span style="white-space: nowrap">
+                        <img class="px-2" src="https://img.icons8.com/ios-glyphs/25/000000/ms-excel.png">
+                        Save Excel</span>
+                </a>
             </div>
         </div>
     </div>
 
     <div class="row flex-md-row py-3">
 
-        <div class="col-md-6">
-            <div class="card my-3" style="text-align:center; min-height: 164px;">
+        <!-- <div class="col-md-6">
+            <div class="card my-3" style="text-align:center; min-height: 192px;">
                 <div class="card-body" style="text-align:center;">
+
                     <button type="button" class="btn btn-primary align-middle" data-bs-toggle="modal"
                         data-bs-target="#newDimention">
                         <span style="white-space: nowrap">
@@ -201,30 +208,48 @@
                             Save PDF
                         </span>
                     </button>
+
                 </div>
             </div>
-        </div>
+        </div> -->
 
-        <div class="col-md-6" style="height: 200px;">
+        <div class="col" style="height: 200px;">
             <div class="card my-3">
                 <div class="card-body">
-                    <p class="" style="text-align:center">
-                        Total area <b class="fs-5"> {{sum_sqm}} Sqm</b><br>
-                        Total area <b class="fs-5"> {{sum_sqft}} SqFt.</b><br>
-                        Total<b class="fs-5"> ₹ {{sum_amt}} </b><br>
-                        <span class="small" style="text-align:center;">
-                            <em>
-                                *Amount calculated using Dimentions in </em><span
-                                class="badge bg-primary rounded-pill">ft./sqft.
+                    <p class="fs-5 fw-bold">
+                        <li class="list-group-item d-flex justify-content-between ">
+                            Total Area in sqm
+                            <span class="badge bg-primary fs-6 font-monospace">{{sum_sqm}} Sqm.</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between ">
+                            Total Area in sqft
+                            <span class="badge bg-primary fs-6 font-monospace">{{sum_sqft}} SqFt.</span>
+                        </li>
 
-                            </span>
-                        </span>
+                        <li class="list-group-item d-flex justify-content-between align-items-start">
+                            <div class="">
+                                <div class="">Total Amount*</div>
+                            </div>
+                            <span class="badge bg-primary fs-6 my-auto font-monospace">₹ {{sum_amt}}</span>
+                        </li>
                     </p>
+                    <span class="fs-6 fst-italic">
+                        <em>*Amount calculated using Dimentions in </em><span
+                            class="badge bg-secondary text-wrap font-monospace">Ft. | SqFt.
+                        </span>
+                    </span>
                 </div>
             </div>
         </div>
     </div>
 </div>
 
+{% endblock %}
 
+{% block expense_button %}
+
+<a href="{{ url_for('expense_urls.project_expense', projectName=projectName, pid=pid) }}" type="button"
+    class="btn btn-success btn-lg">
+    <img src="https://img.icons8.com/ios/30/ffffff/money-circulation.png" />
+</a>
 {% endblock %}
