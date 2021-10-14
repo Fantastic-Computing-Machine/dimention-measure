@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 {% block head %}
-<title>All Expenses</title>
+<title>Expenses {{projectName | capitalize}}</title>
 {% endblock %}
 
 {% block header %}
@@ -147,7 +147,7 @@
 
 
 <div class="container px-3">
-    <div class="text-light py-2 display-4">All Expenses</div>
+    <div class="text-light py-2 display-4">{{projectName | capitalize}} Expenses</div>
 
     <div class="row flex-md-row-reverse py-3" dir="rtl">
         <div class="col-md-6 col_height">
@@ -183,26 +183,23 @@
                 </div>
             </div>
             <!-- SUM CARD -->
+
             <!-- PAYEES CARD -->
             <div class="order-md-4 card my-2">
                 <div class="card-body payee_card">
-
                     <p class="fs-4">Payees</p>
-
                     <ul class="list-group">
                         {% for item in payee_list %}
                         <li class="list-group-item">
 
                             <div class="d-flex justify-content-between">
-                                <div calss="fw-bold">
+                                <div>
                                     <a href="{{ url_for('expense_urls.payee_expense', payee=item.get('payeeName'))}}"
                                         style="text-decoration: none;">
-                                        <div class="fw-bold">{{item.get('payeeName')| capitalize}}</div>
+                                        <b>{{item.get('payeeName')| capitalize}}</b>
                                     </a>
-                                    {% if item.get('remarks')==None %}
-                                    No Remarks
-                                    {% else %}
-                                    {{item.get('remarks')|capitalize}}
+                                    {% if item.get('remarks')!=None %}
+                                    : {{item.get('remarks')}}
                                     {% endif %}
                                 </div>
                                 <div>
@@ -212,7 +209,7 @@
                                             <img src="https://img.icons8.com/ios/20/000000/edit--v2.png" />
                                         </a>
                                         <a class="btn btn-light"
-                                            href="{{ url_for('expense_urls.payee_delete', payee_id=item.get('payeeId')) }}">
+                                            href="{{ url_for('expense_urls.payee_project_delete',projectName=projectName, pid=pid, payee_id=item.get('payeeId')) }}">
                                             <img src="https://img.icons8.com/ios/20/000000/delete-forever.png" />
                                         </a>
                                     </span>
@@ -226,15 +223,11 @@
             <!-- PAYEES CARD -->
         </div>
 
-
         <!-- EXPENSE LIST CARD  -->
         <div class="col-md-6 col_height">
-
             <div class="order-md-3 card my-2">
                 <div class="card-body scroll_card_expense">
-
-                    <p class="fs-4"> All Expenses</p>
-
+                    <p class="fs-4">Expenses</p>
                     {% if expense_list|length == 0 %}
                     <div class=" text-center my-3">
                         <img class="img-fluid m-2" style="width: 450px;"
@@ -287,21 +280,12 @@
                                     <!-- UPDATE EXPENSE MODAL HEADER -->
 
                                     <form action="" method="POST" id="expense_update">
-
                                         <!-- UPDATE EXPENSE MODAL BODY -->
                                         <div class="modal-body">
                                             <div class="my-3 mx-4">
-                                                <select class="form-select" name="payee_list"
-                                                    aria-label="Default select example">
-                                                    <option value="{{item.get('payee')}}" selected>
-                                                        {{item.get('payee')}}
-                                                    </option>
-                                                    {% for payee in payee_list %}
-                                                    <option value="{{payee.get('payeeName')}}">
-                                                        {{payee.get('payeeName')}}
-                                                    </option>
-                                                    {% endfor %}
-                                                </select>
+
+                                                <input class="form-control" name="payee_list" type="text"
+                                                    value="{{item.get('payee')}}" readonly>
                                             </div>
                                             <div class="my-3 mx-4">
                                                 <div class="form-floating">
@@ -324,14 +308,14 @@
                                                 value="expense_update" id="expense_update">Save
                                                 changes</button>
                                             <a class="btn btn-danger"
-                                                href="{{ url_for('expense_urls.expense_delete', expId=item.get('expId')) }}">Delete</a>
+                                                href="{{ url_for('expense_urls.expense_project_delete',pid=pid, projectName=projectName, expId=item.get('expId')) }}">Delete</a>
                                         </div>
                                         <!-- UPDATE EXPENSE MODAL FOOTER -->
                                     </form>
                                 </div>
                             </div>
                         </div>
-                        <!-- UPDATE EXPENSE MODAL -->
+                        <!-- EXPENSE MODAL -->
                         {% endfor %}
                     </ol>
                 </div>
