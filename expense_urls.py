@@ -52,6 +52,12 @@ def payee_project_delete(payee_id, projectName, pid):
 # Universal update payee
 def payee_update(payee_id):
     return payee_update_view(payee_id)
+    
+@expense_urls.route('/payee/<string:projectName>/update/<int:pid>/<int:payee_id>/')
+# Project Specific update payee
+def payee_project_update(payee_id, projectName, pid):
+    print("UPDATE payee_id: ", payee_id)
+    return payee_project_update_view(payee_id, projectName, pid)
 
 
 @expense_urls.route('/expense/delete/<int:expId>/')
