@@ -191,15 +191,18 @@
                     <ul class="list-group">
                         {% for item in payee_list %}
                         <li class="list-group-item">
-
+                            
                             <div class="d-flex justify-content-between">
-                                <div>
+                                <div calss="fw-bold">
                                     <a href="{{ url_for('expense_urls.payee_expense', payee=item.get('payeeName'))}}"
+                                    
                                         style="text-decoration: none;">
-                                        <b>{{item.get('payeeName')| capitalize}}</b>
+                                        <div class="fw-bold">{{item.get('payeeName')| capitalize}}</div>
                                     </a>
-                                    {% if item.get('remarks')!=None %}
-                                    : {{item.get('remarks')}}
+                                    {% if item.get('remarks')==None %}
+                                    No Remarks
+                                    {% else %}
+                                    {{item.get('remarks')|capitalize}}
                                     {% endif %}
                                 </div>
                                 <div>
