@@ -29,11 +29,17 @@ def index_view():
                     return redirect(url_for('index'))
                 else:
                     print("Not working Executing write")
-                    flash("Project name already exists! Please try with different name :)")
+                    flash(
+                        "Project name already exists! Please try with different name :)")
                 pid = sql.fetchRead(
                     f"select PID from projects where PNAME='{str(projectName)[0]['PID']}';")
 
-                return redirect(url_for('record', projectName=projectName, pid=pid))
+                context = {
+                    "projectName": projectName,
+                    "pid": pid
+                }
+
+                return redirect(url_for('record', **context))
             except Exception as e:
                 print(e)
 
@@ -100,7 +106,6 @@ def records_view(projectName, pid):
                     return redirect(url_for('success', projectName=projectName, pid=pid))
                 else:
                     print("ERROR: Unsuccessful dimention append.")
-                    #flash
                     flash("Something Went Wrong :( Error code S04")
 
         else:
@@ -154,7 +159,6 @@ def update_dimention_view(projectName, pid, dimid):
         else:
             print("Unsuccessful")
             flash("Something Went Wrong :( Error code S02")
-            # flash unsuccessful
 
     context = {
         'projectName': projectName,
@@ -174,7 +178,6 @@ def delete_view(projectName, pid, dimid):
     else:
         print("ERROR: Unsuccessful dimention delete.")
         flash("Something Went Wrong :( Error code S03")
-        # flash
 
 
 def deleteProject_view(projectName):

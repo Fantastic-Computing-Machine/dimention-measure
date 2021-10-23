@@ -90,79 +90,12 @@
 </div>
 <!-- Add new user modal trigger -->
 
-<!-- Add new Expense modal -->
-<!-- 
-<div class="modal fade" id="staticBackdrop" tabindex="-1" aria-labelledby="expenseModalLabel" width="75%"
-    aria-hidden="true">
-    <div class="modal-dialog">
-        <form action="" method="POST" id="expense">
-            <div class="mx-auto">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="staticBackdropLabel">Add Expense</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-
-                    <div class="modal-body">
-                        <div class="my-3 mx-4">
-                            <select class="form-select" name="payee_list" aria-label="Default select example">
-                                <option selected>Select Payee</option>
-                                {% for item in payee_list %}
-                                <option value="{{item.get('payeeName')}}">{{item.get('payeeName')}}</option>
-                                {% endfor %}
-                            </select>
-                        </div>
-
-                        <div class="my-3 mx-4">
-                            <div class="form-floating">
-                                <input type="number" step=".01" class="form-control" id="amount" name="amount">
-                                <label for="newPayeeName">Amount</label>
-                            </div>
-                        </div>
-                        <div class="my-3 mx-4">
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="radio" name="status_radio" id="paidRadio"
-                                    value="Paid">
-                                <label class="badge bg-danger rounded-pill" for="paidRadio">Paid</label>
-                            </div>
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="radio" name="status_radio" id="recievedradio"
-                                    value="Recieved">
-                                <label class="badge bg-success rounded-pill" for="recievedradio">Recieved</label>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button type="submit" name="expenseModal" value="expenseModal" id="expenseModal"
-                            class="btn btn-success">Save</button>
-                    </div>
-                </div>
-            </div>
-        </form>
-    </div>
-</div> -->
-<!-- Add new Expense modal -->
-
 
 <div class="container px-3">
     <div class="text-light py-2 display-4">All Expenses</div>
 
     <div class="row flex-md-row-reverse py-3" dir="rtl">
         <div class="col-md-6 col_height">
-            <!-- TOTAL TRANSACTIONS -->
-            <div class="order-md-1 card my-2">
-                <div class="card-body">
-                    <h4>
-                        <li class="list-group-item d-flex justify-content-between align-items-center">
-                            Total Transactions:
-                            <span class="badge font-monospace bg-primary"># {{expense_list|length}}</span>
-                        </li>
-                    </h4>
-                </div>
-            </div>
-            <!-- TOTAL TRANSACTIONS -->
             <!-- SUM CARD -->
             <div class="order-md-2 card my-2">
                 <div class="card-body">
@@ -183,11 +116,38 @@
                 </div>
             </div>
             <!-- SUM CARD -->
+            <!-- TOTAL TRANSACTIONS -->
+            <div class="order-md-1 card my-2">
+                <div class="card-body">
+                    <h4>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            Total Transactions:
+                            <span class="badge font-monospace bg-primary"># {{expense_list|length}}</span>
+                        </li>
+                    </h4>
+                </div>
+            </div>
+            <!-- TOTAL TRANSACTIONS -->
             <!-- PAYEES CARD -->
             <div class="order-md-4 card my-2">
                 <div class="card-body payee_card">
 
                     <p class="fs-4">Payees</p>
+                    {% if payee_list|length == 0 %}
+                    <div class=" text-center my-3">
+                        <img class="img-fluid m-2" style="width: 300px;"
+                            src="{{ url_for('static', filename='img/blank.svg') }}">
+                        <div class="text-center">
+                            <p class="py-1 fw-light my-3 fs-1">Nothing Here
+                                <button type="button" class="btn btn-outline-success" data-bs-toggle="modal"
+                                    data-bs-target="#userModal">
+                                    Add Payee
+                                </button>
+                            </p>
+                        </div>
+                    </div>
+                    {% endif %}
+
 
                     <ul class="list-group">
                         {% for item in payee_list %}
@@ -207,10 +167,11 @@
                                 </div>
                                 <div>
                                     <span class="align-items-start">
-                                        <a class="btn btn-light"
-                                            href="{{ url_for('expense_urls.payee_update', payee_id=item.get('payeeId')) }}">
+                                        <a class="btn btn-light" data-bs-toggle="modal"
+                                            data-bs-target="#{{item.get('payeeName')}}{{item.get('payeeId')}}UpdatePayee">
                                             <img src="https://img.icons8.com/ios/20/000000/edit--v2.png" />
                                         </a>
+
                                         <a class="btn btn-light"
                                             href="{{ url_for('expense_urls.payee_delete', payee_id=item.get('payeeId')) }}">
                                             <img src="https://img.icons8.com/ios/20/000000/delete-forever.png" />
@@ -219,6 +180,32 @@
                                 </div>
                             </div>
                         </li>
+                        <div class="modal fade" id="{{item.get('payeeName')}}{{item.get('payeeId')}}UpdatePayee"
+                            tabindex="-1"
+                            aria-labelledby="{{item.get('payeeName')}}{{item.get('payeeId')}}UpdatePayeeLabel"
+                            aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title"
+                                            id="{{item.get('payeeName')}}{{item.get('payeeId')}}UpdatePayeeLabel">
+                                            Update Payee {{item.get('payeeName')| capitalize}}</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                            aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        ...
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary"
+                                            data-bs-dismiss="modal">Close</button>
+                                        <button type="button" class="btn btn-primary">Save
+                                            changes</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
                         {% endfor %}
                     </ul>
                 </div>
@@ -241,10 +228,6 @@
                             src="{{ url_for('static', filename='img/void.svg') }}">
                         <div class="text-center">
                             <p class="py-1 fw-light my-3 fs-1">Nothing Here
-                                <button type="button" class="btn btn-outline-success mx-1" data-bs-toggle="modal"
-                                    data-bs-target="#staticBackdrop">
-                                    Add Expense
-                                </button>
                             </p>
                         </div>
                     </div>
@@ -254,7 +237,7 @@
                         {% for item in expense_list %}
                         <!-- EXPENSE LIST -->
                         <li class="list-group-item d-flex justify-content-between align-items-start"
-                            data-bs-toggle="modal" data-bs-target="#{{item.get('payee')}}{{item.get('expId')}}">
+                            data-bs-toggle="modal" data-bs-target="#{{item.get('payee')}}{{item.get('expId')}}Expense">
                             <div class="ms-2 me-auto">
                                 <div class="fw-bold">{{item.get('payee') | capitalize}}</div>
                                 <span class="badge bg-secondary">
@@ -273,22 +256,19 @@
                         <!-- EXPENSE LIST -->
 
                         <!-- UPDATE EXPENSE MODAL -->
-                        <div class="modal fade" id="{{item.get('payee')}}{{item.get('expId')}}" tabindex="-1"
-                            aria-labelledby="{{item.get('payee')}}{{item.get('expId')}}Label" aria-hidden="true">
+                        <div class="modal fade" id="{{item.get('payee')}}{{item.get('expId')}}Expense" tabindex="-1"
+                            aria-labelledby="{{item.get('payee')}}{{item.get('expId')}}ExpenseLabel" aria-hidden="true">
                             <div class="modal-dialog">
                                 <div class="modal-content">
-                                    <!-- UPDATE EXPENSE MODAL HEADER -->
                                     <div class="modal-header">
-                                        <h5 class="modal-title" id="{{item.get('payee')}}{{item.get('expId')}}Label">
+                                        <h5 class="modal-title"
+                                            id="{{item.get('payee')}}{{item.get('expId')}}ExpenseLabel">
                                             Update {{item.get('payee') | capitalize}}</h5>
                                         <button type="button" class="btn-close" data-bs-dismiss="modal"
                                             aria-label="Close"></button>
                                     </div>
-                                    <!-- UPDATE EXPENSE MODAL HEADER -->
 
                                     <form action="" method="POST" id="expense_update">
-
-                                        <!-- UPDATE EXPENSE MODAL BODY -->
                                         <div class="modal-body">
                                             <div class="my-3 mx-4">
                                                 <select class="form-select" name="payee_list"
@@ -315,9 +295,6 @@
                                                     value="{{item.get('expId')}}" hidden />
                                             </div>
                                         </div>
-                                        <!-- UPDATE EXPENSE MODAL BODY -->
-
-                                        <!-- UPDATE EXPENSE MODAL FOOTER -->
                                         <div class="modal-footer">
                                             <a type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</a>
                                             <button type="submit" class="btn btn-primary" name="expense_update"
@@ -326,12 +303,10 @@
                                             <a class="btn btn-danger"
                                                 href="{{ url_for('expense_urls.expense_delete', expId=item.get('expId')) }}">Delete</a>
                                         </div>
-                                        <!-- UPDATE EXPENSE MODAL FOOTER -->
                                     </form>
                                 </div>
                             </div>
                         </div>
-                        <!-- UPDATE EXPENSE MODAL -->
                         {% endfor %}
                     </ol>
                 </div>

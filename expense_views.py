@@ -1,4 +1,4 @@
-from flask import request, render_template, redirect, url_for,flash
+from flask import request, render_template, redirect, url_for, flash
 import time
 from datetime import datetime
 
@@ -6,6 +6,7 @@ from database import SqlDatabase
 
 
 def expense_home_view():
+    # Universal Expenses
     sql_obj = SqlDatabase()
 
     payee_list_query = "SELECT payeeId, payeeName, remarks FROM payees;"
@@ -25,24 +26,24 @@ def expense_home_view():
 
     if request.method == 'POST':
         print(request.form)
-        if "expenseModal" in request.form:
-            amount = request.form.get('amount')
-            payee = request.form.get('payee_list')
-            status = request.form.get('status_radio')
-            print("EXPENSE MODAL: ", amount, payee, status)
+        # if "expenseModal" in request.form:
+        #     amount = request.form.get('amount')
+        #     payee = request.form.get('payee_list')
+        #     status = request.form.get('status_radio')
+        #     print("EXPENSE MODAL: ", amount, payee, status)
 
-            insert_expense_query = "insert into expenses(payee, amount, payment_status) values('%s', '%f', '%s');" % (
-                str(payee), float(amount), str(status))
-            insert_value = sql_obj.executeWrite(insert_expense_query)
-            if insert_value == False:
-                flash("Something Went Wrong :( Error code S04")
-                # flash("Successfully Added :)")
-            # else:
-            # Flashing message (successful and unsuccessful)
+        #     insert_expense_query = "insert into expenses(payee, amount, payment_status) values('%s', '%f', '%s');" % (
+        #         str(payee), float(amount), str(status))
+        #     insert_value = sql_obj.executeWrite(insert_expense_query)
+        #     if insert_value == False:
+        #         flash("Something Went Wrong :( Error code S04")
+        #         # flash("Successfully Added :)")
+        #     # else:
+        #     # Flashing message (successful and unsuccessful)
 
-            return redirect(url_for('expense_urls.expense_success'))
+        #     return redirect(url_for('expense_urls.expense_success'))
 
-        elif "userModal" in request.form:
+        if "userModal" in request.form:
             new_payee = request.form.get(
                 'newPayeeName').strip().replace(' ', "-")
             remarks = request.form.get('remarks')
@@ -53,9 +54,8 @@ def expense_home_view():
             insert_value = sql_obj.executeWrite(insert_expense_query)
             if insert_value == False:
                 flash("Something Went Wrong :( Error code S04")
-            # Flashing message (successful and unsuccessful)
 
-            return redirect(url_for('expense_urls.expense_success'))
+            # return redirect(url_for('expense_urls.expense_success'))
 
         elif "expense_update" in request.form:
             expId = request.form.get('expId')
@@ -75,16 +75,15 @@ def expense_home_view():
             if update_value is False:
                 print("FAILED")
                 flash("Something Went Wrong :( Error code S02")
-                # Flashing message (unsuccessful)
                 return render_template("error_404.html")
             print("TRUE")
-            return redirect(url_for('expense_urls.expense_success'))
+            # return redirect(url_for('expense_urls.expense_success'))
 
         elif "payee_update" in request.form:
             payee_update = request.form.get('payee_list')
             print(amount_update, payee_update)
 
-            return redirect(url_for('expense_urls.expense_success'))
+            # return redirect(url_for('expense_urls.expense_success'))
 
         elif "payee_update" in request.form:
             sql_obj = SqlDatabase()
@@ -96,6 +95,13 @@ def expense_home_view():
 #           update_payee = sql_obj.executeWrite(update_payee_query)
 #           print("******Update STATUS: ", update_payee)
 #           return redirect(url_for('expense_urls.expense_success'))
+        return redirect(url_for('expense_urls.expense_success'))
+
+    if expense_list is None:
+        expense_list = []
+    if payee_list is None:
+        payee_list = []
+
     context = {
         "payee_list": payee_list,
         "expense_list": expense_list,
@@ -105,22 +111,22 @@ def expense_home_view():
     # return render_template('expense_home.html', payee_list=payee_list, expense_list=expense_list, sum_result=sum_result)
 
 
-# def payee_update_view(payee_id):
-
-#       
-#     sql_obj = SqlDatabase()
-#     update_payee_query = "UPDATE payees SET payeeName = '%s', remarks ='%s' WHERE payeeId=%i" % (str(payeeName), str(remarks)
-#         int(payee_id))
-#     update_payee = sql_obj.executeWrite(update_payee_query)
-#     print("******Update STATUS: ", update_payee)
-#     return redirect(url_for('expense_urls.expense_home'))
+def payee_update_view(payee_id):
+    sql_obj = SqlDatabase()
+    update_payee_query = "UPDATE payees SET payeeName = '%s', remarks ='%s' WHERE payeeId=%i" % (
+        str(payeeName), str(remarks), int(payee_id))
+    update_payee = sql_obj.executeWrite(update_payee_query)
+    print("******Update STATUS: ", update_payee)
+    return redirect(url_for('expense_urls.expense_home'))
 
 
 def payee_project_update_view(expId, pid, projectName):
+    # Project Specific update payee
     return redirect(url_for('expense_urls.expense_home'))
 
 
 def payee_delete_view(payee_id):
+    # Universal delete payee
     sql_obj = SqlDatabase()
     delete_payee_query = "DELETE FROM payees WHERE payeeId=%i" % (
         int(payee_id))
@@ -130,7 +136,7 @@ def payee_delete_view(payee_id):
 
 
 def payee_project_delete_view(payee_id, projectName, pid):
-    # delete paye from a specific project
+    # Project Specific delete payee
     sql_obj = SqlDatabase()
     delete_payee_query = "DELETE FROM payees WHERE payeeId=%i" % (
         int(payee_id))
@@ -145,6 +151,7 @@ def payee_project_delete_view(payee_id, projectName, pid):
 
 
 def expense_delete_view(expId):
+    # Universal delete expense
     sql_obj = SqlDatabase()
     delete_payee_query = "DELETE FROM expenses WHERE expId=%i" % (
         int(expId))
@@ -154,6 +161,7 @@ def expense_delete_view(expId):
 
 
 def expense_project_delete_view(expId, pid, projectName):
+    # Project Specific delete expense
     sql_obj = SqlDatabase()
     delete_payee_query = "DELETE FROM expenses WHERE expId=%i" % (
         int(expId))
@@ -167,9 +175,12 @@ def expense_project_delete_view(expId, pid, projectName):
 
 
 def expense_update_view(expId):
+    # Universal update expense
     return redirect(url_for('expense_urls.expense_home'))
 
+
 def payee_expense_view(payee):
+    # All expense of Payee
     sql_obj = SqlDatabase()
     query = f'''SELECT expid, payee, amount, date_created, payment_status, e1.pid, pname 
                 FROM expenses e1
@@ -190,9 +201,10 @@ def payee_expense_view(payee):
 
 
 def project_expense_view(projectName, pid):
+    # Project specific Expense
     sql_obj = SqlDatabase()
 
-    payee_list_query = "SELECT payeeId, payeeName FROM payees;"
+    payee_list_query = "SELECT payeeId, payeeName, remarks FROM payees;"
     payee_list = sql_obj.fetchRead(payee_list_query)
     print("PAYEE LIST: ", payee_list)
     expense_list_query = f"SELECT * FROM expenses where pid ={pid} order by date_created DESC;"
@@ -220,16 +232,12 @@ def project_expense_view(projectName, pid):
             status = request.form.get('status_radio')
             print("EXPENSE MODAL: ", amount, payee, status)
 
-            # insert_expense_query = "insert into expenses(payee, amount, payment_status,pid) values('%s', %f, '%s',%i);" % (
-            #     str(payee), float(amount), str(status), int(pid))
             insert_expense_query = f"insert into expenses(payee, amount, payment_status,pid) values('{str(payee)}', {float(amount)}, '{str(status)}',{int(pid)});"
             insert_value = sql_obj.executeWrite(insert_expense_query)
             if insert_value == False:
                 flash("Something Went Wrong :( Error code S04")
-            # Flashing message (successful and unsuccessful)
 
-            return redirect(url_for('expense_urls.expense_project_success', **context))
-            # return redirect(url_for('expense_urls.expense_project_success', projectName=projectName, pid=pid))
+            # return redirect(url_for('expense_urls.expense_project_success', **context))
 
         elif "userModal" in request.form:
             new_payee = request.form.get(
@@ -241,10 +249,8 @@ def project_expense_view(projectName, pid):
             insert_value = sql_obj.executeWrite(insert_expense_query)
             if insert_value == False:
                 flash("Something Went Wrong :( Error code S04")
-            # Flashing message (successful and unsuccessful)
 
-            return redirect(url_for('expense_urls.expense_project_success', **context))
-            # return redirect(url_for('expense_urls.expense_project_success', projectName=projectName, pid=pid))
+            # return redirect(url_for('expense_urls.expense_project_success', **context))
 
         elif "expense_update" in request.form:
             expId = request.form.get('expId')
@@ -264,16 +270,15 @@ def project_expense_view(projectName, pid):
             if update_value is False:
                 print("FAILED")
                 flash("Something Went Wrong :( Error code S02")
-                # Flashing message (unsuccessful)
                 return render_template("error_404.html")
             print("TRUE")
-            return redirect(url_for('expense_urls.expense_project_success', **context))
+            # return redirect(url_for('expense_urls.expense_project_success', **context))
             # return redirect(url_for('expense_urls.expense_project_success', projectName=projectName, pid=pid))
 
         elif "payee_update" in request.form:
             payee_update = request.form.get('payee_list')
             print(amount_update, payee_update)
-            return redirect(url_for('expense_urls.expense_project_success', **context))
+            # return redirect(url_for('expense_urls.expense_project_success', **context))
 
         elif "payee_update" in request.form:
             sql_obj = SqlDatabase()
@@ -287,9 +292,12 @@ def project_expense_view(projectName, pid):
 #           return redirect(url_for('expense_urls.payee_project_update',projectName = projectName,pid=pid,payee_id=payee_id))
 
             # return redirect(url_for('expense_urls.expense_project_success', **context))
+        return redirect(url_for('expense_urls.expense_project_success', **context))
 
     if expense_list is None:
         expense_list = []
+    if payee_list is None:
+        payee_list = []
 
     context = {
         "payee_list": payee_list,
@@ -298,4 +306,7 @@ def project_expense_view(projectName, pid):
         "projectName": projectName,
         "pid": pid
     }
+    # context["payee_list"] = payee_list
+    # context["expense_list"] = expense_list
+    # context["sum_result"] = sum_result
     return render_template('expense_project.html', **context)

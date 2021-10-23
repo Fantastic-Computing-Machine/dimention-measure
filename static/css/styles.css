@@ -37,7 +37,7 @@
 
 .payee_card {
   overflow-y: scroll;
-  max-height: 465px;
+  height: 465px;
 }
 
 .col_height {

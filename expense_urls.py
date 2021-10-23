@@ -1,11 +1,6 @@
 from flask import Blueprint, redirect, url_for
 
-# from expense_views import expense_home_view, payee_update_view, payee_delete_view
-# from expense_views import expense_update_view, expense_delete_view, payee_expense_view, project_expense_view
-# from expense_views import expense_project_delete_view, payee_project_delete_view
-
 from expense_views import *
-
 
 expense_urls = Blueprint(__name__, "expense")
 
@@ -52,7 +47,8 @@ def payee_project_delete(payee_id, projectName, pid):
 # Universal update payee
 def payee_update(payee_id):
     return payee_update_view(payee_id)
-    
+
+
 @expense_urls.route('/payee/<string:projectName>/update/<int:pid>/<int:payee_id>/')
 # Project Specific update payee
 def payee_project_update(payee_id, projectName, pid):
@@ -81,5 +77,6 @@ def expense_update(expId):
 
 
 @expense_urls.route('/payee_expense/<string:payee>/')
+# All expense of Payee
 def payee_expense(payee):
     return payee_expense_view(payee)

@@ -41,6 +41,16 @@
     <div class="text-light py-2 display-4">My Projects</div>
     <div class="row">
 
+        {% if session["allProjects"] | length == 0 %}
+        <div class=" text-center my-3">
+            <img class="img-fluid m-2" style="width: 450px;" src="{{ url_for('static', filename='img/nothing.svg') }}">
+            <div class="text-center">
+                <p class="py-1 text-light fw-light my-3 fs-1">Nothing Here
+                </p>
+            </div>
+        </div>
+        {% endif %}
+
         {% for item in session["allProjects"][::-1]%}
         <div class="col-lg-4 col-md-6 sm-10">
             <div class="card my-2 index_project_card">
