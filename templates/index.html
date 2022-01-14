@@ -43,7 +43,8 @@
 
         {% if session["allProjects"] | length == 0 %}
         <div class=" text-center my-3">
-            <img class="img-fluid m-2" style="width: 450px;" src="{{ url_for('static', filename='img/nothing.svg') }}">
+            <img alt="No-projects" class="img-fluid m-2" style="width: 450px;"
+                src="{{ url_for('static', filename='img/nothing.svg') }}">
             <div class="text-center">
                 <p class="py-1 text-light fw-light my-3 fs-1">Nothing Here
                 </p>
@@ -56,7 +57,7 @@
             <div class="card my-2 index_project_card">
                 <div class="card-body">
                     <a href="{{ url_for('record',projectName = item.get('PNAME'), pid=item.get('PID'))}}"
-                        class="text-dark" style="text-decoration:none">
+                        class="text-dark" style="text-decoration:none" aria-label="project-{{item.get('PNAME')}}">
                         <div class="d-flex justify-content-between align-items-start">
                             <div class="ms-2 me-auto">
                                 <div class="fw-bold" style="white-space: nowrap">{{ item.get('PNAME')|capitalize }}
@@ -66,9 +67,11 @@
                                 </span>
                             </div>
                             <span>
-                                <a class="badge bg-light" style="z-index:2;"
+                                <a aria-label="delete-proj-{{item.get('PNAME')}}" class="badge bg-light"
+                                    style="z-index:2;"
                                     href="{{ url_for('deleteProject',projectName = item.get('PNAME'))}}">
-                                    <img src="https://img.icons8.com/color/28/000000/delete-forever.png" />
+                                    <img alt="delete-project-{{item.get('PNAME')}}"
+                                        src="https://img.icons8.com/color/28/000000/delete-forever.png" />
                                 </a>
                             </span>
                         </div>
@@ -85,7 +88,8 @@
 
 {% block expense_button %}
 
-<a href="{{ url_for('expense_urls.expense_home') }}" type="button" class="btn btn-success btn-lg">
-    <img src="https://img.icons8.com/ios/30/ffffff/money-circulation.png" />
+<a aria-label="all-expenses" href="{{ url_for('expense_urls.expense_home') }}" type="button"
+    class="btn btn-success btn-lg">
+    <img alt="all-expenses" src="https://img.icons8.com/ios/30/ffffff/money-circulation.png" />
 </a>
 {% endblock %}
