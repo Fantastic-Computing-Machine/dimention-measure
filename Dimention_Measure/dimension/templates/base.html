@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+        <!-- ========================= Favicon ========================= -->
+        <link rel="shortcut icon" type="image/x-icon" href="">
+
+        <!-- ========================= CSS ========================= -->
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+
+        <!-- Bootstrap CSS -->
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+            integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+
+        {% block head %} {% endblock %}
+
+        <!-- ===== AJAX ===== -->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
+    </head>
+
+    <body style="background-color: #111827">
+
+        <main class="container-lg" style="width: 100%; min-height: 100vh;">
+            <header class="text-white h3">
+                <nav class="navbar navbar-expand-lg navbar-light nav_bg_translucent m-2">
+                    <div class="container-fluid">
+
+                        <strong>
+                            <a class="navbar-brand justify-content-center h2 text-white fs-4"
+                                href="{{ url_for('index') }}">Dimensions</a>
+                        </strong>
+
+                        <div class="p-1">
+                            {% block header %} {% endblock %}
+                            <button type="button" class="btn btn-light" onclick="history.back()">Back</button>
+                        </div>
+
+                    </div>
+                </nav>
+            </header>
+
+
+            {% block modal %}{% endblock %}
+
+            <div id="content">
+                <!-- Flask alert -->
+                <div class="container">
+                    {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
+                    {% for category, message in messages %}
+                    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                        {{message}}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                    {% endfor %}
+                    {% endif %}
+                    {% endwith %}
+                </div>
+                <!-- Flask alert -->
+                <!-- ===== Content ===== -->
+                {% block body %}
+
+                {% endblock %}
+                <!-- ===== Content ===== -->
+
+            </div>
+        </main>
+
+
+        <div id="mybutton">
+
+            <!-- Converter button modal -->
+            <button type="button" class="btn btn-primary btn-lg" data-bs-toggle="modal"
+                data-bs-target="#calculatorModal">
+                <img alt="converter-button" src="https://img.icons8.com/ios/30/ffffff/design--v2.png" />
+            </button>
+            <!-- Converter button modal -->
+
+            {% block expense_button %}
+            {% endblock %}
+
+        </div>
+
+        <!-- Modal -->
+        <div class="modal fade" id="calculatorModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Calculate</h5>
+                    </div>
+                    <div class="modal-body">
+
+                        <div class="row">
+                            <div class="col">
+                                Meter
+                                <input class="form-control form-control-sm" oninput="mtr_ft()" id="mt" name="mt"
+                                    type="number" placeholder="Meter" aria-label=".form-control-sm">
+                            </div>
+                            <div class="col">
+                                Feet
+                                <input class="form-control form-control-sm" oninput="ft_mtr()" id="ft" name="ft"
+                                    type="number" placeholder="Feet" aria-label=".form-control-sm">
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <footer style="margin: 0; padding:0;">
+            {% include "footer.html" %}
+        </footer>
+    </body>
+
+    <!--===== MAIN JS =====-->
+
+    {% block scripts %} {% endblock %}
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    <!-- Option 1: Bootstrap Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+        crossorigin="anonymous"></script>
+
+
+</html>
