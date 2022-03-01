@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+{% load static %} {% load humanize %}
+{% block head %}<title>Payee | {{payee.name}}</title>{% endblock %}
+
+{% block body %}
+
+<div class="container px-3">
+    <div class="text-light py-2 display-4">{{payee.name|title}}</div>
+
+    <div class="row flex-md-row py-3">
+        <div class="col col_height">
+            <div class=" card my-2">
+                <div class="card-body">
+
+                    {% if expenses|length == 0 %}
+                    <div class=" text-center my-3">
+                        <img alt="nothing-here" class="img-fluid m-2" style="width: 450px;"
+                            src="{% static 'img/nothing.svg' %}">
+                        <div class="text-center">
+                            <p class="py-1 fw-light my-3 fs-1">Nothing Here</p>
+                        </div>
+                    </div>
+                    {% endif %}
+
+                    <ol class="list-group list-group-numbered">
+                        {% for item in expenses %}
+                        <li class="list-group-item d-flex justify-content-between align-items-start">
+                            <div class="ms-2 me-auto">
+                                <a href="{% url 'project_detail' item.project.id item.project.name %}"
+                                    style="text-decoration: none;">
+                                    <div class="fw-bold">
+                                        {{item.project.name | title}}
+                                    </div>
+                                </a>
+                                <span class="badge bg-secondary">
+                                    {{item.created_on | date}}</span>
+                            </div>
+                            {% if item.payment_status == 'P' %}
+                            <span class="badge bg-danger fs-6 font-monospace">
+                                ₹ {{item.amount | intcomma}}</span>
+                            {% else %}
+                            <span class="badge bg-success fs-6 font-monospace">
+                                ₹ {{item.amount | intcomma}}</span>
+                            {% endif %}
+                        </li>
+                        {% endfor %}
+                    </ol>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

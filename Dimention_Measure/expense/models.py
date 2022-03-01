@@ -17,11 +17,6 @@ PAYMENT_STATUS = [
 ]
 
 
-def total_amount(id, status):
-    expenses = Expense.objects.filter(pk=id)
-    sum = sum()
-
-
 class Payee(models.Model):
     phoneNumberRegex = RegexValidator(regex=r"^\+?1?\d{8,15}$")
     name = models.CharField(max_length=255)
@@ -38,12 +33,29 @@ class Payee(models.Model):
         self.name = self.name.replace(" ", "-")
         return super(Payee, self).save()
 
-    # def total_paid(self):
-    #     expenses = Expense.objects.filter(pk=self.id)
-    #     total = 0.0
-    #     for exp in expenses:
-    #         print(exp.payment_status)
-    #         if exp.payment_status == "P" or exp.payment_status == "Paid":
+    def total_paid(self):
+        expenses = Expense.objects.filter(
+            payee=self, payment_status='P')
+        total = sum(item.amount for item in expenses)
+        return total
+
+    def total_recieved(self):
+        expenses = Expense.objects.filter(
+            payee=self, payment_status='R')
+        total = sum(item.amount for item in expenses)
+        return total
+
+    def total_pending(self):
+        expenses = Expense.objects.filter(
+            payee=self, payment_status='PE')
+        total = sum(item.amount for item in expenses)
+        return total
+
+    def total_noStatus(self):
+        expenses = Expense.objects.filter(
+            payee=self, payment_status='NA')
+        total = sum(item.amount for item in expenses)
+        return total
 
 
 class Expense(models.Model):

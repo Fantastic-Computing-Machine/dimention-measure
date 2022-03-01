@@ -2,12 +2,10 @@ from django.contrib import admin
 
 from .models import Payee, Expense
 
-# admin.site.register(Payee)
-
 
 @admin.register(Payee)
 class PayeeAdmin(admin.ModelAdmin):
-    list_display = ["id", "name", "phoneNumber",
+    list_display = ["id", "name", "phoneNumber", "total_paid", "total_recieved", "total_pending", "total_noStatus",
                     "description", "updated_on", "created_on"]
     search_fields = [
         "name",
@@ -18,7 +16,7 @@ class PayeeAdmin(admin.ModelAdmin):
     date_hierarchy = "created_on"
     ordering = ["-created_on"]
     show_full_result_count = True
-    list_display_links = ["id", "name", "phoneNumber",
+    list_display_links = ["id", "name", "phoneNumber", "total_paid", "total_recieved", "total_pending", "total_noStatus",
                           "description", "updated_on", "created_on"]
 
 

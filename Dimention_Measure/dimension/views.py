@@ -34,18 +34,16 @@ class HomeView(CreateView):
         request.POST._mutable = True
         request.POST["author"] = request.session["_auth_user_id"]
         request.POST._mutable = False
-        print("PINN: ", request.POST)
         return super(HomeView, self).post(request, **kwargs)
 
 
 class ProjectView(CreateView):
     model = Dimension
     form_class = NewDimensionForm
-    template_name = 'dimensions/project_detail.html'
+    template_name = 'project_detail.html'
 
     def get_context_data(self, *args, **kwargs):
         project = Project.objects.filter(pk=self.kwargs['pk'])[0]
-        print(project)
         dimentions = Dimension.objects.filter(project=project)
         kwargs['dimentions'] = dimentions
         kwargs['project'] = project
@@ -68,7 +66,7 @@ class ProjectView(CreateView):
 class UpdateDimensionView(UpdateView):
     model = Dimension
     form_class = UpdateDimensionForm
-    template_name = 'dimensions/update_project.html'
+    template_name = 'update_project.html'
 
     def get_context_data(self, *args, **kwargs):
         dimension = Dimension.objects.filter(pk=self.kwargs['pk'])[0]

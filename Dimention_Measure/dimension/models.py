@@ -23,17 +23,17 @@ class Project(models.Model):
         return super(Project, self).save(*args, **kwargs)
 
     def total_amount(self):
-        dims = Dimension.objects.filter(id=self.id)
+        dims = Dimension.objects.filter(project=self)
         sum_amount = sum(item.amount for item in dims)
         return sum_amount
 
     def total_sqm(self):
-        dims = Dimension.objects.filter(id=self.id)
+        dims = Dimension.objects.filter(project=self)
         sum_sqm = sum(item.sqm for item in dims)
         return sum_sqm
 
     def total_sqft(self):
-        dims = Dimension.objects.filter(id=self.id)
+        dims = Dimension.objects.filter(project=self)
         sum_sqft = sum(item.sqft for item in dims)
         return sum_sqft
 

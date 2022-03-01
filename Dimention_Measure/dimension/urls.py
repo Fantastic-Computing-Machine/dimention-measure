@@ -12,7 +12,7 @@ from .views import DeleteProjectView
 
 urlpatterns = [
     path("", HomeView.as_view(), name="home"),
-    path("project/<int:pk>/<str:project>",
+    path("project/<int:pk>/<str:project>/",
          # project_id, project_name
          ProjectView.as_view(), name="project_detail"),
 
