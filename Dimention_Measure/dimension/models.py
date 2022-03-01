@@ -16,7 +16,26 @@ class Project(models.Model):
     updated_on = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return str(self.author.username) + " | " + str(self.name)
+        return str(self.name)
+
+    def save(self):
+        self.name = self.name.replace(" ", "-")
+        return super(Project, self).save(*args, **kwargs)
+
+    def total_amount(self):
+        dims = Dimension.objects.filter(id=self.id)
+        sum_amount = sum(item.amount for item in dims)
+        return sum_amount
+
+    def total_sqm(self):
+        dims = Dimension.objects.filter(id=self.id)
+        sum_sqm = sum(item.sqm for item in dims)
+        return sum_sqm
+
+    def total_sqft(self):
+        dims = Dimension.objects.filter(id=self.id)
+        sum_sqft = sum(item.sqft for item in dims)
+        return sum_sqft
 
 
 class Dimension(models.Model):
@@ -42,54 +61,33 @@ class Dimension(models.Model):
     def __str__(self):
         return str(self.project.name) + " | " + str(self.name)
 
-    def save(self, *args, **kwargs):
-        if self.width or self.width == 0:
-            self.sqm = self.length * self.width
-            self.sqft = self.length * self.width * decimal.Decimal(10.7639)
-        else:
-            self.sqm = self.length
-            self.sqft = self.length * decimal.Decimal(3.28084)
+    def save(self):
+        self.name = self.name.replace(" ", "-")
+
+        if self.width == '' or self.width == 0:
             self.description = "**NOTE: THIS IS RUNNING LENGTH.** \n" + \
                 str(self.description)
+            self.sqm = self.length
+            self.sqft = self.length * decimal.Decimal(3.28084)
+            if self.rate == '' or self.rate == 0:
+                self.amount = decimal.Decimal(0)
 
-        if self.rate:
-            self.amount = self.sqft * self.rate
-        else:
-            self.amount = null
-        return super(Dimension, self).save(*args, **kwargs)
+            elif self.rate > 0:
+                self.amount = self.length * self.rate
 
+            return super(Dimension, self).save()
 
-class Payee(models.Model):
-    phoneNumberRegex = RegexValidator(regex=r"^\+?1?\d{8,15}$")
-    name = models.CharField(max_length=255)
-    description = models.TextField(blank=True, null=True)
-    created_on = models.DateTimeField(auto_now_add=True)
-    updated_on = models.DateTimeField(auto_now=True)
-    phoneNumber = models.CharField(
-        validators=[phoneNumberRegex], max_length=11, unique=True)
+        elif self.width > 0:
+            self.sqm = self.length * self.width
+            self.sqft = self.length * self.width * decimal.Decimal(10.7639)
 
-    def __str__(self):
-        return str(self.name) + " | " + str(self.phoneNumber)
+            if self.rate == '' or self.rate == 0:
+                self.amount = decimal.Decimal(0)
 
+            elif self.rate > 0:
+                self.amount = self.sqft * self.rate
 
-PAYMENT_STATUS = [
-    ("P", "Paid"),
-    ("R", "Recieved"),
-    ("PE", "Pending"),
-    ("NA", "No Status")
-]
+            return super(Dimension, self).save(*args, **kwargs)
 
-
-class Expense(models.Model):
-    project = models.ForeignKey(
-        Project, on_delete=models.CASCADE, default=1)
-    payee = models.ForeignKey(Payee, on_delete=models.CASCADE)
-    amount = models.DecimalField(
-        max_digits=10, decimal_places=2, blank=True, null=True)
-    created_on = models.DateTimeField(auto_now_add=True)
-    updated_on = models.DateTimeField(auto_now=True)
-    payment_status = models.CharField(
-        max_length=2,
-        choices=PAYMENT_STATUS,
-        default="N",
-    )
+    def get_absolute_url(self):
+        return reverse("project_detail", args=[str(self.project.pk), str(self.project.name)])

@@ -1,0 +1,52 @@
+.nav_bg_translucent {
+  background: rgba(255, 255, 255, 0.15);
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+}
+
+.index_project_card {
+  background: rgba(255, 255, 255, 1);
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+}
+
+.record_total_card {
+  background: rgba(255, 255, 255, 1);
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-radius: 10px;
+}
+
+#mybutton {
+  position: fixed;
+  bottom: 10px;
+  right: 10px;
+}
+
+.scroll_card_expense {
+  overflow-y: scroll;
+  height: 700px;
+}
+
+.payee_card {
+  overflow-y: scroll;
+  height: 465px;
+}
+
+.col_height {
+  max-height: 800px;
+  direction: ltr;
+}
+
+.icon_ud {
+  border-radius: 10%;
+  border-color: black;
+  border: 1px;
+}

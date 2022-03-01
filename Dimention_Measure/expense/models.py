@@ -1,0 +1,64 @@
+from django.db import models
+from django.contrib.auth.models import User
+from django.core.validators import RegexValidator
+from django.urls import reverse
+
+from datetime import datetime
+import decimal
+
+from dimension.models import Dimension, Project
+
+
+PAYMENT_STATUS = [
+    ("P", "Paid"),
+    ("R", "Recieved"),
+    ("PE", "Pending"),
+    ("NA", "No Status")
+]
+
+
+def total_amount(id, status):
+    expenses = Expense.objects.filter(pk=id)
+    sum = sum()
+
+
+class Payee(models.Model):
+    phoneNumberRegex = RegexValidator(regex=r"^\+?1?\d{8,15}$")
+    name = models.CharField(max_length=255)
+    description = models.TextField(blank=True, null=True)
+    created_on = models.DateTimeField(auto_now_add=True)
+    updated_on = models.DateTimeField(auto_now=True)
+    phoneNumber = models.CharField(blank=True,
+                                   validators=[phoneNumberRegex], max_length=11, unique=True)
+
+    def __str__(self):
+        return str(self.name) + " | " + str(self.phoneNumber)
+
+    def save(self):
+        self.name = self.name.replace(" ", "-")
+        return super(Payee, self).save()
+
+    # def total_paid(self):
+    #     expenses = Expense.objects.filter(pk=self.id)
+    #     total = 0.0
+    #     for exp in expenses:
+    #         print(exp.payment_status)
+    #         if exp.payment_status == "P" or exp.payment_status == "Paid":
+
+
+class Expense(models.Model):
+    project = models.ForeignKey(
+        Project, on_delete=models.CASCADE, default=1)
+    payee = models.ForeignKey(Payee, on_delete=models.CASCADE)
+    amount = models.DecimalField(
+        max_digits=10, decimal_places=2, blank=True, null=True)
+    created_on = models.DateTimeField(auto_now_add=True)
+    updated_on = models.DateTimeField(auto_now=True)
+    payment_status = models.CharField(
+        max_length=2,
+        choices=PAYMENT_STATUS,
+        default="N",
+    )
+
+    def __str__(self):
+        return str(self.payee.name) + " | " + str(self.amount) + " | " + str(self.payment_status)
