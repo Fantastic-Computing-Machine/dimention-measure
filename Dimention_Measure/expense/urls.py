@@ -7,7 +7,7 @@ from .views import *
 
 
 urlpatterns = [
-    path("", HomeView.as_view(), name="all_expenses"),
+    path("", AllExpenseView.as_view(), name="all_expenses"),
     # payee_id, payee_name
     path("payee/<int:pk>/<str:payee>/",
          PayeeExpensesView.as_view(), name="payee_expense")

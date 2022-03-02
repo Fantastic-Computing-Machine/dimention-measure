@@ -1,7 +1,7 @@
-from django.forms.models import modelform_factory
-from django.db.models import Q, F
 from django.contrib.auth import get_user_model as user_model
 from django.contrib.auth.models import User
+from django.db.models import Q, F
+from django.forms.models import modelform_factory
 from django.shortcuts import render, get_object_or_404
 from django.shortcuts import HttpResponseRedirect
 from django.views.generic import (
@@ -19,10 +19,11 @@ from .models import Payee, Expense
 from .forms import NewPayeeForm
 
 
-class HomeView(CreateView):
+class AllExpenseView(CreateView):
     model = Payee
     template_name = 'all_expenses.html'
     form_class = NewPayeeForm
+    success_url = reverse_lazy('all_expenses')
 
     def get_context_data(self, **kwargs):
         kwargs['payees'] = Payee.objects.all()
@@ -50,7 +51,7 @@ class HomeView(CreateView):
         kwargs['total_recieved'] = total_recieved
         kwargs['total_pending'] = total_pending
         kwargs['total_nostatus'] = total_nostatus
-        return super(HomeView, self).get_context_data(**kwargs)
+        return super(AllExpenseView, self).get_context_data(**kwargs)
 
 
 class PayeeExpensesView(ListView):

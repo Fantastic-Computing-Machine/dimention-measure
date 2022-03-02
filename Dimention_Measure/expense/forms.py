@@ -28,7 +28,7 @@ class NewPayeeForm(forms.ModelForm):
     )
     phoneNumber = forms.CharField(
         max_length=200,
-        required=True,
+        required=False,
         widget=forms.TextInput(
             attrs={
                 'class': 'form-control',
