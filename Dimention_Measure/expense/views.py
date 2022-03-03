@@ -16,7 +16,7 @@ from django.http import JsonResponse
 import re
 
 from .models import Payee, Expense
-from .forms import NewPayeeForm
+from .forms import NewPayeeForm, UpdatePayeeForm
 
 
 class AllExpenseView(CreateView):
@@ -30,8 +30,6 @@ class AllExpenseView(CreateView):
         expenses = Expense.objects.all().order_by('-created_on')
         kwargs['expenses'] = expenses
 
-        # kwargs['total_paid'] = total = sum(
-        #     item.amount for item in expenses.filter(payment_status="P"))
         total_paid = 0
         total_recieved = 0
         total_pending = 0
@@ -66,3 +64,10 @@ class PayeeExpensesView(ListView):
         # print(payee)
         # kwargs['expenses'] = expenses
         return super(PayeeExpensesView, self).get_context_data(**kwargs)
+
+
+class UpdatePayee(UpdateView):
+    model = Payee
+    template_name = 'update_payee.html'
+    form_class = UpdatePayeeForm
+    success_url = reverse_lazy('home')

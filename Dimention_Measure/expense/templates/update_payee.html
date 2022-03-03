@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% load static %} {% load humanize %}
+{% block head %}<title>Payee | {{payee.name}}</title>{% endblock %}
+
+{% block body %}
+
+<div class="container px-3">
+    <div class="text-light pt-2 display-4">{{payee.name|title}}</div>
+    <div class="text-light h5 text-muted">{{payee.description|title}}</div>
+
+    <div class="row flex-md-row py-3">
+        <div class="col col_height">
+            <div class=" card my-2">
+                <div class="card-body">
+
+                    <form method="POST">
+                        {% csrf_token %}
+                        {{form.as_p}}
+                        <button type="submit" class="btn btn-primary">Update
+                        </button>
+                    </form>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
