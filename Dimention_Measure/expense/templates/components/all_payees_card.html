@@ -1,0 +1,56 @@
+{% load static %} {% load humanize %}
+
+<!-- PAYEES CARD -->
+<div class="order-md-4 card my-2">
+    <div class="card-body payee_card">
+
+        <p class="fs-4">Payees</p>
+        {% if payees|length == 0 %}
+        <div class=" text-center my-3">
+            <img alt="blank-image" class="img-fluid m-2" style="width: 300px;" src="{% static 'img/blank.svg' %}">
+            <div class="text-center">
+                <p class="py-1 fw-light my-3 fs-1">Nothing Here
+                    <button type="button" class="btn btn-outline-success" data-bs-toggle="modal"
+                        data-bs-target="#newPayee">
+                        Add Payee
+                    </button>
+                </p>
+            </div>
+        </div>
+        {% endif %}
+
+
+        <ul class="list-group">
+            {% for item in payees %}
+            <li class="list-group-item">
+
+                <div class="d-flex justify-content-between">
+                    <div calss="fw-bold">
+                        <!-- payee expense: all expenses for a payee -->
+                        <a href="{% url 'payee_expense' item.id item.name %}" style="text-decoration: none;">
+                            <div class="fw-bold">{{item.name| title}}</div>
+                        </a>
+                        {% if item.description %}
+                        {{item.description|title}}
+                        {% endif %}
+                    </div>
+                    <div>
+                        <span class="align-items-start">
+                            <a class="btn btn-light" href="{% url 'payee_update' item.id item.name %}">
+                                <img alt="edit-button" src="https://img.icons8.com/ios/20/000000/edit--v2.png" />
+                            </a>
+                            <!-- Delete Payee -->
+                            <a class="btn btn-light" href="#">
+                                <img alt="delete-button"
+                                    src="https://img.icons8.com/ios/20/000000/delete-forever.png" />
+                            </a>
+                        </span>
+                    </div>
+                </div>
+            </li>
+
+            {% endfor %}
+        </ul>
+    </div>
+</div>
+<!-- PAYEES CARD -->

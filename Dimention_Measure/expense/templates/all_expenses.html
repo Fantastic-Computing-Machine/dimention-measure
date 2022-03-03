@@ -40,192 +40,29 @@
 <!-- Add new user modal -->
 
 <div class="container px-3">
+    {% if project_name %}
+    <div class="text-light py-2 display-4">Expenses: {{project_name}}</div>
+    {% else %}
     <div class="text-light py-2 display-4">All Expenses</div>
+    {% endif %}
     <div class="row flex-md-row-reverse py-3" dir="rtl">
         <div class="col-md-6 col_height">
 
             <!-- SUM CARD -->
-            <div class="order-md-2 card my-2">
-                <div class="card-body">
-                    <ul class="list-group">
-                        <h5>
-                            <li class="list-group-item d-flex justify-content-between list-group-item-danger">
-                                Sum Paid
-                                <span class="badge font-monospace bg-danger">₹ {{total_paid|intcomma}}</span>
-                            </li>
-                            <li class="list-group-item d-flex justify-content-between list-group-item-success">
-                                Sum Recieved
-                                <span class="badge font-monospace bg-success">₹ {{total_recieved|intcomma}}</span>
-                            </li>
-                            <li class="list-group-item d-flex justify-content-between list-group-item-primary">
-                                Sum Pending
-                                <span class="badge font-monospace bg-primary">₹ {{total_pending|intcomma}}</span>
-                            </li>
-                            <li class="list-group-item d-flex justify-content-between list-group-item-secondary">
-                                No Status
-                                <span class="badge font-monospace bg-secondary">₹ {{total_nostatus|intcomma}}</span>
-                            </li>
-                        </h5>
-                    </ul>
-                </div>
-            </div>
+            {% include "components/sum_card.html" %}
             <!-- SUM CARD -->
 
+
             <!-- PAYEES CARD -->
-            <div class="order-md-4 card my-2">
-                <div class="card-body payee_card">
-
-                    <p class="fs-4">Payees</p>
-                    {% if payees|length == 0 %}
-                    <div class=" text-center my-3">
-                        <img alt="blank-image" class="img-fluid m-2" style="width: 300px;"
-                            src="{% static 'img/blank.svg' %}">
-                        <div class="text-center">
-                            <p class="py-1 fw-light my-3 fs-1">Nothing Here
-                                <button type="button" class="btn btn-outline-success" data-bs-toggle="modal"
-                                    data-bs-target="#newPayee">
-                                    Add Payee
-                                </button>
-                            </p>
-                        </div>
-                    </div>
-                    {% endif %}
-
-
-                    <ul class="list-group">
-                        {% for item in payees %}
-                        <li class="list-group-item">
-
-                            <div class="d-flex justify-content-between">
-                                <div calss="fw-bold">
-                                    <!-- payee expense: all expenses for a payee -->
-                                    <a href="{% url 'payee_expense' item.id item.name %}"
-                                        style="text-decoration: none;">
-                                        <div class="fw-bold">{{item.name| title}}</div>
-                                    </a>
-                                    {% if item.description %}
-                                    {{item.description|title}}
-                                    {% endif %}
-                                </div>
-                                <div>
-                                    <span class="align-items-start">
-                                        <a class="btn btn-light" href="{% url 'payee_update' item.id item.name %}">
-                                            <img alt="edit-button"
-                                                src="https://img.icons8.com/ios/20/000000/edit--v2.png" />
-                                        </a>
-                                        <!-- Delete Payee -->
-                                        <a class="btn btn-light" href="#">
-                                            <img alt="delete-button"
-                                                src="https://img.icons8.com/ios/20/000000/delete-forever.png" />
-                                        </a>
-                                    </span>
-                                </div>
-                            </div>
-                        </li>
-
-                        {% endfor %}
-                    </ul>
-                </div>
-            </div>
+            {% include "components/all_payees_card.html" %}
             <!-- PAYEES CARD -->
 
         </div>
 
         <!-- EXPENSE LIST CARD  -->
-        <div class="col-md-6 col_height">
-            <div class="order-md-3 card my-2">
-                <div class="card-body scroll_card_expense">
-                    <p class="fs-4"> All Expenses</p>
-                    {% if expenses|length == 0 %}
-                    <div class=" text-center my-3">
-                        <img alt="void" class="img-fluid m-2" style="width: 450px;" src="{% static 'img/void.svg' %}">
-                        <div class="text-center">
-                            <p class="py-1 fw-light my-3 fs-1">Nothing Here
-                            </p>
-                        </div>
-                    </div>
-                    {% endif %}
-                    <ol class="list-group list-group-numbered">
-                        <!-- EXPENSE LIST -->
-                        {% for item in expenses %}
-                        <li class="list-group-item d-flex justify-content-between align-items-start"
-                            data-bs-toggle="modal" data-bs-target="#{{item.payee.name}}{{item.id}}Expense">
-                            <div class="ms-2 me-auto">
-                                <div class="fw-bold">{{item.payee.name | title}}</div>
-                                <span class="badge bg-secondary">
-                                    {{item.created_on | date}}</span>
-                            </div>
-                            <h4>
-                                {% if item.payment_status == "P" %}
-                                <span class="badge bg-danger font-monospace">
-                                    ₹ {{item.amount | intcomma}}</span>
-                                {% else %}
-                                <span class="badge bg-success font-monospace">
-                                    ₹ {{item.amount | intcomma}}</span>
-                                {% endif %}
-                            </h4>
-
-                            <!-- EXPENSE LIST -->
-
-                            <!-- UPDATE EXPENSE MODAL -->
-                            <div class="modal fade" id="{{item.name}}{{item.id}}Expense" tabindex="-1"
-                                aria-labelledby="{{item.name}}{{item.id}}ExpenseLabel" aria-hidden="true">
-                                <div class="modal-dialog">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h5 class="modal-title" id="{{item.name}}{{item.id}}ExpenseLabel">
-                                                Update {{item.name | title}}</h5>
-                                            <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                                aria-label="Close"></button>
-                                        </div>
-
-                                        <form action="" method="POST" id="expense_update">
-                                            <div class="modal-body">
-                                                <div class="my-3 mx-4">
-                                                    <select class="form-select" name="payee_list"
-                                                        aria-label="Default select example">
-                                                        <option value="{{item.name}}" selected>
-                                                            {{item.name}}
-                                                        </option>
-                                                        {% for payee in payee_list %}
-                                                        <option value="{{payee.name}}">
-                                                            {{payee.name}}
-                                                        </option>
-                                                        {% endfor %}
-                                                    </select>
-                                                </div>
-                                                <div class="my-3 mx-4">
-                                                    <div class="form-floating">
-                                                        <input type="number" step=".01" class="form-control" id="amount"
-                                                            value="{{item.amount}}" name="amount">
-                                                        <label for="newPayeeName">Amount</label>
-                                                    </div>
-                                                </div>
-                                                <div>
-                                                    <input class="form-control" type="text" name='expId' id='expId'
-                                                        value="{{item.id}}" hidden />
-                                                </div>
-                                            </div>
-                                            <div class="modal-footer">
-                                                <a type="button" class="btn btn-secondary"
-                                                    data-bs-dismiss="modal">Close</a>
-                                                <button type="submit" class="btn btn-primary" name="expense_update"
-                                                    value="expense_update" id="expense_update">Save
-                                                    changes</button>
-                                                <!-- delete expense -->
-                                                <a class="btn btn-danger" href="#">Delete</a>
-                                            </div>
-                                        </form>
-                                    </div>
-                                </div>
-                            </div>
-                        </li>
-                        {% endfor %}
-                    </ol>
-                </div>
-            </div>
-        </div>
+        {% include "components/expenses_card.html" %}
         <!-- EXPENSE LIST CARD  -->
+
     </div>
 </div>
 

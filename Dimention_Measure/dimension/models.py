@@ -20,7 +20,7 @@ class Project(models.Model):
 
     def save(self):
         self.name = self.name.replace(" ", "-")
-        return super(Project, self).save(*args, **kwargs)
+        return super(Project, self).save()
 
     def total_amount(self):
         dims = Dimension.objects.filter(project=self)

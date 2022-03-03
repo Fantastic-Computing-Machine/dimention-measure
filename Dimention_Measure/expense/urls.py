@@ -4,7 +4,8 @@ from django.urls import path
 from django.urls import include
 
 from .views import AllExpenseView, PayeeExpensesView
-from .views import UpdatePayee
+from .views import UpdatePayeeView
+from .views import ProjectExpenseView
 
 
 urlpatterns = [
@@ -16,7 +17,11 @@ urlpatterns = [
 
     # payee_id, payee_name
     path("payee/<int:pk>/<str:payee>/update/",
-         UpdatePayee.as_view(), name="payee_update"),
+         UpdatePayeeView.as_view(), name="payee_update"),
+
+    # project_id, project_name
+    path("project/<int:project_id>/<str:project_name>/",
+         ProjectExpenseView, name="project_expense"),
 
 
 ]

@@ -61,13 +61,33 @@ class PayeeExpensesView(ListView):
             payee__id=self.kwargs['pk'])
         kwargs['payee'] = Payee.objects.filter(
             id=self.kwargs['pk'])[0]
-        # print(payee)
-        # kwargs['expenses'] = expenses
         return super(PayeeExpensesView, self).get_context_data(**kwargs)
 
 
-class UpdatePayee(UpdateView):
+class UpdatePayeeView(UpdateView):
     model = Payee
     template_name = 'update_payee.html'
     form_class = UpdatePayeeForm
     success_url = reverse_lazy('home')
+
+# class ProjectExpenseView(CreateView):
+#     model = Payee
+#     template_name = 'all_expenses.html'
+#     form_class = New
+
+
+def ProjectExpenseView(request, project_id, project_name):
+
+    context = {}
+
+    payees = Payee.objects.all()
+    expenses = Expense.objects.filter(project__id=project_id)
+    context['payees'] = payees
+    context['project_name'] = project_name
+    context['project_id'] = project_id
+    context['expenses'] = expenses
+    if request.method == 'POST':
+        return
+
+    # return render(request, 'project_expense.html', context)
+    return render(request, 'all_expenses.html', context)
