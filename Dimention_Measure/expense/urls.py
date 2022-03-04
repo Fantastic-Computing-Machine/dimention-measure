@@ -1,11 +1,9 @@
-from django.conf import settings
-from django.conf.urls.static import static
 from django.urls import path
-from django.urls import include
 
 from .views import AllExpenseView, PayeeExpensesView
 from .views import UpdatePayeeView
 from .views import ProjectExpenseView
+from .views import ProjectExpenseViews
 
 
 urlpatterns = [
@@ -19,9 +17,13 @@ urlpatterns = [
     path("payee/<int:pk>/<str:payee>/update/",
          UpdatePayeeView.as_view(), name="payee_update"),
 
+    #     # project_id, project_name
+    #     path("project/<int:project_id>/<str:project_name>/",
+    #          ProjectExpenseViews, name="project_expense"),
+
     # project_id, project_name
     path("project/<int:project_id>/<str:project_name>/",
-         ProjectExpenseView, name="project_expense"),
+         ProjectExpenseView.as_view(), name="project_expense"),
 
 
 ]

@@ -3,9 +3,7 @@ from django.conf.urls.static import static
 from django.urls import path
 from django.urls import include
 
-from .views import HomeView
-from .views import ProjectView
-from .views import UpdateDimensionView
+from .views import HomeView, ProjectView, UpdateDimensionView
 from .views import DeleteDimentionView
 from .views import DeleteProjectView
 

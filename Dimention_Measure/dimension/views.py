@@ -80,7 +80,7 @@ class UpdateDimensionView(UpdateView):
         if request.POST['rate'] == '':
             request.POST['rate'] = '0'
         request.POST["project"] = str(kwargs['pk'])
-        request.POST._mutable = True
+        request.POST._mutable = False
         return super(UpdateDimensionView, self).post(request, **kwargs)
 
 

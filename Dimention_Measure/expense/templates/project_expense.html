@@ -1,7 +1,152 @@
-{{payees}}
-<br>
-{{expenses}}
-<br>
-{{project_name}}
-<br>
-{{project_id}}
+{% extends 'base.html' %}
+{% load static %} {% load humanize %}
+{% block head %}
+<title>{{project_name}} Expenses</title>
+{% endblock %}
+
+{% block header %}
+
+<!-- Add new payee modal trigger -->
+<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#newPayee">
+    <img alt="user" src="https://img.icons8.com/ios/30/ffffff/user--v3.png" />
+</button>
+<!-- Add new payee modal trigger -->
+
+<!-- Add new Expense modal trigger -->
+<button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+    <img src="https://img.icons8.com/ios/30/ffffff/money.png" />
+</button>
+<!-- Add new Expense modal trigger -->
+
+{% endblock %}
+
+
+{% block body %}
+
+<!-- Add new user modal -->
+<div class="modal fade" id="newPayee" tabindex="-1" aria-labelledby="newPayeeLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <form action="" method="POST" name="new_payee" id="newPayee">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="newPayeeLabel">New Payee</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    {% csrf_token %}
+
+                    <p>
+                        <label for="id_name">Name:</label>
+                        <input type="text" name="name" class="form-control" aria-label=".form-control-sm"
+                            placeholder="Tag" maxlength="200" required id="id_name">
+                    </p>
+                    <p>
+                        <label for="id_description">Description:</label>
+                        <textarea name="description" cols="40" rows="3" class="form-control"
+                            aria-label=".form-control-sm" placeholder="Description (optional)" id="id_description">
+                    </textarea>
+                    </p>
+                    <p>
+                        <label for="id_phoneNumber">Phonenumber:</label>
+                        <input type="tel" name="phoneNumber" class="form-control" aria-label=".form-control-sm"
+                            placeholder="Phone Number (optional)" maxlength="200" id="id_phoneNumber">
+                    </p>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button class="btn btn-success" value="new_payee" name="new_payee" type="submit"
+                        id="button-addon2">Add</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<!-- Add new user modal -->
+
+
+<!-- Add new Expense modal -->
+<div class="modal fade" id="staticBackdrop" tabindex="-1" aria-labelledby="expenseModalLabel" width="75%"
+    aria-hidden="true">
+    <div class="modal-dialog">
+        <form action="" method="POST" name="new_expense" id="expense">
+            <div class="mx-auto">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="staticBackdropLabel">Add Expense</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+
+                    <div class="modal-body">
+                        {% csrf_token %}
+                        <p>
+                            <label for="id_payee">Payee:</label>
+                            <select name="payee" class="form-select" aria-label=".form-control-sm" placeholder="Payee"
+                                required id="id_payee">
+                                <option value="" selected>---------</option>
+                                {% for item in payees %}
+                                <option value="{{item.id}}">{{item.name}} | {{item.phoneNumber}}</option>
+                                {% endfor %}
+                            </select>
+                        </p>
+                        <p>
+                            <label for="id_amount">Amount:</label>
+                            <input type="number" name="amount" class="form-control" aria-label=".form-control-sm"
+                                placeholder="Amount" step=".01" maxlength="200" id="id_amount">
+                        </p>
+                        <p>
+                            <label for="id_payment_status">Payment status:</label>
+                            <select name="payment_status" class="form-select" aria-label=".form-control-sm"
+                                placeholder="Payment-satus" maxlength="100" id="id_payment_status">
+                                <option value="" selected>---------</option>
+                                <option value="P">Paid</option>
+                                <option value="R">Recieved</option>
+                                <option value="PE">Pending</option>
+                                <option value="NA">No Status</option>
+                            </select>
+                        </p>
+
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" name="new_expense" value="expenseModal" id="expenseModal"
+                            class="btn btn-success">Save</button>
+
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<!-- Add new Expense modal -->
+
+<div class="container px-3">
+    <div class="text-light py-2 display-4">Expenses: {{project_name}}</div>
+    <div class="row flex-md-row-reverse py-3" dir="rtl">
+        <div class="col-md-6 col_height">
+
+            <!-- SUM CARD -->
+            {% include "components/sum_card.html" %}
+            <!-- SUM CARD -->
+
+            <!-- PAYEES CARD -->
+            {% include "components/all_payees_card.html" %}
+            <!-- PAYEES CARD -->
+
+        </div>
+
+        <!-- EXPENSE LIST CARD  -->
+        {% include "components/expenses_card.html" %}
+        <!-- EXPENSE LIST CARD  -->
+
+    </div>
+</div>
+
+{% endblock %}
+
+{% block expense_button %}
+<a href="{%url 'home'%}" type="button" class="btn btn-success btn-lg">
+    <img alt="project-btn" src="https://img.icons8.com/ios/30/ffffff/safety-hat.png" />
+</a>
+{% endblock %}
