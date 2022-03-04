@@ -20,7 +20,15 @@
                 <li class="list-group-item d-flex justify-content-between align-items-start" data-bs-toggle="modal"
                     data-bs-target="#{{item.payee.name}}{{item.id}}Expense">
                     <div class="ms-2 me-auto">
-                        <div class="fw-bold">{{item.payee.name | title}}</div>
+                        <div class="fw-bold">
+                            <a class="text-dark" href="{%url 'project_detail' item.project.id item.project.name%}"
+                                style="text-decoration: none;">
+                                {% if not project_name %}
+                                {{item.project.name | title}}:
+                                {% endif %}
+                                {{item.payee.name | title}}
+                            </a>
+                        </div>
                         <span class="badge bg-secondary">
                             {{item.created_on | date}}</span>
                     </div>

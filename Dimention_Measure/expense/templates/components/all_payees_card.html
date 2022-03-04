@@ -27,7 +27,8 @@
                 <div class="d-flex justify-content-between">
                     <div calss="fw-bold">
                         <!-- payee expense: all expenses for a payee -->
-                        <a href="{% url 'payee_expense' item.id item.name %}" style="text-decoration: none;">
+                        <a href="{% url 'payee_expense' item.id item.name %}" class="text-dark"
+                            style="text-decoration: none;">
                             <div class="fw-bold">{{item.name| title}}</div>
                         </a>
                         {% if item.description %}
