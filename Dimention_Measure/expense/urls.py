@@ -3,7 +3,7 @@ from django.urls import path
 from .views import AllExpenseView, PayeeExpensesView
 from .views import UpdatePayeeView
 from .views import ProjectExpenseView
-from .views import ProjectExpenseViews
+# from .views import ProjectExpenseViews
 
 
 urlpatterns = [

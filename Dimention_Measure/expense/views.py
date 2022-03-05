@@ -78,28 +78,28 @@ class UpdatePayeeView(UpdateView):
     success_url = reverse_lazy('home')
 
 
-def ProjectExpenseViews(request, project_id, project_name):
-    context = {}
-    payees = Payee.objects.all().order_by('-created_on')
-    expenses = Expense.objects.filter(
-        project__id=project_id).order_by('-created_on')
-    context['payees'] = payees
-    context['project_name'] = project_name
-    context['project_id'] = project_id
-    context['expenses'] = expenses
+# def ProjectExpenseViews(request, project_id, project_name):
+#     context = {}
+#     payees = Payee.objects.all().order_by('-created_on')
+#     expenses = Expense.objects.filter(
+#         project__id=project_id).order_by('-created_on')
+#     context['payees'] = payees
+#     context['project_name'] = project_name
+#     context['project_id'] = project_id
+#     context['expenses'] = expenses
 
-    total_expense = total_expenses(expenses)
+#     total_expense = total_expenses(expenses)
 
-    print(total_expense)
-    context['total_paid'] = total_expense['total_paid']
-    context['total_recieved'] = total_expense['total_recieved']
-    context['total_pending'] = total_expense['total_pending']
-    context['total_nostatus'] = total_expense['total_nostatus']
+#     print(total_expense)
+#     context['total_paid'] = total_expense['total_paid']
+#     context['total_recieved'] = total_expense['total_recieved']
+#     context['total_pending'] = total_expense['total_pending']
+#     context['total_nostatus'] = total_expense['total_nostatus']
 
-    if request.method == 'POST':
-        return
+#     if request.method == 'POST':
+#         return
 
-    return render(request, 'project_expense.html', context)
+#     return render(request, 'project_expense.html', context)
 
 
 class ProjectExpenseView(CreateView):
@@ -126,31 +126,14 @@ class ProjectExpenseView(CreateView):
         return super(ProjectExpenseView, self).get_context_data(**kwargs)
 
     def post(self, request, **kwargs):
-        print(request.POST)
-        # {
-        #     'csrfmiddlewaretoken': ['1ArUdaRCZvKQbbC443fOtZNVqFidr4q4CAIcZ3Joxg3ZYDwsLF3rYozi5D7dAYGB'],
-        #     'payee': ['9'],
-        #     'amount': ['1234'],
-        #     'payment_status': ['P'],
-        #     'new_expense': ['expenseModal']
-        # }
-        # {
-        #     'csrfmiddlewaretoken': ['TkOIJBiXIWi5Hpbtdm3OBexwtKGNiiJpuk50vuaJgHBeuR5RUYRr6DjT8IvNrcZW'],
-        #     'name': ['Aditya Agarwal'],
-        #     'description': ['bhfyugvjk'],
-        #     'phoneNumber': [''],
-        #     'new_payee': ['']
-        print("POST REQ: ", request.POST)
-        # }
         if request.POST.get('new_expense'):
             request.POST._mutable = True
-            request.POST.project = self.kwargs['project_id']
+            request.POST["project"] = self.kwargs['project_id']
             request.POST._mutable = False
-            form = CreateExpenseForm(request.POST)
+
         if request.POST.get('new_payee'):
             form = NewPayeeForm(request.POST)
-
-        if form.is_valid():
-            form.save()
+            if form.is_valid():
+                form.save()
 
         return super(ProjectExpenseView, self).post(request, **kwargs)

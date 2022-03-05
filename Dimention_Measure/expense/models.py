@@ -77,3 +77,6 @@ class Expense(models.Model):
 
     def __str__(self):
         return str(self.payee.name) + " | " + str(self.amount) + " | " + str(self.payment_status)
+
+    def get_absolute_url(self):
+        return reverse("project_expense", args=[str(self.project.pk), str(self.project.name)])
