@@ -160,3 +160,9 @@ class UpdateDimensionForm(forms.ModelForm):
     class Meta:
         model = Dimension
         fields = ('name', 'description', 'length', 'width', 'rate')
+
+class DeleteProjectForm(forms.ModelForm):
+    class Meta:
+        model = Project
+        fields = ('is_deleted',)
+

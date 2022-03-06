@@ -5,6 +5,7 @@ from .views import UpdatePayeeView
 from .views import ProjectExpenseView
 from .views import UpdateExpenseView
 
+from .views import DeletePayeeView
 
 urlpatterns = [
     path("", AllExpenseView.as_view(), name="all_expenses"),
@@ -25,5 +26,8 @@ urlpatterns = [
     path("project/<int:project_id>/<str:project_name>/",
          ProjectExpenseView.as_view(), name="project_expense"),
 
+    path("payee/<int:payee_id>/<int:project_id>/<str:project_name>/delete/",
+         # payee_id, project_id, project_name
+         DeletePayeeView, name="delete_Payee_Project"),
 
 ]

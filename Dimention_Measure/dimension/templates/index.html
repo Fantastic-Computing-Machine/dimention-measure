@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 {% load static %}{% load humanize %}
 {% block head %}
+<script src="/static/js/home.js" defer></script>
 <title>Home</title>
 {% endblock %}
 
@@ -66,20 +67,55 @@
                                 </span>
                             </div>
                             <span>
-                                <a aria-label="delete-proj-{{item.name}}" class="badge bg-light" style="z-index:2;"
-                                    href="#">
-                                    <img alt="delete-project-{{item.name}}"
-                                        src="https://img.icons8.com/color/28/000000/delete-forever.png" />
+                                <!-- Delete modal -->
+
+                                
+                                <a class="delete_button badge bg-light" id="delete_button{{item.id}}" data-bs-toggle="modal"
+                                    data-bs-target="#delete{{item.id}}Modal">
+                                    <img class="icon_ud" style="border-radius: 10%;" width="28" height="28"
+                                        src="https://img.icons8.com/ios/50/000000/delete-forever--v2.png" />
                                 </a>
+                                
                             </span>
                         </div>
                     </a>
                 </div>
             </div>
         </div>
+        <div class="modal fade" id="delete{{item.id}}Modal" tabindex="-1" aria-labelledby="delete{{item.id}}ModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="delete{{item.id}}ModalLabel">
+                            Confirm
+                            delete "{{item.name | title}}"</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body text-start">
+                        You wish to permanently delete project&rarr;
+                        <b>"{{item.name | title}}"</b>?<br>
+                        <b class="my-1">Be Careful!</b>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-outline-success" data-bs-dismiss="modal">Get
+                            back to safety</button>
+                        <form action="{% url 'delete_project' item.id item.name %}" method="POST">
+                            {% csrf_token %}
+                            
+                        <button class="confirm_delete btn btn-danger align-bottom" type="submit">
+                            Chop Chop!
+                        </button>
+                    </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         {% endfor %}
         {% endif %}
     </div>
+    
 </div>
 
 

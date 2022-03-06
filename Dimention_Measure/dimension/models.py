@@ -14,7 +14,8 @@ class Project(models.Model):
         max_length=255, blank=True, null=True, default='')
     created_on = models.DateTimeField(auto_now_add=True)
     updated_on = models.DateTimeField(auto_now=True)
-
+    is_deleted = models.BooleanField(default=False)
+    deleted_on = models.DateTimeField(blank=True, null=True)
     def __str__(self):
         return str(self.name)
 
@@ -58,6 +59,9 @@ class Dimension(models.Model):
     created_on = models.DateTimeField(auto_now_add=True)
     updated_on = models.DateTimeField(auto_now=True)
 
+    is_deleted = models.BooleanField(default=False)
+    deleted_on = models.DateTimeField(blank=True, null=True)
+
     def __str__(self):
         return str(self.project.name) + " | " + str(self.name)
 
@@ -87,7 +91,7 @@ class Dimension(models.Model):
             elif self.rate > 0:
                 self.amount = self.sqft * self.rate
 
-            return super(Dimension, self).save(*args, **kwargs)
+            return super(Dimension, self).save()
 
     def get_absolute_url(self):
         return reverse("project_detail", args=[str(self.project.pk), str(self.project.name)])

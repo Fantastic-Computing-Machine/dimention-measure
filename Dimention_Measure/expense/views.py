@@ -15,7 +15,7 @@ from django.views.generic import (
 from django.urls import reverse_lazy, reverse
 from django.http import JsonResponse
 import re
-
+import datetime
 from .models import Payee, Expense
 from .forms import NewPayeeForm, UpdatePayeeForm
 from .forms import CreateExpenseForm, UpdateExpenseForm
@@ -49,7 +49,8 @@ class AllExpenseView(CreateView):
 
     def get_context_data(self, **kwargs):
         kwargs['payees'] = Payee.objects.all().order_by('-created_on')
-        expenses = Expense.objects.all().order_by('-created_on')
+        expenses = Expense.objects.all().filter(project__is_deleted=False,
+                                                is_deleted=False).order_by('-created_on')
         kwargs['expenses'] = expenses
         total_expense = total_expenses(expenses)
         kwargs['total_paid'] = total_expense['total_paid']
@@ -65,7 +66,7 @@ class PayeeExpensesView(ListView):
 
     def get_context_data(self, **kwargs):
         kwargs['expenses'] = Expense.objects.filter(
-            payee__id=self.kwargs['pk']).order_by('-created_on')
+            payee__id=self.kwargs['pk'], project__is_deleted=False, is_deleted=False).order_by('-created_on')
         kwargs['payee'] = Payee.objects.filter(
             id=self.kwargs['pk'])[0]
         return super(PayeeExpensesView, self).get_context_data(**kwargs)
@@ -78,39 +79,16 @@ class UpdatePayeeView(UpdateView):
     success_url = reverse_lazy('home')
 
 
-# def ProjectExpenseViews(request, project_id, project_name):
-#     context = {}
-#     payees = Payee.objects.all().order_by('-created_on')
-#     expenses = Expense.objects.filter(
-#         project__id=project_id).order_by('-created_on')
-#     context['payees'] = payees
-#     context['project_name'] = project_name
-#     context['project_id'] = project_id
-#     context['expenses'] = expenses
-
-#     total_expense = total_expenses(expenses)
-
-#     print(total_expense)
-#     context['total_paid'] = total_expense['total_paid']
-#     context['total_recieved'] = total_expense['total_recieved']
-#     context['total_pending'] = total_expense['total_pending']
-#     context['total_nostatus'] = total_expense['total_nostatus']
-
-#     if request.method == 'POST':
-#         return
-
-#     return render(request, 'project_expense.html', context)
-
-
 class ProjectExpenseView(CreateView):
     model = Expense
     form_class = CreateExpenseForm
     template_name = 'project_expense.html'
 
     def get_context_data(self, **kwargs):
-        payees = Payee.objects.all().order_by('-created_on')
+        payees = Payee.objects.filter(
+            expense__project__id=self.kwargs['project_id'], expense__is_deleted=False).order_by('-created_on').distinct()
         expenses = Expense.objects.filter(
-            project__id=self.kwargs['project_id']).order_by('-created_on')
+            project__id=self.kwargs['project_id'], is_deleted=False).order_by('-created_on')
         kwargs['payees'] = payees
         kwargs['project_name'] = self.kwargs['project_name']
         kwargs['project_id'] = self.kwargs['project_id']
@@ -159,3 +137,10 @@ class UpdateExpenseView(UpdateView):
     # def get_success_url(self, **kwargs):
     #     print('hello url')
     #     return reverse_lazy('project_expense', args=[self.kwargs['project_id'], self.kwargs['project_name']])
+
+
+def DeletePayeeView(request, payee_id, project_id, project_name):
+    if request.method == 'POST':
+        expense = Expense.objects.filter(project__id=project_id, payee__id=payee_id).update(
+            is_deleted=True, deleted_on=datetime.datetime.now())
+        return HttpResponseRedirect(reverse('project_expense', kwargs={'project_id': project_id, 'project_name': project_name, }))

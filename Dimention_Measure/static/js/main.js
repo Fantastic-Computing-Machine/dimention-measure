@@ -1,3 +1,5 @@
+console.log("main.js loaded");
+
 var length = document.getElementById("id_length");
 var width = document.getElementById("id_width");
 var rate = document.getElementById("id_rate");
@@ -53,3 +55,14 @@ function ft_mtr() {
     var to_mt = len * 0.3048;
     document.getElementById("mt").value = to_mt;
 }
+
+$(document).ready(function(){
+    $(".delete_button").hover(function(){
+      $(this).children('img').attr('src', 'https://img.icons8.com/ios/50/000000/delete-forever--v2.gif');
+      
+      }, function(){
+          $(this).children('img').attr("src","https://img.icons8.com/ios/50/000000/delete-forever--v2.png");
+          
+        
+    });
+  });

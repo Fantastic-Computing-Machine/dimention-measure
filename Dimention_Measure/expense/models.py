@@ -74,7 +74,8 @@ class Expense(models.Model):
         choices=PAYMENT_STATUS,
         default="N",
     )
-
+    is_deleted = models.BooleanField(default=False)
+    deleted_on = models.DateTimeField(blank=True, null=True)
     def __str__(self):
         return str(self.payee.name) + " | " + str(self.amount) + " | " + str(self.payment_status)
 

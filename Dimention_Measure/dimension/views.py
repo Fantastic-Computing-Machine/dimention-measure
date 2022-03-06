@@ -13,8 +13,9 @@ from django.views.generic import (
 from django.urls import reverse_lazy, reverse
 from django.http import JsonResponse
 import re
+import datetime
 
-from .forms import NewProjectForm, NewDimensionForm
+from .forms import NewProjectForm, NewDimensionForm,DeleteProjectForm
 from .forms import UpdateDimensionForm
 from .models import Project, Dimension
 
@@ -27,7 +28,7 @@ class HomeView(CreateView):
 
     def get_context_data(self, *args, **kwargs):
         context = super(HomeView, self).get_context_data(*args, **kwargs)
-        context["projects_list"] = Project.objects.order_by('-created_on')
+        context["projects_list"] = Project.objects.filter(is_deleted=False).order_by('-created_on')
         return context
 
     def post(self, request, **kwargs):
@@ -44,7 +45,7 @@ class ProjectView(CreateView):
 
     def get_context_data(self, *args, **kwargs):
         project = Project.objects.filter(pk=self.kwargs['pk'])[0]
-        dimentions = Dimension.objects.filter(project=project)
+        dimentions = Dimension.objects.filter(project=project).filter(is_deleted=False)
         kwargs['dimentions'] = dimentions
         kwargs['project'] = project
         kwargs['sum_sqm'] = sum(item.sqm for item in dimentions)
@@ -83,11 +84,13 @@ class UpdateDimensionView(UpdateView):
         request.POST._mutable = False
         return super(UpdateDimensionView, self).post(request, **kwargs)
 
+def DeleteProjectView(request, pk,project_name):
+    if request.method == 'POST':
+        project = Project.objects.filter(pk=pk).update(is_deleted=True,deleted_on=datetime.datetime.now())
+    return HttpResponseRedirect(reverse('home'))
 
-class DeleteDimentionView(DeleteView):
-    pass
-
-
-class DeleteProjectView(DeleteView):
-    success_url = reverse_lazy("home")
-    pass
+def DeleteDimentionView(request, pk,project_id,project_name):
+    if request.method == 'POST':
+        dimension = Dimension.objects.filter(pk=pk).update(is_deleted=True,deleted_on=datetime.datetime.now())
+    return HttpResponseRedirect(reverse('project_detail', args=(project_id,project_name,)))
+    

@@ -43,10 +43,47 @@
                                 <img alt="edit-button" src="https://img.icons8.com/ios/20/000000/edit--v2.png" />
                             </a>
                             <!-- Delete Payee -->
-                            <a class="btn btn-light" href="#">
-                                <img alt="delete-button"
-                                    src="https://img.icons8.com/ios/20/000000/delete-forever.png" />
+                            {% if project_id and project_name %}
+                            <a class="delete_button badge bg-light" id="delete_button_{{item.id}}"
+                                data-bs-toggle="modal" data-bs-target="#deleteModal_{{item.id}}">
+                                <img class="icon_ud" style="border-radius: 10%;" width="28" height="28"
+                                    src="https://img.icons8.com/ios/50/000000/delete-forever--v2.png" />
                             </a>
+                            <div class="modal fade" id="deleteModal_{{item.id}}" tabindex="-1"
+                                aria-labelledby="deleteModalLabel" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="deleteModalLabel">
+                                                Confirm
+                                                delete payee "{{item.name | title}}"</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body text-start">
+                                            You wish to permanently delete Payee&rarr;
+                                            <b>"{{item.name | title}}"</b>?<br>
+                                            <b class="my-1">Be Careful!</b>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-outline-success"
+                                                data-bs-dismiss="modal">Get
+                                                back to safety</button>
+                                            <form
+                                                action="{% url 'delete_Payee_Project' item.id project_id project_name%}"
+                                                method="POST">
+                                                {% csrf_token %}
+
+                                                <button class="confirm_delete btn btn-danger align-bottom"
+                                                    type="submit">
+                                                    Chop Chop!
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endif %}
                         </span>
                     </div>
                 </div>
