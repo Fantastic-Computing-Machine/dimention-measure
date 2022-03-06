@@ -6,7 +6,9 @@
 
 <div class="container px-3">
     <div class="text-light pt-2 display-4">{{payee.name|title}}</div>
-    <div class="text-light h5 text-muted">{{payee.description|title}}</div>
+    <div class="text-light h5 pt-2 text-muted">Mob: <a class="text-muted" href="tel:+{{payee.phoneNumber}}"
+            style="text-decoration: none;">{{payee.phoneNumber}}</a></div>
+    <div class="text-light h5 text-muted">Desc: {{payee.description|title}}</div>
 
     <div class="row flex-md-row py-3">
         <div class="col col_height">

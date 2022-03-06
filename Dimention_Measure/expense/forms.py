@@ -134,3 +134,42 @@ class CreateExpenseForm(forms.ModelForm):
             'amount',
             'payment_status'
         )
+
+
+class UpdateExpenseForm(forms.ModelForm):
+
+    amount = forms.CharField(
+        max_length=200,
+        required=False,
+        widget=forms.TextInput(
+            attrs={
+                'class': 'form-control',
+                "aria-label": ".form-control-sm",
+                "type": 'number',
+                "placeholder": "Amount",
+                "step": ".01",
+            }
+        )
+    )
+
+    payment_status = forms.CharField(
+        max_length=100,
+        required=True,
+        widget=forms.Select(
+            choices=PAYMENT_STATUS,
+            attrs={
+                "class": "form-select",
+                "aria-label": ".form-control-sm",
+                "placeholder": "Payment-satus"
+            }
+        )
+    )
+
+    class Meta:
+        model = Expense
+        fields = (
+            'project',
+            'payee',
+            'amount',
+            'payment_status'
+        )

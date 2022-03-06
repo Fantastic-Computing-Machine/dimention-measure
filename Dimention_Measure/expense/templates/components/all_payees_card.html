@@ -29,7 +29,9 @@
                         <!-- payee expense: all expenses for a payee -->
                         <a href="{% url 'payee_expense' item.id item.name %}" class="text-dark"
                             style="text-decoration: none;">
-                            <div class="fw-bold">{{item.name| title}}</div>
+                            <div class="fw-bold">{{item.name| title}}: <a class="text-dark"
+                                    href="tel:+{{item.phoneNumber}}"
+                                    style="text-decoration: none;">{{item.phoneNumber}}</a></div>
                         </a>
                         {% if item.description %}
                         {{item.description|title}}

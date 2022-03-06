@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+{% load static %} {% load humanize %}
+{% block head %}<title>Update | {{expense.payee.name}} / {{expense.project.name | title}}</title>{% endblock %}
+
+{% block body %}
+
+<div class="container-lg container-md container-sm py-4">
+    <div class="mx-auto">
+        <div class="row justify-content-center">
+            <div class="col-lg-7 col-md-6 col-xl-6">
+                <div class="card">
+
+                    <div class="card-header">
+                        <h5 class="card-title" id="{{expense.name}}expense">Update:
+                            {{expense.payee.name}} / {{expense.project.name | title}}
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <form action="{% url 'expense_update' expense.id expense.project.id expense.project.name %}"
+                            method="POST">
+                            {% csrf_token %}
+                            <p>
+                                <label for="id_project">Project:</label>
+                                <input type="text" class="form-control" value="{{expense.project.name | title}}"
+                                    disabled readonly>
+                            </p>
+
+                            <p>
+                                <label for="id_payee">Payee:</label>
+                                <input type="text" class="form-control" value="{{expense.payee.name | title}}" disabled
+                                    readonly>
+                            </p>
+
+                            <p>
+                                <label for="id_amount">Amount:</label>
+                                <input type="number" name="amount" value="{{expense.amount}}" class="form-control"
+                                    aria-label=".form-control-sm" placeholder="Amount" step=".01" maxlength="200"
+                                    id="id_amount">
+                            </p>
+                            <p>
+                                <label for="id_payment_status">Payment status:</label>
+                                <select name="payment_status" class="form-select" aria-label=".form-control-sm"
+                                    placeholder="Payment-satus" maxlength="100" default="{{expense.payment_status}}"
+                                    id="id_payment_status">
+                                    <option value="P" selected>Paid</option>
+                                    <option value="R">Recieved</option>
+                                    <option value="PE">Pending</option>
+                                    <option value="NA">No Status</option>
+
+                                </select>
+                            </p>
+                            <button type="submit" class="btn btn-primary">Save
+                                changes
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
