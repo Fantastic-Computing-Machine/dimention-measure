@@ -108,8 +108,10 @@ def download_excel_view(request, project_id, project_name):
     current_date = date_time_obj.strftime('%x')
     current_time = date_time_obj.strftime('%X')
 
-    filename = "media/excel/" + project_name + '_' + str(current_date).replace('/', "-") + \
+    filename = project_name + '_' + str(current_date).replace('/', "-") + \
         '_' + str(current_time).replace(":", "-") + ".xlsx"
+
+    file_path = "media/excel/" + filename
 
     # create a workbook object
     workbook = Workbook()
@@ -144,8 +146,8 @@ def download_excel_view(request, project_id, project_name):
     sheet.append([""])
     sheet.append(['*Calculated using metrics in sqft.'])
 
-    print(filename)
-    workbook.save(filename=str(filename))
+    print(file_path)
+    workbook.save(filename=str(file_path))
     workbook.close()
 
-    return FileResponse(as_attachment=True, filename=filename)
+    return FileResponse(open(file_path, 'rb'))
