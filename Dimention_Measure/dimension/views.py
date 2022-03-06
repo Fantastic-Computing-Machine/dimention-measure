@@ -103,51 +103,53 @@ def DeleteDimentionView(request, pk, project_id, project_name):
     return HttpResponseRedirect(reverse('project_detail', args=(project_id, project_name,)))
 
 
-def download_excel_view(project_id, project_name):
-    date_time_obj = datetime.now()
-    current_date = date_time_obj.strftime('%x')
-    current_time = date_time_obj.strftime('%X')
+def download_excel_view(request,project_id, project_name):
+    # print(project_id, project_name)
+    # date_time_obj = datetime.datetime.now()
+    # current_date = date_time_obj.strftime('%x')
+    # current_time = date_time_obj.strftime('%X')
 
-    filename = "media/excel/" + project_name + '_' + str(current_date).replace('/', "-") + \
-        '_' + str(current_time).replace(":", "-") + ".xlsx"
+    # filename = "media/excel/" + project_name + '_' + str(current_date).replace('/', "-") + \
+    #     '_' + str(current_time).replace(":", "-") + ".xlsx"
 
-    # create a workbook object
-    workbook = Workbook()
-    # create a worksheet
-    sheet = workbook.active
-    sheet.title = project_name
+    # # create a workbook object
+    # workbook = Workbook()
+    # # create a worksheet
+    # sheet = workbook.active
+    # sheet.title = project_name
 
-    sheet.append(["Project Name", project_name])
-    sheet.append([""])
-    sheet.append(["Tag", "Length", "Width", "Area | sqm",
-                  "Area | sqft", "Rate", "Amount"])
+    # sheet.append(["Project Name", project_name])
+    # sheet.append([""])
+    # sheet.append(["Tag", "Length", "Width", "Area | sqm",
+    #               "Area | sqft", "Rate", "Amount"])
 
-    dimention = Dimension.objects.filter(project__id=project_id)
-    print(dimention)
+    # dimention = Dimension.objects.filter(project__id=project_id)
+    # print(dimention)
 
-    for item in session['proj_info'][1]:
+    # for item in session['proj_info'][1]:
 
-        item["length"] = str(item["length"]) + " m (" + \
-            str(round(item["length"]*3.281, 2)) + " ft.)"
-        item["width"] = str(item["width"]) + " m (" + \
-            str(round(item["width"]*3.281, 2)) + " ft.)"
+    #     item["length"] = str(item["length"]) + " m (" + \
+    #         str(round(item["length"]*3.281, 2)) + " ft.)"
+    #     item["width"] = str(item["width"]) + " m (" + \
+    #         str(round(item["width"]*3.281, 2)) + " ft.)"
 
-        sheet.append([item["tag"], item["length"],
-                      item["width"], item["sqm"], item["sqft"], item["rate"], item["amount"]])
+    #     sheet.append([item["tag"], item["length"],
+    #                   item["width"], item["sqm"], item["sqft"], item["rate"], item["amount"]])
 
-    sheet.append([""])
-    sheet.append(['Total sqm', session['proj_info'][2]])
-    sheet.append(['Total sqft', session['proj_info'][3]])
-    sheet.append(['Total amount*', session['proj_info'][4]])
+    # sheet.append([""])
+    # sheet.append(['Total sqm', session['proj_info'][2]])
+    # sheet.append(['Total sqft', session['proj_info'][3]])
+    # sheet.append(['Total amount*', session['proj_info'][4]])
 
-    sheet.append([""])
-    sheet.append(['*Calculated using metrics in sqft.'])
+    # sheet.append([""])
+    # sheet.append(['*Calculated using metrics in sqft.'])
 
-    print(filename)
-    workbook.save(filename=str(filename))
-    workbook.close()
+    # print(filename)
+    # workbook.save(filename=str(filename))
+    # workbook.close()
 
-    session.pop('proj_info')
+    # session.pop('proj_info')
+    return HttpResponseRedirect(reverse('project_detail', args=(project_id, project_name,)))
 
     # @ after_this_request
     # def remove_file(response):
