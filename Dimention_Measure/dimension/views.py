@@ -86,16 +86,11 @@ class UpdateDimensionView(UpdateView):
 
 def DeleteProjectView(request, pk,project_name):
     if request.method == 'POST':
-        project = Project.objects.filter(pk=pk)[0]
-        project.is_deleted = True
-        project.save()
+        project = Project.objects.filter(pk=pk).update(is_deleted=True,deleted_on=datetime.datetime.now())
     return HttpResponseRedirect(reverse('home'))
 
 def DeleteDimentionView(request, pk,project_id,project_name):
     if request.method == 'POST':
-        dimension = Dimension.objects.filter(pk=pk)[0]
-        dimension.is_deleted = True
-        dimension.delete_on = datetime.datetime.now()
-        dimension.save()
+        dimension = Dimension.objects.filter(pk=pk).update(is_deleted=True,deleted_on=datetime.datetime.now())
     return HttpResponseRedirect(reverse('project_detail', args=(project_id,project_name,)))
     

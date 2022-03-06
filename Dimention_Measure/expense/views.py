@@ -65,7 +65,7 @@ class PayeeExpensesView(ListView):
 
     def get_context_data(self, **kwargs):
         kwargs['expenses'] = Expense.objects.filter(
-            payee__id=self.kwargs['pk']).order_by('-created_on')
+            payee__id=self.kwargs['pk'],project__is_deleted=False,is_deleted=False).order_by('-created_on')
         kwargs['payee'] = Payee.objects.filter(
             id=self.kwargs['pk'])[0]
         return super(PayeeExpensesView, self).get_context_data(**kwargs)
@@ -140,9 +140,5 @@ class ProjectExpenseView(CreateView):
 
 def DeletePayeeView(request, payee_id,project_id,project_name):
     if request.method == 'POST':
-        expense = Expense.objects.filter(project__id=project_id,payee__id=payee_id)
-        for i in expense.iterator():
-            i.is_deleted = True
-            i.delete_on = datetime.datetime.now()
-            i.save()
+        expense = Expense.objects.filter(project__id=project_id,payee__id=payee_id).update(is_deleted=True,deleted_on=datetime.datetime.now())
         return HttpResponseRedirect(reverse('project_expense', kwargs={'project_id': project_id,'project_name':project_name,}))
