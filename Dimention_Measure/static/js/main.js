@@ -66,3 +66,14 @@ $(document).ready(function(){
         
     });
   });
+
+  $(document).ready(function(){
+    $(".setting").hover(function(){
+      $(this).children('img').attr('src', 'https://img.icons8.com/ios/28/000000/settings--v2.gif');
+      
+      }, function(){
+          $(this).children('img').attr("src","https://img.icons8.com/ios/28/000000/settings--v2.png");
+          
+        
+    });
+  });
