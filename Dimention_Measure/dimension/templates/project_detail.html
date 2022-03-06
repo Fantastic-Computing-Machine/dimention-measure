@@ -35,34 +35,34 @@
                     src="https://img.icons8.com/ios/50/000000/delete-forever--v2.png" />
             </a>
             <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel"
-            aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="deleteModalLabel">
-                            Confirm
-                            delete dimention "{{project.name | title}}"</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body text-start">
-                        You wish to permanently delete project&rarr;
-                        <b>"{{project.name | title}}"</b>?<br>
-                        <b class="my-1">Be Careful!</b>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-outline-success" data-bs-dismiss="modal">Get
-                            back to safety</button>
-                        <form action="{% url 'delete_project' project.id project.name %}" method="POST">
-                            {% csrf_token %}
-                            
-                        <button class="confirm_delete btn btn-danger align-bottom" type="submit">
-                            Chop Chop!
-                        </button>
-                    </form>
+                aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="deleteModalLabel">
+                                Confirm
+                                delete dimention "{{project.name | title}}"</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body text-start">
+                            You wish to permanently delete project&rarr;
+                            <b>"{{project.name | title}}"</b>?<br>
+                            <b class="my-1">Be Careful!</b>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-outline-success" data-bs-dismiss="modal">Get
+                                back to safety</button>
+                            <form action="{% url 'delete_project' project.id project.name %}" method="POST">
+                                {% csrf_token %}
+
+                                <button class="confirm_delete btn btn-danger align-bottom" type="submit">
+                                    Chop Chop!
+                                </button>
+                            </form>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
         </span>
 
     </div>
@@ -220,7 +220,8 @@
                     </span>
                 </button>
                 <!-- Download Excel file -->
-                <a class="btn btn-outline-success m-1 disabled" href='#' download>
+                <a class="btn btn-outline-success m-1" href="{% url 'download_excel_file' project.id project.name %}"
+                    download>
                     <span style="white-space: nowrap">
                         <img class="px-2" src="https://img.icons8.com/ios-glyphs/25/000000/ms-excel.png">
                         Save Excel</span>
