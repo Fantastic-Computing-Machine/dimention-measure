@@ -108,19 +108,21 @@ def download_excel_view(request, project_id, project_name):
     current_date = date_time_obj.strftime('%x')
     current_time = date_time_obj.strftime('%X')
 
-    # filename = "media/excel/" + project_name + '_' + str(current_date).replace('/', "-") + \
-    #     '_' + str(current_time).replace(":", "-") + ".xlsx"
+    filename = project_name + '_' + str(current_date).replace('/', "-") + \
+        '_' + str(current_time).replace(":", "-") + ".xlsx"
 
-    # # create a workbook object
-    # workbook = Workbook()
-    # # create a worksheet
-    # sheet = workbook.active
-    # sheet.title = project_name
+    file_path = "media/excel/" + filename
 
-    # sheet.append(["Project Name", project_name])
-    # sheet.append([""])
-    # sheet.append(["Tag", "Length", "Width", "Area | sqm",
-    #               "Area | sqft", "Rate", "Amount"])
+    # create a workbook object
+    workbook = Workbook()
+    # create a worksheet
+    sheet = workbook.active
+    sheet.title = project_name
+
+    sheet.append(["Project Name", project_name])
+    sheet.append([""])
+    sheet.append(["Tag", "Length", "Width", "Area | sqm",
+                  "Area | sqft", "Rate", "Amount"])
 
     dimension = Dimension.objects.filter(
         project__id=project_id, is_deleted=False)
@@ -141,11 +143,11 @@ def download_excel_view(request, project_id, project_name):
     sheet.append(['Total sqft', sum_sqft])
     sheet.append(['Total amount*', sum_amount])
 
-    # sheet.append([""])
-    # sheet.append(['*Calculated using metrics in sqft.'])
+    sheet.append([""])
+    sheet.append(['*Calculated using metrics in sqft.'])
 
-    # print(filename)
-    # workbook.save(filename=str(filename))
-    # workbook.close()
+    print(file_path)
+    workbook.save(filename=str(file_path))
+    workbook.close()
 
-    return FileResponse(as_attachment=True, filename=filename)
+    return FileResponse(open(file_path, 'rb'))
