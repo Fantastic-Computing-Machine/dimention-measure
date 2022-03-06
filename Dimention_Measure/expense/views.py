@@ -119,13 +119,11 @@ class ProjectExpenseView(CreateView):
 
 class UpdateExpenseView(UpdateView):
     model = Expense
-    print('hello class')
     form_class = UpdateExpenseForm
     template_name = 'update_expense.html'
     # success_url = reverse_lazy('all_expenses')
 
     def get_context_data(self, **kwargs):
-        print('hello context')
         expense = Expense.objects.filter(id=self.kwargs['pk'])[0]
         kwargs['expense'] = expense
         return super(UpdateExpenseView, self).get_context_data(**kwargs)

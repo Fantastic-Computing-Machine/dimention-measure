@@ -16,6 +16,7 @@ class Project(models.Model):
     updated_on = models.DateTimeField(auto_now=True)
     is_deleted = models.BooleanField(default=False)
     deleted_on = models.DateTimeField(blank=True, null=True)
+
     def __str__(self):
         return str(self.name)
 
@@ -24,17 +25,17 @@ class Project(models.Model):
         return super(Project, self).save()
 
     def total_amount(self):
-        dims = Dimension.objects.filter(project=self)
+        dims = Dimension.objects.filter(project=self, is_deleted=False)
         sum_amount = sum(item.amount for item in dims)
         return sum_amount
 
     def total_sqm(self):
-        dims = Dimension.objects.filter(project=self)
+        dims = Dimension.objects.filter(project=self, is_deleted=False)
         sum_sqm = sum(item.sqm for item in dims)
         return sum_sqm
 
     def total_sqft(self):
-        dims = Dimension.objects.filter(project=self)
+        dims = Dimension.objects.filter(project=self, is_deleted=False)
         sum_sqft = sum(item.sqft for item in dims)
         return sum_sqft
 

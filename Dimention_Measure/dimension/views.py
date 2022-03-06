@@ -2,7 +2,7 @@ from django.contrib.auth import get_user_model as user_model
 from django.contrib.auth.models import User
 from django.db.models import Q, F
 from django.forms.models import modelform_factory
-from django.http import JsonResponse
+from django.http import FileResponse
 from django.shortcuts import render, get_object_or_404
 from django.shortcuts import HttpResponseRedirect
 from django.views.generic import (
@@ -103,8 +103,8 @@ def DeleteDimentionView(request, pk, project_id, project_name):
     return HttpResponseRedirect(reverse('project_detail', args=(project_id, project_name,)))
 
 
-def download_excel_view(project_id, project_name):
-    date_time_obj = datetime.now()
+def download_excel_view(request, project_id, project_name):
+    date_time_obj = datetime.datetime.now()
     current_date = date_time_obj.strftime('%x')
     current_time = date_time_obj.strftime('%X')
 
@@ -122,23 +122,24 @@ def download_excel_view(project_id, project_name):
     sheet.append(["Tag", "Length", "Width", "Area | sqm",
                   "Area | sqft", "Rate", "Amount"])
 
-    dimention = Dimension.objects.filter(project__id=project_id)
-    print(dimention)
+    dimension = Dimension.objects.filter(
+        project__id=project_id, is_deleted=False)
+    print(dimension)
 
-    for item in session['proj_info'][1]:
+    for item in dimension:
 
-        item["length"] = str(item["length"]) + " m (" + \
-            str(round(item["length"]*3.281, 2)) + " ft.)"
-        item["width"] = str(item["width"]) + " m (" + \
-            str(round(item["width"]*3.281, 2)) + " ft.)"
+        sheet.append([
+            item.name, item.length, item.width, item.sqm, item.sqft, item.rate, item.amount
+        ])
 
-        sheet.append([item["tag"], item["length"],
-                      item["width"], item["sqm"], item["sqft"], item["rate"], item["amount"]])
+    sum_sqft = sum(item.sqft for item in dimension)
+    sum_sqm = sum(item.sqm for item in dimension)
+    sum_amount = sum(item.amount for item in dimension)
 
     sheet.append([""])
-    sheet.append(['Total sqm', session['proj_info'][2]])
-    sheet.append(['Total sqft', session['proj_info'][3]])
-    sheet.append(['Total amount*', session['proj_info'][4]])
+    sheet.append(['Total sqm', sum_sqm])
+    sheet.append(['Total sqft', sum_sqft])
+    sheet.append(['Total amount*', sum_amount])
 
     sheet.append([""])
     sheet.append(['*Calculated using metrics in sqft.'])
@@ -147,16 +148,4 @@ def download_excel_view(project_id, project_name):
     workbook.save(filename=str(filename))
     workbook.close()
 
-    session.pop('proj_info')
-
-    # @ after_this_request
-    # def remove_file(response):
-    #     try:
-    #         os.remove(filename)
-    #         FileHandler.close()
-    #     except Exception as error:
-    #         app.logger.error(
-    #             "Error removing or closing downloaded file handle", error)
-    #     return response
-
-    # return FileResponse(open(path_to_file, 'rb'), as_attachment=True)
+    return FileResponse(as_attachment=True, filename=filename)
