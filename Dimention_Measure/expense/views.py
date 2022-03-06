@@ -15,7 +15,7 @@ from django.views.generic import (
 from django.urls import reverse_lazy, reverse
 from django.http import JsonResponse
 import re
-
+import datetime
 from .models import Payee, Expense
 from .forms import NewPayeeForm, UpdatePayeeForm
 from .forms import CreateExpenseForm
@@ -49,7 +49,7 @@ class AllExpenseView(CreateView):
 
     def get_context_data(self, **kwargs):
         kwargs['payees'] = Payee.objects.all().order_by('-created_on')
-        expenses = Expense.objects.all().order_by('-created_on')
+        expenses = Expense.objects.all().filter(project__is_deleted=False,is_deleted=False).order_by('-created_on')
         kwargs['expenses'] = expenses
         total_expense = total_expenses(expenses)
         kwargs['total_paid'] = total_expense['total_paid']
@@ -108,9 +108,9 @@ class ProjectExpenseView(CreateView):
     template_name = 'project_expense.html'
 
     def get_context_data(self, **kwargs):
-        payees = Payee.objects.all().order_by('-created_on')
+        payees = Payee.objects.filter(expense__project__id=self.kwargs['project_id'],expense__is_deleted=False).order_by('-created_on').distinct()
         expenses = Expense.objects.filter(
-            project__id=self.kwargs['project_id']).order_by('-created_on')
+            project__id=self.kwargs['project_id'],is_deleted=False).order_by('-created_on')
         kwargs['payees'] = payees
         kwargs['project_name'] = self.kwargs['project_name']
         kwargs['project_id'] = self.kwargs['project_id']
@@ -154,3 +154,12 @@ class ProjectExpenseView(CreateView):
             form.save()
 
         return super(ProjectExpenseView, self).post(request, **kwargs)
+
+def DeletePayeeView(request, payee_id,project_id,project_name):
+    if request.method == 'POST':
+        expense = Expense.objects.filter(project__id=project_id,payee__id=payee_id)
+        for i in expense.iterator():
+            i.is_deleted = True
+            i.delete_on = datetime.datetime.now()
+            i.save()
+        return HttpResponseRedirect(reverse('project_expense', kwargs={'project_id': project_id,'project_name':project_name,}))
