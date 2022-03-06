@@ -58,11 +58,48 @@
                                 <li><a class="dropdown-item"
                                         href="{% url 'expense_update' item.id item.project.id  item.project.name %}">Update</a>
                                 </li>
-                                <li><a class="dropdown-item" href="#">Delete</a></li>
+                                <li>
+                                    <!-- <a class="dropdown-item" href="#">Delete</a> -->
+                                    <a class="dropdown-item" data-bs-toggle="modal"
+                                        data-bs-target="#delete{{item.id}}Modal">Delete
+                                    </a>
+
+                                </li>
                             </ul>
                         </span>
                     </h5>
                 </li>
+                <div class="modal fade" id="delete{{item.id}}Modal" tabindex="-1"
+                    aria-labelledby="delete{{item.id}}ModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="delete{{item.id}}ModalLabel">
+                                    Confirm
+                                    delete expense for"{{item.payee.name | title}}"</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                    aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body text-start">
+                                You wish to permanently delete this Expense for value&rarr;
+                                <b>"{{item.amount | title}}"</b>?<br>
+                                <b class="my-1">Be Careful!</b>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-outline-success" data-bs-dismiss="modal">Get
+                                    back to safety</button>
+                                <form action="{% url 'delete_expense' item.id item.project.id item.project.name %}"
+                                    method="POST">
+                                    {% csrf_token %}
+
+                                    <button class="confirm_delete btn btn-danger align-bottom" type="submit">
+                                        Chop Chop!
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 {% endfor %}
             </ol>
             <!-- EXPENSE LIST -->

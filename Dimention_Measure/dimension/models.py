@@ -70,8 +70,9 @@ class Dimension(models.Model):
         self.name = self.name.replace(" ", "-")
 
         if self.width == '' or self.width == 0:
-            self.description = "**NOTE: THIS IS RUNNING LENGTH.** \n" + \
-                str(self.description)
+            if '**NOTE: THIS IS RUNNING LENGTH.**' not in self.description:
+                self.description = "**NOTE: THIS IS RUNNING LENGTH.** \n" + \
+                    str(self.description)
             self.sqm = self.length
             self.sqft = self.length * decimal.Decimal(3.28084)
             if self.rate == '' or self.rate == 0:
@@ -83,6 +84,9 @@ class Dimension(models.Model):
             return super(Dimension, self).save()
 
         elif self.width > 0:
+            if '**NOTE: THIS IS RUNNING LENGTH.**' in self.description:
+                self.description = self.description.replace(
+                    '**NOTE: THIS IS RUNNING LENGTH.**', '')
             self.sqm = self.length * self.width
             self.sqft = self.length * self.width * decimal.Decimal(10.7639)
 

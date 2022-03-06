@@ -123,6 +123,9 @@ class UpdateExpenseView(UpdateView):
     template_name = 'update_expense.html'
     # success_url = reverse_lazy('all_expenses')
 
+    def get_object(self, queryset=None):
+        return get_object_or_404(self.model, pk=self.kwargs['pk'])
+
     def get_context_data(self, **kwargs):
         expense = Expense.objects.filter(id=self.kwargs['pk'])[0]
         kwargs['expense'] = expense
@@ -130,15 +133,21 @@ class UpdateExpenseView(UpdateView):
 
     def post(self, request, **kwargs):
         print(request.POST)
-        return super(UpdateExpenseView, self).post(request, **kwargs)
-
-    # def get_success_url(self, **kwargs):
-    #     print('hello url')
-    #     return reverse_lazy('project_expense', args=[self.kwargs['project_id'], self.kwargs['project_name']])
-
+        expense = Expense.objects.filter(id=self.kwargs['pk']).update(
+            amount=request.POST['amount'],
+            payment_status=request.POST['payment_status']
+        )
+        return HttpResponseRedirect(reverse('project_expense', kwargs={
+            'project_id': self.kwargs['project_id'], 'project_name': self.kwargs['project_name']}))
 
 def DeletePayeeView(request, payee_id, project_id, project_name):
     if request.method == 'POST':
         expense = Expense.objects.filter(project__id=project_id, payee__id=payee_id).update(
+            is_deleted=True, deleted_on=datetime.datetime.now())
+        return HttpResponseRedirect(reverse('project_expense', kwargs={'project_id': project_id, 'project_name': project_name, }))
+
+def DeleteExpenseView(request, expense_id, project_id, project_name):
+    if request.method == 'POST':
+        expense = Expense.objects.filter(project__id=project_id, id=expense_id).update(
             is_deleted=True, deleted_on=datetime.datetime.now())
         return HttpResponseRedirect(reverse('project_expense', kwargs={'project_id': project_id, 'project_name': project_name, }))
