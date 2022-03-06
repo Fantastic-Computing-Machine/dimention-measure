@@ -29,18 +29,26 @@
                                 {{item.payee.name | title}}
                             </a>
                         </div>
-                        <span class="badge bg-secondary">
-                            {{item.created_on | date}}</span>
+                        <small>
+                            <span class="badge bg-secondary">{{item.created_on | date}}</span>
+                        </small>
                     </div>
-                    <h4>
+
+                    <h5>
                         {% if item.payment_status == "P" %}
                         <span class="badge bg-danger font-monospace">
                             ₹ {{item.amount | intcomma}}</span>
-                        {% else %}
+                        {% elif item.payment_status == "R" %}
                         <span class="badge bg-success font-monospace">
                             ₹ {{item.amount | intcomma}}</span>
+                        {% elif item.payment_status == "PE" %}
+                        <span class="badge bg-primary font-monospace">
+                            ₹ {{item.amount | intcomma}}</span>
+                        {% elif item.payment_status == "NA" %}
+                        <span class="badge bg-secondary font-monospace">
+                            ₹ {{item.amount | intcomma}}</span>
                         {% endif %}
-                    </h4>
+                    </h5>
 
                     <!-- EXPENSE LIST -->
 
