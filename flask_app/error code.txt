@@ -1,5 +1,0 @@
-S01 - "Not working Executing WRITE"
-S02 - "ERROR: Unsuccessful update "
-S03 - "ERROR: Unsuccessful delete."
-S04 - "ERROR: Unsuccessful insert"
-S05 - "Not working Executing READ"
