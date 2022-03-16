@@ -41,7 +41,7 @@
                         <div class="modal-header">
                             <h5 class="modal-title" id="deleteModalLabel">
                                 Confirm
-                                delete dimention "{{project.name | title}}"</h5>
+                                delete dimension "{{project.name | title}}"</h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body text-start">
@@ -121,12 +121,12 @@
                                         <div class="modal-header">
                                             <h5 class="modal-title" id="delete{{item.id}}ModalLabel">
                                                 Confirm
-                                                delete dimention"{{item.name | title}}"</h5>
+                                                delete dimension"{{item.name | title}}"</h5>
                                             <button type="button" class="btn-close" data-bs-dismiss="modal"
                                                 aria-label="Close"></button>
                                         </div>
                                         <div class="modal-body text-start">
-                                            You wish to permanently delete dimention&rarr;
+                                            You wish to permanently delete dimension&rarr;
                                             <b>"{{item.name | title}}"</b>?<br>
                                             <b class="my-1">Be Careful!</b>
                                         </div>
@@ -155,16 +155,16 @@
                     <!-- </form> -->
 
                     <!-- Modal -->
-                    <form action="" method="POST" name="new_dimention" id="new_dimention">
+                    <form action="" method="POST" name="new_dimension" id="new_dimension">
 
-                        <div class="modal fade" id="newDimention" tabindex="-1" aria-labelledby="newDimentionLabel"
+                        <div class="modal fade" id="newDimension" tabindex="-1" aria-labelledby="newDimentionLabel"
                             aria-hidden="true">
                             <div class="modal-dialog">
                                 <div class="modal-content">
                                     <div class="modal-header">
                                         {% csrf_token %}
-                                        <h5 class="modal-title" id="newDimentionLabel">
-                                            New Dimention
+                                        <h5 class="modal-title" id="newDimensionLabel">
+                                            New Dimension
                                         </h5>
                                         <button type="button" class="btn-close" data-bs-dismiss="modal"
                                             aria-label="Close"></button>
@@ -200,7 +200,7 @@
                                     <div class="modal-footer">
                                         <button type="button" class="btn btn-secondary"
                                             data-bs-dismiss="modal">Close</button>
-                                        <button type="submit" name="new_dimention" value="new_dimention"
+                                        <button type="submit" name="new_dimension" value="new_dimension"
                                             class="btn btn-primary m-1">
                                             <img src="https://img.icons8.com/ios-filled/25/000000/save--v1.png" />
                                             Add Item</button>
@@ -213,10 +213,10 @@
             </div>
             <div class="my-1">
                 <button type="button" class="btn btn-outline-primary m-1" data-bs-toggle="modal"
-                    data-bs-target="#newDimention">
+                    data-bs-target="#newDimension">
                     <span style="white-space: nowrap">
                         <img class="px-2" src="https://img.icons8.com/ios/25/000000/add--v2.png" />
-                        Add Dimention
+                        Add Dimension
                     </span>
                 </button>
                 <!-- Download Excel file -->
@@ -253,7 +253,7 @@
                         </li>
                     </p>
                     <span class="fs-6 fst-italic">
-                        <em>*Amount calculated using Dimentions in </em><span
+                        <em>*Amount calculated using Dimensions in </em><span
                             class="badge bg-secondary text-wrap font-monospace">Ft. | SqFt.
                         </span>
                     </span>

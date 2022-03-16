@@ -48,13 +48,13 @@ class ProjectView(CreateView):
 
     def get_context_data(self, *args, **kwargs):
         project = Project.objects.filter(pk=self.kwargs['pk'])[0]
-        dimentions = Dimension.objects.filter(
+        dimensions = Dimension.objects.filter(
             project=project).filter(is_deleted=False)
-        kwargs['dimentions'] = dimentions
+        kwargs['dimentions'] = dimensions
         kwargs['project'] = project
-        kwargs['sum_sqm'] = sum(item.sqm for item in dimentions)
-        kwargs['sum_sqft'] = sum(item.sqft for item in dimentions)
-        kwargs['sum_amount'] = sum(item.amount for item in dimentions)
+        kwargs['sum_sqm'] = sum(item.sqm for item in dimensions)
+        kwargs['sum_sqft'] = sum(item.sqft for item in dimensions)
+        kwargs['sum_amount'] = sum(item.amount for item in dimensions)
         return super(ProjectView, self).get_context_data(*args, **kwargs)
 
     def post(self, request, **kwargs):
@@ -96,7 +96,7 @@ def DeleteProjectView(request, pk, project_name):
     return HttpResponseRedirect(reverse('home'))
 
 
-def DeleteDimentionView(request, pk, project_id, project_name):
+def DeleteDimensionView(request, pk, project_id, project_name):
     if request.method == 'POST':
         dimension = Dimension.objects.filter(pk=pk).update(
             is_deleted=True, deleted_on=datetime.datetime.now())
