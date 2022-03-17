@@ -1,5 +1,7 @@
 from django.contrib.auth import get_user_model as user_model
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
+from django.contrib.auth.decorators import login_required
 from django.db.models import Q, F
 from django.forms.models import modelform_factory
 from django.shortcuts import render, get_object_or_404
@@ -14,8 +16,10 @@ from django.views.generic import (
 )
 from django.urls import reverse_lazy, reverse
 from django.http import JsonResponse
+
 import re
 import datetime
+
 from .models import Payee, Expense
 from .forms import NewPayeeForm, UpdatePayeeForm
 from .forms import CreateExpenseForm, UpdateExpenseForm
@@ -41,7 +45,9 @@ def total_expenses(expenses):
     return context
 
 
-class AllExpenseView(CreateView):
+class AllExpenseView(LoginRequiredMixin, CreateView):
+    login_url = '/user/login/'
+    redirect_field_name = 'redirect_to'
     model = Payee
     template_name = 'all_expenses.html'
     form_class = NewPayeeForm
@@ -60,7 +66,9 @@ class AllExpenseView(CreateView):
         return super(AllExpenseView, self).get_context_data(**kwargs)
 
 
-class PayeeExpensesView(ListView):
+class PayeeExpensesView(LoginRequiredMixin, ListView):
+    login_url = '/user/login/'
+    redirect_field_name = 'redirect_to'
     model = Expense
     template_name = 'payee_expense.html'
 
@@ -72,14 +80,18 @@ class PayeeExpensesView(ListView):
         return super(PayeeExpensesView, self).get_context_data(**kwargs)
 
 
-class UpdatePayeeView(UpdateView):
+class UpdatePayeeView(LoginRequiredMixin, UpdateView):
+    login_url = '/user/login/'
+    redirect_field_name = 'redirect_to'
     model = Payee
     template_name = 'update_payee.html'
     form_class = UpdatePayeeForm
     success_url = reverse_lazy('home')
 
 
-class ProjectExpenseView(CreateView):
+class ProjectExpenseView(LoginRequiredMixin, CreateView):
+    login_url = '/user/login/'
+    redirect_field_name = 'redirect_to'
     model = Expense
     form_class = CreateExpenseForm
     template_name = 'project_expense.html'
@@ -117,7 +129,9 @@ class ProjectExpenseView(CreateView):
         return super(ProjectExpenseView, self).post(request, **kwargs)
 
 
-class UpdateExpenseView(UpdateView):
+class UpdateExpenseView(LoginRequiredMixin, UpdateView):
+    login_url = '/user/login/'
+    redirect_field_name = 'redirect_to'
     model = Expense
     form_class = UpdateExpenseForm
     template_name = 'update_expense.html'
@@ -140,12 +154,16 @@ class UpdateExpenseView(UpdateView):
         return HttpResponseRedirect(reverse('project_expense', kwargs={
             'project_id': self.kwargs['project_id'], 'project_name': self.kwargs['project_name']}))
 
+
+@login_required
 def DeletePayeeView(request, payee_id, project_id, project_name):
     if request.method == 'POST':
         expense = Expense.objects.filter(project__id=project_id, payee__id=payee_id).update(
             is_deleted=True, deleted_on=datetime.datetime.now())
         return HttpResponseRedirect(reverse('project_expense', kwargs={'project_id': project_id, 'project_name': project_name, }))
 
+
+@login_required
 def DeleteExpenseView(request, expense_id, project_id, project_name):
     if request.method == 'POST':
         expense = Expense.objects.filter(project__id=project_id, id=expense_id).update(

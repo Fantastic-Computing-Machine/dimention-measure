@@ -1,5 +1,7 @@
 from django.contrib.auth import get_user_model as user_model
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
+from django.contrib.auth.decorators import login_required
 from django.db.models import Q, F
 from django.forms.models import modelform_factory
 from django.http import FileResponse
@@ -22,7 +24,10 @@ from .forms import UpdateDimensionForm
 from .models import Project, Dimension
 
 
-class HomeView(CreateView):
+class HomeView(LoginRequiredMixin, CreateView):
+    login_url = '/user/login/'
+    next_page = ''
+    redirect_field_name = 'redirect_to'
     form_class = NewProjectForm
     model = Project
     success_url = reverse_lazy("home")
@@ -41,12 +46,15 @@ class HomeView(CreateView):
         return super(HomeView, self).post(request, **kwargs)
 
 
-class ProjectView(CreateView):
+class ProjectView(LoginRequiredMixin, CreateView):
+    login_url = '/user/login/'
+    redirect_field_name = 'redirect_to'
     model = Dimension
     form_class = NewDimensionForm
     template_name = 'project_detail.html'
 
     def get_context_data(self, *args, **kwargs):
+        # print(request.user.is_authenticated())
         project = Project.objects.filter(pk=self.kwargs['pk'])[0]
         dimensions = Dimension.objects.filter(
             project=project).filter(is_deleted=False)
@@ -68,7 +76,9 @@ class ProjectView(CreateView):
         return super(ProjectView, self).post(request, **kwargs)
 
 
-class UpdateDimensionView(UpdateView):
+class UpdateDimensionView(LoginRequiredMixin, UpdateView):
+    login_url = '/user/login/'
+    redirect_field_name = 'redirect_to'
     model = Dimension
     form_class = UpdateDimensionForm
     template_name = 'update_project.html'
@@ -89,6 +99,7 @@ class UpdateDimensionView(UpdateView):
         return super(UpdateDimensionView, self).post(request, **kwargs)
 
 
+@login_required
 def DeleteProjectView(request, pk, project_name):
     if request.method == 'POST':
         project = Project.objects.filter(pk=pk).update(
@@ -96,6 +107,7 @@ def DeleteProjectView(request, pk, project_name):
     return HttpResponseRedirect(reverse('home'))
 
 
+@login_required
 def DeleteDimensionView(request, pk, project_id, project_name):
     if request.method == 'POST':
         dimension = Dimension.objects.filter(pk=pk).update(
@@ -103,6 +115,7 @@ def DeleteDimensionView(request, pk, project_id, project_name):
     return HttpResponseRedirect(reverse('project_detail', args=(project_id, project_name,)))
 
 
+@login_required
 def download_excel_view(request, project_id, project_name):
     date_time_obj = datetime.datetime.now()
     current_date = date_time_obj.strftime('%x')
