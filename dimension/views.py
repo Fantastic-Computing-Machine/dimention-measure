@@ -54,7 +54,6 @@ class ProjectView(LoginRequiredMixin, CreateView):
     template_name = 'project_detail.html'
 
     def get_context_data(self, *args, **kwargs):
-        # print(request.user.is_authenticated())
         project = Project.objects.filter(pk=self.kwargs['pk'])[0]
         dimensions = Dimension.objects.filter(
             project=project).filter(is_deleted=False)

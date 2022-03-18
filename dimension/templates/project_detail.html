@@ -6,7 +6,12 @@
 
 
 {% block header %}
-<a type="button" href="{% url 'home' %}" class="btn btn-primary">Home</a>
+<ul class="nav justify-content-end">
+    <li class="nav-item">
+        <a href="{% url 'home' %}" class="nav-link active text-light" aria-current="page"
+            style="cursor: pointer;">Home</a>
+    </li>
+</ul>
 {% endblock %}
 
 
