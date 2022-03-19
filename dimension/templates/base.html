@@ -28,22 +28,20 @@
     <body style="background-color: #111827">
 
         <main class="container-lg" style="width: 100%; min-height: 100vh;">
-            <header class="text-white h3">
+            <header class="text-white">
                 <nav class="navbar navbar-expand-lg navbar-light nav_bg_translucent m-2">
                     <div class="container-fluid">
 
                         <strong>
                             <a class="navbar-brand justify-content-center h2 text-white fs-4"
-                                href="{% url 'home' %}">Dimensions</a>
+                                href="{% url 'home' %}">🔍Insight</a>
                         </strong>
 
-                        {% if user.is_authenticated %}
                         <div class="p-1">
 
                             {% block header %} {% endblock %}
                             <!-- <button type="button" class="btn btn-light" onclick="history.back()">Back</button> -->
                         </div>
-                        {% endif %}
                     </div>
                 </nav>
             </header>
@@ -53,7 +51,6 @@
 
             <div id="content">
 
-                {% if user.is_authenticated %}
 
                 <!-- ===== Content ===== -->
                 {% block body %}
@@ -61,47 +58,18 @@
                 {% endblock %}
                 <!-- ===== Content ===== -->
 
-                {% else %}
 
-                <div class="container-lg container-md container-sm py-4">
-                    <div class="mx-auto">
-                        <div class="row justify-content-center">
-                            <div class="col-lg-7 col-md-6 col-xl-6">
-                                <div class="card">
-                                    <div class="card-body">
-                                        <span class="my-2 h3">
-                                            Authenticate
-                                        </span>
-                                        <div class="text-center my-3">
 
-                                            <div class="my-3">
-                                                <img alt="blank-image" class="img-fluid m-2" style="width: 400px;"
-                                                    src="{% static 'img/authentication.svg' %}">
-
-                                            </div>
-                                            <div class="d-grid gap-2 col-6 mx-auto">
-                                                <a href="{% url 'login' %}" class="btn btn-primary">One Time Login
-                                                    🔐</a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                {% endif %}
 
             </div>
 
         </main>
 
-        {% if user.is_authenticated %}
+
         <div id="mybutton">
 
             <!-- Converter button modal -->
-            <button type="button" class="btn btn-primary btn-lg" data-bs-toggle="modal"
+            <button type="button" class="btn btn-secondary btn-lg" data-bs-toggle="modal"
                 data-bs-target="#calculatorModal">
                 <img alt="converter-button" src="https://img.icons8.com/ios/30/ffffff/design--v2.png" />
             </button>
@@ -112,7 +80,7 @@
 
         </div>
 
-        {% endif %}
+
 
         <!-- Modal -->
         <div class="modal fade" id="calculatorModal" tabindex="-1" aria-labelledby="exampleModalLabel"
