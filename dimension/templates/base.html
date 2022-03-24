@@ -4,7 +4,7 @@
     <head>
         {% load static %}
         <meta charset="UTF-8">
-        <meta name="description" content="">
+        <meta name="description" content="To keep a record of dimentions and expenses of construction project.">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
         <!-- ========================= Favicon ========================= -->
@@ -17,24 +17,25 @@
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
             integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 
+        <title>Insight{% block title %} {% endblock %}</title>
+
         <!-- AJAX JQUERY -->
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
         {% block head %} {% endblock %}
 
-
-
     </head>
 
-    <body style="background-color: #111827">
-
-        <main class="container-lg" style="width: 100%; min-height: 100vh;">
+    <body>
+        <main class="container-lg">
             <header class="text-white">
                 <nav class="navbar navbar-expand-lg navbar-light nav_bg_translucent m-2">
                     <div class="container-fluid">
 
                         <strong>
                             <a class="navbar-brand justify-content-center h2 text-white fs-4"
-                                href="{% url 'home' %}">🔍Insight</a>
+                                href="{% url 'home' %}"><span class="branding">
+                                    🔍Insight
+                                </span></a>
                         </strong>
 
                         <div class="p-1">
@@ -114,7 +115,7 @@
         </div>
 
 
-        <footer style="margin: 0; padding:0;">
+        <footer>
             {% include "footer.html" %}
         </footer>
     </body>

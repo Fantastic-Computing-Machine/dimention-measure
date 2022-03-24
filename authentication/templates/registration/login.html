@@ -19,7 +19,7 @@
 
     </head>
 
-    <body style="background-color: #111827">
+    <body>
 
         <main class="container-lg" style="width: 100%; min-height: 100vh;">
             <header class="text-white h3">
@@ -27,7 +27,9 @@
                     <div class="container-fluid">
                         <strong>
                             <a class="navbar-brand justify-content-center h2 text-white fs-4"
-                                href="{% url 'home' %}">Dimensions</a>
+                                href="{% url 'home' %}"><span class="branding">
+                                    🔍Insight
+                                </span></a>
                         </strong>
                     </div>
                 </nav>
@@ -74,7 +76,7 @@
 
         </main>
 
-        <footer style="margin: 0; padding:0;">
+        <footer>
             {% include "footer.html" %}
         </footer>
     </body>

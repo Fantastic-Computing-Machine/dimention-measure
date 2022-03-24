@@ -1,8 +1,6 @@
 {% extends 'base.html' %}
 
-{% block head %}
-<title>Update {{dimension.project.name}}/{{dimension.id}} </title>
-{% endblock %}
+{% block title %} - Dimension/Update: {{dimension.project.name|title}} {% endblock %}
 
 {% block header %}
 <button type="button" class="btn btn-light" onclick="history.back()">Back </button>
@@ -20,7 +18,7 @@
 
                     <div class="card-header">
                         <h5 class="card-title" id="{{dimension.name}}dimentionLabel">Update:
-                            {{dimension.project.name| title}}/ {{dimension.name}}
+                            {{dimension.project.name| title}}/{{dimension.name|title}}
                         </h5>
                     </div>
                     <form action="" method="POST" name="update_dimention" id="update_dimention">

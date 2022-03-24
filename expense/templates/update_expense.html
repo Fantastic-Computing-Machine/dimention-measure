@@ -1,6 +1,8 @@
 {% extends 'base.html' %}
+
 {% load static %} {% load humanize %}
-{% block head %}<title>Update | {{expense.payee.name}} / {{expense.project.name | title}}</title>{% endblock %}
+
+{% block title %} - Expenses/Update: {{expense.project.name | title}} {% endblock %}
 
 {% block body %}
 

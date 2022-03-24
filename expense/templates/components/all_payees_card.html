@@ -27,11 +27,9 @@
                 <div class="d-flex justify-content-between">
                     <div calss="fw-bold">
                         <!-- payee expense: all expenses for a payee -->
-                        <a href="{% url 'payee_expense' item.id item.name %}" class="text-dark"
-                            style="text-decoration: none;">
+                        <a href="{% url 'payee_expense' item.id item.name %}" class="text-dark">
                             <div class="fw-bold">{{item.name| title}}: <a class="text-dark"
-                                    href="tel:+{{item.phoneNumber}}"
-                                    style="text-decoration: none;">{{item.phoneNumber}}</a></div>
+                                    href="tel:+{{item.phoneNumber}}">{{item.phoneNumber}}</a></div>
                         </a>
                         {% if item.description %}
                         {{item.description|title}}
@@ -46,7 +44,7 @@
                             {% if project_id and project_name %}
                             <a class="delete_button badge bg-light" id="delete_button_{{item.id}}"
                                 data-bs-toggle="modal" data-bs-target="#deleteModal_{{item.id}}">
-                                <img class="icon_ud" style="border-radius: 10%;" width="28" height="28"
+                                <img class="icon_ud" width="28" height="28"
                                     src="https://img.icons8.com/ios/50/000000/delete-forever--v2.png" />
                             </a>
                             <div class="modal fade" id="deleteModal_{{item.id}}" tabindex="-1"

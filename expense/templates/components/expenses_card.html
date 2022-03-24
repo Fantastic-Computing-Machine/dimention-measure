@@ -22,8 +22,7 @@
                     data-bs-target="#{{item.payee.name}}{{item.id}}Expense">
                     <div class="ms-2 me-auto">
                         <div class="fw-bold">
-                            <a class="text-dark" href="{%url 'project_expense' item.project.id item.project.name%}"
-                                style="text-decoration: none;">
+                            <a class="text-dark" href="{%url 'project_expense' item.project.id item.project.name%}">
                                 {% if not project_name %}
                                 {{item.project.name | title}}:
                                 {% endif %}
@@ -51,8 +50,9 @@
                         {% endif %}
 
                         <span class="ps-1">
-                            <a class ="setting" data-bs-toggle="dropdown" aria-expanded="false">
-                                <img width="25" height="25" src="https://img.icons8.com/ios/28/000000/settings--v2.png" />
+                            <a class="setting" data-bs-toggle="dropdown" aria-expanded="false">
+                                <img width="25" height="25"
+                                    src="https://img.icons8.com/ios/28/000000/settings--v2.png" />
                             </a>
                             <ul class="dropdown-menu dropdown-menu-dark">
                                 <li><a class="dropdown-item"

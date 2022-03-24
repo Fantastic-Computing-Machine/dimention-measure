@@ -1,7 +1,12 @@
 {% extends 'base.html' %}
 {% load static %} {% load humanize %}
+
+
+{% block title %} - Expenses {% endblock %}
+
+
 {% block head %}
-<title>All Expenses</title>
+
 {% endblock %}
 
 {% block header %}
@@ -9,8 +14,7 @@
 <!-- new payee modal trigger -->
 <ul class="nav justify-content-end">
     <li class="nav-item">
-        <a data-bs-toggle="modal" data-bs-target="#newPayee" class="nav-link active text-light" aria-current="page"
-            style="cursor: pointer;">
+        <a data-bs-toggle="modal" data-bs-target="#newPayee" class="nav-link active text-light" aria-current="page">
             <span class="align-bottom">
                 <span class="px-1">
                     <img alt="new_payee" src="https://img.icons8.com/ios/25/ffffff/user--v3.png" />
