@@ -1,4 +1,4 @@
-console.log('home.js');
+// console.log('home.js');
 // $(document).ready(function() {
 //     $('.confirm_delete').click(function() {
 //         var id = $(this).attr('data-id');
