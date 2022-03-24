@@ -6,8 +6,14 @@
 {% endblock %}
 
 {% block header %}
-<button type="button" class="btn btn-light" data-bs-toggle="modal" data-bs-target="#newProject"
-    data-bs-whatever="@mdo">New Project</button>
+
+<ul class="nav justify-content-end">
+    <li class="nav-item">
+        <a class="nav-link active text-light" aria-current="page" style="cursor: pointer;" data-bs-toggle="modal"
+            data-bs-target="#newProject" data-bs-whatever="@mdo">
+            New Project</a>
+    </li>
+</ul>
 {% endblock %}
 
 
@@ -46,7 +52,7 @@
 {% block body %}
 
 <div class="container-lg pb-4">
-    <div class="text-light py-2 display-4">Projects</div>
+    <div class="text-light py-2 display-4">Dimensions</div>
     <div class="row">
         {% if projects_list%}
 
@@ -69,13 +75,13 @@
                             <span>
                                 <!-- Delete modal -->
 
-                                
-                                <a class="delete_button badge bg-light" id="delete_button{{item.id}}" data-bs-toggle="modal"
-                                    data-bs-target="#delete{{item.id}}Modal">
+
+                                <a class="delete_button badge bg-light" id="delete_button{{item.id}}"
+                                    data-bs-toggle="modal" data-bs-target="#delete{{item.id}}Modal">
                                     <img class="icon_ud" style="border-radius: 10%;" width="25" height="25"
                                         src="https://img.icons8.com/ios/50/000000/delete-forever--v2.png" />
                                 </a>
-                                
+
                             </span>
                         </div>
                     </a>
@@ -102,11 +108,11 @@
                             back to safety</button>
                         <form action="{% url 'delete_project' item.id item.name %}" method="POST">
                             {% csrf_token %}
-                            
-                        <button class="confirm_delete btn btn-danger align-bottom" type="submit">
-                            Chop Chop!
-                        </button>
-                    </form>
+
+                            <button class="confirm_delete btn btn-danger align-bottom" type="submit">
+                                Chop Chop!
+                            </button>
+                        </form>
                     </div>
                 </div>
             </div>
@@ -115,7 +121,7 @@
         {% endfor %}
         {% endif %}
     </div>
-    
+
 </div>
 
 
@@ -125,5 +131,8 @@
 
 <a aria-label="all-expenses" href="{% url 'all_expenses' %}" type="button" class="btn btn-success btn-lg">
     <img alt="all-expenses" src="https://img.icons8.com/ios/30/ffffff/money-circulation.png" />
+</a>
+<a aria-label="all-expenses" href="{% url 'message_board_all_projects' %}" type="button" class="btn btn-primary btn-lg">
+    <img src="https://img.icons8.com/ios/30/ffffff/chat--v1.png" />
 </a>
 {% endblock %}
