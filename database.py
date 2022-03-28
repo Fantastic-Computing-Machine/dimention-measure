@@ -4,6 +4,8 @@ import certifi
 
 import CONFIG
 
+print("Database.py")
+
 
 class MongoDatabase:
     def __init__(self):
@@ -34,68 +36,68 @@ class MongoDatabase:
             print(ex)
             return False
 
-    def postQuery(self, query):
-        # Insert/Post One
-        query_status = None
-        collection = self.__connect()
-        try:
-            collection.insert_one(query)
-            query_status = True
-        except Exception as ex:
-            query_status = False
-            print("MongoDB: Exception occured while Inserting to the database.")
-            print(ex)
-        finally:
-            self.__disconnect()
-            return query_status
+    # def postQuery(self, query):
+    #     # Insert/Post One
+    #     query_status = None
+    #     collection = self.__connect()
+    #     try:
+    #         collection.insert_one(query)
+    #         query_status = True
+    #     except Exception as ex:
+    #         query_status = False
+    #         print("MongoDB: Exception occured while Inserting to the database.")
+    #         print(ex)
+    #     finally:
+    #         self.__disconnect()
+    #         return query_status
 
-    def findOne(self, query):
-        # Find one
-        query_status = None
-        collection = self.__connect()
-        try:
-            result = collection.find_one(query)
-        except Exception as ex:
-            query_status = False
-            print("MongoDB: Exception occured while performing FindAll in the database.")
-            print(ex)
-        finally:
-            self.__disconnect()
-            if query_status == False:
-                return query_status
-            return result
+    # def findOne(self, query):
+    #     # Find one
+    #     query_status = None
+    #     collection = self.__connect()
+    #     try:
+    #         result = collection.find_one(query)
+    #     except Exception as ex:
+    #         query_status = False
+    #         print("MongoDB: Exception occured while performing FindAll in the database.")
+    #         print(ex)
+    #     finally:
+    #         self.__disconnect()
+    #         if query_status == False:
+    #             return query_status
+    #         return result
 
-    def updateData(self, query, operation, projection):
-        # Update
-        query_status = None
-        collection = self.__connect()
-        try:
-            collection.update(query, {
-                operation: projection})
-            query_status = True
-        except Exception as ex:
-            query_status = False
-            print("MongoDB: Exception occured while Updating to the database.")
-            print(ex)
-        finally:
-            self.__disconnect()
-            return query_status
+    # def updateData(self, query, operation, projection):
+    #     # Update
+    #     query_status = None
+    #     collection = self.__connect()
+    #     try:
+    #         collection.update(query, {
+    #             operation: projection})
+    #         query_status = True
+    #     except Exception as ex:
+    #         query_status = False
+    #         print("MongoDB: Exception occured while Updating to the database.")
+    #         print(ex)
+    #     finally:
+    #         self.__disconnect()
+    #         return query_status
 
-    def deleteData(self, projectName):
-        # Delete one
-        query_status = None
-        collection = self.__connect()
-        try:
-            query = {"projectName": projectName}
-            collection.delete_one(query)
-            query_status = True
-        except Exception as ex:
-            query_status = False
-            print("MongoDB: Exception occured while Deleting to the database.")
-            print(ex)
-        finally:
-            self.__disconnect()
-            return query_status
+    # def deleteData(self, projectName):
+    #     # Delete one
+    #     query_status = None
+    #     collection = self.__connect()
+    #     try:
+    #         query = {"projectName": projectName}
+    #         collection.delete_one(query)
+    #         query_status = True
+    #     except Exception as ex:
+    #         query_status = False
+    #         print("MongoDB: Exception occured while Deleting to the database.")
+    #         print(ex)
+    #     finally:
+    #         self.__disconnect()
+    #         return query_status
 
     def find(self, query=None, projection=None):
         # Find Many
@@ -116,55 +118,55 @@ class MongoDatabase:
             return result
 
 
-class SqlDatabase:
-    def __init__(self):
-        self.host = CONFIG.DATABASE[0]
-        self.port = CONFIG.DATABASE[1]
-        self.user = CONFIG.DATABASE[2]
-        self.password = CONFIG.DATABASE[3]
-        self.db = CONFIG.DATABASE[4]
+# class SqlDatabase:
+#     def __init__(self):
+#         self.host = CONFIG.DATABASE[0]
+#         self.port = CONFIG.DATABASE[1]
+#         self.user = CONFIG.DATABASE[2]
+#         self.password = CONFIG.DATABASE[3]
+#         self.db = CONFIG.DATABASE[4]
 
-    def __connect(self):
-        self.con = pymysql.connect(
-            host=self.host,
-            user=self.user,
-            port=self.port,
-            password=self.password,
-            db=self.db,
-            cursorclass=pymysql.cursors.DictCursor
-        )
-        self.cur = self.con.cursor()
+#     def __connect(self):
+#         self.con = pymysql.connect(
+#             host=self.host,
+#             user=self.user,
+#             port=self.port,
+#             password=self.password,
+#             db=self.db,
+#             cursorclass=pymysql.cursors.DictCursor
+#         )
+#         self.cur = self.con.cursor()
 
-    def __commit(self):
-        self.con.commit()
+#     def __commit(self):
+#         self.con.commit()
 
-    def __disconnect(self):
-        self.con.close()
+#     def __disconnect(self):
+#         self.con.close()
 
-    def executeWrite(self, sql):
-        #Create, Update, Delete
-        try:
-            self.__connect()
-            self.cur.execute(sql)
-            self.__commit()
-            return True
-        except pymysql.MySQLError as e:
-            print("Mysql Error:", e)
-            return False
-        finally:
-            self.__disconnect()
+#     def executeWrite(self, sql):
+#         #Create, Update, Delete
+#         try:
+#             self.__connect()
+#             self.cur.execute(sql)
+#             self.__commit()
+#             return True
+#         except pymysql.MySQLError as e:
+#             print("Mysql Error:", e)
+#             return False
+#         finally:
+#             self.__disconnect()
 
-    def fetchRead(self, sql):
-        # Read
-        try:
-            self.__connect()
-            self.cur.execute(sql)
-            result = self.cur.fetchall()
-            if len(result) == 0:
-                return
-            return result
-        except pymysql.MySQLError as e:
-            print("Mysql Error:", e)
-            return False
-        finally:
-            self.__disconnect()
+#     def fetchRead(self, sql):
+#         # Read
+#         try:
+#             self.__connect()
+#             self.cur.execute(sql)
+#             result = self.cur.fetchall()
+#             if len(result) == 0:
+#                 return
+#             return result
+#         except pymysql.MySQLError as e:
+#             print("Mysql Error:", e)
+#             return False
+#         finally:
+#             self.__disconnect()

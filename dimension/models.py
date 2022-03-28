@@ -18,7 +18,7 @@ class Project(models.Model):
     deleted_on = models.DateTimeField(blank=True, null=True)
 
     def __str__(self):
-        return str(self.name)
+        return str(self.name) + '|' + str(self.author) + '|' + str(self.description) + '|' + str(self.is_deleted)
 
     def save(self):
         self.name = self.name.replace(" ", "-")
@@ -64,15 +64,21 @@ class Dimension(models.Model):
     deleted_on = models.DateTimeField(blank=True, null=True)
 
     def __str__(self):
-        return str(self.project.name) + " | " + str(self.name)
+        # return str(self.project.name) + " | " + str(self.name)
+        return str(self.name) + " | " + str(self.name) + " | " + str(self.length) + " | " + str(self.width) + " | " + str(self.sqm) + " | " + str(self.sqft) + " | " + str(self.rate) + " | " + str(self.amount)
 
     def save(self):
         self.name = self.name.replace(" ", "-")
 
         if self.width == '' or self.width == 0:
-            if '**NOTE: THIS IS RUNNING LENGTH.**' not in self.description:
-                self.description = "**NOTE: THIS IS RUNNING LENGTH.** \n" + \
-                    str(self.description)
+
+            if self.description != None:
+                if '**NOTE: THIS IS RUNNING LENGTH.**' not in self.description:
+                    self.description = "**NOTE: THIS IS RUNNING LENGTH.** \n" + \
+                        str(self.description)
+            else:
+                self.description = '**NOTE: THIS IS RUNNING LENGTH.**'
+
             self.sqm = self.length
             self.sqft = self.length * decimal.Decimal(3.28084)
             if self.rate == '' or self.rate == 0:
@@ -84,9 +90,14 @@ class Dimension(models.Model):
             return super(Dimension, self).save()
 
         elif self.width > 0:
-            if '**NOTE: THIS IS RUNNING LENGTH.**' in self.description:
-                self.description = self.description.replace(
-                    '**NOTE: THIS IS RUNNING LENGTH.**', '')
+            if self.description != None:
+                if '**NOTE: THIS IS RUNNING LENGTH.**' in self.description:
+                    self.description = self.description.replace(
+                        '**NOTE: THIS IS RUNNING LENGTH.**', '')
+
+            else:
+                self.description = '**NOTE: THIS IS RUNNING LENGTH.**'
+
             self.sqm = self.length * self.width
             self.sqft = self.length * self.width * decimal.Decimal(10.7639)
 

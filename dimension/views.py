@@ -1,3 +1,7 @@
+import decimal
+from pymongo import MongoClient
+import CONFIG
+import certifi
 from django.contrib.auth import get_user_model as user_model
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
@@ -12,6 +16,7 @@ from django.views.generic import (
     CreateView,
     UpdateView,
     DeleteView,
+    TemplateView,
 )
 from django.urls import reverse_lazy, reverse
 
@@ -163,3 +168,100 @@ def download_excel_view(request, project_id, project_name):
     workbook.close()
 
     return FileResponse(open(file_path, 'rb'))
+
+
+class MongoDatabase:
+    def __init__(self):
+        self.databaseName = CONFIG.MONGO[0]
+        self.clusterName = CONFIG.MONGO[1]
+        self.connectionId = str(CONFIG.MONGO[2])
+
+    def __connect(self):
+        try:
+            self.client = MongoClient(
+                self.connectionId, tlsCAFile=certifi.where())
+            db = self.client[self.databaseName]
+            collection = db[self.clusterName]
+            return collection
+        except Exception as ex:
+            print("MongoDB: Exception occured while Connecting to the database.")
+            print(ex)
+            return False
+
+    def __disconnect(self):
+        try:
+            self.client = MongoClient(self.connectionId)
+            self.client.close()
+            return True
+        except Exception as ex:
+            print(
+                "MongoDB: Exception occured while disconnecting to the database. \nTrying...")
+            print(ex)
+            return False
+
+    def find(self, query=None, projection=None):
+        # Find Many
+        query_status = None
+        collection = self.__connect()
+        try:
+            result = collection.find(query, projection)
+            return result
+        except Exception as ex:
+            query_status = False
+            print("MongoDB: Exception occured while performing Find in the database.")
+            print(ex)
+            return query_status
+        finally:
+            self.__disconnect()
+            if query_status == False:
+                return query_status
+            return result
+
+
+class MigrateData(LoginRequiredMixin, TemplateView):
+    login_url = '/user/login/'
+    redirect_field_name = 'redirect_to'
+    model = Dimension
+
+    def get_context_data(self, **kwargs):
+        print("\nMigration Save Method")
+        mongo_obj = MongoDatabase()
+
+        # user_obj = User.objects.get(id=2)
+        ct = 0
+
+        for item in mongo_obj.find():
+            projectName = item["projectName"]
+
+            # project_obj = Project(
+            #     name=(projectName),
+            #     author=user_obj,
+            # )
+
+            project_obj = Project.objects.get(name=projectName)
+            ct += 1
+            # project.save()
+            print(ct, ' | ', project_obj)
+
+            cnt = 0
+
+            for dim in range(len(item["dims"])):
+                curr_dim = item["dims"][dim]
+
+                print("Current Dimention: #", dim)
+
+                dims_obj = Dimension(
+                    project=project_obj,
+                    name=curr_dim["name"],
+                    length=decimal.Decimal(curr_dim["length"]),
+                    width=decimal.Decimal(curr_dim["width"]),
+                    rate=decimal.Decimal(curr_dim["rate"]),
+                )
+
+                dims_obj.save()
+
+                cnt = +1
+                print(cnt, ' | ', dims_obj)
+            print()
+
+        return super(MigrateData, self).get_context_data(**kwargs)
