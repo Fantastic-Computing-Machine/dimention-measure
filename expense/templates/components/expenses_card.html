@@ -24,9 +24,9 @@
                         <div class="fw-bold">
                             <a class="text-dark" href="{%url 'project_expense' item.project.id item.project.name%}">
                                 {% if not project_name %}
-                                {{item.project.name | title}}:
+                                {{item.project.name | capfirst }}:
                                 {% endif %}
-                                <span class="fst-normal">{{item.payee.name | title}}</span>
+                                <span class="fst-normal">{{item.payee.name | capfirst }}</span>
                             </a>
                         </div>
                         <small>
@@ -76,14 +76,14 @@
                             <div class="modal-header">
                                 <h5 class="modal-title" id="delete{{item.id}}ModalLabel">
                                     Confirm
-                                    delete expense for"{{item.payee.name | title}}"</h5>
+                                    delete expense for"{{item.payee.name | capfirst }}"</h5>
                                 <button type="button" class="btn-close" data-bs-dismiss="modal"
                                     aria-label="Close"></button>
                             </div>
                             <div class="modal-body text-start">
                                 You wish to permanently delete this Expense for value&rarr;
-                                <b>"{{item.amount | title}}"</b>?<br>
-                                <b class="my-1">Be Careful!</b>
+                                <p class="h6">"₹ {{item.amount}}"?</p>
+                                <p class="my-1">Be Careful!</p>
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-outline-success" data-bs-dismiss="modal">Get

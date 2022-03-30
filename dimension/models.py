@@ -18,10 +18,10 @@ class Project(models.Model):
     deleted_on = models.DateTimeField(blank=True, null=True)
 
     def __str__(self):
-        return str(self.name) + '|' + str(self.author) + '|' + str(self.description) + '|' + str(self.is_deleted)
+        return str(self.name)
 
     def save(self):
-        self.name = self.name.replace(" ", "-")
+        self.name = self.name.replace(" ", "-").strip()
         return super(Project, self).save()
 
     def total_amount(self):
@@ -64,15 +64,14 @@ class Dimension(models.Model):
     deleted_on = models.DateTimeField(blank=True, null=True)
 
     def __str__(self):
-        # return str(self.project.name) + " | " + str(self.name)
-        return str(self.name) + " | " + str(self.name) + " | " + str(self.length) + " | " + str(self.width) + " | " + str(self.sqm) + " | " + str(self.sqft) + " | " + str(self.rate) + " | " + str(self.amount)
+        return str(self.name) + " | " + str(self.project.name)
 
     def save(self):
-        self.name = self.name.replace(" ", "-")
+        self.name = self.name.replace(" ", "-").strip()
 
         if self.width == '' or self.width == 0:
 
-            if self.description != None:
+            if self.description != None and self.description != '':
                 if '**NOTE: THIS IS RUNNING LENGTH.**' not in self.description:
                     self.description = "**NOTE: THIS IS RUNNING LENGTH.** \n" + \
                         str(self.description)
@@ -90,13 +89,10 @@ class Dimension(models.Model):
             return super(Dimension, self).save()
 
         elif self.width > 0:
-            if self.description != None:
+            if self.description != None and self.description != '':
                 if '**NOTE: THIS IS RUNNING LENGTH.**' in self.description:
                     self.description = self.description.replace(
                         '**NOTE: THIS IS RUNNING LENGTH.**', '')
-
-            else:
-                self.description = '**NOTE: THIS IS RUNNING LENGTH.**'
 
             self.sqm = self.length * self.width
             self.sqft = self.length * self.width * decimal.Decimal(10.7639)

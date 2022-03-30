@@ -2,7 +2,7 @@
 
 {% load static %} {% load humanize %}
 
-{% block title %} - Expenses/Update: {{expense.project.name | title}} {% endblock %}
+{% block title %} - Expenses/Update: {{expense.project.name | capfirst }} {% endblock %}
 
 {% block body %}
 
@@ -23,14 +23,14 @@
                             {% csrf_token %}
                             <p>
                                 <label for="id_project">Project:</label>
-                                <input type="text" class="form-control" value="{{expense.project.name | title}}"
+                                <input type="text" class="form-control" value="{{expense.project.name | capfirst }}"
                                     disabled readonly>
                             </p>
 
                             <p>
                                 <label for="id_payee">Payee:</label>
-                                <input type="text" class="form-control" value="{{expense.payee.name | title}}" disabled
-                                    readonly>
+                                <input type="text" class="form-control" value="{{expense.payee.name | capfirst }}"
+                                    disabled readonly>
                             </p>
 
                             <p>

@@ -2,7 +2,7 @@
 
 {% load static %} {% load humanize %}
 
-{% block title %} - Dimension: {{project.name| title}} {% endblock %}
+{% block title %} - Dimension: {{project.name| capfirst }} {% endblock %}
 
 {% block header %}
 <ul class="nav justify-content-end">
@@ -19,11 +19,13 @@
         <div class="pb-2">
 
             <h2 class="text-light py-2">
-                {{project.name| title}}
+                {{project.name | title}}
             </h2>
-            <span class="badge bg-secondary" data-bs-toggle="tooltip" data-bs-placement="bottom"
-                title="{{project.created_on}}">
-                Created {{project.created_on | naturalday}}
+            <span class="hide_items_print">
+                <span class="badge bg-secondary" data-bs-toggle="tooltip" data-bs-placement="bottom"
+                    title="{{project.created_on}}">
+                    Created {{project.created_on | naturalday}}
+                </span>
             </span>
             {%if project.description%}
             <div class="text-light py-2">
@@ -31,7 +33,7 @@
             </div>
             {% endif %}
         </div>
-        <span>
+        <span class="hide_items_print">
             <a class="delete_button badge bg-light" id="delete_button" data-bs-toggle="modal"
                 data-bs-target="#deleteModal">
                 <img class="icon_ud" width="28" height="28"
@@ -44,12 +46,12 @@
                         <div class="modal-header">
                             <h5 class="modal-title" id="deleteModalLabel">
                                 Confirm
-                                delete dimension "{{project.name | title}}"</h5>
+                                delete dimension "{{project.name | capfirst }}"</h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body text-start">
                             You wish to permanently delete project&rarr;
-                            <b>"{{project.name | title}}"</b>?<br>
+                            <b>"{{project.name | capfirst }}"</b>?<br>
                             <b class="my-1">Be Careful!</b>
                         </div>
                         <div class="modal-footer">
@@ -82,29 +84,29 @@
                         <th class="text-center mx-2 text-nowrap">Area: Sqft</th>
                         <th class="text-end mx-2 text-nowrap">Rate</th>
                         <th class="text-end mx-2 text-nowrap">Amount (₹)</th>
-                        <th class="text-center mx-2 text-nowrap">Action</th>
+                        <th class="text-center mx-2 text-nowrap hide_items_print">Action</th>
                     </thead>
 
                     <!-- <form action="" method="POST" name="update_dimention" id="update_dimention"> -->
 
                     {% for item in dimentions %}
                     <tr class="table align-middle">
-                        <td class="mx-2 font-monospace">{{item.name | title}}
+                        <td class="mx-2 font-monospace">{{item.name | capfirst }}
                             <div class="text-muted">
                                 {{item.description}}
                             </div>
                         </td>
                         <td class="text-center mx-2 font-monospace text-nowrap">
-                            {{item.length}} m
+                            {{item.length}}
                         </td>
                         <td class="text-center mx-2 font-monospace text-nowrap">
-                            {{item.width}} m
+                            {{item.width}}
                         </td>
-                        <td class="text-end mx-2 font-monospace text-nowrap">{{item.sqm|intcomma}}</td>
-                        <td class="text-end mx-2 font-monospace text-nowrap">{{item.sqft|intcomma}}</td>
-                        <td class="text-end mx-2 font-monospace text-nowrap">{{item.rate|intcomma}}</td>
-                        <td class="text-end mx-2 font-monospace text-nowrap">{{item.amount|intcomma}}</td>
-                        <td class="text-center mx-2">
+                        <td class="text-center text-end mx-2 font-monospace text-nowrap">{{item.sqm|intcomma}}</td>
+                        <td class="text-center text-end mx-2 font-monospace text-nowrap">{{item.sqft|intcomma}}</td>
+                        <td class="text-center text-end mx-2 font-monospace text-nowrap">{{item.rate|intcomma}}</td>
+                        <td class="text-center text-end mx-2 font-monospace text-nowrap">{{item.amount|intcomma}}</td>
+                        <td class="text-center mx-2 hide_items_print">
 
                             <!-- HERE MODAl UPDATE -->
                             <a href="{% url 'update_dimention' item.id project.name %}">
@@ -123,13 +125,13 @@
                                         <div class="modal-header">
                                             <h5 class="modal-title" id="delete{{item.id}}ModalLabel">
                                                 Confirm
-                                                delete dimension"{{item.name | title}}"</h5>
+                                                delete dimension"{{item.name | capfirst }}"</h5>
                                             <button type="button" class="btn-close" data-bs-dismiss="modal"
                                                 aria-label="Close"></button>
                                         </div>
                                         <div class="modal-body text-start">
                                             You wish to permanently delete dimension&rarr;
-                                            <b>"{{item.name | title}}"</b>?<br>
+                                            <b>"{{item.name | capfirst }}"</b>?<br>
                                             <b class="my-1">Be Careful!</b>
                                         </div>
                                         <div class="modal-footer">
@@ -213,7 +215,7 @@
                     </form>
                 </table>
             </div>
-            <div class="my-1">
+            <div class="my-1 hide_items_print">
                 <button type="button" class="btn btn-outline-primary m-1" data-bs-toggle="modal"
                     data-bs-target="#newDimension">
                     <span class="text-nowrap">
@@ -229,9 +231,18 @@
                         Save Excel</span>
                 </a>
                 <!-- Download Excel file -->
+                <button type="button" class="btn btn-outline-danger m-1" onClick="window.print()">
+                    <span class="text-nowrap">
+                        <!-- <img class="px-2" src="https://img.icons8.com/ios/25/000000/add--v2.png" /> -->
+                        <img class="px-2" src="https://img.icons8.com/material/25/000000/pdf-2--v1.png" />
+                        Save PDF
+                    </span>
+                </button>
             </div>
         </div>
     </div>
+
+    <!-- 5- 10 min bass -->
 
     <div class="row flex-md-row py-3 mb-3">
         <div class="col" style="height: 200px;">

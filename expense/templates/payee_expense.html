@@ -2,7 +2,7 @@
 
 {% load static %} {% load humanize %}
 
-{% block title %} - Payee: {{payee.name|title}} {% endblock %}
+{% block title %} - Payee: {{payee.name|capfirst }} {% endblock %}
 
 {% block body %}
 
@@ -10,7 +10,7 @@
     <div class="text-light pt-2 display-4">{{payee.name|title}}</div>
     <div class="text-light h5 pt-2 text-muted">Mob: <a class="text-muted"
             href="tel:+{{payee.phoneNumber}}">{{payee.phoneNumber}}</a></div>
-    <div class="text-light h5 text-muted">Desc: {{payee.description|title}}</div>
+    <div class="text-light h5 text-muted">Desc: {{payee.description|capfirst }}</div>
 
     <div class="row flex-md-row py-3">
         <div class="col col_height">
@@ -33,7 +33,7 @@
                             <div class="ms-2 me-auto">
                                 <a href="{% url 'project_detail' item.project.id item.project.name %}">
                                     <div class="fw-bold">
-                                        {{item.project.name | title}}
+                                        {{item.project.name | capfirst }}
                                     </div>
                                 </a>
                                 <span class="badge bg-secondary">

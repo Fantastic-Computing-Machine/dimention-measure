@@ -56,24 +56,27 @@ function ft_mtr() {
     document.getElementById("mt").value = to_mt;
 }
 
-$(document).ready(function(){
-    $(".delete_button").hover(function(){
-      $(this).children('img').attr('src', 'https://img.icons8.com/ios/50/000000/delete-forever--v2.gif');
-      
-      }, function(){
-          $(this).children('img').attr("src","https://img.icons8.com/ios/50/000000/delete-forever--v2.png");
-          
-        
-    });
-  });
+$(document).ready(function () {
+    $(".delete_button").hover(function () {
+        $(this).children('img').attr('src', 'https://img.icons8.com/ios/50/000000/delete-forever--v2.gif');
 
-  $(document).ready(function(){
-    $(".setting").hover(function(){
-      $(this).children('img').attr('src', 'https://img.icons8.com/ios/28/000000/settings--v2.gif');
-      
-      }, function(){
-          $(this).children('img').attr("src","https://img.icons8.com/ios/28/000000/settings--v2.png");
-          
-        
+    }, function () {
+        $(this).children('img').attr("src", "https://img.icons8.com/ios/50/000000/delete-forever--v2.png");
+
+
     });
-  });
+});
+
+$(document).ready(function () {
+    $(".setting").hover(function () {
+        $(this).children('img').attr('src', 'https://img.icons8.com/ios/28/000000/settings--v2.gif');
+
+    }, function () {
+        $(this).children('img').attr("src", "https://img.icons8.com/ios/28/000000/settings--v2.png");
+
+
+    });
+});
+
+var dt = new Date();
+document.getElementById('date-time').innerHTML = dt;

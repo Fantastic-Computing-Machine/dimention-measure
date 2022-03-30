@@ -28,11 +28,11 @@
                     <div calss="fw-bold">
                         <!-- payee expense: all expenses for a payee -->
                         <a href="{% url 'payee_expense' item.id item.name %}" class="text-dark">
-                            <div class="fw-bold">{{item.name| title}}: <a class="text-dark"
+                            <div class="fw-bold">{{item.name| capfirst }}: <a class="text-dark"
                                     href="tel:+{{item.phoneNumber}}">{{item.phoneNumber}}</a></div>
                         </a>
                         {% if item.description %}
-                        {{item.description|title}}
+                        {{item.description|capfirst }}
                         {% endif %}
                     </div>
                     <div>
@@ -54,13 +54,13 @@
                                         <div class="modal-header">
                                             <h5 class="modal-title" id="deleteModalLabel">
                                                 Confirm
-                                                delete payee "{{item.name | title}}"</h5>
+                                                delete payee "{{item.name | capfirst }}"</h5>
                                             <button type="button" class="btn-close" data-bs-dismiss="modal"
                                                 aria-label="Close"></button>
                                         </div>
                                         <div class="modal-body text-start">
                                             You wish to permanently delete Payee&rarr;
-                                            <b>"{{item.name | title}}"</b>?<br>
+                                            <b>"{{item.name | capfirst }}"</b>?<br>
                                             <b class="my-1">Be Careful!</b>
                                         </div>
                                         <div class="modal-footer">
