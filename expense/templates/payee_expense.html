@@ -2,6 +2,16 @@
 
 {% load static %} {% load humanize %}
 
+
+{% block header %}
+<ul class="nav justify-content-end">
+    <li class="nav-item">
+        <a href="{% url 'home' %}" class="nav-link active text-light" aria-current="page">Home</a>
+    </li>
+</ul>
+{% endblock %}
+
+
 {% block title %} - Payee: {{payee.name|capfirst }} {% endblock %}
 
 {% block body %}
@@ -12,7 +22,7 @@
             href="tel:+{{payee.phoneNumber}}">{{payee.phoneNumber}}</a></div>
     <div class="text-light h5 text-muted">Desc: {{payee.description|capfirst }}</div>
 
-    <div class="row flex-md-row py-3">
+    <div class="row flex-md-row pt-1">
         <div class="col col_height">
             <div class=" card my-2">
                 <div class="card-body">

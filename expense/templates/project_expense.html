@@ -6,17 +6,19 @@
 
 {% block header %}
 
-<!-- Add new payee modal trigger -->
-<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#newPayee">
-    <img alt="user" src="https://img.icons8.com/ios/30/ffffff/user--v3.png" />
-</button>
-<!-- Add new payee modal trigger -->
+<ul class="nav justify-content-end">
+    <li class="nav-item px-2">
+        <a type="button" class="text-light" data-bs-toggle="modal" data-bs-target="#newPayee">
+            New Payee
+        </a>
+    </li>
 
-<!-- Add new Expense modal trigger -->
-<button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
-    <img src="https://img.icons8.com/ios/30/ffffff/money.png" />
-</button>
-<!-- Add new Expense modal trigger -->
+    <li class="nav-item px-2">
+        <a type="button" class="text-light" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+            New Expense
+        </a>
+    </li>
+</ul>
 
 {% endblock %}
 
@@ -122,7 +124,7 @@
 <!-- Add new Expense modal -->
 
 <div class="container px-3">
-    <div class="text-light py-2 display-4">Expenses: {{project_name}}</div>
+    <div class="text-light py-2 display-4">Expense: {{project_name}}</div>
     <div class="row flex-md-row-reverse py-3" dir="rtl">
         <div class="col-md-6 col_height">
 
