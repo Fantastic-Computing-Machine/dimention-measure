@@ -2,14 +2,11 @@ import decimal
 from pymongo import MongoClient
 import CONFIG
 import certifi
-from django.contrib.auth import get_user_model as user_model
+
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
-from django.contrib.auth.decorators import login_required
-from django.db.models import Q, F
-from django.forms.models import modelform_factory
 from django.http import FileResponse
-from django.shortcuts import render, get_object_or_404
 from django.shortcuts import HttpResponseRedirect
 from django.views.generic import (
     DetailView,
@@ -31,7 +28,6 @@ from .models import Project, Dimension
 
 class HomeView(LoginRequiredMixin, CreateView):
     login_url = '/user/login/'
-    next_page = ''
     redirect_field_name = 'redirect_to'
     form_class = NewProjectForm
     model = Project
