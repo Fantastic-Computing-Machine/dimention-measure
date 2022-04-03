@@ -52,7 +52,6 @@
                             Estimate</button>
                     </div>
                 </form>
-
             </div>
             <!-- </div> -->
         </div>
@@ -65,13 +64,15 @@
 {% block body %}
 <div class="container-lg pt-2 px-3">
     <div class="d-flex justify-content-between align-middle">
-        <div class="h2 text-light pb-1">
+        <div class="text-light pb-1">
             <span class="align-middle">
                 <span class="align-middle">
-                    <span class="text-muted small">
+                    <div class="text-muted fw-bold">
                         {{project.reference_number}}
+                    </div>
+                    <span class="h2">
+                        {{project.name | title}}
                     </span>
-                    {{project.name | title}}
                 </span>
 
                 <span class="dropdown">
@@ -100,7 +101,6 @@
         </div>
     </div>
 
-
     {%if project.description%}
     <div class="mb-3">
         <span class="text-light">
@@ -108,7 +108,6 @@
         </span>
     </div>
     {% endif %}
-
 
     <hr class="text-light">
 
@@ -123,16 +122,13 @@
                     <span class="h6 mt-1">
                         Mob.: +{{project.client.phoneNumber}}
                     </span>
-
                 </div>
                 <div>
                     <!-- address -->
                 </div>
             </div>
         </div>
-
     </div>
-
 
     <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
         <div class="modal-dialog">
@@ -164,7 +160,6 @@
         </div>
     </div>
 
-
     <div class="my-2">
 
         <div class="card">
@@ -178,9 +173,6 @@
                             <th class="text-center mx-2 text-nowrap">Rate</th>
                             <th class="text-center mx-2 text-nowrap">Amount</th>
                         </thead>
-
-
-                        <!-- Item loop -->
 
                         {% for item in all_estimates %}
                         <tr class="table align-middle">
@@ -202,17 +194,13 @@
                                 {{item.quantity}}
                             </td>
                             <td class="text-center">
-
                                 {{item.room_item_description.rate}}
                             </td>
-
                             <td class="text-center">
-
                                 {{item.amount}}
                             </td>
                         </tr>
                         {% endfor %}
-
 
                     </table>
                 </div>
@@ -225,24 +213,35 @@
             <div class="card my-3">
                 <div class="card-body">
                     <p class="fs-5 fw-bold">
-                        <li class="list-group-item d-flex justify-content-between ">
-                            Grand Total
-                            <span class="badge bg-primary fs-6 font-monospace">₹
-                                {{project.total_amount|intcomma}}</span>
+                        <li class="list-group-item list-group-item-action list-group-item-info ">
+
+                            <div class="d-flex justify-content-between">
+                                <div>
+                                    Grand Total
+                                </div>
+                                <span class="badge bg-info fs-6 font-monospace">₹
+                                    {{project.total_amount|intcomma}}</span>
+                            </div>
                         </li>
-                        <li class="list-group-item d-flex justify-content-between ">
-                            GST @ 18%
-                            <span class="badge bg-primary fs-6 font-monospace">
-                                ₹ {{project.gst_amount|intcomma}}
-                            </span>
+                        <li class="list-group-item list-group-item-action list-group-item-primary">
+                            <div class="d-flex justify-content-between">
+                                <div>
+                                    GST @ 18%
+                                </div>
+                                <span class="badge bg-primary fs-6 font-monospace">
+                                    ₹ {{project.gst_amount|intcomma}}
+                                </span>
+                            </div>
                         </li>
 
-                        <li class="list-group-item d-flex justify-content-between align-items-start">
-                            <div>
-                                <div>Grand Total after GST</div>
+                        <li class="list-group-item list-group-item-action list-group-item-success">
+                            <div class="d-flex justify-content-between">
+                                <div>
+                                    Grand Total after GST
+                                </div>
+                                <span class="badge bg-success fs-6 my-auto font-monospace">
+                                    ₹ {{project.total_with_gst|intcomma}}</span>
                             </div>
-                            <span class="badge bg-success fs-6 my-auto font-monospace">
-                                ₹ {{project.total_with_gst|intcomma}}</span>
                         </li>
                     </p>
                 </div>

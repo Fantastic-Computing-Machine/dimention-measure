@@ -8,7 +8,7 @@
             "name": "Python: Django",
             "type": "python",
             "request": "launch",
-            "program": "/home/adiagarwal/dimention-measure/Dimention_Measure/manage.py",
+            "program": "/home/adiagarwal/dimention-measure/manage.py",
             "args": [
                 "runserver"
             ],

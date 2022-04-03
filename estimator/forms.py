@@ -194,6 +194,84 @@ class NewClient(forms.ModelForm):
         )
     )
 
+    address_1 = forms.CharField(
+        max_length=200,
+        required=True,
+        widget=forms.TextInput(
+            attrs={
+                'class': 'form-control',
+                "aria-label": ".form-control-sm",
+                "type": 'text',
+                "placeholder": "Name",
+            }
+        )
+    )
+
+    address_2 = forms.CharField(
+        max_length=200,
+        required=True,
+        widget=forms.TextInput(
+            attrs={
+                'class': 'form-control',
+                "aria-label": ".form-control-sm",
+                "type": 'text',
+                "placeholder": "Name",
+            }
+        )
+    )
+
+    landmark = forms.CharField(
+        max_length=200,
+        required=True,
+        widget=forms.TextInput(
+            attrs={
+                'class': 'form-control',
+                "aria-label": ".form-control-sm",
+                "type": 'text',
+                "placeholder": "Name",
+            }
+        )
+    )
+
+    town_city = forms.CharField(
+        max_length=200,
+        required=True,
+        widget=forms.TextInput(
+            attrs={
+                'class': 'form-control',
+                "aria-label": ".form-control-sm",
+                "type": 'text',
+                "placeholder": "Name",
+            }
+        )
+    )
+
+    zip_code = forms.CharField(
+        max_length=200,
+        required=True,
+        widget=forms.TextInput(
+            attrs={
+                'class': 'form-control',
+                "aria-label": ".form-control-sm",
+                "type": 'number',
+                "placeholder": "Name",
+            }
+        )
+    )
+
+    state = forms.CharField(
+        max_length=100,
+        required=True,
+        widget=forms.Select(
+            choices=STATE_CHOICES,
+            attrs={
+                "class": "form-select",
+                "aria-label": ".form-control-sm",
+                "placeholder": "State"
+            }
+        )
+    )
+
     class Meta:
         model = Client
         fields = {
