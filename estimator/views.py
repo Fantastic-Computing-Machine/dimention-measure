@@ -11,7 +11,7 @@ from django.views.generic import (CreateView, DeleteView, DetailView, ListView,
 
 
 from .models import *
-from .forms import NewProjectForm
+from .forms import NewProjectForm, NewEstimateItemForm
 
 
 class AllEstimates(LoginRequiredMixin, CreateView):
@@ -39,14 +39,39 @@ class EstimateDetailView(LoginRequiredMixin, CreateView):
     login_url = '/user/login/'
     redirect_field_name = 'redirect_to'
     model = Estimate
-    form_class = NewProjectForm
+    form_class = NewEstimateItemForm
     template_name = 'estimate.html'
 
     def get_context_data(self, **kwargs):
         project = Project.objects.filter(pk=self.kwargs['pk'])[0]
         estimates = Estimate.objects.filter(project=project, is_deleted=False)
-
         kwargs['project'] = project
         kwargs['all_estimates'] = estimates
-
         return super(EstimateDetailView, self).get_context_data(**kwargs)
+
+    def post(self, request, **kwargs):
+        active_project = Project.objects.filter(id=kwargs['pk'])[0]
+
+        if request.method == 'POST':
+            request.POST._mutable = True
+            request.POST["project"] = active_project
+            request.POST._mutable = False
+        return super(EstimateDetailView, self).post(request, **kwargs)
+
+
+class FolioView(LoginRequiredMixin, CreateView):
+    login_url = '/user/login/'
+    redirect_field_name = 'redirect_to'
+    model = Estimate
+    form_class = NewEstimateItemForm
+    template_name = 'folio.html'
+
+    def get_context_data(self, **kwargs):
+        rooms = Room.objects.filter(is_deleted=False)
+        room_item = RoomItem.objects.filter(is_deleted=False)
+        room_item_description = RoomItemDescription.objects.filter(
+            is_deleted=False)
+        kwargs['rooms'] = rooms
+        kwargs['room_item'] = room_item
+        kwargs['room_item_description'] = room_item_description
+        return super().get_context_data(**kwargs)

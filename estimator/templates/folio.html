@@ -1,0 +1,133 @@
+{% extends 'base.html' %}
+{% load static %} {% load humanize %}
+
+
+{% block title %} - Estimate-Folio {% endblock %}
+
+{% block header %}
+<ul class="nav justify-content-end">
+    <li class="nav-item">
+        <a class="nav-link active text-light" aria-label="all-expenses" href="{% url 'all_estimates' %}">
+            All Estimates
+        </a>
+    </li>
+</ul>
+{% endblock %}
+
+{% block body %}
+<div class="container-lg py-3">
+    <div class="row align-items-start">
+        <div class="col">
+            <div class="card border-0 text-dark bg-light">
+                <div class="card-header text-light bg-success">
+
+                    <div class="d-flex justify-content-between align-bottom">
+                        <span class="align-bottom">
+                            <p class="fs-4 text-wrap">Rooms</p>
+                        </span>
+                        <span class="">
+                            <img src="https://img.icons8.com/cotton/30/000000/add--v2.png" />
+                        </span>
+                    </div>
+
+                </div>
+                <div class="card-body folio_card">
+                    {% if rooms|length == 0 %}
+                    <div class=" text-center my-3">
+                        <img alt="void" class="img-fluid m-2" src="{% static 'img/void.svg' %}">
+                        <div class="text-center">
+                            <p class="py-1 fw-light my-3 fs-1">Nothing Here
+                            </p>
+                        </div>
+                    </div>
+                    {% else %}
+                    <ul class="list-group">
+                        {% for item in rooms %}
+                        <a href="#" class="list-group-item list-group-item-action">{{item.name}}</a>
+                        {% endfor %}
+                    </ul>
+                    {% endif %}
+
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card border-0 ">
+                <div class="card-header text-light bg-secondary">
+
+                    <div class="d-flex justify-content-between align-bottom">
+                        <span class="align-bottom">
+                            <p class="fs-4 text-wrap">Room Element</p>
+                        </span>
+                        <span class="">
+                            <img src="https://img.icons8.com/cotton/30/000000/add--v2.png" />
+                        </span>
+                    </div>
+                </div>
+                <div class="card-body folio_card">
+                    {% if room_item|length == 0 %}
+                    <div class=" text-center my-3">
+                        <img alt="void" class="img-fluid m-2" src="{% static 'img/void.svg' %}">
+                        <div class="text-center">
+                            <p class="py-1 fw-light my-3 fs-1">Nothing Here
+                            </p>
+                        </div>
+                    </div>
+                    {% else %}
+                    <ul class="list-group">
+                        {% for item in room_item %}
+                        <a href="#" class="list-group-item list-group-item-action">{{item.name}}</a>
+                        {% endfor %}
+                    </ul>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card">
+                <div class="card-header bg-info">
+
+                    <div class="d-flex justify-content-between align-bottom">
+                        <span class="align-bottom">
+                            <p class="fs-4 text-wrap">Element Description</p>
+                        </span>
+                        <span class="">
+                            <img src="https://img.icons8.com/cotton/30/000000/add--v2.png" />
+                        </span>
+                    </div>
+                </div>
+                <div class="card-body folio_card">
+                    {% if room_item_description|length == 0 %}
+                    <div class=" text-center my-3">
+                        <img alt="void" class="img-fluid m-2" src="{% static 'img/void.svg' %}">
+                        <div class="text-center">
+                            <p class="py-1 fw-light my-3 fs-1">Nothing Here
+                            </p>
+                        </div>
+                    </div>
+                    {% else %}
+                    <ul class="list-group">
+                        {% for item in room_item_description %}
+                        <a href="#" class="list-group-item list-group-item-action">
+                            <div class="d-flex justify-content-between">
+                                <div class="text-wraps">
+                                    {{item.description}}
+                                </div>
+                                <div class="text-nowrap text-primary">
+                                    ₹ {{item.rate}}
+                                </div>
+                            </div>
+                        </a>
+
+
+                        {% endfor %}
+                    </ul>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}

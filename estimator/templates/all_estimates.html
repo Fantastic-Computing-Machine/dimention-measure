@@ -4,15 +4,13 @@
 
 {% block title %} - Estimate {% endblock %}
 
-
-{% block head %}
-
-{% endblock %}
-
 {% block header %}
 
 <!-- new estimate modal trigger -->
 <ul class="nav justify-content-end">
+    <li class="nav-item">
+        <a href="{% url 'folio' %}" class="nav-link active text-light" aria-current="page">Folio</a>
+    </li>
     <li class="nav-item">
         <a data-bs-toggle="modal" data-bs-target="#newEstimate" class="nav-link active text-light" aria-current="page">
             <span class="align-bottom">
@@ -97,11 +95,19 @@
                     <div class="card-body">
                         <div class="d-flex justify-content-between align-items-start">
                             <div class="ms-2 me-auto">
-                                <div class="fw-bold text-nowrap">{{ item.name | capfirst  }}
+                                <div class="fw-bold text-nowrap">
+                                    <span class="text-muted small">
+                                        {{item.reference_number}}
+                                    </span>
+                                    <span class="text-wrap">
+                                        {{item.name|capfirst}}
+                                    </span>
                                 </div>
                                 <span class="badge bg-secondary mt-1" data-bs-toggle="tooltip"
                                     data-bs-placement="bottom" title="{{item.created_on}}">
-                                    Created {{item.created_on | naturalday}}
+                                    <small>
+                                        Created {{item.created_on|naturalday}}
+                                    </small>
                                 </span>
                             </div>
                             <!-- Delete modal -->

@@ -10,4 +10,5 @@ urlpatterns = [
     path("", AllEstimates.as_view(), name="all_estimates"),
     path("<int:pk>/<str:project_name>/details",
          EstimateDetailView.as_view(), name="estimate"),
+    path("folio/", FolioView.as_view(), name="folio"),
 ]

@@ -7,16 +7,67 @@
 {% block header %}
 <ul class="nav justify-content-end">
     <li class="nav-item">
-        <a href="{% url 'home' %}" class="nav-link active text-light" aria-current="page">Home</a>
+        <a href="{% url 'folio' %}" class="nav-link active text-light" aria-current="page">Folio</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link active text-light" data-bs-toggle="modal" data-bs-target="#newItemModal">
+            New Item
+        </a>
     </li>
 </ul>
 {% endblock %}
 
 
+{% block modal %}
+
+<!-- Modal -->
+<div class="modal fade" id="newItemModal" tabindex="-1" aria-labelledby="newItemModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="newItemModalLabel">New Item</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form method="POST" action="">
+                    {% csrf_token %}
+
+                    <p>
+                        {{form.room.label}}
+                        {{form.room}}
+                    </p>
+                    <p>
+                        {{form.room_item.label}}
+                        {{form.room_item}}
+                    </p>
+                    <p>
+                        {{form.room_item_description.label}}
+                        {{form.room_item_description}}
+                    </p>
+                    <p>
+                        {{form.quantity.label}}
+                        {{form.quantity}}
+                    </p>
+
+                    <div class="text-center">
+                        <button class="btn btn-outline-success" type="submit" id="button-addon2">Add to
+                            Estimate</button>
+                    </div>
+                </form>
+
+            </div>
+            <!-- </div> -->
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+
 {% block body %}
-<div class="container-lg pt-2 px-3 pb-4">
+<div class="container-lg pt-2 px-3">
     <div class="d-flex justify-content-between align-middle">
-        <div class="h2 text-light pb-2">
+        <div class="h2 text-light pb-1">
             <span class="align-middle">
                 <span class="align-middle">
                     {{project.name | title}}
@@ -58,6 +109,29 @@
     {% endif %}
 
 
+    <hr class="text-light">
+
+    <div class="my-2">
+        <div class="card">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-middle">
+                    <sapn class="h4">
+                        {{project.client.name}}
+                    </sapn>
+
+                    <span class="h6 mt-1">
+                        Mob.: +{{project.client.phoneNumber}}
+                    </span>
+
+                </div>
+                <div>
+                    <!-- address -->
+                </div>
+            </div>
+        </div>
+
+    </div>
+
 
     <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
         <div class="modal-dialog">
@@ -89,24 +163,92 @@
         </div>
     </div>
 
-    <div class="card">
-        <div class="card-body">
-            <div class="table-responsive">
-                <table class="table table-bordered table-hover table-sm">
-                    <thead class="table-primary align-middle row-cols-auto">
-                        <th class="text-center mx-2 text-nowrap">Description</th>
-                        <th class="text-center mx-2 text-nowrap">Unit</th>
-                        <th class="text-center mx-2 text-nowrap">Quantity</th>
-                        <th class="text-center mx-2 text-nowrap">Rate</th>
-                        <th class="text-center mx-2 text-nowrap">Amount</th>
-                    </thead>
 
-                </table>
+    <div class="my-2">
+
+        <div class="card">
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-bordered table-hover table-sm">
+                        <thead class="table-primary align-middle row-cols-auto">
+                            <th class="text-center mx-2 text-nowrap">Description</th>
+                            <th class="text-center mx-2 text-nowrap">Unit</th>
+                            <th class="text-center mx-2 text-nowrap">Quantity</th>
+                            <th class="text-center mx-2 text-nowrap">Rate</th>
+                            <th class="text-center mx-2 text-nowrap">Amount</th>
+                        </thead>
+
+
+                        <!-- Item loop -->
+
+                        {% for item in all_estimates %}
+                        <tr class="table align-middle">
+                            <td class="mx-2">
+                                <div>
+                                    {{item.room.name}}
+                                    <div>
+                                        {{item.room_item.name}}
+                                        <div>
+                                            {{item.room_item_description.description}}
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="text-center">
+                                Sqft
+                            </td>
+                            <td class="text-center">
+                                {{item.quantity}}
+                            </td>
+                            <td class="text-center">
+
+                                {{item.room_item_description.rate}}
+                            </td>
+
+                            <td class="text-center">
+
+                                {{item.amount}}
+                            </td>
+                        </tr>
+                        {% endfor %}
+
+
+                    </table>
+                </div>
             </div>
         </div>
     </div>
 
+    <div class="row flex-md-row py-3 mb-3">
+        <div class="col" style="height: 200px;">
+            <div class="card my-3">
+                <div class="card-body">
+                    <p class="fs-5 fw-bold">
+                        <li class="list-group-item d-flex justify-content-between ">
+                            Total Area in sqm
+                            <span class="badge bg-primary fs-6 font-monospace">{{sum_sqm|intcomma}} Sqm.</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between ">
+                            Total Area in sqft
+                            <span class="badge bg-primary fs-6 font-monospace">{{sum_sqft|intcomma}} SqFt.</span>
+                        </li>
 
+                        <li class="list-group-item d-flex justify-content-between align-items-start">
+                            <div>
+                                <div>Total Amount*</div>
+                            </div>
+                            <span class="badge bg-success fs-6 my-auto font-monospace">₹ {{sum_amount|intcomma}}</span>
+                        </li>
+                    </p>
+                    <span class="fs-6 fst-italic">
+                        <em>*Amount calculated using Dimensions in </em><span
+                            class="badge bg-secondary text-wrap font-monospace">Ft. | SqFt.
+                        </span>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
 
 
 
