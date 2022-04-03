@@ -12,11 +12,25 @@
         <a href="{% url 'folio' %}" class="nav-link active text-light" aria-current="page">Folio</a>
     </li>
     <li class="nav-item">
-        <a data-bs-toggle="modal" data-bs-target="#newEstimate" class="nav-link active text-light" aria-current="page">
-            <span class="align-bottom">
-                New Estimate
-            </span>
-        </a>
+        <div class="dropdown">
+            <a class="nav-link active text-light dropdown-toggle" id="dropdownMenuButton2" data-bs-toggle="dropdown"
+                aria-expanded="false">
+                New
+            </a>
+            <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="dropdownMenuButton2">
+                <li>
+                    <a data-bs-toggle="modal" data-bs-target="#newEstimate" class="dropdown-item" aria-current="page">
+                        Estimate
+                    </a>
+                </li>
+                <li>
+                    <a data-bs-toggle="modal" data-bs-target="" class="dropdown-item" aria-current="page">
+                        Client
+                    </a>
+                </li>
+            </ul>
+        </div>
+
     </li>
 </ul>
 <!-- new estimate modal trigger -->
@@ -40,6 +54,10 @@
                         <p>
                             {{form.name.label}}
                             {{form.name}}
+                        </p>
+                        <p>
+                            {{form.client.label}}
+                            {{form.client}}
                         </p>
                         <p>
                             {{form.description.label}}

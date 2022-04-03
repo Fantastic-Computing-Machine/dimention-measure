@@ -102,8 +102,14 @@ class Project(models.Model):
         sum_amount = sum(item.amount for item in estimates)
         return sum_amount
 
+    def gst_amount(self):
+        return decimal.Decimal(format(self.total_amount() * decimal.Decimal(0.18), ".2f"))
+
+    def total_with_gst(self):
+        return self.total_amount() + self.gst_amount()
+
     def get_absolute_url(self):
-        return reverse("project_expense")
+        return reverse("estimate", args=[str(self.pk), str(self.name)])
 
 
 class Estimate(models.Model):

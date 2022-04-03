@@ -31,7 +31,6 @@
             <div class="modal-body">
                 <form method="POST" action="">
                     {% csrf_token %}
-
                     <p>
                         {{form.room.label}}
                         {{form.room}}
@@ -48,7 +47,6 @@
                         {{form.quantity.label}}
                         {{form.quantity}}
                     </p>
-
                     <div class="text-center">
                         <button class="btn btn-outline-success" type="submit" id="button-addon2">Add to
                             Estimate</button>
@@ -70,6 +68,9 @@
         <div class="h2 text-light pb-1">
             <span class="align-middle">
                 <span class="align-middle">
+                    <span class="text-muted small">
+                        {{project.reference_number}}
+                    </span>
                     {{project.name | title}}
                 </span>
 
@@ -225,32 +226,29 @@
                 <div class="card-body">
                     <p class="fs-5 fw-bold">
                         <li class="list-group-item d-flex justify-content-between ">
-                            Total Area in sqm
-                            <span class="badge bg-primary fs-6 font-monospace">{{sum_sqm|intcomma}} Sqm.</span>
+                            Grand Total
+                            <span class="badge bg-primary fs-6 font-monospace">₹
+                                {{project.total_amount|intcomma}}</span>
                         </li>
                         <li class="list-group-item d-flex justify-content-between ">
-                            Total Area in sqft
-                            <span class="badge bg-primary fs-6 font-monospace">{{sum_sqft|intcomma}} SqFt.</span>
+                            GST @ 18%
+                            <span class="badge bg-primary fs-6 font-monospace">
+                                ₹ {{project.gst_amount|intcomma}}
+                            </span>
                         </li>
 
                         <li class="list-group-item d-flex justify-content-between align-items-start">
                             <div>
-                                <div>Total Amount*</div>
+                                <div>Grand Total after GST</div>
                             </div>
-                            <span class="badge bg-success fs-6 my-auto font-monospace">₹ {{sum_amount|intcomma}}</span>
+                            <span class="badge bg-success fs-6 my-auto font-monospace">
+                                ₹ {{project.total_with_gst|intcomma}}</span>
                         </li>
                     </p>
-                    <span class="fs-6 fst-italic">
-                        <em>*Amount calculated using Dimensions in </em><span
-                            class="badge bg-secondary text-wrap font-monospace">Ft. | SqFt.
-                        </span>
-                    </span>
                 </div>
             </div>
         </div>
     </div>
-
-
 
 
 </div>
