@@ -8,7 +8,7 @@ from .views import *
 
 urlpatterns = [
     path("", AllEstimates.as_view(), name="all_estimates"),
-    path("<int:pk>/<str:project_name>/details",
-         EstimateDetailView.as_view(), name="estimate"),
+    path("<int:pk>/<str:project_name>/details",EstimateDetailView.as_view(), name="estimate"),
     path("folio/", FolioView.as_view(), name="folio"),
+    path("estimate/<int:pk>/<str:project_name>/delete",DeleteEstimate, name="delete_estimate"),
 ]

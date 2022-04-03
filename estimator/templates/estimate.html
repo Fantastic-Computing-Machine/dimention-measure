@@ -139,18 +139,18 @@
                 <div class="modal-header">
                     <h5 class="modal-title" id="deleteModalLabel">
                         Confirm
-                        delete dimension "{{project.name | capfirst }}"</h5>
+                        delete estimate "{{project.name | capfirst }}"</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body text-start">
-                    You wish to permanently delete project&rarr;
+                    You wish to permanently delete estimate&rarr;
                     <b>"{{project.name | capfirst }}"</b>?<br>
                     <b class="my-1">Be Careful!</b>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-outline-success" data-bs-dismiss="modal">Get
                         back to safety</button>
-                    <form action="#" method="POST">
+                    <form action="{% url 'delete_project' project.id project.name %}" method="POST">
                         <!-- Delete Estimate -->
                         {% csrf_token %}
 
