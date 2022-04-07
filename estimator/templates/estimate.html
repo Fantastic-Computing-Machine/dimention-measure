@@ -201,6 +201,28 @@
         <div class="card">
             <div class="card-body">
                 <div class="table-responsive">
+
+                    {% if all_estimates|length == 0 %}
+                    <div class="card">
+                        <div class="card-body">
+                            <div class=" text-center my-3">
+                                <img alt="void" class="img-fluid m-2" style="width: 400px;"
+                                    src="{% static 'img/void.svg' %}">
+                                <div class="text-center">
+                                    <p class="py-1 fw-light my-3 fs-1">Nothing Here
+                                        <a class="btn btn-outline-success" data-bs-toggle="modal"
+                                            data-bs-target="#newItemModal">
+                                            New Item
+                                        </a>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+
+                    {% if all_estimates %}
+
                     <table class="table table-bordered table-hover table-sm">
                         <thead class="table-primary align-middle row-cols-auto">
                             <th class="text-center mx-2 text-nowrap">Description</th>
@@ -209,6 +231,8 @@
                             <th class="text-center mx-2 text-nowrap">Rate</th>
                             <th class="text-center mx-2 text-nowrap">Amount</th>
                         </thead>
+
+
 
                         {% for item in all_estimates %}
                         <tr class="table align-middle">
@@ -239,6 +263,7 @@
                         {% endfor %}
 
                     </table>
+                    {% endif %}
                 </div>
             </div>
         </div>
