@@ -154,7 +154,7 @@ class NewRoomItemForm(forms.ModelForm):
         )
 
 
-class NewClient(forms.ModelForm):
+class NewClientForm(forms.ModelForm):
 
     name = forms.CharField(
         max_length=200,
@@ -202,33 +202,33 @@ class NewClient(forms.ModelForm):
                 'class': 'form-control',
                 "aria-label": ".form-control-sm",
                 "type": 'text',
-                "placeholder": "Name",
+                "placeholder": "Address 1",
             }
         )
     )
 
     address_2 = forms.CharField(
         max_length=200,
-        required=True,
+        required=False,
         widget=forms.TextInput(
             attrs={
                 'class': 'form-control',
                 "aria-label": ".form-control-sm",
                 "type": 'text',
-                "placeholder": "Name",
+                "placeholder": "Address 2 (optional)",
             }
         )
     )
 
     landmark = forms.CharField(
         max_length=200,
-        required=True,
+        required=False,
         widget=forms.TextInput(
             attrs={
                 'class': 'form-control',
                 "aria-label": ".form-control-sm",
                 "type": 'text',
-                "placeholder": "Name",
+                "placeholder": "Landmark (optional)",
             }
         )
     )
@@ -241,7 +241,7 @@ class NewClient(forms.ModelForm):
                 'class': 'form-control',
                 "aria-label": ".form-control-sm",
                 "type": 'text',
-                "placeholder": "Name",
+                "placeholder": "Town/City",
             }
         )
     )
@@ -254,7 +254,8 @@ class NewClient(forms.ModelForm):
                 'class': 'form-control',
                 "aria-label": ".form-control-sm",
                 "type": 'number',
-                "placeholder": "Name",
+                "placeholder": "Zip code",
+                "maxlength": "7",
             }
         )
     )
@@ -278,5 +279,10 @@ class NewClient(forms.ModelForm):
             'name',
             'phoneNumber',
             'description',
-
+            'address_1',
+            'address_2',
+            'landmark',
+            'town_city',
+            'zip_code',
+            'state',
         }

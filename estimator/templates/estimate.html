@@ -6,13 +6,30 @@
 
 {% block header %}
 <ul class="nav justify-content-end">
-    <li class="nav-item">
-        <a href="{% url 'folio' %}" class="nav-link active text-light" aria-current="page">Folio</a>
-    </li>
+
     <li class="nav-item">
         <a class="nav-link active text-light" data-bs-toggle="modal" data-bs-target="#newItemModal">
             New Item
         </a>
+    </li>
+
+    <li class="nav-item">
+        <div class="dropdown">
+            <a class="nav-link active text-light dropdown-toggle" id="dropdownMenuButton2" data-bs-toggle="dropdown"
+                aria-expanded="false">
+                More
+            </a>
+            <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="dropdownMenuButton2">
+                <li>
+                    <a href="{% url 'folio' %}" class="dropdown-item" aria-current="page">Folio</a>
+                </li>
+                <li>
+                    <a href="{% url 'clients' %}" class="dropdown-item" aria-current="page">
+                        Clients
+                    </a>
+                </li>
+            </ul>
+        </div>
     </li>
 </ul>
 {% endblock %}
@@ -81,9 +98,14 @@
                     </a>
                     <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="dropdownMenuButton2">
                         <li>
+                            <a href="#" class="dropdown-item">
+                                Update Estimate
+                            </a>
+                        </li>
+                        <li>
                             <a class="dropdown-item" id="delete_button" data-bs-toggle="modal"
                                 data-bs-target="#deleteModal">
-                                Delete project
+                                Delete Estimate
                             </a>
                         </li>
                     </ul>
@@ -114,15 +136,29 @@
     <div class="my-2">
         <div class="card">
             <div class="card-body">
-                <div class="d-flex justify-content-between align-middle">
-                    <sapn class="h4">
-                        {{project.client.name}}
-                    </sapn>
 
-                    <span class="h6 mt-1">
-                        Mob.: +{{project.client.phoneNumber}}
-                    </span>
+                <div>
+                    <p class="h4">
+                        {{project.client.name}}
+                        <span class="h5">
+                            (+91-{{project.client.phoneNumber}})
+                        </span>
+                    </p>
                 </div>
+
+                <p><span class="fw-bold">Address: </span>
+                    <span>{{project.client.address_1}}</span>
+
+                    <span>{% if project.client.address_2 %},
+                        {{project.client.address_2}}{%endif%}</span>
+
+                    <span> {% if project.client.landmark %},
+                        {{project.client.landmark}}{%endif%}</span>
+                    <span>
+                        , {{project.client.town_city}}, {{project.client.state}}- {{project.client.zip_code}}
+                    </span>
+                </p>
+
                 <div>
                     <!-- address -->
                 </div>
@@ -176,7 +212,7 @@
 
                         {% for item in all_estimates %}
                         <tr class="table align-middle">
-                            <td class="mx-2">
+                            <td class="mx-2 col-5">
                                 <div>
                                     {{item.room.name}}
                                     <div>
@@ -187,16 +223,16 @@
                                     </div>
                                 </div>
                             </td>
-                            <td class="text-center">
+                            <td class="text-center col-1">
                                 Sqft
                             </td>
-                            <td class="text-center">
+                            <td class="text-center col-1">
                                 {{item.quantity}}
                             </td>
-                            <td class="text-center">
+                            <td class="text-center col-1">
                                 {{item.room_item_description.rate}}
                             </td>
-                            <td class="text-center">
+                            <td class="text-center col-1">
                                 {{item.amount}}
                             </td>
                         </tr>

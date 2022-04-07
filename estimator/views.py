@@ -5,13 +5,14 @@ from openpyxl import Workbook
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
+from django.core.paginator import Paginator
 from django.urls import reverse, reverse_lazy
 from django.views.generic import (CreateView, DeleteView, DetailView, ListView,
                                   UpdateView)
 
 
 from .models import *
-from .forms import NewProjectForm, NewEstimateItemForm
+from .forms import NewProjectForm, NewEstimateItemForm, NewClientForm
 
 
 class AllEstimates(LoginRequiredMixin, CreateView):
@@ -19,7 +20,7 @@ class AllEstimates(LoginRequiredMixin, CreateView):
     redirect_field_name = 'redirect_to'
     model = Project
     form_class = NewProjectForm
-    template_name = 'all_estimates.html'
+    template_name = 'estimates_home.html'
 
     def get_context_data(self, **kwargs):
         all_projects_object_list = Project.objects.filter(
@@ -64,7 +65,7 @@ class FolioView(LoginRequiredMixin, CreateView):
     redirect_field_name = 'redirect_to'
     model = Estimate
     form_class = NewEstimateItemForm
-    template_name = 'folio.html'
+    template_name = 'folio/folio.html'
 
     def get_context_data(self, **kwargs):
         rooms = Room.objects.filter(is_deleted=False)
@@ -75,3 +76,27 @@ class FolioView(LoginRequiredMixin, CreateView):
         kwargs['room_item'] = room_item
         kwargs['room_item_description'] = room_item_description
         return super().get_context_data(**kwargs)
+
+
+class ClientView(LoginRequiredMixin, CreateView):
+    login_url = '/user/login/'
+    redirect_field_name = 'redirect_to'
+    model = Client
+    template_name = 'clients/clients.html'
+    form_class = NewClientForm
+
+    def get_context_data(self, **kwargs):
+        all_clients_object_list = Client.objects.filter(
+            is_deleted=False).order_by('-created_on')
+        kwargs['clients_list'] = all_clients_object_list
+
+        return super(ClientView, self).get_context_data(**kwargs)
+
+
+class UpdateClientView(LoginRequiredMixin, UpdateView):
+    login_url = '/user/login/'
+    redirect_field_name = 'redirect_to'
+    model = Client
+    template_name = 'clients/update_client.html'
+    form_class = NewClientForm
+    success_url = reverse_lazy('clients')
