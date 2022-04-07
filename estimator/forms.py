@@ -4,7 +4,6 @@ from .models import *
 
 
 class NewProjectForm(forms.ModelForm):
-
     name = forms.CharField(
         max_length=200,
         required=True,
@@ -49,6 +48,54 @@ class NewProjectForm(forms.ModelForm):
             'client',
             'description',
             'author'
+        )
+
+
+class UpdateProjectForm(forms.ModelForm):
+
+    name = forms.CharField(
+        max_length=200,
+        required=True,
+        widget=forms.TextInput(
+            attrs={
+                'class': 'form-control',
+                "aria-label": ".form-control-sm",
+                "type": 'text',
+                "placeholder": "Name",
+            }
+        )
+    )
+
+    client = forms.ModelChoiceField(
+        required=True,
+        queryset=Client.objects.all(),
+        widget=forms.Select(
+            attrs={
+                "class": "form-select",
+                "aria-label": ".form-control-sm",
+                "placeholder": "Client",
+            }
+        )
+    )
+
+    description = forms.CharField(
+        required=False,
+        widget=forms.Textarea(
+            attrs={
+                'class': 'form-control',
+                "rows": 3,
+                "aria-label": ".form-control-sm",
+                "placeholder": "Description (optional)",
+            }
+        )
+    )
+
+    class Meta:
+        model = Project
+        fields = (
+            'name',
+            'client',
+            'description',
         )
 
 

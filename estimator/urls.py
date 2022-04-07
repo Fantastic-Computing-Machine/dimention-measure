@@ -8,10 +8,17 @@ from .views import *
 
 urlpatterns = [
     path("", AllEstimates.as_view(), name="all_estimates"),
-    path("<int:pk>/<str:project_name>/details",
+
+    path("<int:pk>/<str:project_name>/details/",
          EstimateDetailView.as_view(), name="estimate"),
+
+    path("<int:pk>/<str:project_name>/update_estimate/",
+         UpdateEstimateProjectView.as_view(), name="update_estimate_project"),
+
     path("folio/", FolioView.as_view(), name="folio"),
+
     path("clients/", ClientView.as_view(), name="clients"),
-    path("clients/update/<int:pk>/<str:client_name>",
+
+    path("clients/update/<int:pk>/<str:client_name>/",
          UpdateClientView.as_view(), name="update_client"),
 ]

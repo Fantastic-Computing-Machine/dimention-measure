@@ -12,7 +12,7 @@ from django.views.generic import (CreateView, DeleteView, DetailView, ListView,
 
 
 from .models import *
-from .forms import NewProjectForm, NewEstimateItemForm, NewClientForm
+from .forms import NewProjectForm, NewEstimateItemForm, NewClientForm, UpdateProjectForm
 
 
 class AllEstimates(LoginRequiredMixin, CreateView):
@@ -58,6 +58,14 @@ class EstimateDetailView(LoginRequiredMixin, CreateView):
             request.POST["project"] = active_project
             request.POST._mutable = False
         return super(EstimateDetailView, self).post(request, **kwargs)
+
+
+class UpdateEstimateProjectView(LoginRequiredMixin, UpdateView):
+    login_url = '/user/login/'
+    redirect_field_name = 'redirect_to'
+    model = Project
+    template_name = 'update_estimate_project.html'
+    form_class = UpdateProjectForm
 
 
 class FolioView(LoginRequiredMixin, CreateView):

@@ -98,7 +98,7 @@
                     </a>
                     <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="dropdownMenuButton2">
                         <li>
-                            <a href="#" class="dropdown-item">
+                            <a href="{% url 'update_estimate_project' project.id project.name %}" class="dropdown-item">
                                 Update Estimate
                             </a>
                         </li>
@@ -244,9 +244,9 @@
         </div>
     </div>
 
-    <div class="row flex-md-row py-3 mb-3">
+    <div class="row flex-md-row pb-3 mb-3">
         <div class="col" style="height: 200px;">
-            <div class="card my-3">
+            <div class="card mb-3">
                 <div class="card-body">
                     <p class="fs-5 fw-bold">
                         <li class="list-group-item list-group-item-action list-group-item-info ">
