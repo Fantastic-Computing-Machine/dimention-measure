@@ -129,7 +129,7 @@ class Client(models.Model):
 
 class Project(models.Model):
     name = models.CharField(
-        max_length=255, unique=True)
+        max_length=255)
     description = models.TextField(
         max_length=255, blank=True, null=True)
     author = models.ForeignKey(
@@ -171,13 +171,21 @@ class Project(models.Model):
         return reverse("estimate", args=[str(self.pk), str(self.name)])
 
 
+class Unit(models.Model):
+    unit = models.CharField(max_length=255)
+
+    def __str__(self):
+        return str(self.unit)
+
+
 class Estimate(models.Model):
-    project = models.ForeignKey(Project, on_delete=models.CASCADE,)
+    project = models.ForeignKey(Project, on_delete=models.CASCADE)
     room = models.ForeignKey(Room, on_delete=models.CASCADE)
     room_item = models.ForeignKey(RoomItem, on_delete=models.CASCADE)
     room_item_description = models.ForeignKey(
         RoomItemDescription, on_delete=models.CASCADE)
-
+    unit = models.ForeignKey(
+        Unit, on_delete=models.CASCADE, blank=True, null=True, default=1)
     quantity = models.DecimalField(
         max_digits=10, decimal_places=2, blank=True, null=True)
     amount = models.DecimalField(

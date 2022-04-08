@@ -133,6 +133,17 @@ class NewEstimateItemForm(forms.ModelForm):
             }
         )
     )
+    unit = forms.ModelChoiceField(
+        required=True,
+        queryset=Unit.objects.all(),
+        widget=forms.Select(
+            attrs={
+                "class": "form-select",
+                "aria-label": ".form-control-sm",
+                "placeholder": "Unit",
+            }
+        )
+    )
 
     quantity = forms.CharField(
         max_length=200,
@@ -156,6 +167,7 @@ class NewEstimateItemForm(forms.ModelForm):
             'room_item',
             'room_item_description',
             'quantity',
+            'unit',
         )
 
 

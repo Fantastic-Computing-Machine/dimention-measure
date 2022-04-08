@@ -61,6 +61,10 @@
                         {{form.room_item_description}}
                     </p>
                     <p>
+                        {{form.unit.label}}
+                        {{form.unit}}
+                    </p>
+                    <p>
                         {{form.quantity.label}}
                         {{form.quantity}}
                     </p>
@@ -97,6 +101,14 @@
                         <img src="https://img.icons8.com/ios/27/ffffff/menu-2.png" />
                     </a>
                     <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="dropdownMenuButton2">
+                        <li>
+                            <a href="#" class="dropdown-item">
+                                Download Excel
+                            </a>
+                        </li>
+                        <li>
+                            <hr class="dropdown-divider">
+                        </li>
                         <li>
                             <a href="{% url 'update_estimate_project' project.id project.name %}" class="dropdown-item">
                                 Update Estimate
@@ -206,7 +218,7 @@
                     <div class="card">
                         <div class="card-body">
                             <div class=" text-center my-3">
-                                <img alt="void" class="img-fluid m-2" style="width: 400px;"
+                                <img alt="void" class="img-fluid m-2" style="width: 350px;"
                                     src="{% static 'img/void.svg' %}">
                                 <div class="text-center">
                                     <p class="py-1 fw-light my-3 fs-1">Nothing Here
@@ -248,7 +260,7 @@
                                 </div>
                             </td>
                             <td class="text-center col-1">
-                                Sqft
+                                {{item.unit.unit}}
                             </td>
                             <td class="text-center col-1">
                                 {{item.quantity}}
