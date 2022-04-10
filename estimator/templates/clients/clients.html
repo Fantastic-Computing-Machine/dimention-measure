@@ -1,0 +1,193 @@
+{% extends 'base.html' %}
+{% load static %} {% load humanize %}
+
+
+{% block title %} - Clients{% endblock %}
+{% block head %}
+<link rel="stylesheet" href="{% static 'css/search.css' %}">
+{% endblock %}
+
+{% block header %}
+<ul class="nav justify-content-end">
+
+    <li class="nav-item">
+        <a data-bs-toggle="modal" data-bs-target="#newClient" class="nav-link active text-light" aria-current="page">
+            New Client
+        </a>
+    </li>
+
+    <li class="nav-item">
+        <div class="dropdown">
+            <a class="nav-link active text-light dropdown-toggle" id="dropdownMenuButton2" data-bs-toggle="dropdown"
+                aria-expanded="false">
+                More
+            </a>
+            <ul class="dropdown-menu dropdown-menu-dark" style="z-index: 99;" aria-labelledby="dropdownMenuButton2">
+                <li>
+                    <a href="{% url 'folio' %}" class="dropdown-item" aria-current="page">Folio</a>
+                </li>
+                <li>
+                    <a href="{% url 'all_estimates' %}" class="dropdown-item" aria-current="page">
+                        Estimates
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </li>
+
+</ul>
+{% endblock %}
+
+
+
+
+
+{% block modal %}
+<!-- new client modal -->
+<div class="modal fade" id="newClient" tabindex="-1" aria-labelledby="newClientLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <form action="" method="POST" id="newClient">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="newClientLabel">New Estimate</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <p>
+                            {{form.name.label}}
+                            {{form.name}}
+                        </p>
+                        <p>
+                            Phone Number
+                            {{form.phoneNumber}}
+                        </p>
+                        <p>
+                            {{form.description.label}}
+                            {{form.description}}
+                        </p>
+                        <p>
+                            {{form.address_1.label}}
+                            {{form.address_1}}
+                        </p>
+                        <p>
+                            {{form.address_2.label}}
+                            {{form.address_2}}
+                        </p>
+                        <p>
+                            {{form.landmark.label}}
+                            {{form.landmark}}
+                        </p>
+                        <p>
+                            Town/City
+                            {{form.town_city}}
+                        </p>
+                        <p>
+                            {{form.zip_code.label}}
+                            {{form.zip_code}}
+                        </p>
+                        <p>
+                            {{form.state.label}}
+                            {{form.state}}
+                        </p>
+
+                    </div>
+                    <div class="text-center">
+                        <button class="btn btn-outline-success" type="submit" id="button-addon2">Save</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<!-- new client modal -->
+{% endblock %}
+
+
+
+
+
+{% block body %}
+
+<div class="container-lg pb-4">
+
+
+    <div class="row justify-content-between py-2">
+        <div class="col-4">
+            <div class="text-light display-4">Clients</div>
+        </div>
+        <div class="col-xl-6 col-md-8">
+            <div class="mt-3">
+                <div class="">
+                    <div class="input-group mb-3">
+                        <input type="search" class="form-control" placeholder="Search Clients..."
+                            aria-label="Search Clients..." aria-describedby="button-addon2">
+                        <button class="btn btn-primary" type="button" id="button-addon2">Search</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="accordion" id="accordionExample">
+
+        {% for item in clients_list %}
+
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="heading_{{item.id}}">
+                <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#collapse_{{item.id}}_accordion" aria-expanded="true"
+                    aria-controls="collapse_{{item.id}}_accordion">
+                    <span class="fw-bold text-dark">
+                        {{item.name}} ({{item.phoneNumber}}) - {{item.town_city}}
+                    </span>
+                </button>
+            </h2>
+            <div id="collapse_{{item.id}}_accordion" class="accordion-collapse collapse"
+                aria-labelledby="heading_{{item.id}}" data-bs-parent="#accordionExample">
+                <div class="accordion-body">
+                    {% if item.description %}
+                    <p>{{item.description}}</p>
+                    {%endif%}
+
+                    <p><span class="fw-bold">Address: </span>
+                        <span>{{item.address_1}}</span>
+
+                        <span>{% if item.address_2 %},
+                            {{item.address_2}}{%endif%}</span>
+
+                        <span> {% if item.landmark %},
+                            {{item.landmark}}{%endif%}</span>
+                        <span>
+                            , {{item.town_city}}, {{item.state}}- {{item.zip_code}}
+                        </span>
+                    </p>
+                    <p>
+                        <a href="{% url 'update_client' item.id item.name %}" class="btn btn-outline-primary">Update</a>
+                        <a href="#" class="btn btn-outline-danger">Delete</a>
+
+                    </p>
+
+                </div>
+            </div>
+        </div>
+
+        {% endfor %}
+    </div>
+
+</div>
+
+
+{% endblock %}
+
+
+{% block expense_button %}
+<a aria-label="all-expenses" href="{% url 'all_expenses' %}" type="button" class="btn btn-success btn-lg">
+    <img alt="all-expenses" src="https://img.icons8.com/ios/30/ffffff/money-circulation.png" />
+</a>
+<a href="{%url 'home'%}" type="button" class="btn btn-warning btn-lg">
+    <img alt="project-btn" src="https://img.icons8.com/ios/30/000/safety-hat.png" />
+</a>
+{% endblock %}

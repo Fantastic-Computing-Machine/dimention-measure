@@ -6,13 +6,30 @@
 
 {% block header %}
 <ul class="nav justify-content-end">
-    <li class="nav-item">
-        <a href="{% url 'folio' %}" class="nav-link active text-light" aria-current="page">Folio</a>
-    </li>
+
     <li class="nav-item">
         <a class="nav-link active text-light" data-bs-toggle="modal" data-bs-target="#newItemModal">
             New Item
         </a>
+    </li>
+
+    <li class="nav-item">
+        <div class="dropdown">
+            <a class="nav-link active text-light dropdown-toggle" id="dropdownMenuButton2" data-bs-toggle="dropdown"
+                aria-expanded="false">
+                More
+            </a>
+            <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="dropdownMenuButton2">
+                <li>
+                    <a href="{% url 'folio' %}" class="dropdown-item" aria-current="page">Folio</a>
+                </li>
+                <li>
+                    <a href="{% url 'clients' %}" class="dropdown-item" aria-current="page">
+                        Clients
+                    </a>
+                </li>
+            </ul>
+        </div>
     </li>
 </ul>
 {% endblock %}
@@ -42,6 +59,10 @@
                     <p>
                         {{form.room_item_description.label}}
                         {{form.room_item_description}}
+                    </p>
+                    <p>
+                        {{form.unit.label}}
+                        {{form.unit}}
                     </p>
                     <p>
                         {{form.quantity.label}}
@@ -81,9 +102,22 @@
                     </a>
                     <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="dropdownMenuButton2">
                         <li>
+                            <a href="#" class="dropdown-item">
+                                Download Excel
+                            </a>
+                        </li>
+                        <li>
+                            <hr class="dropdown-divider">
+                        </li>
+                        <li>
+                            <a href="{% url 'update_estimate_project' project.id project.name %}" class="dropdown-item">
+                                Update Estimate
+                            </a>
+                        </li>
+                        <li>
                             <a class="dropdown-item" id="delete_button" data-bs-toggle="modal"
                                 data-bs-target="#deleteModal">
-                                Delete project
+                                Delete Estimate
                             </a>
                         </li>
                     </ul>
@@ -114,15 +148,29 @@
     <div class="my-2">
         <div class="card">
             <div class="card-body">
-                <div class="d-flex justify-content-between align-middle">
-                    <sapn class="h4">
-                        {{project.client.name}}
-                    </sapn>
 
-                    <span class="h6 mt-1">
-                        Mob.: +{{project.client.phoneNumber}}
-                    </span>
+                <div>
+                    <p class="h4">
+                        {{project.client.name}}
+                        <span class="h5">
+                            (+91-{{project.client.phoneNumber}})
+                        </span>
+                    </p>
                 </div>
+
+                <p><span class="fw-bold">Address: </span>
+                    <span>{{project.client.address_1}}</span>
+
+                    <span>{% if project.client.address_2 %},
+                        {{project.client.address_2}}{%endif%}</span>
+
+                    <span> {% if project.client.landmark %},
+                        {{project.client.landmark}}{%endif%}</span>
+                    <span>
+                        , {{project.client.town_city}}, {{project.client.state}}- {{project.client.zip_code}}
+                    </span>
+                </p>
+
                 <div>
                     <!-- address -->
                 </div>
@@ -165,6 +213,28 @@
         <div class="card">
             <div class="card-body">
                 <div class="table-responsive">
+
+                    {% if all_estimates|length == 0 %}
+                    <div class="card">
+                        <div class="card-body">
+                            <div class=" text-center my-3">
+                                <img alt="void" class="img-fluid m-2" style="width: 350px;"
+                                    src="{% static 'img/void.svg' %}">
+                                <div class="text-center">
+                                    <p class="py-1 fw-light my-3 fs-1">Nothing Here
+                                        <a class="btn btn-outline-success" data-bs-toggle="modal"
+                                            data-bs-target="#newItemModal">
+                                            New Item
+                                        </a>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+
+                    {% if all_estimates %}
+
                     <table class="table table-bordered table-hover table-sm">
                         <thead class="table-primary align-middle row-cols-auto">
                             <th class="text-center mx-2 text-nowrap">Description</th>
@@ -174,9 +244,11 @@
                             <th class="text-center mx-2 text-nowrap">Amount</th>
                         </thead>
 
+
+
                         {% for item in all_estimates %}
                         <tr class="table align-middle">
-                            <td class="mx-2">
+                            <td class="mx-2 col-5">
                                 <div>
                                     {{item.room.name}}
                                     <div>
@@ -187,30 +259,31 @@
                                     </div>
                                 </div>
                             </td>
-                            <td class="text-center">
-                                Sqft
+                            <td class="text-center col-1">
+                                {{item.unit.unit}}
                             </td>
-                            <td class="text-center">
+                            <td class="text-center col-1">
                                 {{item.quantity}}
                             </td>
-                            <td class="text-center">
+                            <td class="text-center col-1">
                                 {{item.room_item_description.rate}}
                             </td>
-                            <td class="text-center">
+                            <td class="text-center col-1">
                                 {{item.amount}}
                             </td>
                         </tr>
                         {% endfor %}
 
                     </table>
+                    {% endif %}
                 </div>
             </div>
         </div>
     </div>
 
-    <div class="row flex-md-row py-3 mb-3">
+    <div class="row flex-md-row pb-3 mb-3">
         <div class="col" style="height: 200px;">
-            <div class="card my-3">
+            <div class="card mb-3">
                 <div class="card-body">
                     <p class="fs-5 fw-bold">
                         <li class="list-group-item list-group-item-action list-group-item-info ">

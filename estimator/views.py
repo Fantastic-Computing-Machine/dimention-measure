@@ -5,13 +5,14 @@ from datetime import datetime
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
+from django.core.paginator import Paginator
 from django.urls import reverse, reverse_lazy
 from django.views.generic import (CreateView, DeleteView, DetailView, ListView,
                                   UpdateView)
 from django.shortcuts import get_object_or_404
 from django.shortcuts import HttpResponseRedirect
 from .models import *
-from .forms import NewProjectForm, NewEstimateItemForm
+from .forms import NewProjectForm, NewEstimateItemForm, NewClientForm, UpdateProjectForm
 
 
 class AllEstimates(LoginRequiredMixin, CreateView):
@@ -19,7 +20,7 @@ class AllEstimates(LoginRequiredMixin, CreateView):
     redirect_field_name = 'redirect_to'
     model = Project
     form_class = NewProjectForm
-    template_name = 'all_estimates.html'
+    template_name = 'estimates_home.html'
 
     def get_context_data(self, **kwargs):
         all_projects_object_list = Project.objects.filter(
@@ -59,12 +60,20 @@ class EstimateDetailView(LoginRequiredMixin, CreateView):
         return super(EstimateDetailView, self).post(request, **kwargs)
 
 
+class UpdateEstimateProjectView(LoginRequiredMixin, UpdateView):
+    login_url = '/user/login/'
+    redirect_field_name = 'redirect_to'
+    model = Project
+    template_name = 'update_estimate_project.html'
+    form_class = UpdateProjectForm
+
+
 class FolioView(LoginRequiredMixin, CreateView):
     login_url = '/user/login/'
     redirect_field_name = 'redirect_to'
     model = Estimate
     form_class = NewEstimateItemForm
-    template_name = 'folio.html'
+    template_name = 'folio/folio.html'
 
     def get_context_data(self, **kwargs):
         rooms = Room.objects.filter(is_deleted=False)
@@ -82,3 +91,26 @@ def DeleteEstimate(request, pk, project_name):
         estimate = Project.objects.filter(pk=pk).update(is_deleted=True,deleted_on=datetime.now())
         return HttpResponseRedirect(reverse('all_estimates'))
     
+
+class ClientView(LoginRequiredMixin, CreateView):
+    login_url = '/user/login/'
+    redirect_field_name = 'redirect_to'
+    model = Client
+    template_name = 'clients/clients.html'
+    form_class = NewClientForm
+
+    def get_context_data(self, **kwargs):
+        all_clients_object_list = Client.objects.filter(
+            is_deleted=False).order_by('-created_on')
+        kwargs['clients_list'] = all_clients_object_list
+
+        return super(ClientView, self).get_context_data(**kwargs)
+
+
+class UpdateClientView(LoginRequiredMixin, UpdateView):
+    login_url = '/user/login/'
+    redirect_field_name = 'redirect_to'
+    model = Client
+    template_name = 'clients/update_client.html'
+    form_class = NewClientForm
+    success_url = reverse_lazy('clients')

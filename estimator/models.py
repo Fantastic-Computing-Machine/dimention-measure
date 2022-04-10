@@ -3,7 +3,7 @@ import decimal
 from datetime import datetime
 from django.contrib.auth.models import User
 from django.urls import reverse
-from django.core.validators import RegexValidator
+from django.core.validators import RegexValidator, MaxValueValidator
 from django.db import models
 
 
@@ -19,10 +19,31 @@ STATE_CHOICES = (
     ("Himachal Pradesh", "Himachal Pradesh"),
     ("Jammu and Kashmir ", "Jammu and Kashmir "),
     ("Jharkhand", "Jharkhand"),
-    ("Karnataka", "Karnataka"), ("Kerala", "Kerala"), ("Madhya Pradesh", "Madhya Pradesh"), ("Maharashtra", "Maharashtra"), ("Manipur",
-                                                                                                                             "Manipur"), ("Meghalaya", "Meghalaya"), ("Mizoram", "Mizoram"), ("Nagaland", "Nagaland"), ("Odisha", "Odisha"),
+    ("Karnataka", "Karnataka"), ("Kerala", "Kerala"),
+    ("Madhya Pradesh", "Madhya Pradesh"),
+    ("Maharashtra", "Maharashtra"),
+    ("Manipur", "Manipur"),
+    ("Meghalaya", "Meghalaya"),
+    ("Mizoram", "Mizoram"),
+    ("Nagaland", "Nagaland"),
+    ("Odisha", "Odisha"),
     ("Punjab", "Punjab"),
-    ("Rajasthan", "Rajasthan"), ("Sikkim", "Sikkim"), ("Tamil Nadu", "Tamil Nadu"), ("Telangana", "Telangana"), ("Tripura", "Tripura"), ("Uttar Pradesh", "Uttar Pradesh"), ("Uttarakhand", "Uttarakhand"), ("West Bengal", "West Bengal"), ("Andaman and Nicobar Islands", "Andaman and Nicobar Islands"), ("Chandigarh", "Chandigarh"), ("Dadra and Nagar Haveli", "Dadra and Nagar Haveli"), ("Daman and Diu", "Daman and Diu"), ("Lakshadweep", "Lakshadweep"), ("National Capital Territory of Delhi", "National Capital Territory of Delhi"), ("Puducherry", "Puducherry"))
+    ("Rajasthan", "Rajasthan"),
+    ("Sikkim", "Sikkim"),
+    ("Tamil Nadu", "Tamil Nadu"),
+    ("Telangana", "Telangana"),
+    ("Tripura", "Tripura"),
+    ("Uttar Pradesh", "Uttar Pradesh"),
+    ("Uttarakhand", "Uttarakhand"),
+    ("West Bengal", "West Bengal"),
+    ("Andaman and Nicobar Islands", "Andaman and Nicobar Islands"),
+    ("Chandigarh", "Chandigarh"),
+    ("Dadra and Nagar Haveli", "Dadra and Nagar Haveli"),
+    ("Daman and Diu", "Daman and Diu"),
+    ("Lakshadweep", "Lakshadweep"),
+    ("National Capital Territory of Delhi", "National Capital Territory of Delhi"),
+    ("Puducherry", "Puducherry")
+)
 
 
 class Room(models.Model):
@@ -68,7 +89,7 @@ class RoomItemDescription(models.Model):
 
 class Client(models.Model):
     name = models.CharField(
-        max_length=255, unique=True)
+        max_length=255)
     description = models.TextField(
         max_length=255, blank=True, null=True)
     phoneNumberRegex = RegexValidator(regex=r"^\+?1?\d{8,15}$")
@@ -82,8 +103,8 @@ class Client(models.Model):
     address_1 = models.CharField(max_length=255, default="abc")
     address_2 = models.CharField(max_length=255, blank=True, null=True)
     landmark = models.CharField(max_length=255, blank=True, null=True)
-    town_city = models.CharField(max_length=255, default='abc')
-    zip_code = models.CharField(max_length=6, default="123456")
+    town_city = models.CharField(max_length=255)
+    zip_code = models.CharField(max_length=6)
     state = models.CharField(choices=STATE_CHOICES,
                              max_length=255, default='abc')
 
@@ -92,17 +113,23 @@ class Client(models.Model):
 
     def save(self):
         self.name = self.name.replace(" ", "-").strip()
-        self.description = self.description.strip()
+        if self.description:
+            self.description = self.description.strip()
         self.address_1 = self.address_1.strip()
-        self.address_2 = self.address_2.strip()
-        self.landmark = self.landmark.strip()
+        if self.address_2:
+            self.address_2 = self.address_2.strip()
+        if self.landmark:
+            self.landmark = self.landmark.strip()
         self.town_city = self.town_city.strip()
         return super(Client, self).save()
+
+    def get_absolute_url(self):
+        return reverse("clients")
 
 
 class Project(models.Model):
     name = models.CharField(
-        max_length=255, unique=True)
+        max_length=255)
     description = models.TextField(
         max_length=255, blank=True, null=True)
     author = models.ForeignKey(
@@ -144,14 +171,23 @@ class Project(models.Model):
         return reverse("estimate", args=[str(self.pk), str(self.name)])
 
 
+class Unit(models.Model):
+    unit = models.CharField(max_length=255)
+
+    def __str__(self):
+        return str(self.unit)
+
+
 class Estimate(models.Model):
-    project = models.ForeignKey(Project, on_delete=models.CASCADE,)
+    project = models.ForeignKey(Project, on_delete=models.CASCADE)
     room = models.ForeignKey(Room, on_delete=models.CASCADE)
     room_item = models.ForeignKey(RoomItem, on_delete=models.CASCADE)
     room_item_description = models.ForeignKey(
         RoomItemDescription, on_delete=models.CASCADE)
-
-    quantity = models.PositiveIntegerField(blank=True, null=True)
+    unit = models.ForeignKey(
+        Unit, on_delete=models.CASCADE, blank=True, null=True, default=1)
+    quantity = models.DecimalField(
+        max_digits=10, decimal_places=2, blank=True, null=True)
     amount = models.DecimalField(
         max_digits=10, decimal_places=2, blank=True, null=True)
     created_on = models.DateTimeField(auto_now_add=True)

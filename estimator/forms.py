@@ -4,7 +4,6 @@ from .models import *
 
 
 class NewProjectForm(forms.ModelForm):
-
     name = forms.CharField(
         max_length=200,
         required=True,
@@ -52,6 +51,54 @@ class NewProjectForm(forms.ModelForm):
         )
 
 
+class UpdateProjectForm(forms.ModelForm):
+
+    name = forms.CharField(
+        max_length=200,
+        required=True,
+        widget=forms.TextInput(
+            attrs={
+                'class': 'form-control',
+                "aria-label": ".form-control-sm",
+                "type": 'text',
+                "placeholder": "Name",
+            }
+        )
+    )
+
+    client = forms.ModelChoiceField(
+        required=True,
+        queryset=Client.objects.all(),
+        widget=forms.Select(
+            attrs={
+                "class": "form-select",
+                "aria-label": ".form-control-sm",
+                "placeholder": "Client",
+            }
+        )
+    )
+
+    description = forms.CharField(
+        required=False,
+        widget=forms.Textarea(
+            attrs={
+                'class': 'form-control',
+                "rows": 3,
+                "aria-label": ".form-control-sm",
+                "placeholder": "Description (optional)",
+            }
+        )
+    )
+
+    class Meta:
+        model = Project
+        fields = (
+            'name',
+            'client',
+            'description',
+        )
+
+
 class NewEstimateItemForm(forms.ModelForm):
     room = forms.ModelChoiceField(
         required=True,
@@ -86,6 +133,17 @@ class NewEstimateItemForm(forms.ModelForm):
             }
         )
     )
+    unit = forms.ModelChoiceField(
+        required=True,
+        queryset=Unit.objects.all(),
+        widget=forms.Select(
+            attrs={
+                "class": "form-select",
+                "aria-label": ".form-control-sm",
+                "placeholder": "Unit",
+            }
+        )
+    )
 
     quantity = forms.CharField(
         max_length=200,
@@ -109,6 +167,7 @@ class NewEstimateItemForm(forms.ModelForm):
             'room_item',
             'room_item_description',
             'quantity',
+            'unit',
         )
 
 
@@ -154,7 +213,7 @@ class NewRoomItemForm(forms.ModelForm):
         )
 
 
-class NewClient(forms.ModelForm):
+class NewClientForm(forms.ModelForm):
 
     name = forms.CharField(
         max_length=200,
@@ -202,33 +261,33 @@ class NewClient(forms.ModelForm):
                 'class': 'form-control',
                 "aria-label": ".form-control-sm",
                 "type": 'text',
-                "placeholder": "Name",
+                "placeholder": "Address 1",
             }
         )
     )
 
     address_2 = forms.CharField(
         max_length=200,
-        required=True,
+        required=False,
         widget=forms.TextInput(
             attrs={
                 'class': 'form-control',
                 "aria-label": ".form-control-sm",
                 "type": 'text',
-                "placeholder": "Name",
+                "placeholder": "Address 2 (optional)",
             }
         )
     )
 
     landmark = forms.CharField(
         max_length=200,
-        required=True,
+        required=False,
         widget=forms.TextInput(
             attrs={
                 'class': 'form-control',
                 "aria-label": ".form-control-sm",
                 "type": 'text',
-                "placeholder": "Name",
+                "placeholder": "Landmark (optional)",
             }
         )
     )
@@ -241,7 +300,7 @@ class NewClient(forms.ModelForm):
                 'class': 'form-control',
                 "aria-label": ".form-control-sm",
                 "type": 'text',
-                "placeholder": "Name",
+                "placeholder": "Town/City",
             }
         )
     )
@@ -254,7 +313,8 @@ class NewClient(forms.ModelForm):
                 'class': 'form-control',
                 "aria-label": ".form-control-sm",
                 "type": 'number',
-                "placeholder": "Name",
+                "placeholder": "Zip code",
+                "maxlength": "7",
             }
         )
     )
@@ -278,5 +338,10 @@ class NewClient(forms.ModelForm):
             'name',
             'phoneNumber',
             'description',
-
+            'address_1',
+            'address_2',
+            'landmark',
+            'town_city',
+            'zip_code',
+            'state',
         }
