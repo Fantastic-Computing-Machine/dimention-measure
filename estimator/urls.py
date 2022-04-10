@@ -15,6 +15,9 @@ urlpatterns = [
     path("<int:pk>/<str:project_name>/update_estimate/",
          UpdateEstimateProjectView.as_view(), name="update_estimate_project"),
 
+    path("<int:pk>/<int:project_id>/<str:project_name>/update_estimate_item/",
+         UpdateEstimateItemView.as_view(), name="update_estimate_item"),
+
     path("folio/", FolioView.as_view(), name="folio"),
 
     path("clients/", ClientView.as_view(), name="clients"),
