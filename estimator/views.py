@@ -1,15 +1,15 @@
-import datetime
+
 import re
 from openpyxl import Workbook
-
+from datetime import datetime
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
 from django.urls import reverse, reverse_lazy
 from django.views.generic import (CreateView, DeleteView, DetailView, ListView,
                                   UpdateView)
-
-
+from django.shortcuts import get_object_or_404
+from django.shortcuts import HttpResponseRedirect
 from .models import *
 from .forms import NewProjectForm, NewEstimateItemForm
 
@@ -75,3 +75,10 @@ class FolioView(LoginRequiredMixin, CreateView):
         kwargs['room_item'] = room_item
         kwargs['room_item_description'] = room_item_description
         return super().get_context_data(**kwargs)
+
+@login_required
+def DeleteEstimate(request, pk, project_name):
+    if request.method == 'POST':
+        estimate = Project.objects.filter(pk=pk).update(is_deleted=True,deleted_on=datetime.now())
+        return HttpResponseRedirect(reverse('all_estimates'))
+    
