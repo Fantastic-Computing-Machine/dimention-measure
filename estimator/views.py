@@ -1,10 +1,3 @@
-<<<<<<< HEAD
-
-=======
-from django.shortcuts import HttpResponseRedirect
-import datetime
->>>>>>> 8d21997f0d9e7b846666bf5f1bdb4b09d54be666
-import re
 from openpyxl import Workbook
 from datetime import datetime
 from django.contrib.auth.decorators import login_required
@@ -121,12 +114,14 @@ class FolioView(LoginRequiredMixin, CreateView):
         kwargs['room_item_description'] = room_item_description
         return super().get_context_data(**kwargs)
 
+
 @login_required
 def DeleteEstimate(request, pk, project_name):
     if request.method == 'POST':
-        estimate = Project.objects.filter(pk=pk).update(is_deleted=True,deleted_on=datetime.now())
+        estimate = Project.objects.filter(pk=pk).update(
+            is_deleted=True, deleted_on=datetime.now())
         return HttpResponseRedirect(reverse('all_estimates'))
-    
+
 
 class ClientView(LoginRequiredMixin, CreateView):
     login_url = '/user/login/'
@@ -151,9 +146,10 @@ class UpdateClientView(LoginRequiredMixin, UpdateView):
     form_class = NewClientForm
     success_url = reverse_lazy('clients')
 
+
 @login_required
 def DeleteClient(request, pk):
     if request.method == 'POST':
-        client = Client.objects.filter(pk=pk).update(is_deleted=True,deleted_on=datetime.now())
+        client = Client.objects.filter(pk=pk).update(
+            is_deleted=True, deleted_on=datetime.now())
         return HttpResponseRedirect(reverse('clients'))
-    
