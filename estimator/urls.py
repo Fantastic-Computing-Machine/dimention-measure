@@ -21,6 +21,9 @@ urlpatterns = [
 
     path("clients/update/<int:pk>/<str:client_name>/",
          UpdateClientView.as_view(), name="update_client"),
-         
+
     path("estimate/<int:pk>/<str:project_name>/delete",DeleteEstimate, name="delete_estimate"),
+
+    path("clients/<int:pk>/delete",DeleteClient, name="delete_client"),
+
 ]

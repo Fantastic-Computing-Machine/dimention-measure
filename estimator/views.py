@@ -114,3 +114,10 @@ class UpdateClientView(LoginRequiredMixin, UpdateView):
     template_name = 'clients/update_client.html'
     form_class = NewClientForm
     success_url = reverse_lazy('clients')
+
+@login_required
+def DeleteClient(request, pk):
+    if request.method == 'POST':
+        client = Client.objects.filter(pk=pk).update(is_deleted=True,deleted_on=datetime.now())
+        return HttpResponseRedirect(reverse('clients'))
+    
