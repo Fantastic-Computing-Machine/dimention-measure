@@ -1,4 +1,9 @@
+<<<<<<< HEAD
 
+=======
+from django.shortcuts import HttpResponseRedirect
+import datetime
+>>>>>>> 8d21997f0d9e7b846666bf5f1bdb4b09d54be666
 import re
 from openpyxl import Workbook
 from datetime import datetime
@@ -36,6 +41,14 @@ class AllEstimates(LoginRequiredMixin, CreateView):
         return super(AllEstimates, self).post(request, **kwargs)
 
 
+class UpdateEstimateProjectView(LoginRequiredMixin, UpdateView):
+    login_url = '/user/login/'
+    redirect_field_name = 'redirect_to'
+    model = Project
+    template_name = 'update_estimate_project.html'
+    form_class = UpdateProjectForm
+
+
 class EstimateDetailView(LoginRequiredMixin, CreateView):
     login_url = '/user/login/'
     redirect_field_name = 'redirect_to'
@@ -60,12 +73,35 @@ class EstimateDetailView(LoginRequiredMixin, CreateView):
         return super(EstimateDetailView, self).post(request, **kwargs)
 
 
-class UpdateEstimateProjectView(LoginRequiredMixin, UpdateView):
+class UpdateEstimateItemView(LoginRequiredMixin, UpdateView):
     login_url = '/user/login/'
     redirect_field_name = 'redirect_to'
-    model = Project
-    template_name = 'update_estimate_project.html'
-    form_class = UpdateProjectForm
+    model = Estimate
+    template_name = 'update_estimate_item.html'
+    form_class = NewEstimateItemForm
+
+    def post(self, request, **kwargs):
+        req = request.POS
+        super(UpdateEstimateItemView, self).post(request, **kwargs)
+        estimate = Estimate.objects.get(pk=self.kwargs['pk'])
+
+        estimate.room_id = req['room'][0]
+        estimate.room_item_id = req['room_item'][0][0]
+        estimate.room_item_description_id = req['room_item_description'][0]
+        estimate.quantity = req['quantity'][0]
+        estimate.unit_id = req['unit'][0]
+        estimate.save()
+
+        return HttpResponseRedirect(reverse('estimate', kwargs={"pk": self.kwargs['project_id'], "project_name": self.kwargs['project_name']}))
+
+
+class UpdateClientView(LoginRequiredMixin, UpdateView):
+    login_url = '/user/login/'
+    redirect_field_name = 'redirect_to'
+    model = Client
+    template_name = 'clients/update_client.html'
+    form_class = NewClientForm
+    success_url = reverse_lazy('clients')
 
 
 class FolioView(LoginRequiredMixin, CreateView):

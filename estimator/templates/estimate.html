@@ -242,8 +242,8 @@
                             <th class="text-center mx-2 text-nowrap">Quantity</th>
                             <th class="text-center mx-2 text-nowrap">Rate</th>
                             <th class="text-center mx-2 text-nowrap">Amount</th>
+                            <th class="text-center mx-2 text-nowrap">Action</th>
                         </thead>
-
 
 
                         {% for item in all_estimates %}
@@ -270,6 +270,53 @@
                             </td>
                             <td class="text-center col-1">
                                 {{item.amount}}
+                            </td>
+                            <td class="text-center col-1">
+                                <a href="{% url 'update_estimate_item' item.id project.id project.name %}">
+                                    <img class="icon_ud" src="https://img.icons8.com/ios/20/fff/edit-row.png" />
+                                </a>
+
+
+                                <!-- Delete modal -->
+                                <a class="align-bottom" data-bs-toggle="modal" data-bs-target="#delete{{item.id}}Modal">
+                                    <img class="icon_ud"
+                                        src="https://img.icons8.com/ios/20/000000/delete-sign--v1.png" />
+                                </a>
+                                <div class="modal fade" id="delete{{item.id}}Modal" tabindex="-1"
+                                    aria-labelledby="delete{{item.id}}ModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="delete{{item.id}}ModalLabel">
+                                                    Confirm
+                                                    delete dimension"{{item.name | capfirst }}"</h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                    aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body text-start">
+                                                You wish to permanently delete dimension&rarr;
+                                                <b>"{{item.name | capfirst }}"</b>?<br>
+                                                <b class="my-1">Be Careful!</b>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-outline-success"
+                                                    data-bs-dismiss="modal">Get
+                                                    back to safety</button>
+                                                <form
+                                                    action="{% url 'delete_dimention' item.id item.project.id item.project.name %}"
+                                                    method="POST">
+                                                    {% csrf_token %}
+
+                                                    <button class="confirm_delete btn btn-danger align-bottom"
+                                                        type="submit">
+                                                        Chop Chop!
+                                                    </button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Delete modal -->
                             </td>
                         </tr>
                         {% endfor %}
