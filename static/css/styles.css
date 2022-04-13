@@ -99,6 +99,7 @@ footer {
 .folio_card {
   overflow-y: scroll;
   height: 600px;
+  max-height: 600px;
 }
 
 @media print {

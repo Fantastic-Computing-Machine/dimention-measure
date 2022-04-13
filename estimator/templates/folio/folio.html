@@ -22,17 +22,24 @@
 
 {% block body %}
 <div class="container-lg py-3">
-    <div class="row align-items-start">
-        <div class="col">
+    <div class="row justify-content-evenly">
+
+        <!-- Column Room -->
+        <div class="col-md-4 col-sm-12 mb-3">
             <div class="card border-0 text-dark bg-light">
                 <div class="card-header text-light bg-success">
-
                     <div class="d-flex justify-content-between align-bottom">
                         <span class="align-bottom">
                             <span class="fs-4 text-wrap">Rooms</span>
                         </span>
                         <span class="">
-                            <img src="https://img.icons8.com/cotton/30/000000/add--v2.png" />
+                            <a href="#">
+                                <img class="icon_ud"
+                                    src="https://img.icons8.com/ios/20/ffffff/delete-forever--v2.png" />
+                            </a>
+                            <a href="#">
+                                <img src="https://img.icons8.com/cotton/30/000000/add--v2.png" />
+                            </a>
                         </span>
                     </div>
 
@@ -60,12 +67,7 @@
                                             <img class="icon_ud" src="https://img.icons8.com/ios/20/fff/edit-row.png" />
                                         </a>
                                     </span>
-                                    <span class="px-1">
-                                        <a href="#">
-                                            <img class="icon_ud"
-                                                src="https://img.icons8.com/ios/20/000000/delete-forever--v2.png" />
-                                        </a>
-                                    </span>
+
                                 </span>
                             </div>
                         </li>
@@ -76,7 +78,10 @@
                 </div>
             </div>
         </div>
-        <div class="col">
+        <!-- Column Room -->
+
+        <!-- Column Room Element -->
+        <div class="col-md-4 col-sm-12 mb-3">
             <div class="card border-0 ">
                 <div class="card-header text-light bg-secondary">
 
@@ -85,7 +90,13 @@
                             <span class="fs-4 text-wrap">Room Element</span>
                         </span>
                         <span class="">
-                            <img src="https://img.icons8.com/cotton/30/000000/add--v2.png" />
+                            <a href="#">
+                                <img class="icon_ud"
+                                    src="https://img.icons8.com/ios/20/ffffff/delete-forever--v2.png" />
+                            </a>
+                            <a href="#">
+                                <img src="https://img.icons8.com/cotton/30/000000/add--v2.png" />
+                            </a>
                         </span>
                     </div>
                 </div>
@@ -112,12 +123,6 @@
                                             <img class="icon_ud" src="https://img.icons8.com/ios/20/fff/edit-row.png" />
                                         </a>
                                     </span>
-                                    <span class="px-1">
-                                        <a href="#">
-                                            <img class="icon_ud"
-                                                src="https://img.icons8.com/ios/20/000000/delete-forever--v2.png" />
-                                        </a>
-                                    </span>
                                 </span>
                             </div>
                         </li>
@@ -127,16 +132,24 @@
                 </div>
             </div>
         </div>
-        <div class="col">
+        <!-- Column Room Element -->
+
+        <!-- Column Room Element Description -->
+        <div class="col-md-4 col-sm-12 mb-3">
             <div class="card">
                 <div class="card-header bg-info">
-
                     <div class="d-flex justify-content-between align-bottom">
                         <span class="align-bottom">
                             <span class="fs-4 text-wrap">Element Description</span>
                         </span>
                         <span class="">
-                            <img src="https://img.icons8.com/cotton/30/000000/add--v2.png" />
+                            <a href="#">
+                                <img class="icon_ud"
+                                    src="https://img.icons8.com/ios/20/000000/delete-forever--v2.png" />
+                            </a>
+                            <a href="#">
+                                <img src="https://img.icons8.com/cotton/30/000000/add--v2.png" />
+                            </a>
                         </span>
                     </div>
                 </div>
@@ -164,30 +177,11 @@
                                 </div>
                                 <div class="text-nowrap text-primary">
 
-                                    <span class="dropdown">
-
-                                        <a type="button" id="dropdownMenuButton2" data-bs-toggle="dropdown"
-                                            aria-expanded="false">
-                                            <img src="https://img.icons8.com/ios/24/000000/menu-2.png" />
+                                    <span class="px-1">
+                                        <a href="{% url 'update_room_item_desc' item.pk %}">
+                                            <img class="icon_ud" src="https://img.icons8.com/ios/20/fff/edit-row.png" />
                                         </a>
-                                        <ul class="dropdown-menu dropdown-menu-dark"
-                                            aria-labelledby="dropdownMenuButton2">
-                                            <li>
-                                                <a href="{% url 'update_room_item_desc' item.pk %}"
-                                                    class="dropdown-item">
-                                                    Update Estimate
-                                                </a>
-                                            </li>
-                                            <li>
-                                                <a class="dropdown-item" id="delete_button" data-bs-toggle="modal"
-                                                    data-bs-target="#deleteModal">
-                                                    Delete Estimate
-                                                </a>
-                                            </li>
-                                        </ul>
                                     </span>
-
-
 
                                 </div>
                             </div>
@@ -198,6 +192,8 @@
                 </div>
             </div>
         </div>
+        <!-- Column Room Element Description -->
+
     </div>
 </div>
 
