@@ -20,13 +20,23 @@ urlpatterns = [
 
     path("folio/", FolioView.as_view(), name="folio"),
 
+    path("folio/<int:pk>/update_room/",
+         UpdateRoomView.as_view(), name="update_room"),
+
+    path("folio/<int:pk>/update_room_item/",
+         UpdateRoomItemView.as_view(), name="update_room_item"),
+
+    path("folio/<int:pk>/update_room_item_desc/",
+         UpdateRoomItemDescriptionView.as_view(), name="update_room_item_desc"),
+
     path("clients/", ClientView.as_view(), name="clients"),
 
     path("clients/update/<int:pk>/<str:client_name>/",
          UpdateClientView.as_view(), name="update_client"),
 
-    path("estimate/<int:pk>/<str:project_name>/delete",DeleteEstimate, name="delete_estimate"),
+    path("estimate/<int:pk>/<str:project_name>/delete",
+         DeleteEstimate, name="delete_estimate"),
 
-    path("clients/<int:pk>/delete",DeleteClient, name="delete_client"),
+    path("clients/<int:pk>/delete", DeleteClient, name="delete_client"),
 
 ]

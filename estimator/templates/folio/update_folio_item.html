@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% load static %} {% load humanize %}
+
+{% block title %} - Estimate/Update{% endblock %}
+
+{% block body %}
+
+<div class="container-lg container-md container-sm py-4">
+    <div class="mx-auto">
+        <div class="row justify-content-center">
+            <div class="col-lg-7 col-md-6 col-xl-6">
+                <div class="card">
+
+                    <div class="card-header">
+                        <h5 class="card-title" id="{{expense.name}}expense">Update Estimate
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <form action="" method="POST">
+                            {% csrf_token %}
+
+
+                            {{form.as_p}}
+
+                            <button type="submit" class="btn btn-primary">
+                                Save changes
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

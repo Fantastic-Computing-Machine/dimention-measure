@@ -5,12 +5,25 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
 from django.core.paginator import Paginator
 from django.urls import reverse, reverse_lazy
-from django.views.generic import (CreateView, DeleteView, DetailView, ListView,
-                                  UpdateView)
+from django.views.generic import (
+    CreateView,
+    DeleteView,
+    DetailView,
+    ListView,
+    UpdateView
+)
 from django.shortcuts import get_object_or_404
 from django.shortcuts import HttpResponseRedirect
 from .models import *
-from .forms import NewProjectForm, NewEstimateItemForm, NewClientForm, UpdateProjectForm
+from .forms import (
+    NewProjectForm,
+    NewEstimateItemForm,
+    NewClientForm,
+    UpdateProjectForm,
+    NewRoomForm,
+    NewRoomItemForm,
+    NewRoomItemDescriptionForm,
+)
 
 
 class AllEstimates(LoginRequiredMixin, CreateView):
@@ -113,6 +126,33 @@ class FolioView(LoginRequiredMixin, CreateView):
         kwargs['room_item'] = room_item
         kwargs['room_item_description'] = room_item_description
         return super().get_context_data(**kwargs)
+
+
+class UpdateRoomView(LoginRequiredMixin, UpdateView):
+    login_url = '/user/login/'
+    redirect_field_name = 'redirect_to'
+    model = Room
+    form_class = NewRoomForm
+    template_name = 'folio/update_folio_item.html'
+    success_url = reverse_lazy('folio')
+
+
+class UpdateRoomItemView(LoginRequiredMixin, UpdateView):
+    login_url = '/user/login/'
+    redirect_field_name = 'redirect_to'
+    model = RoomItem
+    form_class = NewRoomItemForm
+    template_name = 'folio/update_folio_item.html'
+    success_url = reverse_lazy('folio')
+
+
+class UpdateRoomItemDescriptionView(LoginRequiredMixin, UpdateView):
+    login_url = '/user/login/'
+    redirect_field_name = 'redirect_to'
+    model = RoomItemDescription
+    form_class = NewRoomItemDescriptionForm
+    template_name = 'folio/update_folio_item.html'
+    success_url = reverse_lazy('folio')
 
 
 @login_required

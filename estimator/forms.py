@@ -213,6 +213,41 @@ class NewRoomItemForm(forms.ModelForm):
         )
 
 
+class NewRoomItemDescriptionForm(forms.ModelForm):
+    description = forms.CharField(
+        required=False,
+        widget=forms.Textarea(
+            attrs={
+                'class': 'form-control',
+                "rows": 3,
+                "aria-label": ".form-control-sm",
+                "placeholder": "Description",
+            }
+        )
+    )
+
+    rate = forms.CharField(
+        max_length=200,
+        required=False,
+        widget=forms.TextInput(
+            attrs={
+                'class': 'form-control',
+                "aria-label": ".form-control-sm",
+                "type": 'number',
+                "placeholder": "Rate",
+                "step": ".01",
+            }
+        )
+    )
+
+    class Meta:
+        model = RoomItemDescription
+        fields = (
+            'description',
+            'rate'
+        )
+
+
 class NewClientForm(forms.ModelForm):
 
     name = forms.CharField(
