@@ -139,7 +139,6 @@ def download_excel_view(request, project_id, project_name):
 
     dimension = Dimension.objects.filter(
         project__id=project_id, is_deleted=False)
-    print(dimension)
 
     for item in dimension:
 
@@ -159,7 +158,6 @@ def download_excel_view(request, project_id, project_name):
     sheet.append([""])
     sheet.append(['*Calculated using metrics in sqft.'])
 
-    print(file_path)
     workbook.save(filename=str(file_path))
     workbook.close()
     file_ecxel = FileResponse(open(file_path, 'rb'))

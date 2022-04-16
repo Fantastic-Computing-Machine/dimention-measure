@@ -151,7 +151,7 @@
 
                 <div>
                     <p class="h4">
-                        {{project.client.name}}
+                        {{project.client.name|title}}
                         <span class="h5">
                             (+91-{{project.client.phoneNumber}})
                         </span>
@@ -248,15 +248,12 @@
 
                         {% for item in all_estimates %}
                         <tr class="table align-middle">
-                            <td class="mx-2 col-5">
-                                <div>
+                            <td class="mx-2 fs-6 col-5">
+                                <b>
                                     {{item.room.name}}
-                                    <div>
-                                        {{item.room_item.name}}
-                                        <div>
-                                            {{item.room_item_description.description}}
-                                        </div>
-                                    </div>
+                                </b>- {{item.room_item.name}}
+                                <div class="text-wrap ps-2">
+                                    {{item.room_item_description.description}}
                                 </div>
                             </td>
                             <td class="text-center col-1">

@@ -87,7 +87,7 @@ class UpdateEstimateItemView(LoginRequiredMixin, UpdateView):
     form_class = NewEstimateItemForm
 
     def post(self, request, **kwargs):
-        req = request.POS
+        req = request.POST
         super(UpdateEstimateItemView, self).post(request, **kwargs)
         estimate = Estimate.objects.get(pk=self.kwargs['pk'])
 
@@ -172,7 +172,7 @@ class ClientView(LoginRequiredMixin, CreateView):
 
     def get_context_data(self, **kwargs):
         all_clients_object_list = Client.objects.filter(
-            is_deleted=False).order_by('-created_on')
+            is_deleted=False).order_by('name')
         kwargs['clients_list'] = all_clients_object_list
 
         return super(ClientView, self).get_context_data(**kwargs)
@@ -194,6 +194,7 @@ def DeleteClient(request, pk):
             is_deleted=True, deleted_on=datetime.now())
         return HttpResponseRedirect(reverse('clients'))
 
+
 @login_required
 def DeleteRoom(request):
     if request.method == 'POST':
@@ -204,6 +205,7 @@ def DeleteRoom(request):
 
         return HttpResponseRedirect(reverse('folio'))
 
+
 @login_required
 def DeleteRoomComponent(request):
     if request.method == 'POST':
@@ -213,6 +215,7 @@ def DeleteRoomComponent(request):
                 is_deleted=True, deleted_on=datetime.now())
 
         return HttpResponseRedirect(reverse('folio'))
+
 
 @login_required
 def DeleteComponentDescription(request):
