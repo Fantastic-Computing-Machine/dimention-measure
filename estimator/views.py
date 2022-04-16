@@ -193,3 +193,32 @@ def DeleteClient(request, pk):
         client = Client.objects.filter(pk=pk).update(
             is_deleted=True, deleted_on=datetime.now())
         return HttpResponseRedirect(reverse('clients'))
+
+@login_required
+def DeleteRoom(request):
+    if request.method == 'POST':
+        list_to_delete = request.POST.getlist('roomCheckbox')
+        for item in list_to_delete:
+            room = Room.objects.filter(pk=int(item)).update(
+                is_deleted=True, deleted_on=datetime.now())
+
+        return HttpResponseRedirect(reverse('folio'))
+
+@login_required
+def DeleteRoomComponent(request):
+    if request.method == 'POST':
+        list_to_delete = request.POST.getlist('roomElementCheckbox')
+        for item in list_to_delete:
+            room_item = RoomItem.objects.filter(pk=int(item)).update(
+                is_deleted=True, deleted_on=datetime.now())
+
+        return HttpResponseRedirect(reverse('folio'))
+
+@login_required
+def DeleteComponentDescription(request):
+    if request.method == 'POST':
+        list_to_delete = request.POST.getlist('elementDescriptionCheckbox')
+        for item in list_to_delete:
+            room_item_description = RoomItemDescription.objects.filter(
+                pk=int(item)).update(is_deleted=True, deleted_on=datetime.now())
+        return HttpResponseRedirect(reverse('folio'))

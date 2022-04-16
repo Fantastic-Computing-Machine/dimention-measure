@@ -39,4 +39,10 @@ urlpatterns = [
 
     path("clients/<int:pk>/delete", DeleteClient, name="delete_client"),
 
+    path("folio/delete/delete_room", DeleteRoom, name="delete_room"),
+
+    path("folio/delete/delete_room_component", DeleteRoomComponent, name="delete_room_component"),
+
+    path("folio/delete/delete_component_description", DeleteComponentDescription, name="delete_component_description"),
+
 ]

@@ -33,16 +33,20 @@
                             data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
                             <div class="text-dark">
                                 <div class="fs-4 text-wrap">Rooms</div>
-                                <div>
-                                    <a href="#">Delete selected</a>|
-                                    <a href="#">Add New</a>
-                                </div>
+
                             </div>
                         </button>
                     </h2>
                     <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne"
                         data-bs-parent="#accordianRoom">
                         <div class="accordion-body">
+                            <a class="align-bottom" data-bs-toggle="modal" data-bs-target="#deleteRoom{{item.id}}Modal">
+                                <img class="icon_ud" src="https://img.icons8.com/ios/30/000000/delete-forever--v2.png" />
+                            </a>
+                            <a href="#">
+                                <img class="px-2" src="https://img.icons8.com/ios/30/000000/add--v1.png" />
+                                
+                            </a>
                             <div class="folio_card">
                                 {% if rooms|length == 0 %}
                                 <div class=" text-center my-3">
@@ -54,25 +58,63 @@
                                 {% else %}
                                 <ul class="list-group">
                                     {% for item in rooms %}
-                                    <li class="list-group-item list-group-item-action">
-                                        <div class="d-flex justify-content-between align-items-start">
-                                            <div>{{item.name}}</div>
-                                            <span>
-                                                <span class="px-1">
-                                                    <a href="{% url 'update_room' item.pk %}">
-                                                        <img class="icon_ud"
-                                                            src="https://img.icons8.com/ios/20/fff/edit-row.png" />
-                                                    </a>
+                                    <form action="{% url 'delete_room' %}" id="formDeleteRoom" method="POST">
+                                        {% csrf_token %}
+                                        <li class="list-group-item list-group-item-action">
+                                            <div class="d-flex justify-content-between align-items-start">
+                                                <div class="form-check">
+                                                    <input class="form-check-input" name="roomCheckbox" type="checkbox"
+                                                        value="{{item.id}}" id="roomCheckbox_{{item.id}}">
+                                                    <label class="form-check-label" for="roomCheckbox_{{item.id}}">
+                                                        {{item.name}}
+                                                    </label>
+                                                </div>
+                                                <span>
+                                                    <span class="px-1">
+                                                        <a href="{% url 'update_room' item.pk %}">
+                                                            <img class="icon_ud"
+                                                                src="https://img.icons8.com/ios/20/fff/edit-row.png" />
+                                                        </a>
+                                                    </span>
                                                 </span>
-                                            </span>
-                                        </div>
-                                    </li>
-                                    {% endfor %}
+                                            </div>
+                                        </li>
+                                        {% endfor %}
+                                    </form>
                                 </ul>
+                                <div class="modal fade" id="deleteRoom{{item.id}}Modal" tabindex="-1"
+                                    aria-labelledby="deleteRoom{{item.id}}ModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="deleteRoom{{item.id}}ModalLabel">
+                                                    Confirm
+                                                    delete</h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                    aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body text-start">
+                                                You wish to permanently delete selected Rooms
+                                                ?<br>
+                                                <b class="my-1">Be Careful!</b>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-outline-success"
+                                                    data-bs-dismiss="modal">Get
+                                                    back to safety</button>
+                                                <button class="confirm_delete btn btn-danger align-bottom" type="submit"
+                                                    form="formDeleteRoom">
+                                                    Chop Chop!
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                                 {% endif %}
                             </div>
                         </div>
                     </div>
+
                 </div>
             </div>
 
@@ -88,10 +130,7 @@
 
                                 <div class="fs-4 text-wrap">Room Element</div>
                                 <div>
-                                    <div>
-                                        <a href="#">Delete selected</a>|
-                                        <a href="#">Add New</a>
-                                    </div>
+
                                 </div>
                             </div>
                         </button>
@@ -99,6 +138,13 @@
                     <div id="collapseTwo" class="accordion-collapse collapse show" aria-labelledby="headingTwo"
                         data-bs-parent="#accordianRoomItem">
                         <div class="accordion-body">
+                            <a class="align-bottom" data-bs-toggle="modal" data-bs-target="#deleteRoomComponent{{item.id}}Modal">
+                                <img class="icon_ud" src="https://img.icons8.com/ios/30/000000/delete-forever--v2.png" />
+                            </a>
+                            <a href="#">
+                                <img class="px-2" src="https://img.icons8.com/ios/30/000000/add--v1.png" />
+                                
+                            </a>
                             <div class="folio_card">
                                 {% if room_item|length == 0 %}
                                 <div class=" text-center my-3">
@@ -111,21 +157,61 @@
                                 {% else %}
                                 <ul class="list-group">
                                     {% for item in room_item %}
-                                    <li class="list-group-item list-group-item-action">
-                                        <div class="d-flex justify-content-between align-items-start">
-                                            <div>{{item.name}}</div>
-                                            <span>
-                                                <span class="px-1">
-                                                    <a href="{% url 'update_room_item' item.pk %}">
-                                                        <img class="icon_ud"
-                                                            src="https://img.icons8.com/ios/20/fff/edit-row.png" />
-                                                    </a>
+                                    <form action="{% url 'delete_room_component' %}" id="formDeleteRoomComponent"
+                                        method="POST">
+                                        {% csrf_token %}
+                                        <li class="list-group-item list-group-item-action">
+                                            <div class="d-flex justify-content-between align-items-start">
+                                                <div class="form-check">
+                                                    <input class="form-check-input" name="roomElementCheckbox"
+                                                        type="checkbox" value="{{item.id}}"
+                                                        id="roomElementCheckbox_{{item.id}}">
+                                                    <label class="form-check-label"
+                                                        for="roomElementCheckbox_{{item.id}}">
+                                                        {{item.name}}
+                                                    </label>
+                                                </div>
+                                                <span>
+                                                    <span class="px-1">
+                                                        <a href="{% url 'update_room_item' item.pk %}">
+                                                            <img class="icon_ud"
+                                                                src="https://img.icons8.com/ios/20/fff/edit-row.png" />
+                                                        </a>
+                                                    </span>
                                                 </span>
-                                            </span>
-                                        </div>
-                                    </li>
-                                    {% endfor %}
+                                            </div>
+                                        </li>
+                                        {% endfor %}
+                                    </form>
                                 </ul>
+                                <div class="modal fade" id="deleteRoomComponent{{item.id}}Modal" tabindex="-1"
+                                    aria-labelledby="deleteRoomComponent{{item.id}}ModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="deleteRoomComponent{{item.id}}ModalLabel">
+                                                    Confirm
+                                                    delete</h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                    aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body text-start">
+                                                You wish to permanently delete selected Room Components
+                                                ?<br>
+                                                <b class="my-1">Be Careful!</b>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-outline-success"
+                                                    data-bs-dismiss="modal">Get
+                                                    back to safety</button>
+                                                <button class="confirm_delete btn btn-danger align-bottom" type="submit"
+                                                    form="formDeleteRoomComponent">
+                                                    Chop Chop!
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                                 {% endif %}
                             </div>
                         </div>
@@ -144,16 +230,20 @@
                             data-bs-target="#collapseThree" aria-expanded="true" aria-controls="collapseThree">
                             <div class="text-dark">
                                 <div class="fs-4 text-wrap">Element Description</div>
-                                <div>
-                                    <a href="#">Delete selected</a>|
-                                    <a href="#">Add New</a>
-                                </div>
+
                             </div>
                         </button>
                     </h2>
                     <div id="collapseThree" class="accordion-collapse collapse show" aria-labelledby="headingThree"
                         data-bs-parent="#accordianRoomItemDesc">
                         <div class="accordion-body">
+                            <a class="align-bottom" data-bs-toggle="modal" data-bs-target="#deleteComponentDescription{{item.id}}Modal">
+                                <img class="icon_ud" src="https://img.icons8.com/ios/30/000000/delete-forever--v2.png" />
+                            </a>
+                            <a href="#">
+                                <img class="px-2" src="https://img.icons8.com/ios/30/000000/add--v1.png" />
+                                
+                            </a>
                             <div class="folio_card">
                                 {% if room_item_description|length == 0 %}
                                 <div class=" text-center my-3">
@@ -166,28 +256,67 @@
                                 {% else %}
                                 <ul class="list-group">
                                     {% for item in room_item_description %}
-                                    <li href="#" class="list-group-item list-group-item-action">
-                                        <div class="d-flex justify-content-between">
-                                            <div class="text-wraps">
-                                                <span class="px-1">
-                                                    {{item.description}} @
-                                                    <span class="text-primary">
-                                                        ₹ {{item.rate}}
+                                    <form action="{% url 'delete_component_description' %}"
+                                        id="formDeleteComponentDescription" method="POST">
+                                        {% csrf_token %}
+                                        <li href="#" class="list-group-item list-group-item-action">
+                                            <div class="d-flex justify-content-between">
+                                                <div class="form-check text-wraps">
+                                                    <input class="form-check-input" name="elementDescriptionCheckbox"
+                                                        type="checkbox" value="{{item.id}}"
+                                                        id="elementDescriptionCheckbox_{{item.id}}">
+                                                    <label class="form-check-label"
+                                                        for="elementDescriptionCheckbox_{{item.id}}">
+                                                        <span class="px-1">
+                                                            {{item.description}} @
+                                                            <span class="text-primary">
+                                                                ₹ {{item.rate}}
+                                                            </span>
+                                                        </span>
+                                                    </label>
+                                                </div>
+
+                                                <div class="text-nowrap text-primary">
+                                                    <span class="px-1">
+                                                        <a href="{% url 'update_room_item_desc' item.pk %}">
+                                                            <img class="icon_ud"
+                                                                src="https://img.icons8.com/ios/20/fff/edit-row.png" />
+                                                        </a>
                                                     </span>
-                                                </span>
+                                                </div>
                                             </div>
-                                            <div class="text-nowrap text-primary">
-                                                <span class="px-1">
-                                                    <a href="{% url 'update_room_item_desc' item.pk %}">
-                                                        <img class="icon_ud"
-                                                            src="https://img.icons8.com/ios/20/fff/edit-row.png" />
-                                                    </a>
-                                                </span>
+                                        </li>
+                                        {% endfor %}
+                                    </form>
+                                </ul>
+                                <div class="modal fade" id="deleteComponentDescription{{item.id}}Modal" tabindex="-1"
+                                    aria-labelledby="deleteComponentDescription{{item.id}}ModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="deleteComponentDescription{{item.id}}ModalLabel">
+                                                    Confirm
+                                                    delete</h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                    aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body text-start">
+                                                You wish to permanently delete selected Component Descriptions
+                                                ?<br>
+                                                <b class="my-1">Be Careful!</b>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-outline-success"
+                                                    data-bs-dismiss="modal">Get
+                                                    back to safety</button>
+                                                <button class="confirm_delete btn btn-danger align-bottom" type="submit"
+                                                    form="formDeleteComponentDescription">
+                                                    Chop Chop!
+                                                </button>
                                             </div>
                                         </div>
-                                    </li>
-                                    {% endfor %}
-                                </ul>
+                                    </div>
+                                </div>
                                 {% endif %}
                             </div>
                         </div>
