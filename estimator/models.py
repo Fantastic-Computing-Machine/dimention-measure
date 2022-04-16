@@ -158,7 +158,7 @@ class Project(models.Model):
 
     def total_amount(self):
         estimates = Estimate.objects.filter(project=self, is_deleted=False)
-        sum_amount = sum(item.amount for item in estimates)
+        sum_amount = sum(item.calculate_amount() for item in estimates)
         return sum_amount
 
     def gst_amount(self):
@@ -202,6 +202,9 @@ class Estimate(models.Model):
         self.amount = decimal.Decimal(
             self.quantity) * self.room_item_description.rate
         return super(Estimate, self).save()
+
+    def calculate_amount(self):
+        return decimal.Decimal(self.quantity) * self.room_item_description.rate
 
     def get_absolute_url(self):
         return reverse("estimate", args=[str(self.project.pk), str(self.project.name)])
