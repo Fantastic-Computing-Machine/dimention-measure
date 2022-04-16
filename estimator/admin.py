@@ -73,7 +73,7 @@ class ClientAdmin(admin.ModelAdmin):
 class EstimateAdmin(admin.ModelAdmin):
     list_display = ["id",
                     "project", "room", "room_item",
-                    "room_item_description",  "unit", "quantity", "amount"
+                    "room_item_description", "quantity", "amount"
                     ]
     search_fields = [
         "project__name",
@@ -83,17 +83,12 @@ class EstimateAdmin(admin.ModelAdmin):
         "room_item_description__rate",
     ]
 
-    # x = ["id",
-    #      "project__name", "project__client__name", "room__name", "room_item__name",
-    #      "room_item_description__rate",  "unit__unit", "quantity", "amount"
-    #      ]
-    # search_help_text = "Search by Fields: Name, Phone Number, city, state, zip_code"
     date_hierarchy = "created_on"
     ordering = ["-created_on"]
     show_full_result_count = True
     list_display_links = ["id",
                           "project", "room", "room_item",
-                          "room_item_description",  "unit", "quantity", "amount"
+                          "room_item_description", "quantity", "amount"
                           ]
 
 

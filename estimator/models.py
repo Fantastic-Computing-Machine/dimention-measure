@@ -46,6 +46,13 @@ STATE_CHOICES = (
 )
 
 
+class Unit(models.Model):
+    unit = models.CharField(max_length=255)
+
+    def __str__(self):
+        return str(self.unit)
+
+
 class Room(models.Model):
     name = models.CharField(
         max_length=255, unique=True)
@@ -78,10 +85,12 @@ class RoomItem(models.Model):
 
 class RoomItemDescription(models.Model):
     description = models.TextField(blank=True, null=True)
+    rate = models.DecimalField(max_digits=10, decimal_places=2)
+    unit = models.ForeignKey(
+        Unit, on_delete=models.CASCADE, blank=True, null=True, default=1)
     created_on = models.DateTimeField(auto_now_add=True)
     is_deleted = models.BooleanField(default=False)
     deleted_on = models.DateTimeField(blank=True, null=True)
-    rate = models.DecimalField(max_digits=10, decimal_places=2)
 
     def __str__(self):
         return str(self.description) + " @ " + str(self.rate)
@@ -171,21 +180,12 @@ class Project(models.Model):
         return reverse("estimate", args=[str(self.pk), str(self.name)])
 
 
-class Unit(models.Model):
-    unit = models.CharField(max_length=255)
-
-    def __str__(self):
-        return str(self.unit)
-
-
 class Estimate(models.Model):
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
     room = models.ForeignKey(Room, on_delete=models.CASCADE)
     room_item = models.ForeignKey(RoomItem, on_delete=models.CASCADE)
     room_item_description = models.ForeignKey(
         RoomItemDescription, on_delete=models.CASCADE)
-    unit = models.ForeignKey(
-        Unit, on_delete=models.CASCADE, blank=True, null=True, default=1)
     quantity = models.DecimalField(
         max_digits=10, decimal_places=2, blank=True, null=True)
     amount = models.DecimalField(

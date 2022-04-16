@@ -238,7 +238,7 @@
                     <table class="table table-bordered table-hover table-sm">
                         <thead class="table-primary align-middle row-cols-auto">
                             <th class="text-center mx-2 text-nowrap">Description</th>
-                            <th class="text-center mx-2 text-nowrap">Unit</th>
+                            <!-- <th class="text-center mx-2 text-nowrap">Unit</th> -->
                             <th class="text-center mx-2 text-nowrap">Quantity</th>
                             <th class="text-center mx-2 text-nowrap">Rate</th>
                             <th class="text-center mx-2 text-nowrap">Amount</th>
@@ -257,13 +257,10 @@
                                 </div>
                             </td>
                             <td class="text-center col-1">
-                                {{item.unit.unit}}
-                            </td>
-                            <td class="text-center col-1">
                                 {{item.quantity}}
                             </td>
                             <td class="text-center col-1">
-                                {{item.room_item_description.rate}}
+                                {{item.room_item_description.rate}} / {{item.room_item_description.unit.unit}}
                             </td>
                             <td class="text-center col-1">
                                 {{item.calculate_amount | floatformat:2}}
