@@ -269,7 +269,7 @@
                                 {{item.room_item_description.rate}}
                             </td>
                             <td class="text-center col-1">
-                                {{item.calculate_amount}}
+                                {{item.calculate_amount | floatformat:2}}
                             </td>
                             <td class="text-center col-1">
                                 <a href="{% url 'update_estimate_item' item.id project.id project.name %}">
@@ -340,7 +340,7 @@
                                     Grand Total
                                 </div>
                                 <span class="badge bg-info fs-6 font-monospace">₹
-                                    {{project.total_amount|intcomma}}</span>
+                                    {{project.total_amount|intcomma | floatformat:2}}</span>
                             </div>
                         </li>
                         <li class="list-group-item list-group-item-action list-group-item-primary">
@@ -349,7 +349,7 @@
                                     GST @ 18%
                                 </div>
                                 <span class="badge bg-primary fs-6 font-monospace">
-                                    ₹ {{project.gst_amount|intcomma}}
+                                    ₹ {{project.gst_amount|intcomma | floatformat:2}}
                                 </span>
                             </div>
                         </li>
@@ -360,7 +360,7 @@
                                     Grand Total after GST
                                 </div>
                                 <span class="badge bg-success fs-6 my-auto font-monospace">
-                                    ₹ {{project.total_with_gst|intcomma}}</span>
+                                    ₹ {{project.total_with_gst|intcomma | floatformat:2}}</span>
                             </div>
                         </li>
                     </p>
