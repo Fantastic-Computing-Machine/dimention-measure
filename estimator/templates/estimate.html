@@ -340,7 +340,7 @@
                                     Grand Total
                                 </div>
                                 <span class="badge bg-info fs-6 font-monospace">₹
-                                    {{project.total_amount|intcomma | floatformat:2}}</span>
+                                    {{project.total_amount|floatformat:2|intcomma}}</span>
                             </div>
                         </li>
                         <li class="list-group-item list-group-item-action list-group-item-primary">
@@ -349,7 +349,7 @@
                                     GST @ 18%
                                 </div>
                                 <span class="badge bg-primary fs-6 font-monospace">
-                                    ₹ {{project.gst_amount|intcomma | floatformat:2}}
+                                    ₹ {{project.gst_amount|floatformat:2|intcomma}}
                                 </span>
                             </div>
                         </li>
@@ -360,7 +360,7 @@
                                     Grand Total after GST
                                 </div>
                                 <span class="badge bg-success fs-6 my-auto font-monospace">
-                                    ₹ {{project.total_with_gst|intcomma | floatformat:2}}</span>
+                                    ₹ {{project.total_with_gst|floatformat:2|intcomma}}</span>
                             </div>
                         </li>
                     </p>
