@@ -16,7 +16,7 @@ from django.views.generic import (
     TemplateView,
 )
 from django.urls import reverse_lazy, reverse
-
+import os
 import datetime
 from openpyxl import Workbook
 import re
@@ -162,8 +162,9 @@ def download_excel_view(request, project_id, project_name):
     print(file_path)
     workbook.save(filename=str(file_path))
     workbook.close()
-
-    return FileResponse(open(file_path, 'rb'))
+    file_ecxel = FileResponse(open(file_path, 'rb'))
+    delete_file = os.remove(file_path)
+    return file_ecxel
 
 
 class MongoDatabase:
