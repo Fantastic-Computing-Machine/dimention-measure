@@ -112,7 +112,7 @@ class Client(models.Model):
         return str(self.name) + ' | ' + str(self.phoneNumber)
 
     def save(self):
-        self.name = self.name.replace(" ", "-").strip()
+        self.name = self.name.replace(" ", "-").strip().lower()
         if self.description:
             self.description = self.description.strip()
         self.address_1 = self.address_1.strip()

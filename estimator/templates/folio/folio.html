@@ -40,13 +40,19 @@
                     <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne"
                         data-bs-parent="#accordianRoom">
                         <div class="accordion-body">
-                            <a class="align-bottom" data-bs-toggle="modal" data-bs-target="#deleteRoom{{item.id}}Modal">
-                                <img class="icon_ud" src="https://img.icons8.com/ios/30/000000/delete-forever--v2.png" />
-                            </a>
-                            <a href="#">
-                                <img class="px-2" src="https://img.icons8.com/ios/30/000000/add--v1.png" />
-                                
-                            </a>
+                            <div class="d-flex justify-content-between">
+                                <span class="pb-2">
+                                    <a href="#" class="btn btn-primary btn-sm">
+                                        Add New
+                                    </a>
+                                </span>
+                                <span class="pb-2">
+                                    <a data-bs-toggle="modal" class="btn btn-outline-danger btn-sm"
+                                        data-bs-target="#deleteRoom{{item.id}}Modal">
+                                        Delete Selected
+                                    </a>
+                                </span>
+                            </div>
                             <div class="folio_card">
                                 {% if rooms|length == 0 %}
                                 <div class=" text-center my-3">
@@ -138,13 +144,19 @@
                     <div id="collapseTwo" class="accordion-collapse collapse show" aria-labelledby="headingTwo"
                         data-bs-parent="#accordianRoomItem">
                         <div class="accordion-body">
-                            <a class="align-bottom" data-bs-toggle="modal" data-bs-target="#deleteRoomComponent{{item.id}}Modal">
-                                <img class="icon_ud" src="https://img.icons8.com/ios/30/000000/delete-forever--v2.png" />
-                            </a>
-                            <a href="#">
-                                <img class="px-2" src="https://img.icons8.com/ios/30/000000/add--v1.png" />
-                                
-                            </a>
+                            <div class="d-flex justify-content-between">
+                                <span class="pb-2">
+                                    <a href="#" class="btn btn-primary btn-sm">
+                                        Add New
+                                    </a>
+                                </span>
+                                <span class="pb-2">
+                                    <a data-bs-toggle="modal" class="btn btn-outline-danger btn-sm"
+                                        data-bs-target="#deleteRoomComponent{{item.id}}Modal">
+                                        Delete Selected
+                                    </a>
+                                </span>
+                            </div>
                             <div class="folio_card">
                                 {% if room_item|length == 0 %}
                                 <div class=" text-center my-3">
@@ -237,13 +249,19 @@
                     <div id="collapseThree" class="accordion-collapse collapse show" aria-labelledby="headingThree"
                         data-bs-parent="#accordianRoomItemDesc">
                         <div class="accordion-body">
-                            <a class="align-bottom" data-bs-toggle="modal" data-bs-target="#deleteComponentDescription{{item.id}}Modal">
-                                <img class="icon_ud" src="https://img.icons8.com/ios/30/000000/delete-forever--v2.png" />
-                            </a>
-                            <a href="#">
-                                <img class="px-2" src="https://img.icons8.com/ios/30/000000/add--v1.png" />
-                                
-                            </a>
+                            <div class="d-flex justify-content-between">
+                                <span class="pb-2">
+                                    <a href="#" class="btn btn-primary btn-sm">
+                                        Add New
+                                    </a>
+                                </span>
+                                <span class="pb-2">
+                                    <a data-bs-toggle="modal" class="btn btn-outline-danger btn-sm"
+                                        data-bs-target="#deleteComponentDescription{{item.id}}Modal">
+                                        Delete Selected
+                                    </a>
+                                </span>
+                            </div>
                             <div class="folio_card">
                                 {% if room_item_description|length == 0 %}
                                 <div class=" text-center my-3">
@@ -290,11 +308,13 @@
                                     </form>
                                 </ul>
                                 <div class="modal fade" id="deleteComponentDescription{{item.id}}Modal" tabindex="-1"
-                                    aria-labelledby="deleteComponentDescription{{item.id}}ModalLabel" aria-hidden="true">
+                                    aria-labelledby="deleteComponentDescription{{item.id}}ModalLabel"
+                                    aria-hidden="true">
                                     <div class="modal-dialog">
                                         <div class="modal-content">
                                             <div class="modal-header">
-                                                <h5 class="modal-title" id="deleteComponentDescription{{item.id}}ModalLabel">
+                                                <h5 class="modal-title"
+                                                    id="deleteComponentDescription{{item.id}}ModalLabel">
                                                     Confirm
                                                     delete</h5>
                                                 <button type="button" class="btn-close" data-bs-dismiss="modal"

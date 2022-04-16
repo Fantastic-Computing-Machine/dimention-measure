@@ -146,7 +146,6 @@ class UpdateExpenseView(LoginRequiredMixin, UpdateView):
         return super(UpdateExpenseView, self).get_context_data(**kwargs)
 
     def post(self, request, **kwargs):
-        print(request.POST)
         expense = Expense.objects.filter(id=self.kwargs['pk']).update(
             amount=request.POST['amount'],
             payment_status=request.POST['payment_status']
