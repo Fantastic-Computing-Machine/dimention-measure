@@ -111,7 +111,9 @@
                     <tr class="table align-middle">
                         <td class="mx-2 font-monospace">{{item.name | capfirst }}
                             <div class="text-muted">
-                                {{item.description}}
+                                {% if item.description %}
+                                    {{item.description}}
+                                {% endif %}
                             </div>
                         </td>
                         <td class="text-center mx-2 font-monospace text-nowrap">
