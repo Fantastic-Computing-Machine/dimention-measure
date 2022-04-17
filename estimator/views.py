@@ -12,6 +12,7 @@ from django.views.generic import (
     ListView,
     UpdateView
 )
+from django.views.generic.edit import ModelFormMixin, FormMixin
 from django.shortcuts import get_object_or_404
 from django.shortcuts import HttpResponseRedirect
 from .models import *
@@ -26,25 +27,49 @@ from .forms import (
 )
 
 
-class AllEstimates(LoginRequiredMixin, CreateView):
+# class AllEstimates(LoginRequiredMixin, CreateView):
+#     login_url = '/user/login/'
+#     redirect_field_name = 'redirect_to'
+#     model = Project
+#     form_class = NewProjectForm
+#     template_name = 'estimates_home.html'
+
+#     def get_context_data(self, **kwargs):
+#         all_projects_object_list = Project.objects.filter(
+#             is_deleted=False).order_by('-created_on')
+#         kwargs['projects_list'] = all_projects_object_list
+
+#         return super(AllEstimates, self).get_context_data(**kwargs)
+
+#     def post(self, request, **kwargs):
+#         request.POST._mutable = True
+#         request.POST["author"] = request.session["_auth_user_id"]
+#         request.POST._mutable = False
+#         return super(AllEstimates, self).post(request, **kwargs)
+
+
+class AllEstimates(LoginRequiredMixin, FormMixin, ListView):
     login_url = '/user/login/'
     redirect_field_name = 'redirect_to'
     model = Project
     form_class = NewProjectForm
+    context_object_name = 'projects_list'
     template_name = 'estimates_home.html'
+    success_url = reverse_lazy('all_estimates')
+    paginate_by = 20
 
-    def get_context_data(self, **kwargs):
-        all_projects_object_list = Project.objects.filter(
-            is_deleted=False).order_by('-created_on')
-        kwargs['projects_list'] = all_projects_object_list
-
-        return super(AllEstimates, self).get_context_data(**kwargs)
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        return queryset.filter(is_deleted=False).order_by('-created_on')
 
     def post(self, request, **kwargs):
         request.POST._mutable = True
         request.POST["author"] = request.session["_auth_user_id"]
         request.POST._mutable = False
-        return super(AllEstimates, self).post(request, **kwargs)
+        form = NewProjectForm(request.POST)
+        if form.is_valid():
+            form.save()
+        return HttpResponseRedirect(reverse('all_estimates'))
 
 
 class UpdateEstimateProjectView(LoginRequiredMixin, UpdateView):
