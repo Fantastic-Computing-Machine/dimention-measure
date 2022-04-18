@@ -12,7 +12,7 @@ from django.views.generic import (
     ListView,
     UpdateView
 )
-from django.views.generic.edit import ModelFormMixin, FormMixin
+from django.views.generic.edit import FormMixin
 from django.shortcuts import get_object_or_404
 from django.shortcuts import HttpResponseRedirect
 from .models import *
@@ -56,7 +56,7 @@ class AllEstimates(LoginRequiredMixin, FormMixin, ListView):
     context_object_name = 'projects_list'
     template_name = 'estimates_home.html'
     success_url = reverse_lazy('all_estimates')
-    paginate_by = 20
+    paginate_by = 15
 
     def get_queryset(self):
         queryset = super().get_queryset()

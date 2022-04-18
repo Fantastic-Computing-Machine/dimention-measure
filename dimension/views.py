@@ -14,6 +14,7 @@ from django.views.generic import (
     UpdateView,
     DeleteView,
     TemplateView,
+    ListView,
 )
 from django.urls import reverse_lazy, reverse
 import os
@@ -25,26 +26,37 @@ from .forms import NewProjectForm, NewDimensionForm, DeleteProjectForm
 from .forms import UpdateDimensionForm
 from .models import Project, Dimension
 
+from django.views.generic.edit import FormMixin
 
-class HomeView(LoginRequiredMixin, CreateView):
+
+class HomeView(LoginRequiredMixin, FormMixin, ListView):
     login_url = '/user/login/'
     redirect_field_name = 'redirect_to'
-    form_class = NewProjectForm
     model = Project
-    success_url = reverse_lazy("home")
+    form_class = NewProjectForm
+    context_object_name = 'projects_list'
     template_name = 'index.html'
+    success_url = reverse_lazy("home")
+    paginate_by = 15
 
-    def get_context_data(self, *args, **kwargs):
-        context = super(HomeView, self).get_context_data(*args, **kwargs)
-        context["projects_list"] = Project.objects.filter(
-            is_deleted=False).order_by('-created_on')
-        return context
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        return queryset.filter(is_deleted=False).order_by('-created_on')
+
+    # def get_context_data(self, *args, **kwargs):
+    #     context = super(HomeView, self).get_context_data(*args, **kwargs)
+    #     context["projects_list"] = Project.objects.filter(
+    #         is_deleted=False).order_by('-created_on')
+    #     return context
 
     def post(self, request, **kwargs):
         request.POST._mutable = True
         request.POST["author"] = request.session["_auth_user_id"]
         request.POST._mutable = False
-        return super(HomeView, self).post(request, **kwargs)
+        form = NewProjectForm(request.POST)
+        if form.is_valid():
+            form.save()
+        return HttpResponseRedirect(reverse('home'))
 
 
 class ProjectView(LoginRequiredMixin, CreateView):
