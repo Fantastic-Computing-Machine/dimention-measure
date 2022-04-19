@@ -5,10 +5,6 @@
 {% block title %} - Expenses {% endblock %}
 
 
-{% block head %}
-
-{% endblock %}
-
 {% block header %}
 
 <!-- new payee modal trigger -->
@@ -16,9 +12,9 @@
     <li class="nav-item">
         <a data-bs-toggle="modal" data-bs-target="#newPayee" class="nav-link active text-light" aria-current="page">
             <span class="align-bottom">
-                <span class="px-1">
+                <!-- <span class="px-1">
                     <img alt="new_payee" src="https://img.icons8.com/ios/25/ffffff/user--v3.png" />
-                </span>
+                </span> -->
                 New Payee
             </span>
         </a>
@@ -28,8 +24,7 @@
 
 {% endblock %}
 
-
-{% block body %}
+{% block modal %}
 
 <!-- new payee modal -->
 <div class="modal fade" id="newPayee" tabindex="-1" aria-labelledby="newPayeeLabel" aria-hidden="true">
@@ -53,9 +48,13 @@
 </div>
 <!-- new payee modal -->
 
-<div class="container px-3">
+{% endblock %}
+
+
+{% block body %}
+<div class="container pb-4">
     <div class="text-light py-2 display-4">All Expenses</div>
-    <div class="row flex-md-row-reverse py-3" dir="rtl">
+    <div class="row flex-md-row-reverse pb-3" dir="rtl">
         <div class="col-md-6 col_height">
 
             <!-- SUM CARD -->
