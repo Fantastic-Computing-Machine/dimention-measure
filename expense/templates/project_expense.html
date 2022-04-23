@@ -85,7 +85,7 @@
                             <select name="payee" class="form-select" aria-label=".form-control-sm" placeholder="Payee"
                                 required id="id_payee">
                                 <option value="" selected>---------</option>
-                                {% for item in payees %}
+                                {% for item in all_payees %}
                                 <option value="{{item.id}}">{{item.name}} | {{item.phoneNumber}}</option>
                                 {% endfor %}
                             </select>

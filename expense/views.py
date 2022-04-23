@@ -130,11 +130,16 @@ class ProjectExpenseView(LoginRequiredMixin, FormMixin, ListView):
         return HttpResponseRedirect(reverse('project_expense', kwargs={'project_id': self.kwargs['project_id'], 'project_name': self.kwargs['project_name'], }))
 
     def get_context_data(self, **kwargs):
-        payees = Payee.objects.filter(
-            expense__project__id=self.kwargs['project_id'], expense__is_deleted=False).order_by('-created_on').distinct()
+        all_payees = Payee.objects.filter(
+            expense__is_deleted=False).order_by('-created_on').distinct()
+
+        payees = all_payees.filter(
+            expense__project__id=self.kwargs['project_id'])
+
         expenses = Expense.objects.filter(
             project__id=self.kwargs['project_id'], is_deleted=False).order_by('-created_on')
         kwargs['payees'] = payees
+        kwargs['all_payees'] = all_payees
         kwargs['project_name'] = self.kwargs['project_name']
         kwargs['project_id'] = self.kwargs['project_id']
 
