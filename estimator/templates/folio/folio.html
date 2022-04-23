@@ -42,8 +42,9 @@
                         <div class="accordion-body">
                             <div class="d-flex justify-content-between">
                                 <span class="pb-2">
-                                    <a href="#" class="btn btn-primary btn-sm">
-                                        Add New
+                                    <a type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal"
+                                        data-bs-target="#addRoomModal">
+                                        Add new
                                     </a>
                                 </span>
                                 <span class="pb-2">
@@ -123,7 +124,42 @@
 
                 </div>
             </div>
+            <!-- add room  -->
+            <div class="modal fade" id="addRoomModal" tabindex="-1" aria-labelledby="expenseModalLabel" width="75%"
+                aria-hidden="true">
+                <div class="modal-dialog">
+                    <form action="{% url 'add_room'%}" method="POST" name="new_expense" id="expense">
+                        <div class="mx-auto">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="staticBackdropLabel">Add Room</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                        aria-label="Close"></button>
+                                </div>
 
+                                <div class="modal-body">
+                                    {% csrf_token %}
+                                       
+                                    <p>
+                                        <label for="roomName">Room Name</label>
+                                        <input name = "name" type="text" class="form-control" id="name"
+                                            placeholder="Enter Room Name">
+                                    </p>
+                                </div>
+
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary"
+                                        data-bs-dismiss="modal">Close</button>
+                                    <button type="submit" name="new_expense" value="expenseModal" id="expenseModal"
+                                        class="btn btn-success">Save</button>
+
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <!-- add room -->
         </div>
 
         <div class="col-md-4 col-sm-12 mb-3">
@@ -134,7 +170,7 @@
                             data-bs-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
                             <div class="text-dark">
 
-                                <div class="fs-4 text-wrap">Room Element</div>
+                                <div class="fs-4 text-wrap">Room Component</div>
                                 <div>
 
                                 </div>
@@ -146,8 +182,9 @@
                         <div class="accordion-body">
                             <div class="d-flex justify-content-between">
                                 <span class="pb-2">
-                                    <a href="#" class="btn btn-primary btn-sm">
-                                        Add New
+                                    <a type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal"
+                                        data-bs-target="#add_room_components">
+                                        Add new
                                     </a>
                                 </span>
                                 <span class="pb-2">
@@ -230,7 +267,43 @@
                     </div>
                 </div>
             </div>
+            <!-- add room Component element -->
+            <div class="modal fade" id="add_room_components" tabindex="-1" aria-labelledby="expenseModalLabel" width="75%"
+                aria-hidden="true">
+                <div class="modal-dialog">
+                    <form action="{% url 'add_room_component'%}" method="POST" name="new_expense" id="expense">
+                        <div class="mx-auto">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="staticBackdropLabel">Add Room Element</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                        aria-label="Close"></button>
+                                </div>
 
+                                <div class="modal-body">
+                                    {% csrf_token %}
+                                    <p>
+                                        <label for="roomName">Room Component Name</label>
+                                        <input name = "name" type="text" class="form-control" id="name"
+                                            placeholder="Enter Room Component Name">
+                                    </p>
+
+
+                                </div>
+
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary"
+                                        data-bs-dismiss="modal">Close</button>
+                                    <button type="submit" name="new_expense" value="expenseModal" id="expenseModal"
+                                        class="btn btn-success">Save</button>
+
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <!-- add room element -->
         </div>
 
 
@@ -251,8 +324,9 @@
                         <div class="accordion-body">
                             <div class="d-flex justify-content-between">
                                 <span class="pb-2">
-                                    <a href="#" class="btn btn-primary btn-sm">
-                                        Add New
+                                    <a type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal"
+                                        data-bs-target="#addRoomDesc">
+                                        Add new
                                     </a>
                                 </span>
                                 <span class="pb-2">
@@ -343,6 +417,61 @@
                     </div>
                 </div>
             </div>
+            <!-- add room desc  -->
+            <div class="modal fade" id="addRoomDesc" tabindex="-1" aria-labelledby="expenseModalLabel" width="75%"
+                aria-hidden="true">
+                <div class="modal-dialog">
+                    <form action="{% url 'add_component_description'%}" method="POST" name="new_expense" id="expense">
+                        <div class="mx-auto">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="staticBackdropLabel">Add Room Desc</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                        aria-label="Close"></button>
+                                </div>
+
+                                <div class="modal-body">
+                                    {% csrf_token %}
+                                    <p>
+                                        <label for="roomName">Room Component Description</label>
+                                        <input name = "description" type="text" class="form-control" id="description"
+                                            placeholder="Enter Room Component Name">
+                                    </p>
+                                    
+                                    <p>
+                                        <label for="rate">Rate</label>
+                                        <input type="number" name="rate" class="form-control"
+                                            aria-label=".form-control-sm" placeholder="Enter Rate" step=".01"
+                                            maxlength="200" id="rate">
+                                    </p>
+                                    <p>
+                                        <label for="unit">Unit</label>
+                                        <select name="unit" class="form-select" aria-label=".form-control-sm"
+                                            placeholder="Unit" maxlength="100" id="unit">
+                                            <option value="" selected>---------</option>
+                                            <option value="1">Sqft</option>
+                                            <option value="2">Rft</option>
+                                            <option value="3">LS</option>
+                                            <option value="4">No.</option>
+                                        </select>
+                                    </p>
+
+
+                                </div>
+
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary"
+                                        data-bs-dismiss="modal">Close</button>
+                                    <button type="submit" name="new_expense" value="expenseModal" id="expenseModal"
+                                        class="btn btn-success">Save</button>
+
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <!-- add room desc -->
         </div>
 
     </div>

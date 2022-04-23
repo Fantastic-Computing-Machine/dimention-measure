@@ -41,8 +41,17 @@ urlpatterns = [
 
     path("folio/delete/delete_room", DeleteRoom, name="delete_room"),
 
-    path("folio/delete/delete_room_component", DeleteRoomComponent, name="delete_room_component"),
+    path("folio/delete/delete_room_component",
+         DeleteRoomComponent, name="delete_room_component"),
 
-    path("folio/delete/delete_component_description", DeleteComponentDescription, name="delete_component_description"),
+    path("folio/delete/delete_component_description",
+         DeleteComponentDescription, name="delete_component_description"),
+
+    path("folio/add_room", AddRoom, name="add_room"),
+
+    path("folio/add_room_component", AddRoomItem, name="add_room_component"),
+
+    path("folio/add_component_description",
+         AddRoomItemDescription, name="add_component_description"),
 
 ]

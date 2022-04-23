@@ -262,3 +262,28 @@ def DeleteComponentDescription(request):
             room_item_description = RoomItemDescription.objects.filter(
                 pk=int(item)).update(is_deleted=True, deleted_on=datetime.now())
         return HttpResponseRedirect(reverse('folio'))
+
+@login_required
+def AddRoom(request):
+    print(request.POST)
+    if request.method == 'POST':
+        form = NewRoomForm(request.POST)
+        if form.is_valid():
+            form.save()
+        return HttpResponseRedirect(reverse('folio'))
+
+@login_required
+def AddRoomItem(request):
+    if request.method == 'POST':
+        form = NewRoomItemForm(request.POST)
+        if form.is_valid():
+            form.save()
+        return HttpResponseRedirect(reverse('folio'))
+
+@login_required
+def AddRoomItemDescription(request):
+    if request.method == 'POST':
+        form = NewRoomItemDescriptionForm(request.POST)
+        if form.is_valid():
+            form.save()
+        return HttpResponseRedirect(reverse('folio'))
