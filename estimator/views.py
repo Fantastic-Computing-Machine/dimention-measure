@@ -14,6 +14,7 @@ from django.views.generic import (
     UpdateView
 )
 import os
+from openpyxl.styles import Font, Border, Side, GradientFill, Alignment
 from django.views.generic.edit import FormMixin
 from django.shortcuts import get_object_or_404
 from django.shortcuts import HttpResponseRedirect
@@ -318,11 +319,16 @@ def download_estimate_excel_file(request, project_id, project_name):
     sheet = workbook.active
     sheet.title = project_name + " Estimate"
 
+    sheet.column_dimensions['B'].width = 70
+    sheet.column_dimensions['B'].alignment = Alignment(wrapText=True)
     sheet.append(["", "Reference No.: " + str(project.reference_number),
                  "", "", "Date", current_date])
-
+    sheet["B1"].font = Font(size=9)
+    sheet["E1"].font = Font(size=9)
+    sheet["F1"].font = Font(size=9)
     sheet.append([""])
     sheet.append(["", company.compan_name])
+    sheet["B3"].font = Font(size=12, bold=True)
     sheet.append(["", company.address()])
     sheet.append(["", "Email:"+str(company.email)])
     sheet.append(
@@ -330,12 +336,21 @@ def download_estimate_excel_file(request, project_id, project_name):
     sheet.append([""])
     sheet.append(["","To"])
     sheet.append(["", project.client.name])
+    sheet["B9"].font = Font(size=12, bold=True)
     sheet.append(["", project.client.address()])
+    sheet.append([""])
+    sheet.append(["","Estimate"])
     # sheet.append(["", project.client.address])
     sheet.append([""])
     sheet.append(["Sl.No", "Description", "Unit", "Quantity",
                   "Rate", "Amount"])
-
+    sheet["A14"].font = Font(bold=True)
+    sheet["B14"].font = Font(bold=True)
+    sheet["C14"].font = Font(bold=True)
+    sheet["D14"].font = Font(bold=True)
+    sheet["E14"].font = Font(bold=True)
+    sheet["F14"].font = Font(bold=True)
+    # sheet["B14"].alignment = Alignment(wrapText=True)
     index = 1
     # room_obj = Room.objects.all()
     estimate = Estimate.objects.filter(
