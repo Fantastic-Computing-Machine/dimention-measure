@@ -54,4 +54,7 @@ urlpatterns = [
     path("folio/add_component_description",
          AddRoomItemDescription, name="add_component_description"),
 
+    path("excel/<int:project_id>/<str:project_name>/download/",
+         download_estimate_excel_file, name="download_estimate_excel_file"),
+
 ]

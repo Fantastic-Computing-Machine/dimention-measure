@@ -45,6 +45,8 @@ STATE_CHOICES = (
     ("Puducherry", "Puducherry")
 )
 
+phoneNumberRegex = RegexValidator(regex=r"^\+?1?\d{8,15}$")
+
 
 class Unit(models.Model):
     unit = models.CharField(max_length=255)
@@ -101,7 +103,7 @@ class Client(models.Model):
         max_length=255)
     description = models.TextField(
         max_length=255, blank=True, null=True)
-    phoneNumberRegex = RegexValidator(regex=r"^\+?1?\d{8,15}$")
+
     phoneNumber = models.CharField(blank=True,
                                    validators=[phoneNumberRegex], max_length=11)
     created_on = models.DateTimeField(auto_now_add=True)
@@ -132,8 +134,57 @@ class Client(models.Model):
         self.town_city = self.town_city.strip()
         return super(Client, self).save()
 
+    def address(self):
+        full_address = self.address_1
+        if self.address_2:
+            full_address = full_address + ", " + self.address_2
+        if self.landmark:
+            full_address = full_address + ", " + self.landmark
+        full_address = full_address + ", " + self.town_city + \
+            ", " + self.state + " - " + self.zip_code
+        return full_address
+
     def get_absolute_url(self):
         return reverse("clients")
+
+
+class CompanyDetail(models.Model):
+    compan_name = models.CharField(
+        max_length=255)
+    name = models.CharField(
+        max_length=255)
+    email = models.EmailField()
+    phoneNumber = models.CharField(blank=True,
+                                   validators=[phoneNumberRegex], max_length=11)
+    address_1 = models.CharField(max_length=255, default="abc")
+    address_2 = models.CharField(max_length=255, blank=True, null=True)
+    landmark = models.CharField(max_length=255, blank=True, null=True)
+    town_city = models.CharField(max_length=255)
+    zip_code = models.CharField(max_length=6)
+    state = models.CharField(choices=STATE_CHOICES,
+                             max_length=255, default='abc')
+
+    def __str__(self):
+        return str(self.compan_name) + ' | ' + str(self.name)
+
+    def save(self):
+        self.address_1 = self.address_1.strip()
+        if self.address_2:
+            self.address_2 = self.address_2.strip()
+        if self.landmark:
+            self.landmark = self.landmark.strip()
+        self.town_city = self.town_city.strip()
+        return super(CompanyDetail, self).save()
+
+    def address(self):
+        full_address = self.address_1
+        if self.address_2:
+            full_address = full_address + ", " + self.address_2
+        if self.landmark:
+            full_address = full_address + ", " + self.landmark
+        full_address = full_address + ", " + self.town_city + \
+            ", " + self.state + " - " + self.zip_code
+        return full_address
 
 
 class Project(models.Model):
@@ -176,6 +227,14 @@ class Project(models.Model):
     def total_with_gst(self):
         return self.total_amount() + self.gst_amount()
 
+    def get_all_rooms(self):
+        estimate_room_obj = Estimate.objects.values_list(
+            'room__id', 'room__name').filter(project__id=self.id).distinct()
+
+        print(estimate_room_obj)
+
+        return estimate_room_obj
+
     def get_absolute_url(self):
         return reverse("estimate", args=[str(self.pk), str(self.name)])
 
@@ -204,7 +263,25 @@ class Estimate(models.Model):
         return super(Estimate, self).save()
 
     def calculate_amount(self):
+        print("here###############################")
         return decimal.Decimal(self.quantity) * self.room_item_description.rate
 
     def get_absolute_url(self):
         return reverse("estimate", args=[str(self.project.pk), str(self.project.name)])
+
+
+class TermsHeading(models.Model):
+    name = models.CharField(
+        max_length=255)
+
+    def __str__(self):
+        return str(self.name)
+
+
+class TermsContent(models.Model):
+    heading = models.ForeignKey(TermsHeading, on_delete=models.CASCADE)
+    description = models.TextField(
+        blank=True, null=True)
+
+    def __str__(self):
+        return str(self.heading.name) + ' | ' + str(self.description[:15])

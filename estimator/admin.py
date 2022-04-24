@@ -94,3 +94,6 @@ class EstimateAdmin(admin.ModelAdmin):
 
 admin.site.register(Project)
 admin.site.register(Unit)
+admin.site.register(CompanyDetail)
+admin.site.register(TermsHeading)
+admin.site.register(TermsContent)
