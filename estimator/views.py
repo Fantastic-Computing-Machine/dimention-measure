@@ -328,7 +328,11 @@ def download_estimate_excel_file(request, project_id, project_name):
     sheet.append(
         ["", "Mobile: " + str(company.phoneNumber) + str(company.name)])
     sheet.append([""])
-
+    sheet.append(["","To"])
+    sheet.append(["", project.client.name])
+    sheet.append(["", project.client.address()])
+    # sheet.append(["", project.client.address])
+    sheet.append([""])
     sheet.append(["Sl.No", "Description", "Unit", "Quantity",
                   "Rate", "Amount"])
 
@@ -345,10 +349,11 @@ def download_estimate_excel_file(request, project_id, project_name):
         sheet.append([index, room_item[1]])
 
         estimate_room_obj = estimate.filter(room__id=room_item[0], )
-
+        index_j=0
         for item in estimate_room_obj:
+            index_j = index_j + 1
             sheet.append([
-                "",
+                str(index)+"."+ str(index_j),
                 str(item.room_item.name) + " - " +
                 str(item.room_item_description.description),
                 str(item.room_item_description.unit.unit),
@@ -376,7 +381,7 @@ def download_estimate_excel_file(request, project_id, project_name):
             sheet.append([index, term_item.description])
 
             index += 1
-
+        sheet.append([""])
     sheet.append([""])
 
     workbook.save(filename=str(file_path))
