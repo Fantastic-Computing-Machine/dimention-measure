@@ -102,7 +102,8 @@
                     </a>
                     <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="dropdownMenuButton2">
                         <li>
-                            <a href="#" class="dropdown-item">
+                            <a href="{% url 'download_estimate_excel_file' project.id project.name %}" download
+                                class="dropdown-item">
                                 Download Excel
                             </a>
                         </li>
@@ -362,14 +363,6 @@
             </div>
         </div>
     </div>
-    <!-- Download Excel file -->
-    <a class="btn btn-outline-success m-1" href="{% url 'download_estimate_excel_file' project.id project.name %}"
-        download>
-        <span class="text-nowrap">
-            <img class="px-2" src="https://img.icons8.com/ios-glyphs/25/000000/ms-excel.png">
-            Save Excel</span>
-    </a>
-    <!-- Download Excel file -->
 
 </div>
 {% endblock %}

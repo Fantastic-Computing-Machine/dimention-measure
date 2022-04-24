@@ -91,7 +91,8 @@ class EstimateDetailView(LoginRequiredMixin, CreateView):
 
     def get_context_data(self, **kwargs):
         project = Project.objects.filter(pk=self.kwargs['pk'])[0]
-        estimates = Estimate.objects.filter(project=project, is_deleted=False)
+        estimates = Estimate.objects.filter(
+            project=project, is_deleted=False).order_by('room')
         kwargs['project'] = project
         kwargs['all_estimates'] = estimates
         return super(EstimateDetailView, self).get_context_data(**kwargs)
@@ -328,7 +329,7 @@ def download_estimate_excel_file(request, project_id, project_name):
     sheet.append(
         ["", "Mobile: " + str(company.phoneNumber) + str(company.name)])
     sheet.append([""])
-    sheet.append(["","To"])
+    sheet.append(["", "To"])
     sheet.append(["", project.client.name])
     sheet.append(["", project.client.address()])
     # sheet.append(["", project.client.address])
@@ -349,11 +350,11 @@ def download_estimate_excel_file(request, project_id, project_name):
         sheet.append([index, room_item[1]])
 
         estimate_room_obj = estimate.filter(room__id=room_item[0], )
-        index_j=0
+        index_j = 0
         for item in estimate_room_obj:
             index_j = index_j + 1
             sheet.append([
-                str(index)+"."+ str(index_j),
+                str(index)+"." + str(index_j),
                 str(item.room_item.name) + " - " +
                 str(item.room_item_description.description),
                 str(item.room_item_description.unit.unit),
