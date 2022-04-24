@@ -82,18 +82,12 @@
                         {% csrf_token %}
                         <p>
                             <label for="id_payee">Payee:</label>
-                            <select name="payee" class="form-select" aria-label=".form-control-sm" placeholder="Payee"
-                                required id="id_payee">
-                                <option value="" selected>---------</option>
-                                {% for item in all_payees %}
-                                <option value="{{item.id}}">{{item.name}} | {{item.phoneNumber}}</option>
-                                {% endfor %}
-                            </select>
+                            {{form.payee}}
+
                         </p>
                         <p>
                             <label for="id_amount">Amount:</label>
-                            <input type="number" name="amount" class="form-control" aria-label=".form-control-sm"
-                                placeholder="Amount" step=".01" maxlength="200" id="id_amount">
+                            {{form.amount}}
                         </p>
                         <p>
                             <label for="id_payment_status">Payment status:</label>
@@ -148,7 +142,17 @@
 {% endblock %}
 
 {% block expense_button %}
-<a href="{%url 'project_detail' project_id project_name %}" type="button" class="btn btn-success btn-lg">
-    <img alt="project-btn" src="https://img.icons8.com/ios/30/ffffff/safety-hat.png" />
+<a href="{%url 'project_detail' project_id project_name %}" type="button" class="btn btn-warning btn-lg">
+    <img alt="project-btn" src="https://img.icons8.com/ios/30/000000/safety-hat.png" />
 </a>
+
+<a aria-label="all-expenses" href="{% url 'all_expenses' %}" type="button" class="btn btn-success btn-lg">
+    <img alt="all-expenses" src="https://img.icons8.com/ios/30/ffffff/money-circulation.png" />
+</a>
+
+<a aria-label="all-expenses" href="{% url 'all_estimates' %}" type="button" class="btn btn-info btn-lg">
+    <img src="https://img.icons8.com/ios/30/000000/estimates.png" />
+</a>
+
+
 {% endblock %}

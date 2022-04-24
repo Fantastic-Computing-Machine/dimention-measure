@@ -139,7 +139,7 @@ class ProjectExpenseView(LoginRequiredMixin, FormMixin, ListView):
         expenses = Expense.objects.filter(
             project__id=self.kwargs['project_id'], is_deleted=False).order_by('-created_on')
         kwargs['payees'] = payees
-        kwargs['all_payees'] = all_payees
+        # kwargs['all_payees'] = all_payees
         kwargs['project_name'] = self.kwargs['project_name']
         kwargs['project_id'] = self.kwargs['project_id']
 
