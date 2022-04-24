@@ -3,7 +3,8 @@ from datetime import datetime
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
-from django.core.paginator import Paginator
+# from django.core.paginator import Paginator
+from django.http import FileResponse
 from django.urls import reverse, reverse_lazy
 from django.views.generic import (
     CreateView,
@@ -12,6 +13,7 @@ from django.views.generic import (
     ListView,
     UpdateView
 )
+import os
 from django.views.generic.edit import FormMixin
 from django.shortcuts import get_object_or_404
 from django.shortcuts import HttpResponseRedirect
@@ -263,6 +265,7 @@ def DeleteComponentDescription(request):
                 pk=int(item)).update(is_deleted=True, deleted_on=datetime.now())
         return HttpResponseRedirect(reverse('folio'))
 
+
 @login_required
 def AddRoom(request):
     print(request.POST)
@@ -272,6 +275,7 @@ def AddRoom(request):
             form.save()
         return HttpResponseRedirect(reverse('folio'))
 
+
 @login_required
 def AddRoomItem(request):
     if request.method == 'POST':
@@ -280,6 +284,7 @@ def AddRoomItem(request):
             form.save()
         return HttpResponseRedirect(reverse('folio'))
 
+
 @login_required
 def AddRoomItemDescription(request):
     if request.method == 'POST':
@@ -287,3 +292,96 @@ def AddRoomItemDescription(request):
         if form.is_valid():
             form.save()
         return HttpResponseRedirect(reverse('folio'))
+
+
+@login_required
+def download_estimate_excel_file(request, project_id, project_name):
+    date_time_obj = datetime.now()
+    current_date = date_time_obj.strftime('%x')
+    current_time = date_time_obj.strftime('%X')
+
+    filename = project_name + '_' + str(current_date).replace('/', "-") + \
+        '_' + str(current_time).replace(":", "-") + ".xlsx"
+
+    file_path = "media/excel/" + filename
+
+    project = Project.objects.filter(
+        pk=project_id, is_deleted=False)[0]
+    company = CompanyDetail.objects.filter(
+        pk=1)[0]
+    print(project)
+    print(company)
+
+    # create a workbook object
+    workbook = Workbook()
+    # create a worksheet
+    sheet = workbook.active
+    sheet.title = project_name + " Estimate"
+
+    sheet.append(["", "Reference No.: " + str(project.reference_number),
+                 "", "", "Date", current_date])
+
+    sheet.append([""])
+    sheet.append(["", company.compan_name])
+    sheet.append(["", company.address()])
+    sheet.append(["", "Email:"+str(company.email)])
+    sheet.append(
+        ["", "Mobile: " + str(company.phoneNumber) + str(company.name)])
+    sheet.append([""])
+
+    sheet.append(["Sl.No", "Description", "Unit", "Quantity",
+                  "Rate", "Amount"])
+
+    index = 1
+    # room_obj = Room.objects.all()
+    estimate = Estimate.objects.filter(
+        project__id=project_id, is_deleted=False).order_by('room')
+
+    print(estimate)
+    print(project.get_all_rooms())
+
+    for room_item in project.get_all_rooms():
+
+        sheet.append([index, room_item[1]])
+
+        estimate_room_obj = estimate.filter(room__id=room_item[0], )
+
+        for item in estimate_room_obj:
+            sheet.append([
+                "",
+                str(item.room_item.name) + " - " +
+                str(item.room_item_description.description),
+                str(item.room_item_description.unit.unit),
+                str(item.quantity),
+                str(item.room_item_description.rate),
+                str(item.calculate_amount())
+            ])
+        index += 1
+
+    sheet.append(["", "Grand Total", "", "", "", project.total_amount()])
+    sheet.append(["", "GST @ 18%", "", "", "", project.gst_amount()])
+    sheet.append(["", "Total including GST", "",
+                 "", "", project.total_with_gst()])
+    sheet.append([""])
+
+    terms_heading_obj = TermsHeading.objects.all()
+
+    for item in terms_heading_obj:
+        sheet.append(["", item.name.upper()])
+        terms_content_obj = TermsContent.objects.filter(heading__id=item.pk)
+
+        index = 1
+        for term_item in terms_content_obj:
+
+            sheet.append([index, term_item.description])
+
+            index += 1
+
+    sheet.append([""])
+
+    workbook.save(filename=str(file_path))
+    workbook.close()
+    print("WB--- CLOSE")
+    file_ecxel = FileResponse(open(file_path, 'rb'))
+    delete_file = os.remove(file_path)
+    return file_ecxel
