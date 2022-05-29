@@ -1,11 +1,13 @@
-from django_countries.fields import CountryField
 import decimal
 from datetime import datetime
-from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model as user_model
 from django.urls import reverse
 from django.core.validators import RegexValidator, MaxValueValidator
 from django.db import models
 
+from client_and_company.models import Client
+
+User = user_model()
 
 STATE_CHOICES = (
     ("Andhra Pradesh", "Andhra Pradesh"),
@@ -98,95 +100,6 @@ class RoomItemDescription(models.Model):
         return str(self.description) + " @ " + str(self.rate)
 
 
-class Client(models.Model):
-    name = models.CharField(
-        max_length=255)
-    description = models.TextField(
-        max_length=255, blank=True, null=True)
-
-    phoneNumber = models.CharField(blank=True,
-                                   validators=[phoneNumberRegex], max_length=11)
-    created_on = models.DateTimeField(auto_now_add=True)
-    updated_on = models.DateTimeField(auto_now=True)
-    is_deleted = models.BooleanField(default=False)
-    deleted_on = models.DateTimeField(blank=True, null=True)
-
-    address_1 = models.CharField(max_length=255, default="abc")
-    address_2 = models.CharField(max_length=255, blank=True, null=True)
-    landmark = models.CharField(max_length=255, blank=True, null=True)
-    town_city = models.CharField(max_length=255)
-    zip_code = models.CharField(max_length=6)
-    state = models.CharField(choices=STATE_CHOICES,
-                             max_length=255, default='abc')
-
-    def __str__(self):
-        return str(self.name) + ' | ' + str(self.phoneNumber)
-
-    def save(self):
-        self.name = self.name.replace(" ", "-").strip().lower()
-        if self.description:
-            self.description = self.description.strip()
-        self.address_1 = self.address_1.strip()
-        if self.address_2:
-            self.address_2 = self.address_2.strip()
-        if self.landmark:
-            self.landmark = self.landmark.strip()
-        self.town_city = self.town_city.strip()
-        return super(Client, self).save()
-
-    def address(self):
-        full_address = self.address_1
-        if self.address_2:
-            full_address = full_address + ", " + self.address_2
-        if self.landmark:
-            full_address = full_address + ", " + self.landmark
-        full_address = full_address + ", " + self.town_city + \
-            ", " + self.state + " - " + self.zip_code
-        return full_address
-
-    def get_absolute_url(self):
-        return reverse("clients")
-
-
-class CompanyDetail(models.Model):
-    compan_name = models.CharField(
-        max_length=255)
-    name = models.CharField(
-        max_length=255)
-    email = models.EmailField()
-    phoneNumber = models.CharField(blank=True,
-                                   validators=[phoneNumberRegex], max_length=11)
-    address_1 = models.CharField(max_length=255, default="abc")
-    address_2 = models.CharField(max_length=255, blank=True, null=True)
-    landmark = models.CharField(max_length=255, blank=True, null=True)
-    town_city = models.CharField(max_length=255)
-    zip_code = models.CharField(max_length=6)
-    state = models.CharField(choices=STATE_CHOICES,
-                             max_length=255, default='abc')
-
-    def __str__(self):
-        return str(self.compan_name) + ' | ' + str(self.name)
-
-    def save(self):
-        self.address_1 = self.address_1.strip()
-        if self.address_2:
-            self.address_2 = self.address_2.strip()
-        if self.landmark:
-            self.landmark = self.landmark.strip()
-        self.town_city = self.town_city.strip()
-        return super(CompanyDetail, self).save()
-
-    def address(self):
-        full_address = self.address_1
-        if self.address_2:
-            full_address = full_address + ", " + self.address_2
-        if self.landmark:
-            full_address = full_address + ", " + self.landmark
-        full_address = full_address + ", " + self.town_city + \
-            ", " + self.state + " - " + self.zip_code
-        return full_address
-
-
 class Project(models.Model):
     name = models.CharField(
         max_length=255)
@@ -197,7 +110,6 @@ class Project(models.Model):
     client = models.ForeignKey(
         Client, on_delete=models.CASCADE)
     created_on = models.DateTimeField(auto_now_add=True)
-    updated_on = models.DateTimeField(auto_now=True)
     is_deleted = models.BooleanField(default=False)
     deleted_on = models.DateTimeField(blank=True, null=True)
     reference_number = models.CharField(max_length=225, blank=True, null=True)
@@ -250,7 +162,6 @@ class Estimate(models.Model):
     amount = models.DecimalField(
         max_digits=10, decimal_places=2, blank=True, null=True)
     created_on = models.DateTimeField(auto_now_add=True)
-    updated_on = models.DateTimeField(auto_now=True)
     is_deleted = models.BooleanField(default=False)
     deleted_on = models.DateTimeField(blank=True, null=True)
 
@@ -268,20 +179,3 @@ class Estimate(models.Model):
 
     def get_absolute_url(self):
         return reverse("estimate", args=[str(self.project.pk), str(self.project.name)])
-
-
-class TermsHeading(models.Model):
-    name = models.CharField(
-        max_length=255)
-
-    def __str__(self):
-        return str(self.name)
-
-
-class TermsContent(models.Model):
-    heading = models.ForeignKey(TermsHeading, on_delete=models.CASCADE)
-    description = models.TextField(
-        blank=True, null=True)
-
-    def __str__(self):
-        return str(self.heading.name) + ' | ' + str(self.description[:15])

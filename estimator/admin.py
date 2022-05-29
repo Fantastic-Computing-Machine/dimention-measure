@@ -20,9 +20,7 @@ class RoomAdmin(admin.ModelAdmin):
 @admin.register(RoomItem)
 class RoomItemAdmin(admin.ModelAdmin):
     list_display = ["id", "name", "created_on",  "is_deleted"]
-    search_fields = [
-        "name"
-    ]
+    search_fields = ["name"]
     search_help_text = "Search by Fields: Name"
     date_hierarchy = "created_on"
     ordering = ["-created_on"]
@@ -43,30 +41,6 @@ class RoomItemDescriptionAdmin(admin.ModelAdmin):
     show_full_result_count = True
     list_display_links = ["id", "description", "rate",
                           "created_on", "is_deleted"]
-
-
-@admin.register(Client)
-class ClientAdmin(admin.ModelAdmin):
-    list_display = [
-        "id", "name", "phoneNumber",
-        "town_city",  "state", "is_deleted"
-    ]
-    search_fields = [
-        "name",
-        "phoneNumber",
-        "landmark",
-        "zip_code",
-        "town_city",
-        "state",
-    ]
-    search_help_text = "Search by Fields: Name, Phone Number, city, state, zip_code"
-    date_hierarchy = "created_on"
-    ordering = ["-created_on"]
-    show_full_result_count = True
-    list_display_links = [
-        "id", "name", "phoneNumber",
-        "town_city",  "state", "is_deleted"
-    ]
 
 
 @admin.register(Estimate)
@@ -92,8 +66,40 @@ class EstimateAdmin(admin.ModelAdmin):
                           ]
 
 
-admin.site.register(Project)
-admin.site.register(Unit)
-admin.site.register(CompanyDetail)
-admin.site.register(TermsHeading)
-admin.site.register(TermsContent)
+class ProjectInline(admin.TabularInline):
+    model = Estimate
+    show_change_link = True
+    view_on_site = False
+    can_delete = False
+    extra = 0
+    readonly_fields = [
+        "room",
+        "room_item",
+        "room_item_description",
+        "quantity",
+        "amount",
+    ]
+    fields = [
+        "room",
+        "room_item",
+        "room_item_description",
+        "quantity",
+        "amount",
+    ]
+
+
+@admin.register(Project)
+class ProjectAdmin(admin.ModelAdmin):
+    list_display = [
+        "reference_number",
+        "created_on",
+        "name",
+        "client",
+    ]
+    readonly_fields = [
+        "reference_number",
+        "deleted_on",
+        "created_on",
+        "author",
+    ]
+    inlines = [ProjectInline, ]

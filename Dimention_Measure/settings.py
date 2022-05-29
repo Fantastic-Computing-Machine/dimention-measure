@@ -21,17 +21,19 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-+b%8ic_2cy(-g58t-lrhjj)1*+%2r-t)8$90t_4&1zz0wqvk%n'
+SECRET_KEY = 'ddjfdfagnhfggdoh-i547nsjhefjcfjffujrkehgk-+gsrbgh%8hdihdhc_hd2hcryrh(r-rgehhs58t-lrhjj)1*+%2r-t)8$90t_4&1zz0wqvk%n'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
 ALLOWED_HOSTS = ["0.tcp.in.ngrok.io", "127.0.0.1", "localhost", "0.0.0.0", ]
 
+AUTH_USER_MODEL = "authentication.UserProfile"
 
 # Application definition
-
 INSTALLED_APPS = [
+    'admin_interface',
+    'colorfield',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -41,10 +43,16 @@ INSTALLED_APPS = [
     'django.contrib.humanize',
     'django_countries',
     'dimension',
+    'client_and_company',
     'authentication',
     'expense',
-    'estimator'
+    'estimator',
+    'settings'
 ]
+
+# For django-admin-interface installed app
+X_FRAME_OPTIONS = "SAMEORIGIN"
+SILENCED_SYSTEM_CHECKS = ["security.W019"]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

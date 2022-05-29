@@ -23,7 +23,6 @@ class Payee(models.Model):
     name = models.CharField(max_length=255)
     description = models.TextField(blank=True, null=True)
     created_on = models.DateTimeField(auto_now_add=True)
-    updated_on = models.DateTimeField(auto_now=True)
     phoneNumber = models.CharField(blank=True,
                                    validators=[phoneNumberRegex], max_length=11)
 
@@ -69,7 +68,6 @@ class Expense(models.Model):
     amount = models.DecimalField(
         max_digits=10, decimal_places=2, blank=True, null=True)
     created_on = models.DateTimeField(auto_now_add=True)
-    updated_on = models.DateTimeField(auto_now=True)
     payment_status = models.CharField(
         max_length=2,
         choices=PAYMENT_STATUS,

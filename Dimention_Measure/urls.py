@@ -24,6 +24,8 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     path("expense/", include("expense.urls")),
     path("estimate/", include("estimator.urls")),
+    path('', include("client_and_company.urls")),
+    path('', include("client_and_company.urls")),
     path("user/", include("django.contrib.auth.urls")),
     path("user/", include("authentication.urls")),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -1,54 +1,39 @@
-from openpyxl import Workbook
+from django.shortcuts import HttpResponseRedirect
 from datetime import datetime
+from openpyxl import Workbook
+from openpyxl.styles import Font, Alignment
+import os
+
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.contrib.auth.models import User
-# from django.core.paginator import Paginator
 from django.http import FileResponse
 from django.urls import reverse, reverse_lazy
 from django.views.generic import (
     CreateView,
-    DeleteView,
-    DetailView,
     ListView,
     UpdateView
 )
-import os
-from openpyxl.styles import Font, Border, Side, GradientFill, Alignment
 from django.views.generic.edit import FormMixin
-from django.shortcuts import get_object_or_404
-from django.shortcuts import HttpResponseRedirect
-from .models import *
-from .forms import (
+
+
+from estimator.models import (
+    Room,
+    RoomItemDescription,
+    RoomItem,
+    Project,
+    Estimate,
+)
+from estimator.forms import (
     NewProjectForm,
     NewEstimateItemForm,
-    NewClientForm,
     UpdateProjectForm,
     NewRoomForm,
     NewRoomItemForm,
     NewRoomItemDescriptionForm,
 )
-
-
-# class AllEstimates(LoginRequiredMixin, CreateView):
-#     login_url = '/user/login/'
-#     redirect_field_name = 'redirect_to'
-#     model = Project
-#     form_class = NewProjectForm
-#     template_name = 'estimates_home.html'
-
-#     def get_context_data(self, **kwargs):
-#         all_projects_object_list = Project.objects.filter(
-#             is_deleted=False).order_by('-created_on')
-#         kwargs['projects_list'] = all_projects_object_list
-
-#         return super(AllEstimates, self).get_context_data(**kwargs)
-
-#     def post(self, request, **kwargs):
-#         request.POST._mutable = True
-#         request.POST["author"] = request.session["_auth_user_id"]
-#         request.POST._mutable = False
-#         return super(AllEstimates, self).post(request, **kwargs)
+from client_and_company.models import CompanyDetail, Client
+from client_and_company.forms import NewClientForm
+from settings.models import TermsHeading, TermsContent
 
 
 class AllEstimates(LoginRequiredMixin, FormMixin, ListView):
@@ -130,15 +115,6 @@ class UpdateEstimateItemView(LoginRequiredMixin, UpdateView):
         return HttpResponseRedirect(reverse('estimate', kwargs={"pk": self.kwargs['project_id'], "project_name": self.kwargs['project_name']}))
 
 
-class UpdateClientView(LoginRequiredMixin, UpdateView):
-    login_url = '/user/login/'
-    redirect_field_name = 'redirect_to'
-    model = Client
-    template_name = 'clients/update_client.html'
-    form_class = NewClientForm
-    success_url = reverse_lazy('clients')
-
-
 class FolioView(LoginRequiredMixin, CreateView):
     login_url = '/user/login/'
     redirect_field_name = 'redirect_to'
@@ -211,12 +187,6 @@ class ClientView(LoginRequiredMixin, FormMixin, ListView):
         if form.is_valid():
             form.save()
         return HttpResponseRedirect(reverse('clients'))
-
-    # def get_context_data(self, **kwargs):
-    #     all_clients_object_list = Client.objects.filter(
-    #         is_deleted=False).order_by('name')
-    #     kwargs['clients_list'] = all_clients_object_list
-    #     return super(ClientView, self).get_context_data(**kwargs)
 
 
 class UpdateClientView(LoginRequiredMixin, UpdateView):
@@ -328,7 +298,7 @@ def download_estimate_excel_file(request, project_id, project_name):
     sheet["E1"].font = Font(size=9)
     sheet["F1"].font = Font(size=9)
     sheet.append([""])
-    sheet.append(["", company.compan_name])
+    sheet.append(["", company.company_name])
     sheet["B3"].font = Font(size=12, bold=True)
     sheet.append(["", company.address()])
     sheet.append(["", "Email:"+str(company.email)])
@@ -340,7 +310,7 @@ def download_estimate_excel_file(request, project_id, project_name):
     sheet["B9"].font = Font(size=12, bold=True)
     sheet.append(["", project.client.address()])
     sheet.append([""])
-    sheet.append(["","Estimate"])
+    sheet.append(["", "Estimate"])
     # sheet.append(["", project.client.address])
     sheet.append([""])
     sheet.append(["Sl.No", "Description", "Unit", "Quantity",

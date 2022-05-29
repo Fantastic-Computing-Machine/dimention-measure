@@ -1,4 +1,5 @@
-from django.contrib.auth.models import User
+# from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model as user_model
 from django.core.validators import RegexValidator
 from django.db import models
 from django.urls import reverse
@@ -7,13 +8,15 @@ from datetime import datetime
 import decimal
 
 
+User = user_model()
+
+
 class Project(models.Model):
     name = models.CharField(max_length=255, unique=True, default='')
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     description = models.TextField(
         max_length=255, blank=True, null=True, default='')
     created_on = models.DateTimeField(auto_now_add=True)
-    updated_on = models.DateTimeField(auto_now=True)
     is_deleted = models.BooleanField(default=False)
     deleted_on = models.DateTimeField(blank=True, null=True)
 
@@ -58,8 +61,6 @@ class Dimension(models.Model):
     amount = models.DecimalField(
         max_digits=10, decimal_places=2, blank=True, null=True)
     created_on = models.DateTimeField(auto_now_add=True)
-    updated_on = models.DateTimeField(auto_now=True)
-
     is_deleted = models.BooleanField(default=False)
     deleted_on = models.DateTimeField(blank=True, null=True)
 

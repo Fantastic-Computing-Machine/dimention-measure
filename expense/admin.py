@@ -6,7 +6,7 @@ from .models import Payee, Expense
 @admin.register(Payee)
 class PayeeAdmin(admin.ModelAdmin):
     list_display = ["id", "name", "phoneNumber", "total_paid", "total_recieved", "total_pending", "total_noStatus",
-                    "description", "updated_on", "created_on"]
+                    "description", "created_on"]
     search_fields = [
         "name",
         "phoneNumber",
@@ -17,13 +17,13 @@ class PayeeAdmin(admin.ModelAdmin):
     ordering = ["-created_on"]
     show_full_result_count = True
     list_display_links = ["id", "name", "phoneNumber", "total_paid", "total_recieved", "total_pending", "total_noStatus",
-                          "description", "updated_on", "created_on"]
+                          "description", "created_on"]
 
 
 @admin.register(Expense)
 class ExpenseAdmin(admin.ModelAdmin):
     list_display = ["id", "payee", "project",
-                    "amount", "payment_status", "created_on", "updated_on"]
+                    "amount", "payment_status", "created_on",]
     search_fields = [
         "payee",
         "project",
@@ -38,4 +38,4 @@ class ExpenseAdmin(admin.ModelAdmin):
     ordering = ["-created_on"]
     show_full_result_count = True
     list_display_links = ["id", "payee", "project",
-                          "amount", "payment_status", "created_on", "updated_on"]
+                          "amount", "payment_status", "created_on",]

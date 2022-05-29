@@ -1,9 +1,23 @@
-from django.conf import settings
-from django.conf.urls.static import static
 from django.urls import path
-from django.urls import include
 
-from .views import *
+from estimator.views import (
+    AllEstimates,
+    UpdateEstimateProjectView,
+    EstimateDetailView,
+    UpdateEstimateItemView,
+    FolioView,
+    UpdateRoomView,
+    UpdateRoomItemView,
+    UpdateRoomItemDescriptionView,
+    DeleteEstimate,
+    DeleteRoom,
+    DeleteRoomComponent,
+    DeleteComponentDescription,
+    AddRoom,
+    AddRoomItem,
+    AddRoomItemDescription,
+    download_estimate_excel_file,
+)
 
 
 urlpatterns = [
@@ -29,15 +43,8 @@ urlpatterns = [
     path("folio/<int:pk>/update_room_item_desc/",
          UpdateRoomItemDescriptionView.as_view(), name="update_room_item_desc"),
 
-    path("clients/", ClientView.as_view(), name="clients"),
-
-    path("clients/update/<int:pk>/<str:client_name>/",
-         UpdateClientView.as_view(), name="update_client"),
-
     path("estimate/<int:pk>/<str:project_name>/delete",
          DeleteEstimate, name="delete_estimate"),
-
-    path("clients/<int:pk>/delete", DeleteClient, name="delete_client"),
 
     path("folio/delete/delete_room", DeleteRoom, name="delete_room"),
 
