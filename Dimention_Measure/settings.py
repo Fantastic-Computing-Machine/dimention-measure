@@ -28,7 +28,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = ["0.tcp.in.ngrok.io", "127.0.0.1", "localhost", "0.0.0.0", ]
 
-AUTH_USER_MODEL = "authentication.UserProfile"
+AUTH_USER_MODEL = "authentication.CompanyUser"
 
 # Application definition
 INSTALLED_APPS = [

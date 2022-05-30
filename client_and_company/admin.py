@@ -33,11 +33,13 @@ class ClientAdmin(admin.ModelAdmin):
         "id", "name", "phoneNumber",
         "town_city",  "state", "is_deleted"
     ]
-    readonly_fields = ['deleted_on', 'organization']
+    readonly_fields = ['deleted_on',
+                       # 'organization',
+                       ]
 
     list_filter = [
         'created_on',
-        'organization__name',
+        # 'organization__name',
         'state',
     ]
 

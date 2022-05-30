@@ -104,8 +104,8 @@ class Client(models.Model):
     zip_code = models.CharField(max_length=6)
     state = models.CharField(choices=STATE_CHOICES,
                              max_length=255, default='abc')
-    organization = models.ForeignKey(
-        CompanyDetail, on_delete=models.CASCADE, default=1)
+    # organization = models.ForeignKey(
+    #     CompanyDetail, on_delete=models.CASCADE, default=1)
 
     def __str__(self):
         return str(self.name) + ' | ' + str(self.phoneNumber)

@@ -21,7 +21,7 @@ GENDER = [
 phoneNumberRegex = RegexValidator(regex=r"^\+?1?\d{8,15}$")
 
 
-class UserProfile(AbstractUser):
+class CompanyUser(AbstractUser):
     phoneNumber = models.CharField(blank=True,
                                    validators=[phoneNumberRegex], max_length=11)
     gender = models.CharField(

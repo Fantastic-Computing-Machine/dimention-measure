@@ -3,10 +3,10 @@ from django.contrib.auth.models import User
 from django.contrib.admin.models import LogEntry
 from django.contrib import admin
 
-from authentication.models import UserProfile
+from authentication.models import CompanyUser
 
 
-admin.site.register(UserProfile)
+admin.site.register(CompanyUser)
 
 
 @admin.register(LogEntry)
