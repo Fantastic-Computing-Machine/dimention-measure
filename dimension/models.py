@@ -12,10 +12,10 @@ User = user_model()
 
 
 class Project(models.Model):
-    name = models.CharField(max_length=255, unique=True, default='')
+    name = models.CharField(max_length=255, unique=True)
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     description = models.TextField(
-        max_length=255, blank=True, null=True, default='')
+        max_length=255, blank=True, null=True)
     created_on = models.DateTimeField(auto_now_add=True)
     is_deleted = models.BooleanField(default=False)
     deleted_on = models.DateTimeField(blank=True, null=True)
@@ -24,7 +24,7 @@ class Project(models.Model):
         return str(self.name)
 
     def save(self):
-        self.name = self.name.replace(" ", "-").strip()
+        self.name = self.name.strip().replace(" ", "-")
         return super(Project, self).save()
 
     def total_amount(self):
@@ -45,7 +45,7 @@ class Project(models.Model):
 
 class Dimension(models.Model):
     project = models.ForeignKey(
-        Project, on_delete=models.CASCADE, default=1)
+        Project, on_delete=models.CASCADE)
     name = models.CharField(max_length=255)
     description = models.TextField(blank=True, null=True)
     # length & width are in meters
@@ -68,7 +68,7 @@ class Dimension(models.Model):
         return str(self.name) + " | " + str(self.project.name)
 
     def save(self):
-        self.name = self.name.replace(" ", "-").strip()
+        self.name = self.name.strip().replace(" ", "-")
 
         if self.width == '' or self.width == 0:
 

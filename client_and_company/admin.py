@@ -2,10 +2,10 @@ from django.contrib import admin
 from django.db import models
 from django.forms import Textarea
 
-from client_and_company.models import Client, CompanyDetail
+from client_and_company.models import Client, Organization
 
 
-admin.site.register(CompanyDetail)
+admin.site.register(Organization)
 
 
 @admin.register(Client)
@@ -34,16 +34,16 @@ class ClientAdmin(admin.ModelAdmin):
         "town_city",  "state", "is_deleted"
     ]
     readonly_fields = ['deleted_on',
-                       # 'organization',
+                       'organization',
                        ]
 
     list_filter = [
         'created_on',
-        # 'organization__name',
+        'organization__company_name',
         'state',
     ]
 
-    def save_model(self, request, obj):
+    def save_model(self, request, obj, form, change):
         if getattr(obj, "added_by", None) is None:
             obj.organization == request.user.organization
         obj.save()

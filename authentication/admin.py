@@ -1,12 +1,12 @@
-from django.contrib.auth.admin import UserAdmin
-from django.contrib.auth.models import User
-from django.contrib.admin.models import LogEntry
 from django.contrib import admin
+from django.contrib.admin.models import LogEntry
+from django.contrib.auth.admin import (GroupAdmin as BaseGroupAdmin, UserAdmin)
+from django.contrib.auth.models import (Group as DjangoGroup, User)
+from django.utils.translation import gettext as _
+# from django.contrib.auth.admin import UserAdmin
+# from django.contrib.auth.models import User
 
-from authentication.models import CompanyUser
-
-
-admin.site.register(CompanyUser)
+from authentication.models import CompanyUser,  Group
 
 
 @admin.register(LogEntry)
@@ -44,10 +44,21 @@ class LogEntryAdmin(admin.ModelAdmin):
         'action_flag',
     ]
 
-# admin.site.unregister(User)
 
-# @admin.register(User)
-# class CustomUserAdmin(UserAdmin):
+# admin.site.unregister(User)
+admin.site.register(CompanyUser)
+
+
+admin.site.unregister(DjangoGroup)
+
+
+@admin.register(Group)
+class GroupAdmin(BaseGroupAdmin):
+    pass
+
+
+# @admin.register(CompanyUser)
+# class CustomUserAdmin(CompanyUser):
 #     readonly_fields = [
 #         'date_joined',
 #         'last_login',

@@ -31,7 +31,7 @@ from estimator.forms import (
     NewRoomItemForm,
     NewRoomItemDescriptionForm,
 )
-from client_and_company.models import CompanyDetail, Client
+from client_and_company.models import Organization, Client
 from client_and_company.forms import NewClientForm
 from settings.models import TermsHeading, TermsContent
 
@@ -279,7 +279,7 @@ def download_estimate_excel_file(request, project_id, project_name):
 
     project = Project.objects.filter(
         pk=project_id, is_deleted=False)[0]
-    company = CompanyDetail.objects.filter(
+    company = Organization.objects.filter(
         pk=1)[0]
     print(project)
     print(company)

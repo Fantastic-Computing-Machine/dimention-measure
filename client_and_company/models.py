@@ -1,3 +1,4 @@
+from tabnanny import verbose
 from django_countries.fields import CountryField
 import decimal
 from datetime import datetime
@@ -48,7 +49,7 @@ STATE_CHOICES = (
 phoneNumberRegex = RegexValidator(regex=r"^\+?1?\d{8,15}$")
 
 
-class CompanyDetail(models.Model):
+class Organization(models.Model):
     company_name = models.CharField(max_length=255)
     name = models.CharField(max_length=255)
     email = models.EmailField()
@@ -72,7 +73,7 @@ class CompanyDetail(models.Model):
         if self.landmark:
             self.landmark = self.landmark.strip()
         self.town_city = self.town_city.strip()
-        return super(CompanyDetail, self).save()
+        return super(Organization, self).save()
 
     def address(self):
         full_address = self.address_1
@@ -104,8 +105,8 @@ class Client(models.Model):
     zip_code = models.CharField(max_length=6)
     state = models.CharField(choices=STATE_CHOICES,
                              max_length=255, default='abc')
-    # organization = models.ForeignKey(
-    #     CompanyDetail, on_delete=models.CASCADE, default=1)
+    organization = models.ForeignKey(
+        Organization, on_delete=models.CASCADE, default=1)
 
     def __str__(self):
         return str(self.name) + ' | ' + str(self.phoneNumber)

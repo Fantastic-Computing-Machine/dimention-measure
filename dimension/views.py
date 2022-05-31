@@ -27,6 +27,10 @@ from .forms import UpdateDimensionForm
 from .models import Project, Dimension
 
 from django.views.generic.edit import FormMixin
+from django.contrib.auth import get_user_model as user_model
+
+
+User = user_model()
 
 
 class HomeView(LoginRequiredMixin, FormMixin, ListView):
@@ -231,23 +235,23 @@ class MigrateData(LoginRequiredMixin, TemplateView):
     model = Dimension
 
     def get_context_data(self, **kwargs):
-        print("\nMigration Save Method")
         mongo_obj = MongoDatabase()
+        print("\nMongo Object Created")
 
-        # user_obj = User.objects.get(id=2)
+        user_obj = User.objects.get(username="admin")
         ct = 0
 
         for item in mongo_obj.find():
             projectName = item["projectName"]
+            print("project Name:", projectName)
 
-            # project_obj = Project(
-            #     name=(projectName),
-            #     author=user_obj,
-            # )
+            project_obj = Project(
+                name=projectName,
+                author=user_obj,
+            ).save()
 
             project_obj = Project.objects.get(name=projectName)
             ct += 1
-            # project.save()
             print(ct, ' | ', project_obj)
 
             cnt = 0
