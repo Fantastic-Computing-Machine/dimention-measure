@@ -31,7 +31,8 @@ from estimator.forms import (
     NewRoomItemForm,
     NewRoomItemDescriptionForm,
 )
-from client_and_company.models import Organization, Client
+from client_and_company.models import Client
+from authentication.models import Organization
 from client_and_company.forms import NewClientForm
 from settings.models import TermsHeading, TermsContent
 

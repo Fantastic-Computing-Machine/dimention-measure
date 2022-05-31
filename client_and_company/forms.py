@@ -2,7 +2,9 @@ from django import forms
 
 from client_and_company.models import Client
 
-from client_and_company.models import STATE_CHOICES
+# from client_and_company.models import STATE_CHOICES
+
+from django.conf import settings
 
 
 class NewClientForm(forms.ModelForm):
@@ -115,7 +117,7 @@ class NewClientForm(forms.ModelForm):
         max_length=100,
         required=True,
         widget=forms.Select(
-            choices=STATE_CHOICES,
+            choices=settings.STATE_CHOICES,
             attrs={
                 "class": "form-select",
                 "aria-label": ".form-control-sm",

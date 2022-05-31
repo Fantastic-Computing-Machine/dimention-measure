@@ -2,10 +2,7 @@ from django.contrib import admin
 from django.db import models
 from django.forms import Textarea
 
-from client_and_company.models import Client, Organization
-
-
-admin.site.register(Organization)
+from client_and_company.models import Client
 
 
 @admin.register(Client)

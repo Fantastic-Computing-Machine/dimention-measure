@@ -6,7 +6,9 @@ from django.utils.translation import gettext as _
 # from django.contrib.auth.admin import UserAdmin
 # from django.contrib.auth.models import User
 
-from authentication.models import CompanyUser,  Group
+from authentication.models import Organization, CompanyUser,  Group
+
+admin.site.register(Organization)
 
 
 @admin.register(LogEntry)

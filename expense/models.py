@@ -1,11 +1,8 @@
 # Expense
-from django.db import models
+from django.conf import settings
 from django.contrib.auth.models import User
-from django.core.validators import RegexValidator
+from django.db import models
 from django.urls import reverse
-
-from datetime import datetime
-import decimal
 
 from dimension.models import Dimension, Project
 
@@ -19,12 +16,11 @@ PAYMENT_STATUS = [
 
 
 class Payee(models.Model):
-    phoneNumberRegex = RegexValidator(regex=r"^\+?1?\d{8,15}$")
     name = models.CharField(max_length=255)
     description = models.TextField(blank=True, null=True)
     created_on = models.DateTimeField(auto_now_add=True)
     phoneNumber = models.CharField(blank=True,
-                                   validators=[phoneNumberRegex], max_length=11)
+                                   validators=[settings.PHONE_NUMBER_FORMAT], max_length=11)
 
     def __str__(self):
         return str(self.name) + " | " + str(self.phoneNumber)
