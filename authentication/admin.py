@@ -1,14 +1,10 @@
 from django.contrib import admin
 from django.contrib.admin.models import LogEntry
-from django.contrib.auth.admin import (GroupAdmin as BaseGroupAdmin, UserAdmin)
-from django.contrib.auth.models import (Group as DjangoGroup, User)
-from django.utils.translation import gettext as _
-# from django.contrib.auth.admin import UserAdmin
-# from django.contrib.auth.models import User
+from django.contrib.auth.admin import (GroupAdmin as BaseGroupAdmin)
+from django.contrib.auth.models import (Group as DjangoGroup)
+from django.utils.translation import gettext_lazy as _
 
 from authentication.models import Organization, CompanyUser,  Group
-
-admin.site.register(Organization)
 
 
 @admin.register(LogEntry)
@@ -47,8 +43,44 @@ class LogEntryAdmin(admin.ModelAdmin):
     ]
 
 
-# admin.site.unregister(User)
-admin.site.register(CompanyUser)
+@admin.register(CompanyUser)
+class CompanyUser(admin.ModelAdmin):
+    readonly_fields = ['organization',
+                       'last_login', 'date_joined', ]
+
+    exclude = ['password', 'is_superuser', 'is_staff']
+
+    def get_form(self, request, obj=None, **kwargs):
+        form = super().get_form(request, obj, **kwargs)
+        user_access_level = request.user.access_level
+        is_superuser = request.user.is_superuser
+
+        disabled_fields = [
+            'user_permissions',
+        ]
+
+        if user_access_level == 'SITE_USR':
+            disabled_fields = disabled_fields + ['is_active']
+
+        if user_access_level == 'ORG_ADM':
+            disabled_fields = disabled_fields + ['organization']
+
+        if user_access_level == 'ORG_USR':
+            disabled_fields |= disabled_fields + \
+                ['access_level', 'organization', 'is_active']
+
+        # Prevent non-superusers from editing their own permissions
+
+        for f in disabled_fields:
+            if f in form.base_fields:
+                form.base_fields[f].disabled = True
+
+        print(form.base_fields['access_level'])
+
+        return form
+
+
+admin.site.register(Organization)
 
 
 admin.site.unregister(DjangoGroup)
@@ -57,47 +89,3 @@ admin.site.unregister(DjangoGroup)
 @admin.register(Group)
 class GroupAdmin(BaseGroupAdmin):
     pass
-
-
-# @admin.register(CompanyUser)
-# class CustomUserAdmin(CompanyUser):
-#     readonly_fields = [
-#         'date_joined',
-#         'last_login',
-#     ]
-
-#     def get_form(self, request, obj=None, **kwargs):
-#         form = super().get_form(request, obj, **kwargs)
-#         is_superuser = request.user.is_superuser
-#         disabled_fields = set()
-
-#         if not is_superuser:
-#             disabled_fields |= {
-#                 'username',
-#                 'is_superuser',
-#                 'user_permissions',
-#             }
-
-#         # Prevent non-superusers from editing their own permissions
-#         print(obj)
-#         if (
-#             not is_superuser
-#             and obj is not None
-#             and obj == request.user
-#         ):
-#             disabled_fields |= {
-#                 'is_staff',
-#                 'is_superuser',
-#                 'groups',
-#                 'user_permissions',
-#             }
-
-#         for f in disabled_fields:
-#             if f in form.base_fields:
-#                 form.base_fields[f].disabled = True
-
-#         return form
-
-#     def clean(self):
-#         print("hello")
-#         return

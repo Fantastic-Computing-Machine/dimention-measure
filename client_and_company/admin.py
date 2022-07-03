@@ -32,6 +32,7 @@ class ClientAdmin(admin.ModelAdmin):
     ]
     readonly_fields = ['deleted_on',
                        'organization',
+                       'created_by',
                        ]
 
     list_filter = [
@@ -41,6 +42,7 @@ class ClientAdmin(admin.ModelAdmin):
     ]
 
     def save_model(self, request, obj, form, change):
-        if getattr(obj, "added_by", None) is None:
-            obj.organization == request.user.organization
-        obj.save()
+        print(request.user)
+        obj.organization = request.user.organization
+        obj.created_by = request.user
+        super(ClientAdmin, self).save_model(request, obj, form, change)

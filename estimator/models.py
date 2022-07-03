@@ -2,19 +2,12 @@ import decimal
 from datetime import datetime
 from django.contrib.auth import get_user_model as user_model
 from django.urls import reverse
-from django.core.validators import RegexValidator, MaxValueValidator
 from django.db import models
 
 from client_and_company.models import Client
+from settings.models import Unit
 
 User = user_model()
-
-
-class Unit(models.Model):
-    unit = models.CharField(max_length=255)
-
-    def __str__(self):
-        return str(self.unit)
 
 
 class Room(models.Model):
@@ -134,7 +127,6 @@ class Estimate(models.Model):
         return super(Estimate, self).save()
 
     def calculate_amount(self):
-        print("here###############################")
         return decimal.Decimal(self.quantity) * self.room_item_description.rate
 
     def get_absolute_url(self):

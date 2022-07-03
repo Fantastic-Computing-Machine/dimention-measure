@@ -1,10 +1,8 @@
 # from django.contrib.auth.models import User
 from django.contrib.auth import get_user_model as user_model
-from django.core.validators import RegexValidator
 from django.db import models
 from django.urls import reverse
 
-from datetime import datetime
 import decimal
 
 

@@ -169,42 +169,42 @@ def DeleteEstimate(request, pk, project_name):
         return HttpResponseRedirect(reverse('all_estimates'))
 
 
-class ClientView(LoginRequiredMixin, FormMixin, ListView):
-    login_url = '/user/login/'
-    redirect_field_name = 'redirect_to'
-    model = Client
-    form_class = NewClientForm
-    context_object_name = 'clients_list'
-    template_name = 'clients/clients.html'
-    success_url = reverse_lazy("clients")
-    paginate_by = 15
+# class ClientView(LoginRequiredMixin, FormMixin, ListView):
+#     login_url = '/user/login/'
+#     redirect_field_name = 'redirect_to'
+#     model = Client
+#     form_class = NewClientForm
+#     context_object_name = 'clients_list'
+#     template_name = 'clients/clients.html'
+#     success_url = reverse_lazy("clients")
+#     paginate_by = 15
 
-    def get_queryset(self):
-        queryset = super().get_queryset()
-        return queryset.filter(is_deleted=False).order_by('-created_on')
+#     def get_queryset(self):
+#         queryset = super().get_queryset()
+#         return queryset.filter(is_deleted=False).order_by('-created_on')
 
-    def post(self, request, **kwargs):
-        form = NewClientForm(request.POST)
-        if form.is_valid():
-            form.save()
-        return HttpResponseRedirect(reverse('clients'))
-
-
-class UpdateClientView(LoginRequiredMixin, UpdateView):
-    login_url = '/user/login/'
-    redirect_field_name = 'redirect_to'
-    model = Client
-    template_name = 'clients/update_client.html'
-    form_class = NewClientForm
-    success_url = reverse_lazy('clients')
+#     def post(self, request, **kwargs):
+#         form = NewClientForm(request.POST)
+#         if form.is_valid():
+#             form.save()
+#         return HttpResponseRedirect(reverse('clients'))
 
 
-@login_required
-def DeleteClient(request, pk):
-    if request.method == 'POST':
-        client = Client.objects.filter(pk=pk).update(
-            is_deleted=True, deleted_on=datetime.now())
-        return HttpResponseRedirect(reverse('clients'))
+# class UpdateClientView(LoginRequiredMixin, UpdateView):
+#     login_url = '/user/login/'
+#     redirect_field_name = 'redirect_to'
+#     model = Client
+#     template_name = 'clients/update_client.html'
+#     form_class = NewClientForm
+#     success_url = reverse_lazy('clients')
+
+
+# @login_required
+# def DeleteClient(request, pk):
+#     if request.method == 'POST':
+#         client = Client.objects.filter(pk=pk).update(
+#             is_deleted=True, deleted_on=datetime.now())
+#         return HttpResponseRedirect(reverse('clients'))
 
 
 @login_required

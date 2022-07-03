@@ -29,7 +29,12 @@ class ClientView(LoginRequiredMixin, FormMixin, ListView):
         return queryset.filter(is_deleted=False).order_by('-created_on')
 
     def post(self, request, **kwargs):
+        request.POST._mutable = True
+        request.POST["created_by"] = request.session["_auth_user_id"]
+        request.POST["organization"] = str(request.user.organization.id)
+        request.POST._mutable = False
         form = NewClientForm(request.POST)
+        print(form.errors)
         if form.is_valid():
             form.save()
         return HttpResponseRedirect(reverse('clients'))
@@ -42,15 +47,6 @@ class UpdateClientView(LoginRequiredMixin, UpdateView):
     template_name = 'clients/update_client.html'
     form_class = NewClientForm
     success_url = reverse_lazy('clients')
-
-
-# class UpdateClientView(LoginRequiredMixin, UpdateView):
-#     login_url = '/user/login/'
-#     redirect_field_name = 'redirect_to'
-#     model = Client
-#     template_name = 'clients/update_client.html'
-#     form_class = NewClientForm
-#     success_url = reverse_lazy('clients')
 
 
 @login_required

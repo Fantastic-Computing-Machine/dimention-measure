@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import *
+from .models import Room, RoomItem, RoomItemDescription, Estimate, Project
 
 
 @admin.register(Room)
@@ -86,6 +86,11 @@ class ProjectInline(admin.TabularInline):
         "quantity",
         "amount",
     ]
+
+
+# @admin.register(Unit)
+# class UnitAdmin(admin.ModelAdmin):
+#     list_display = ['unit']
 
 
 @admin.register(Project)

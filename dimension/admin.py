@@ -1,3 +1,6 @@
+import re
+from django.contrib.admin.models import LogEntry, ADDITION
+from django.contrib.contenttypes.models import ContentType
 from django.contrib import admin
 from .models import Project, Dimension
 
@@ -17,12 +20,33 @@ class ProjectInline(admin.TabularInline):
               "width", "sqm", "sqft", "rate", "amount", "description"]
 
 
-@admin.register(Project)
+class ProjectTabular(admin.StackedInline):
+    formfield_overrides = {
+        models.TextField: {'widget': Textarea(attrs={'rows': 4, 'cols': 40})},
+    }
+    model = Dimension
+    show_change_link = True
+    view_on_site = False
+    can_delete = False
+    extra = 1
+    readonly_fields = [
+        "sqm",
+        "sqft",
+        "amount",
+        "deleted_on",
+    ]
+    exclude = ["is_deleted"]
+
+    def get_queryset(self, request):
+        return Dimension.objects.none()
+
+
+# @admin.register(Project)
 class ProjectAdmin(admin.ModelAdmin):
     formfield_overrides = {
         models.TextField: {'widget': Textarea(attrs={'rows': 4, 'cols': 40})},
     }
-    inlines = [ProjectInline]
+    inlines = [ProjectInline, ProjectTabular]
     list_display = [
         "id",
         "name",
@@ -31,8 +55,8 @@ class ProjectAdmin(admin.ModelAdmin):
         "total_sqm",
         "total_sqft",
         "description",
-        "created_on"]
-
+        "created_on",
+    ]
     search_fields = [
         "author__username",
         "author__first_name",
@@ -53,7 +77,17 @@ class ProjectAdmin(admin.ModelAdmin):
         "total_sqft",
         "total_amount",
     ]
-    readonly_fields = ["deleted_on", ]
+    readonly_fields = ["deleted_on", "author"]
+
+    # def get_queryset(self, request):
+    #     qs = super(ProjectAdmin, self).get_queryset(request)
+    #     return qs.filter(author__organization=request.user.organization)
+
+    def save_model(self, request, obj, form, change):
+        self.author = request.user
+        # if getattr(obj, "added_by", None) is None:
+        #     obj.author == request.user
+        # obj.save()
 
 
 @admin.register(Dimension)
@@ -87,3 +121,10 @@ class DimensionAdmin(admin.ModelAdmin):
         "deleted_on",
         "project"
     ]
+
+    def get_queryset(self, request):
+        qs = super(DimensionAdmin, self).get_queryset(request)
+        return qs.filter(project__author__organization=request.user.organization)
+
+
+admin.site.register(Project, ProjectAdmin)

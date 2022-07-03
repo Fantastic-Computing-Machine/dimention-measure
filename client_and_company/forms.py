@@ -1,10 +1,7 @@
 from django import forms
+from django.conf import settings
 
 from client_and_company.models import Client
-
-# from client_and_company.models import STATE_CHOICES
-
-from django.conf import settings
 
 
 class NewClientForm(forms.ModelForm):
@@ -43,6 +40,7 @@ class NewClientForm(forms.ModelForm):
                 "aria-label": ".form-control-sm",
                 "type": 'tel',
                 "placeholder": "Phone Number (optional)",
+                "maxlength": "11",
             }
         )
     )
@@ -138,4 +136,6 @@ class NewClientForm(forms.ModelForm):
             'town_city',
             'zip_code',
             'state',
+            'organization',
+            'created_by',
         }

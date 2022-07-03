@@ -1,15 +1,12 @@
-from tabnanny import verbose
-from django_countries.fields import CountryField
-import decimal
-from datetime import datetime
 from django.contrib.auth.models import User
 from django.urls import reverse
-from django.core.validators import RegexValidator
 from django.db import models
 
 from authentication.models import Organization
 
 from django.conf import settings
+from django.contrib.auth import get_user_model as user_model
+User = user_model()
 
 
 class Client(models.Model):
@@ -31,15 +28,14 @@ class Client(models.Model):
     zip_code = models.CharField(max_length=6)
     state = models.CharField(choices=settings.STATE_CHOICES,
                              max_length=255, default='abc')
+    created_by = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
     organization = models.ForeignKey(
-        Organization, on_delete=models.CASCADE, default=1)
+        Organization, on_delete=models.CASCADE)
 
     def __str__(self):
         return str(self.name) + ' | ' + str(self.phoneNumber)
 
-    def save(self, request, obj):
-        print(request)
-        print(obj)
+    def save(self):
         self.name = self.name.replace(" ", "-").strip().lower()
         if self.description:
             self.description = self.description.strip()
@@ -50,6 +46,10 @@ class Client(models.Model):
             self.landmark = self.landmark.strip()
         self.town_city = self.town_city.strip()
         return super(Client, self).save()
+
+    # def save_model(self, request, obj, form, change):
+    #     obj.created_by = request.user
+    #     super().save_model(request, obj, form, change)
 
     def address(self):
         full_address = self.address_1
