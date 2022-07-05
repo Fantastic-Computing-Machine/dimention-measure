@@ -89,8 +89,14 @@ class EstimateDetailView(LoginRequiredMixin, CreateView):
 
         if request.method == 'POST':
             request.POST._mutable = True
+            if request.POST['width'] == '':
+                # SECURITY: CHECK FOR EXCEPTIONS LIKE LETTERS/SYMBOLS/NONE-TYPE/EMPTY (check is_integer)
+                request.POST['width'] = '0'
             request.POST["project"] = active_project
             request.POST._mutable = False
+            print("88888888888888")
+            print(request.POST)
+            print("88888888888888")
         return super(EstimateDetailView, self).post(request, **kwargs)
 
 

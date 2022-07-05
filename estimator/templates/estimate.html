@@ -65,6 +65,41 @@
                         {{form.unit}}
                     </p>
                     <p>
+                    <div class="row">
+                        <div class="col">
+                            {{form.length.label}}
+                            {{form.length}}
+                        </div>
+                        <div class="col">
+                            {{form.width.label}}
+                            {{form.width}}
+                        </div>
+                    </div>
+                    </p>
+                    <p>
+                        {{form.sqm.label}}
+                        {{form.sqm}}
+                    </p>
+                    <p>
+                        {{form.sqft.label}}
+                        {{form.sqft}}
+                    </p>
+                    <p>
+                    <div class="row">
+                        <div class="col">
+                            Sqm
+                            <input class="form-control" id="sqm" type="text" placeholder="Sqm"
+                                aria-label=".form-control-sm" value="{{dimension.sqm}}" disabled readonly>
+                        </div>
+                        <div class="col">
+                            Sqft
+                            <input class="form-control" id="sqft" type="text" placeholder="Sqft"
+                                aria-label=".form-control-sm" value="{{dimension.sqft}}" disabled readonly>
+                        </div>
+                    </div>
+                    </p>
+
+                    <p>
                         {{form.quantity.label}}
                         {{form.quantity}}
                     </p>

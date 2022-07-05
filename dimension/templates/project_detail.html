@@ -112,7 +112,7 @@
                         <td class="mx-2 font-monospace">{{item.name | capfirst }}
                             <div class="text-muted">
                                 {% if item.description %}
-                                    {{item.description}}
+                                {{item.description}}
                                 {% endif %}
                             </div>
                         </td>
@@ -194,31 +194,49 @@
                                             aria-label="Close"></button>
                                     </div>
                                     <div class="modal-body">
-                                        <div class="my-2">
+                                        <p>
+                                            {{form.name.label}}
                                             {{form.name}}
-                                        </div>
-                                        <div class="my-2">
+                                        </p>
+                                        <p>
+                                            {{form.description.label}}
                                             {{form.description}}
+                                        </p>
+                                        <p>
+                                        <div class="row">
+                                            <div class="col">
+                                                {{form.length.label}}
+                                                {{form.length}}
+                                            </div>
+                                            <div class="col">
+                                                {{form.width.label}}
+                                                {{form.width}}
+                                            </div>
                                         </div>
-                                        <div class="my-2">
-                                            {{form.length}}
+                                        </p>
+                                        <p>
+                                        <div class="row">
+                                            <div class="col">
+                                                Sqm
+                                                <input class="form-control" id="sqm" type="text" placeholder="Sqm"
+                                                    aria-label=".form-control-sm" value="{{dimension.sqm}}" disabled
+                                                    readonly>
+                                            </div>
+                                            <div class="col">
+                                                Sqft
+                                                <input class="form-control" id="sqft" type="text" placeholder="Sqft"
+                                                    aria-label=".form-control-sm" value="{{dimension.sqft}}" disabled
+                                                    readonly>
+                                            </div>
                                         </div>
-                                        <div class="my-2">
-                                            {{form.width}}
-                                        </div>
-                                        <div class="my-2">
-                                            <input class="form-control" id="sqm" type="text" placeholder="Sqm"
-                                                aria-label=".form-control-sm" readonly>
-                                        </div>
-                                        <div class="my-2"><input class="form-control" id="sqft" type="text"
-                                                placeholder="Sqft" aria-label=".form-control-sm" readonly>
-                                        </div>
-                                        <div class="my-2">
+                                        </p>
+                                        <p>
+                                            {{form.rate.label}}
                                             {{form.rate}}
-                                        </div>
-                                        <div class="my-2"><input class="form-control" id="amount" type="number"
+                                        </p>
+                                        <p>Amount<input class="form-control" id="amount" type="number"
                                                 placeholder="Amount" aria-label=".form-control-sm" readonly>
-                                        </div>
+                                        </p>
 
                                     </div>
                                     <div class="modal-footer">

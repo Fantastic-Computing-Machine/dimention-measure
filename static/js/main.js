@@ -4,16 +4,24 @@ var length = document.getElementById("id_length");
 var width = document.getElementById("id_width");
 var rate = document.getElementById("id_rate");
 
+function calculateAmount() {
+    var rt = parseFloat(rate.value);
+
+    if (isNaN(rt)) { rt = 0; }
+    var amount = document.getElementById("sqft").value * rt
+    document.getElementById("amount").value = amount;
+}
 
 function areas() {
+    // Find area of the lengths provided.
     var len = parseFloat(length.value);
     var wid = parseFloat(width.value);
-    var rt = parseFloat(rate.value);
+    // var rt = parseFloat(rate.value);
     var flag = false;
 
     if (isNaN(len)) { len = 0; }
     if (isNaN(wid)) { wid = 1; flag = true; }
-    if (isNaN(rt)) { rt = 0; }
+    // if (isNaN(rt)) { rt = 0; }
 
     var sqmtr = len * wid;
     document.getElementById("sqm").value = sqmtr;
@@ -22,8 +30,8 @@ function areas() {
         var sqfeet = len * wid * 3.28;
         document.getElementById("sqft").value = sqfeet;
 
-        var amount = sqfeet * rt
-        document.getElementById("amount").value = amount;
+        // var amount = sqfeet * rt
+        // document.getElementById("amount").value = amount;
 
         document.getElementById("sqm").value = 0.0;
         // <!-- if you change "N/A" here then change the value in records.html file also -->
@@ -32,15 +40,18 @@ function areas() {
         var sqfeet = len * wid * 10.764;
         document.getElementById("sqft").value = sqfeet;
 
-        var amount = sqfeet * rt
-        document.getElementById("amount").value = amount;
+        // var amount = sqfeet * rt
+        // document.getElementById("amount").value = amount;
     }
+
+    // calculateAmount()
 }
 
 var meter = document.getElementById("mt");
 var feet = document.getElementById("ft");
 
 function mtr_ft() {
+    // Unit conversion meter to feet
     var len = parseFloat(meter.value);
     if (isNaN(len)) { len = 0; }
 
@@ -49,6 +60,7 @@ function mtr_ft() {
 }
 
 function ft_mtr() {
+    // Unit conversion feet to meter
     var len = parseFloat(feet.value);
     if (isNaN(len)) { len = 0; }
 
@@ -78,5 +90,6 @@ $(document).ready(function () {
     });
 });
 
-var dt = new Date();
-document.getElementById('date-time').innerHTML = dt;
+
+// Dynamically change the year in the footer
+document.getElementById("current_year").innerHTML = new Date().getFullYear();

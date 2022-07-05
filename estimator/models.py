@@ -112,8 +112,18 @@ class Estimate(models.Model):
         RoomItemDescription, on_delete=models.CASCADE)
     quantity = models.DecimalField(
         max_digits=10, decimal_places=2, blank=True, null=True)
+    length = models.DecimalField(
+        max_digits=10, decimal_places=2, blank=True, null=True)
+    width = models.DecimalField(
+        max_digits=10, decimal_places=2, blank=True, null=True)
+    sqm = models.DecimalField(
+        max_digits=10, decimal_places=2, blank=True, null=True)
+    sqft = models.DecimalField(
+        max_digits=10, decimal_places=2, blank=True, null=True)
     amount = models.DecimalField(
         max_digits=10, decimal_places=2, blank=True, null=True)
+    description = models.TextField(
+        max_length=255, blank=True, null=True)
     created_on = models.DateTimeField(auto_now_add=True)
     is_deleted = models.BooleanField(default=False)
     deleted_on = models.DateTimeField(blank=True, null=True)
@@ -122,9 +132,40 @@ class Estimate(models.Model):
         return str(self.project.name) + ' | ' + str(self.room.name)
 
     def save(self):
+        print("88888888888888")
+        print(self.width)
+        print("88888888888888")
         self.amount = decimal.Decimal(
             self.quantity) * self.room_item_description.rate
-        return super(Estimate, self).save()
+
+        if self.width == '' or self.width == 0 or self.width == 0.0:
+            # SECURITY: CHECK FOR EXCEPTIONS LIKE LETTERS/SYMBOLS/NONE-TYPE/EMPTY
+
+            # when there is no width
+            if self.description != None and self.description != '':
+                if '**NOTE: THIS IS RUNNING LENGTH.**' not in self.description:
+                    self.description = "**NOTE: THIS IS RUNNING LENGTH.** \n" + \
+                        str(self.description)
+            else:
+                self.description = '**NOTE: THIS IS RUNNING LENGTH.**'
+
+            self.sqm = self.length
+            self.sqft = self.length * decimal.Decimal(3.28084)
+
+            return super(Estimate, self).save()
+
+        elif self.width > 0:
+            # SECURITY: CHECK FOR EXCEPTIONS LIKE LETTERS/SYMBOLS/NONE-TYPE/EMPTY
+
+            if self.description != None and self.description != '':
+                if '**NOTE: THIS IS RUNNING LENGTH.**' in self.description:
+                    self.description.replace(
+                        '**NOTE: THIS IS RUNNING LENGTH.**', '')
+
+            self.sqm = self.length * self.width
+            self.sqft = self.length * self.width * decimal.Decimal(10.7639)
+
+            return super(Estimate, self).save()
 
     def calculate_amount(self):
         return decimal.Decimal(self.quantity) * self.room_item_description.rate
