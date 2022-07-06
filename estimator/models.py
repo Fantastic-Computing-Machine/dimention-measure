@@ -129,10 +129,12 @@ class Estimate(models.Model):
     deleted_on = models.DateTimeField(blank=True, null=True)
 
     def __str__(self):
-        return str(self.project.name) + ' | ' + str(self.room.name)
+        return str(self.project.name) + ' | ' + str(self.room.name) + '|' + str(self.width)
 
     def save(self):
+        print(self)
         print("88888888888888")
+        print(self.length)
         print(self.width)
         print("88888888888888")
         self.amount = decimal.Decimal(

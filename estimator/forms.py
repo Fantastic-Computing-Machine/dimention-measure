@@ -187,6 +187,9 @@ class NewEstimateItemForm(forms.ModelForm):
             'room_item',
             'room_item_description',
             'quantity',
+            'length',
+            'width',
+
         )
 
 

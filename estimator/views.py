@@ -86,7 +86,7 @@ class EstimateDetailView(LoginRequiredMixin, CreateView):
 
     def post(self, request, **kwargs):
         active_project = Project.objects.filter(id=kwargs['pk'])[0]
-
+        
         if request.method == 'POST':
             request.POST._mutable = True
             if request.POST['width'] == '':
@@ -94,9 +94,14 @@ class EstimateDetailView(LoginRequiredMixin, CreateView):
                 request.POST['width'] = '0'
             request.POST["project"] = active_project
             request.POST._mutable = False
-            print("88888888888888")
             print(request.POST)
-            print("88888888888888")
+            try:
+                form = NewEstimateItemForm(request.POST)
+                if not form.is_valid():
+                    print(form.errors)
+            except Exception as e:
+                print(e)
+
         return super(EstimateDetailView, self).post(request, **kwargs)
 
 
