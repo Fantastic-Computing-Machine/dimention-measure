@@ -65,51 +65,62 @@
                         {{form.unit}}
                     </p>
                     <p>
-                    <div class="row">
-                        <div class="col">
-                            {{form.length.label}}
-                            {{form.length}}
-                        </div>
-                        <div class="col">
-                            {{form.width.label}}
-                            {{form.width}}
-                        </div>
-                    </div>
-                    </p>
+                        <hr>
                     <p>
-                        {{form.sqm.label}}
-                        {{form.sqm}}
-                    </p>
-                    <p>
-                        {{form.sqft.label}}
-                        {{form.sqft}}
-                    </p>
-                    <p>
-                    <div class="row">
-                        <div class="col">
-                            Sqm
-                            <input class="form-control" id="sqm" type="text" placeholder="Sqm"
-                                aria-label=".form-control-sm" value="{{dimension.sqm}}" disabled readonly>
-                        </div>
-                        <div class="col">
-                            Sqft
-                            <input class="form-control" id="sqft" type="text" placeholder="Sqft"
-                                aria-label=".form-control-sm" value="{{dimension.sqft}}" disabled readonly>
-                        </div>
-                    </div>
-                    </p>
+                    <div class="form-check">
+                        <input onclick="area_enable()" class="form-check-input" type="radio" name="flexRadio"
+                            id="flexRadioDefault1" checked>
 
+                        <label class="form-check-label" for="flexRadioDefault1">Area</label>
+
+                        <label class="form-check-label" for="flexRadioDefault1" id="areaBox">
+                            <div class="row">
+                                <div class="col">
+                                    {{form.length.label}}
+                                    {{form.length}}
+                                </div>
+                                <div class="col">
+                                    {{form.width.label}}
+                                    {{form.width}}
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div id="sqm_box" class="col">
+                                    Sqm
+                                    <input class="form-control" id="sqm" type="text" placeholder="Sqm"
+                                        aria-label=".form-control-sm" value="{{dimension.sqm}}" disabled readonly>
+                                </div>
+                                <div id="sqft_box" class="col">
+                                    Sqft
+                                    <input class="form-control" id="sqft" type="text" placeholder="Sqft"
+                                        aria-label=".form-control-sm" value="{{dimension.sqft}}" disabled readonly>
+                                </div>
+                            </div>
+                        </label>
+                    </div>
+                    </p>
+                    <hr>
                     <p>
-                        {{form.quantity.label}}
-                        {{form.quantity}}
+                    <div class="form-check">
+                        <input onclick="quantity_enable()" class="form-check-input" type="radio" name="flexRadio"
+                            id="flexRadioDefault2">
+                        <label class="form-check-label" for="flexRadioDefault2" id="quantityBox">
+                            <div>
+                                {{form.quantity.label}}
+                                {{form.quantity}}
+                            </div>
+                        </label>
+                    </div>
+                    </p>
                     </p>
                     <div class="text-center">
                         <button class="btn btn-outline-success" type="submit" id="button-addon2">Add to
                             Estimate</button>
                     </div>
                 </form>
+
+                <div class="text-muted">**Area will be calculated using Sq Meters.</div>
             </div>
-            <!-- </div> -->
         </div>
     </div>
 </div>
@@ -275,6 +286,10 @@
                         <thead class="table-primary align-middle row-cols-auto">
                             <th class="text-center mx-2 text-nowrap">Description</th>
                             <!-- <th class="text-center mx-2 text-nowrap">Unit</th> -->
+                            <th class="text-center mx-2 text-nowrap">Length</th>
+                            <th class="text-center mx-2 text-nowrap">Width</th>
+                            <th class="text-center mx-2 text-nowrap">Sq Meter</th>
+                            <th class="text-center mx-2 text-nowrap">Sq Ft.</th>
                             <th class="text-center mx-2 text-nowrap">Quantity</th>
                             <th class="text-center mx-2 text-nowrap">Rate</th>
                             <th class="text-center mx-2 text-nowrap">Amount</th>
@@ -293,13 +308,25 @@
                                 </div>
                             </td>
                             <td class="text-center col-1">
+                                {{item.length}}
+                            </td>
+                            <td class="text-center col-1">
+                                {{item.width}}
+                            </td>
+                            <td class="text-center col-1">
+                                {{item.sqm}}
+                            </td>
+                            <td class="text-center col-1">
+                                {{item.sqft}}
+                            </td>
+                            <td class="text-center col-1">
                                 {{item.quantity}}
                             </td>
                             <td class="text-center col-1">
                                 {{item.room_item_description.rate}} / {{item.room_item_description.unit.unit}}
                             </td>
                             <td class="text-center col-1">
-                                {{item.calculate_amount | floatformat:2}}
+                                {{item.calculate_amount | floatformat:2}} // {{item.amount | floatformat:2}}
                             </td>
                             <td class="text-center col-1">
                                 <a href="{% url 'update_estimate_item' item.id project.id project.name %}">

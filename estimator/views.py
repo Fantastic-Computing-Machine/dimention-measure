@@ -86,12 +86,16 @@ class EstimateDetailView(LoginRequiredMixin, CreateView):
 
     def post(self, request, **kwargs):
         active_project = Project.objects.filter(id=kwargs['pk'])[0]
-        
+
+        print(request.POST)
+
         if request.method == 'POST':
             request.POST._mutable = True
-            if request.POST['width'] == '':
-                # SECURITY: CHECK FOR EXCEPTIONS LIKE LETTERS/SYMBOLS/NONE-TYPE/EMPTY (check is_integer)
-                request.POST['width'] = '0'
+            # SECURITY: CHECK FOR EXCEPTIONS LIKE LETTERS/SYMBOLS/NONE-TYPE/EMPTY (check is_integer)
+            if 'width' in request.POST:
+                # if request.POST['width']:
+                if request.POST['width'] == '':
+                    request.POST['width'] = '0'
             request.POST["project"] = active_project
             request.POST._mutable = False
             print(request.POST)

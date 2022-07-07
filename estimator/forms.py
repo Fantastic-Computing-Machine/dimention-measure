@@ -1,3 +1,4 @@
+from faulthandler import disable
 from django import forms
 
 from .models import Estimate, Project, Room, RoomItem, RoomItemDescription
@@ -11,9 +12,9 @@ class NewProjectForm(forms.ModelForm):
         required=True,
         widget=forms.TextInput(
             attrs={
-                'class': 'form-control',
+                "class": "form-control",
                 "aria-label": ".form-control-sm",
-                "type": 'text',
+                "type": "text",
                 "placeholder": "Name",
             }
         )
@@ -35,7 +36,7 @@ class NewProjectForm(forms.ModelForm):
         required=False,
         widget=forms.Textarea(
             attrs={
-                'class': 'form-control',
+                "class": "form-control",
                 "rows": 3,
                 "aria-label": ".form-control-sm",
                 "placeholder": "Description (optional)",
@@ -46,10 +47,10 @@ class NewProjectForm(forms.ModelForm):
     class Meta:
         model = Project
         fields = (
-            'name',
-            'client',
-            'description',
-            'author'
+            "name",
+            "client",
+            "description",
+            "author"
         )
 
 
@@ -60,9 +61,9 @@ class UpdateProjectForm(forms.ModelForm):
         required=True,
         widget=forms.TextInput(
             attrs={
-                'class': 'form-control',
+                "class": "form-control",
                 "aria-label": ".form-control-sm",
-                "type": 'text',
+                "type": "text",
                 "placeholder": "Name",
             }
         )
@@ -84,7 +85,7 @@ class UpdateProjectForm(forms.ModelForm):
         required=False,
         widget=forms.Textarea(
             attrs={
-                'class': 'form-control',
+                "class": "form-control",
                 "rows": 3,
                 "aria-label": ".form-control-sm",
                 "placeholder": "Description (optional)",
@@ -95,9 +96,9 @@ class UpdateProjectForm(forms.ModelForm):
     class Meta:
         model = Project
         fields = (
-            'name',
-            'client',
-            'description',
+            "name",
+            "client",
+            "description",
         )
 
 
@@ -138,15 +139,16 @@ class NewEstimateItemForm(forms.ModelForm):
 
     length = forms.CharField(
         max_length=200,
-        required=True,
+        required=False,
         widget=forms.TextInput(
             attrs={
-                'class': 'form-control',
+                "class": "form-control",
                 "aria-label": ".form-control-sm",
-                "type": 'number',
+                "type": "number",
                 "placeholder": "Lenght (in meters)",
                 "step": ".01",
                 "oninput": "areas()",
+                # "id": "forAreaLength"
             }
         )
     )
@@ -155,12 +157,13 @@ class NewEstimateItemForm(forms.ModelForm):
         required=False,
         widget=forms.TextInput(
             attrs={
-                'class': 'form-control',
+                "class": "form-control",
                 "aria-label": ".form-control-sm",
-                "type": 'number',
+                "type": "number",
                 "placeholder": "Width (in meters)",
                 "step": ".01",
                 "oninput": "areas()",
+                # "id": "forAreaWidth",
             }
         )
     )
@@ -170,11 +173,13 @@ class NewEstimateItemForm(forms.ModelForm):
         required=False,
         widget=forms.TextInput(
             attrs={
-                'class': 'form-control',
+                "class": "form-control",
                 "aria-label": ".form-control-sm",
-                "type": 'number',
+                "type": "number",
                 "placeholder": "Quantity",
                 "step": ".01",
+                "id": "forQuantity",
+                "disabled": "disabled"
             }
         )
     )
@@ -182,13 +187,13 @@ class NewEstimateItemForm(forms.ModelForm):
     class Meta:
         model = Estimate
         fields = (
-            'project',
-            'room',
-            'room_item',
-            'room_item_description',
-            'quantity',
-            'length',
-            'width',
+            "project",
+            "room",
+            "room_item",
+            "room_item_description",
+            "quantity",
+            "length",
+            "width",
 
         )
 
@@ -199,9 +204,9 @@ class NewRoomForm(forms.ModelForm):
         required=True,
         widget=forms.TextInput(
             attrs={
-                'class': 'form-control',
+                "class": "form-control",
                 "aria-label": ".form-control-sm",
-                "type": 'text',
+                "type": "text",
                 "placeholder": "Name",
             }
         )
@@ -210,7 +215,7 @@ class NewRoomForm(forms.ModelForm):
     class Meta:
         model = Room
         fields = (
-            'name',
+            "name",
         )
 
 
@@ -220,9 +225,9 @@ class NewRoomItemForm(forms.ModelForm):
         required=True,
         widget=forms.TextInput(
             attrs={
-                'class': 'form-control',
+                "class": "form-control",
                 "aria-label": ".form-control-sm",
-                "type": 'text',
+                "type": "text",
                 "placeholder": "Name",
             }
         )
@@ -231,7 +236,7 @@ class NewRoomItemForm(forms.ModelForm):
     class Meta:
         model = RoomItem
         fields = (
-            'name',
+            "name",
         )
 
 
@@ -240,7 +245,7 @@ class NewRoomItemDescriptionForm(forms.ModelForm):
         required=False,
         widget=forms.Textarea(
             attrs={
-                'class': 'form-control',
+                "class": "form-control",
                 "rows": 3,
                 "aria-label": ".form-control-sm",
                 "placeholder": "Description",
@@ -253,9 +258,9 @@ class NewRoomItemDescriptionForm(forms.ModelForm):
         required=False,
         widget=forms.TextInput(
             attrs={
-                'class': 'form-control',
+                "class": "form-control",
                 "aria-label": ".form-control-sm",
-                "type": 'number',
+                "type": "number",
                 "placeholder": "Rate",
                 "step": ".01",
             }
@@ -277,8 +282,7 @@ class NewRoomItemDescriptionForm(forms.ModelForm):
     class Meta:
         model = RoomItemDescription
         fields = (
-            'description',
-            'unit',
-            'rate'
+            "description",
+            "unit",
+            "rate"
         )
-

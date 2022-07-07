@@ -132,45 +132,65 @@ class Estimate(models.Model):
         return str(self.project.name) + ' | ' + str(self.room.name) + '|' + str(self.width)
 
     def save(self):
-        print(self)
-        print("88888888888888")
-        print(self.length)
-        print(self.width)
-        print("88888888888888")
-        self.amount = decimal.Decimal(
-            self.quantity) * self.room_item_description.rate
-
-        if self.width == '' or self.width == 0 or self.width == 0.0:
-            # SECURITY: CHECK FOR EXCEPTIONS LIKE LETTERS/SYMBOLS/NONE-TYPE/EMPTY
-
-            # when there is no width
-            if self.description != None and self.description != '':
-                if '**NOTE: THIS IS RUNNING LENGTH.**' not in self.description:
-                    self.description = "**NOTE: THIS IS RUNNING LENGTH.** \n" + \
-                        str(self.description)
-            else:
-                self.description = '**NOTE: THIS IS RUNNING LENGTH.**'
-
-            self.sqm = self.length
-            self.sqft = self.length * decimal.Decimal(3.28084)
-
+        if self.quantity:
+            self.length = None
+            self.width = None
+            self.sqm = None
+            self.sqft = None
+            self.amount = decimal.Decimal(
+                self.quantity) * self.room_item_description.rate
             return super(Estimate, self).save()
 
-        elif self.width > 0:
-            # SECURITY: CHECK FOR EXCEPTIONS LIKE LETTERS/SYMBOLS/NONE-TYPE/EMPTY
+        else:
+            if self.width == '' or self.width == 0 or self.width == 0.0:
+                # SECURITY: CHECK FOR EXCEPTIONS LIKE LETTERS/SYMBOLS/NONE-TYPE/EMPTY
 
-            if self.description != None and self.description != '':
-                if '**NOTE: THIS IS RUNNING LENGTH.**' in self.description:
-                    self.description.replace(
-                        '**NOTE: THIS IS RUNNING LENGTH.**', '')
+                # when there is width (RUNNING LENGTH)
+                if self.description != None and self.description != '':
+                    if '**NOTE: THIS IS RUNNING LENGTH.**' not in self.description:
+                        self.description = "**NOTE: THIS IS RUNNING LENGTH.** \n" + \
+                            str(self.description)
+                else:
+                    self.description = '**NOTE: THIS IS RUNNING LENGTH.**'
 
-            self.sqm = self.length * self.width
-            self.sqft = self.length * self.width * decimal.Decimal(10.7639)
+                self.sqm = self.length
+                self.sqft = self.length * decimal.Decimal(3.28084)
+
+                self.amount = decimal.Decimal(
+                    self.length) * self.room_item_description.rate
+
+                # return super(Estimate, self).save()
+
+            elif self.width > 0:
+                # AREA
+
+                # SECURITY: CHECK FOR EXCEPTIONS LIKE LETTERS/SYMBOLS/NONE-TYPE/EMPTY
+
+                if self.description != None and self.description != '':
+                    if '**NOTE: THIS IS RUNNING LENGTH.**' in self.description:
+                        self.description.replace(
+                            '**NOTE: THIS IS RUNNING LENGTH.**', '')
+
+                self.sqm = self.length * self.width
+                self.sqft = self.length * self.width * decimal.Decimal(10.7639)
+
+                self.amount = decimal.Decimal(
+                    self.sqm) * self.room_item_description.rate
+
+            self.quantity = None
 
             return super(Estimate, self).save()
 
     def calculate_amount(self):
-        return decimal.Decimal(self.quantity) * self.room_item_description.rate
+        print(",,,,,,,,,,,,,,,,,,,,,")
+        print(self.sqm)
+        print(self.sqft)
+        print(self.quantity)
+        print(self.room_item_description.rate)
+        print(",,,,,,,,,,,,,,,,,,,,,")
+        if self.quantity is not None:
+            return decimal.Decimal(self.quantity) * self.room_item_description.rate
+        return decimal.Decimal(self.sqm) * self.room_item_description.rate
 
     def get_absolute_url(self):
         return reverse("estimate", args=[str(self.project.pk), str(self.project.name)])
