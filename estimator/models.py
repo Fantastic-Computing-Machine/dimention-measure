@@ -52,13 +52,6 @@ class RoomItemDescription(models.Model):
     def __str__(self):
         return str(self.description) + " @ " + str(self.rate)
 
-
-DISCOUNT_TYPE = [
-    ("AMT", "Amount"),
-    ("PCT", "Percentage"),
-]
-
-
 class Project(models.Model):
     name = models.CharField(
         max_length=255)
@@ -104,7 +97,7 @@ class Project(models.Model):
         return decimal.Decimal(format(self.total_after_discount() * decimal.Decimal(0.18), ".2f"))
 
     def total_with_gst(self):
-        return self.total_amount() + self.gst_amount()
+        return self.total_after_discount() + self.gst_amount()
 
     def get_all_rooms(self):
         estimate_room_obj = Estimate.objects.values_list(
