@@ -458,10 +458,13 @@
                                         <select name="unit" class="form-select" aria-label=".form-control-sm"
                                             placeholder="Unit" maxlength="100" id="unit">
                                             <option value="" selected>---------</option>
-                                            <option value="1">Sqft</option>
+                                            <!-- <option value="1">Sqft</option>
                                             <option value="2">Rft</option>
                                             <option value="3">LS</option>
-                                            <option value="4">No.</option>
+                                            <option value="4">No.</option> -->
+                                            {% for unit in units %}
+                                            <option value="{{unit.pk}}">{{unit.unit}}</option>
+                                            {% endfor %}
                                         </select>
                                     </p>
 

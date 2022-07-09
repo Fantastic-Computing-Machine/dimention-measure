@@ -36,7 +36,7 @@ from estimator.forms import (
 from client_and_company.models import Client
 from authentication.models import Organization
 from client_and_company.forms import NewClientForm
-from settings.models import TermsHeading, TermsContent
+from settings.models import Unit, TermsHeading, TermsContent
 
 
 class AllEstimates(LoginRequiredMixin, FormMixin, ListView):
@@ -119,7 +119,7 @@ class UpdateEstimateItemView(LoginRequiredMixin, UpdateView):
     model = Estimate
     template_name = 'update_estimate_item.html'
     form_class = NewEstimateItemForm
-   
+
     def post(self, request, **kwargs):
 
         print(request.POST)
@@ -127,7 +127,7 @@ class UpdateEstimateItemView(LoginRequiredMixin, UpdateView):
         req = request.POST
         super(UpdateEstimateItemView, self).post(request, **kwargs)
         estimate = Estimate.objects.get(pk=self.kwargs['pk'])
-        print("---",estimate)
+        print("---", estimate)
 
         estimate.room_id = req['room']
         estimate.room_item_id = req['room_item']
@@ -159,6 +159,7 @@ class FolioView(LoginRequiredMixin, CreateView):
         room_item = RoomItem.objects.filter(is_deleted=False)
         room_item_description = RoomItemDescription.objects.filter(
             is_deleted=False)
+        kwargs['units'] = Unit.objects.all()
         kwargs['rooms'] = rooms
         kwargs['room_item'] = room_item
         kwargs['room_item_description'] = room_item_description
@@ -413,12 +414,12 @@ def download_estimate_excel_file(request, project_id, project_name):
 @login_required
 def updateDiscount(request, pk, project_name):
     if request.method == 'POST':
-        print("Inside Update Discount",request.POST)
+        print("Inside Update Discount", request.POST)
         form = DiscountForm(request.POST)
         if form.is_valid():
             project = Project.objects.filter(
                 pk=pk, is_deleted=False)[0]
             project.discount = form.cleaned_data['discount']
             project.save()
-       
+
     return HttpResponseRedirect(reverse('estimate', args=(pk, project_name,)))

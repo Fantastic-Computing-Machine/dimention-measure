@@ -45,39 +45,39 @@ class LogEntryAdmin(admin.ModelAdmin):
 
 @admin.register(CompanyUser)
 class CompanyUser(admin.ModelAdmin):
-    readonly_fields = ['organization',
-                       'last_login', 'date_joined', ]
+    # readonly_fields = ['organization',
+    #                    'last_login', 'date_joined', ]
 
     exclude = ['password', 'is_superuser', 'is_staff']
 
-    def get_form(self, request, obj=None, **kwargs):
-        form = super().get_form(request, obj, **kwargs)
-        user_access_level = request.user.access_level
-        is_superuser = request.user.is_superuser
+    # def get_form(self, request, obj=None, **kwargs):
+    #     form = super().get_form(request, obj, **kwargs)
+    #     user_access_level = request.user.access_level
+    #     is_superuser = request.user.is_superuser
 
-        disabled_fields = [
-            'user_permissions',
-        ]
+    #     disabled_fields = [
+    #         'user_permissions',
+    #     ]
 
-        if user_access_level == 'SITE_USR':
-            disabled_fields = disabled_fields + ['is_active']
+    #     if user_access_level == 'SITE_USR':
+    #         disabled_fields = disabled_fields + ['is_active']
 
-        if user_access_level == 'ORG_ADM':
-            disabled_fields = disabled_fields + ['organization']
+    #     if user_access_level == 'ORG_ADM':
+    #         disabled_fields = disabled_fields + ['organization']
 
-        if user_access_level == 'ORG_USR':
-            disabled_fields |= disabled_fields + \
-                ['access_level', 'organization', 'is_active']
+    #     if user_access_level == 'ORG_USR':
+    #         disabled_fields |= disabled_fields + \
+    #             ['access_level', 'organization', 'is_active']
 
-        # Prevent non-superusers from editing their own permissions
+    #     # Prevent non-superusers from editing their own permissions
 
-        for f in disabled_fields:
-            if f in form.base_fields:
-                form.base_fields[f].disabled = True
+    #     for f in disabled_fields:
+    #         if f in form.base_fields:
+    #             form.base_fields[f].disabled = True
 
-        print(form.base_fields['access_level'])
+    #     print(form.base_fields['access_level'])
 
-        return form
+    #     return form
 
 
 admin.site.register(Organization)
