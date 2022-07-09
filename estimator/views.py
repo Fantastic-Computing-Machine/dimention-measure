@@ -335,7 +335,7 @@ def download_estimate_excel_file(request, project_id, project_name):
     sheet.append(["", company.address()])
     sheet.append(["", "Email:"+str(company.email)])
     sheet.append(
-        ["", "Mobile: " + str(company.phoneNumber) + str(company.name)])
+        ["", "Mobile: " + str(company.phoneNumber) + str(company.company_name)])
     sheet.append([""])
     sheet.append(["", "To"])
     sheet.append(["", project.client.name])
