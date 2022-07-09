@@ -399,80 +399,76 @@
     <div class="card mb-3">
         <div class="card-body">
             <p class="fs-5 fw-bold">
-                <a data-bs-toggle="modal" data-bs-target="#exampleModal">
-                    <li class="list-group-item list-group-item-action list-group-item-info ">
-                        <div class="d-flex justify-content-between">
-                            <div>
-                                Grand Total
-                            </div>
-                            <span class="badge bg-info fs-6 font-monospace">₹
-                                {{project.total_amount|floatformat:2|intcomma}}</span>
+
+                <li class="list-group-item list-group-item-action list-group-item-info ">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            Grand Total
                         </div>
-                    </li>
+                        <span class="badge bg-info fs-6 font-monospace">₹
+                            {{project.total_amount|floatformat:2|intcomma}}</span>
+                    </div>
+                </li>
+                <a data-bs-toggle="modal" data-bs-target="#exampleModal">
                     <li class="list-group-item list-group-item-action list-group-item-primary">
                         <div class="d-flex justify-content-between">
                             <div>
                                 Discount Percentage
                             </div>
                             <span class="badge bg-primary fs-6 font-monospace">
-                                {{project.discount}} %
-                            </span>
-                        </div>
-                    </li>
-                    <li class="list-group-item list-group-item-action list-group-item-primary">
-                        <div class="d-flex justify-content-between">
-                            <div>
-                                Discount Amount
-                            </div>
-                            <span class="badge bg-primary fs-6 font-monospace">
-                                ₹ {{project.discount_amount|floatformat:2|intcomma}}
-                            </span>
-                        </div>
-                    </li>
-                    <li class="list-group-item list-group-item-action list-group-item-primary">
-                        <div class="d-flex justify-content-between">
-                            <div>
-                                Total after discount
-                            </div>
-                            <span class="badge bg-primary fs-6 font-monospace">
-                                ₹ {{project.total_after_discount|floatformat:2|intcomma}}
+                                % {{project.discount}}
                             </span>
                         </div>
                     </li>
                 </a>
+                <li class="list-group-item list-group-item-action list-group-item-primary">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            Discount Amount
+                        </div>
+                        <span class="badge bg-primary fs-6 font-monospace">
+                            ₹ {{project.discount_amount|floatformat:2|intcomma}}
+                        </span>
+                    </div>
+                </li>
+                <li class="list-group-item list-group-item-action list-group-item-primary">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            Total after discount
+                        </div>
+                        <span class="badge bg-primary fs-6 font-monospace">
+                            ₹ {{project.total_after_discount|floatformat:2|intcomma}}
+                        </span>
+                    </div>
+                </li>
 
             <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
                 aria-hidden="true">
                 <div class="modal-dialog">
                     <div class="modal-content">
-                        <form method="POST">
+                        <form action="{% url 'update_estimate_discount' project.id project.name%}" method="POST"
+                            name="updateDiscount_name" id="updateDiscount_id">
 
-                            <div class="modal-header">
-                                <h5 class="modal-title" id="exampleModalLabel">Discount</h5>
-                            </div>
                             <div class="modal-body">
 
                                 {% csrf_token %}
-
                                 <p>
-                                <div class="form-check form-switch">
-                                    <label for="id_discount_in_percentage">Discount in Amount</label>
-                                    <input type="checkbox" name="discount_in_percentage" class="form-check-input"
-                                        id="id_discount_in_percentage">
+
+                                <div class="input-group mb-3">
+                                    <span class = 'input-group-text'>Discount</span>
+                                    <input type="number" name="discount" class="form-control"
+                                        aria-label=".form-control-sm"  step=".10" maxlength="3"
+                                        id="id_discount" required aria-describedby="discountChangeSubmit">
+                                        <span class = 'input-group-text'>%</span>
+                                    <button type="submit" id="discountChangeSubmit"
+                                        class="btn btn-success">Submit</button>
                                 </div>
                                 </p>
-
-                                <p>
-                                    <label for="id_discount">Discount:</label>
-                                    <input type="number" name="discount" class="form-control"
-                                        aria-label=".form-control-sm" placeholder="Discount" step=".01" maxlength="200"
-                                        id="id_discount">
-                                </p>
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                <button type="submit" class="btn btn-primary">Save changes</button>
-                            </div>
+                                <div class="m-0 p-0">
+                                    <small id="DiscountError" class="text-danger" hidden>
+                                        ** Please enter a valid discount amount(Range: 0 to 100).
+                                    </small>
+                                </div>
                         </form>
                     </div>
                 </div>

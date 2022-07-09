@@ -17,6 +17,7 @@ from estimator.views import (
     AddRoomItem,
     AddRoomItemDescription,
     download_estimate_excel_file,
+    updateDiscount,
 )
 
 
@@ -63,5 +64,8 @@ urlpatterns = [
 
     path("excel/<int:project_id>/<str:project_name>/download/",
          download_estimate_excel_file, name="download_estimate_excel_file"),
+
+    path("<int:pk>/<str:project_name>/update_discount/",
+         updateDiscount, name="update_estimate_discount"),
 
 ]
