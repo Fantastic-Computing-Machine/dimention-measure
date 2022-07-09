@@ -3,6 +3,8 @@ from datetime import datetime
 from openpyxl import Workbook
 from openpyxl.styles import Font, Alignment
 import os
+import decimal
+
 
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -117,27 +119,31 @@ class UpdateEstimateItemView(LoginRequiredMixin, UpdateView):
     model = Estimate
     template_name = 'update_estimate_item.html'
     form_class = NewEstimateItemForm
-    # success_url = reverse_lazy('folio')
+   
+    def post(self, request, **kwargs):
 
-    def get_success_url(self, **kwargs):
-        return HttpResponseRedirect(reverse('estimate', kwargs={'pk': self.kwargs['project_id'], 'project_name': self.kwargs['project_name'], }))
+        print(request.POST)
 
-    # def post(self, request, **kwargs):
+        req = request.POST
+        super(UpdateEstimateItemView, self).post(request, **kwargs)
+        estimate = Estimate.objects.get(pk=self.kwargs['pk'])
+        print("---",estimate)
 
-    #     print(request.POST)
+        estimate.room_id = req['room']
+        estimate.room_item_id = req['room_item']
+        estimate.room_item_description_id = req['room_item_description']
+        if('quantity' in req):
+            estimate.quantity = req['quantity']
+            estimate.length = None
+            estimate.width = None
+        else:
+            estimate.length = decimal.Decimal(req['length'])
+            estimate.width = decimal.Decimal(req['width'])
+            estimate.quantity = None
+        estimate.discount = req['discount']
+        estimate.save()
 
-    #     req = request.POST
-    #     super(UpdateEstimateItemView, self).post(request, **kwargs)
-    #     estimate = Estimate.objects.get(pk=self.kwargs['pk'])
-
-    #     estimate.room_id = req['room'][0]
-    #     estimate.room_item_id = req['room_item'][0][0]
-    #     estimate.room_item_description_id = req['room_item_description'][0]
-    #     estimate.quantity = req['quantity'][0]
-    #     estimate.discount = req['discount'][0]
-    #     estimate.save()
-
-    #     return HttpResponseRedirect(reverse('estimate', kwargs={"pk": self.kwargs['project_id'], "project_name": self.kwargs['project_name']}))
+        return HttpResponseRedirect(reverse('estimate', kwargs={"pk": self.kwargs['project_id'], "project_name": self.kwargs['project_name']}))
 
 
 class FolioView(LoginRequiredMixin, CreateView):
