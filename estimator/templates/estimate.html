@@ -357,13 +357,13 @@
                                             <div class="modal-header">
                                                 <h5 class="modal-title" id="delete{{item.id}}ModalLabel">
                                                     Confirm
-                                                    delete dimension"{{item.name | capfirst }}"</h5>
+                                                    delete estimate</h5>
                                                 <button type="button" class="btn-close" data-bs-dismiss="modal"
                                                     aria-label="Close"></button>
                                             </div>
                                             <div class="modal-body text-start">
-                                                You wish to permanently delete dimension&rarr;
-                                                <b>"{{item.name | capfirst }}"</b>?<br>
+                                                You wish to permanently delete ?
+                                               
                                                 <b class="my-1">Be Careful!</b>
                                             </div>
                                             <div class="modal-footer">
@@ -371,7 +371,7 @@
                                                     data-bs-dismiss="modal">Get
                                                     back to safety</button>
                                                 <form
-                                                    action="{% url 'delete_dimention' item.id item.project.id item.project.name %}"
+                                                    action="{% url 'delete_estimate_row' item.id item.project.id item.project.name %}"
                                                     method="POST">
                                                     {% csrf_token %}
 

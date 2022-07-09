@@ -5,7 +5,6 @@ from openpyxl.styles import Font, Alignment
 import os
 import decimal
 
-
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import FileResponse
@@ -422,3 +421,10 @@ def updateDiscount(request, pk, project_name):
             project.save()
        
     return HttpResponseRedirect(reverse('estimate', args=(pk, project_name,)))
+
+
+@login_required
+def DeleteEstimateComponentView(request, pk, project_id, project_name):
+    if request.method == 'POST':
+        estimate = Estimate.objects.filter(pk=pk).update(is_deleted=True, deleted_on=datetime.now())
+    return HttpResponseRedirect(reverse('estimate', args=(project_id, project_name,)))

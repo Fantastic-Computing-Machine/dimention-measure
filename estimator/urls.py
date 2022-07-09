@@ -18,6 +18,7 @@ from estimator.views import (
     AddRoomItemDescription,
     download_estimate_excel_file,
     updateDiscount,
+    DeleteEstimateComponentView
 )
 
 
@@ -67,5 +68,9 @@ urlpatterns = [
 
     path("<int:pk>/<str:project_name>/update_discount/",
          updateDiscount, name="update_estimate_discount"),
+
+     # estimate_row_id, project_name
+    path("<int:pk>/<int:project_id>/<str:project_name>/delete_estimate_component/",
+         DeleteEstimateComponentView, name="delete_estimate_row"),
 
 ]
