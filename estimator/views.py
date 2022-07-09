@@ -395,3 +395,17 @@ def download_estimate_excel_file(request, project_id, project_name):
     file_ecxel = FileResponse(open(file_path, 'rb'))
     delete_file = os.remove(file_path)
     return file_ecxel
+
+
+@login_required
+def updateDiscount(request, pk, project_name):
+    if request.method == 'POST':
+        print("Inside Update Discount",request.POST)
+        form = DiscountForm(request.POST)
+        if form.is_valid():
+            project = Project.objects.filter(
+                pk=pk, is_deleted=False)[0]
+            project.discount = form.cleaned_data['discount']
+            project.save()
+       
+    return HttpResponseRedirect(reverse('estimate', args=(pk, project_name,)))

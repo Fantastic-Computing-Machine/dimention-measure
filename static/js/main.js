@@ -132,3 +132,17 @@ function quantity_enable() {
 
     document.getElementById('forQuantity').disabled = false;
 }
+
+$(document).ready(function () {
+    $("#id_discount").on('input', function() {
+        if($(this).val() < 0 || $(this).val() > 100){
+            $('#DiscountError').prop('hidden', false);
+            $('#discountChangeSubmit').prop('disabled', true);
+        }
+        else
+        {
+            $('#DiscountError').prop('hidden', true);
+            $('#discountChangeSubmit').prop('disabled', false);
+        }
+    });
+});
