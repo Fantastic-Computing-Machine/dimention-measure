@@ -149,7 +149,6 @@ class NewEstimateItemForm(forms.ModelForm):
                 "placeholder": "Lenght (in meters)",
                 "step": ".01",
                 "oninput": "areas()",
-                # "id": "forAreaLength"
             }
         )
     )
@@ -164,7 +163,20 @@ class NewEstimateItemForm(forms.ModelForm):
                 "placeholder": "Width (in meters)",
                 "step": ".01",
                 "oninput": "areas()",
-                # "id": "forAreaWidth",
+            }
+        )
+    )
+
+    discount = forms.CharField(
+        max_length=200,
+        required=False,
+        widget=forms.TextInput(
+            attrs={
+                "class": "form-control",
+                "aria-label": ".form-control-sm",
+                "type": "number",
+                "placeholder": "Discount percentage",
+                "step": ".01",
             }
         )
     )
@@ -195,6 +207,7 @@ class NewEstimateItemForm(forms.ModelForm):
             "quantity",
             "length",
             "width",
+            "discount",
 
         )
 

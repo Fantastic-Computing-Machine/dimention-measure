@@ -123,6 +123,7 @@ function quantity_enable() {
     document.getElementById('sqm').value = '';
     document.getElementById('sqm').hidden = true;
     document.getElementById('sqm_box').hidden = true;
+    document.getElementById('forQuantity').required = true;
 
     document.getElementById('sqft').value = '';
     document.getElementById('sqft').hidden = true;

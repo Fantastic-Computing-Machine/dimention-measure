@@ -112,6 +112,10 @@
                         </label>
                     </div>
                     </p>
+                    <hr>
+                    <p>
+                        {{form.discount.label}}
+                        {{form.discount}}
                     </p>
                     <div class="text-center">
                         <button class="btn btn-outline-success" type="submit" id="button-addon2">Add to
@@ -293,6 +297,7 @@
                             <th class="text-center mx-2 text-nowrap">Quantity</th>
                             <th class="text-center mx-2 text-nowrap">Rate</th>
                             <th class="text-center mx-2 text-nowrap">Amount</th>
+                            <th class="text-center mx-2 text-nowrap">Disc. Amt</th>
                             <th class="text-center mx-2 text-nowrap">Action</th>
                         </thead>
 
@@ -305,6 +310,9 @@
                                 </b>- {{item.room_item.name}}
                                 <div class="text-wrap ps-2">
                                     {{item.room_item_description.description}}
+                                </div>
+                                <div>
+                                    <b>Discount: </b> {{item.discount | floatformat:1}} %
                                 </div>
                             </td>
                             <td class="text-end col-1">
@@ -327,6 +335,10 @@
                             </td>
                             <td class="text-end col-1">
                                 &#8377 {{item.calculate_amount | floatformat:2}}
+                            </td>
+                            <td class="text-end col-1">
+                                <div class="text-danger">- &#8377 {{item.discount_amount | floatformat:2}}</div>
+                                &#8377 {{item.total_after_discount | floatformat:2}}
                             </td>
                             <td class="text-center col-2">
                                 <a href="{% url 'update_estimate_item' item.id project.id project.name %}">

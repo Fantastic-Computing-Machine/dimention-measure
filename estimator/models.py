@@ -52,6 +52,7 @@ class RoomItemDescription(models.Model):
     def __str__(self):
         return str(self.description) + " @ " + str(self.rate)
 
+
 class Project(models.Model):
     name = models.CharField(
         max_length=255)
@@ -65,7 +66,7 @@ class Project(models.Model):
     is_deleted = models.BooleanField(default=False)
     deleted_on = models.DateTimeField(blank=True, null=True)
     discount = models.DecimalField(
-        max_digits=20, decimal_places=2, blank=True, null=True, default=0)
+        max_digits=20, decimal_places=2, default=0)
     reference_number = models.CharField(max_length=225, blank=True, null=True)
 
     def __str__(self):
@@ -84,7 +85,7 @@ class Project(models.Model):
 
     def total_amount(self):
         estimates = Estimate.objects.filter(project=self, is_deleted=False)
-        sum_amount = sum(item.calculate_amount() for item in estimates)
+        sum_amount = sum(item.total_after_discount() for item in estimates)
         return sum_amount
 
     def discount_amount(self):
@@ -129,6 +130,8 @@ class Estimate(models.Model):
         max_digits=20, decimal_places=2, blank=True, null=True)
     amount = models.DecimalField(
         max_digits=20, decimal_places=2, blank=True, null=True)
+    discount = models.DecimalField(
+        max_digits=20, decimal_places=2, default=0)
     description = models.TextField(
         max_length=255, blank=True, null=True)
     created_on = models.DateTimeField(auto_now_add=True)
@@ -166,8 +169,6 @@ class Estimate(models.Model):
                 self.amount = decimal.Decimal(
                     self.length) * self.room_item_description.rate
 
-                # return super(Estimate, self).save()
-
             elif self.width > 0:
                 # AREA
 
@@ -192,6 +193,12 @@ class Estimate(models.Model):
         if self.quantity is not None:
             return decimal.Decimal(self.quantity) * self.room_item_description.rate
         return decimal.Decimal(self.sqm) * self.room_item_description.rate
+
+    def discount_amount(self):
+        return (self.calculate_amount() * self.discount)/100
+
+    def total_after_discount(self):
+        return self.calculate_amount() - self.discount_amount()
 
     def get_absolute_url(self):
         return reverse("estimate", args=[str(self.project.pk), str(self.project.name)])
