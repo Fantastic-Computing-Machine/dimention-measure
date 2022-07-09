@@ -311,10 +311,8 @@ def download_estimate_excel_file(request, project_id, project_name):
 
     project = Project.objects.filter(
         pk=project_id, is_deleted=False)[0]
-    company = Organization.objects.filter(
-        pk=1)[0]
-    print(project)
-    print(company)
+
+    company = request.user.organization
 
     # create a workbook object
     workbook = Workbook()
@@ -333,7 +331,7 @@ def download_estimate_excel_file(request, project_id, project_name):
     sheet.append(["", company.company_name])
     sheet["B3"].font = Font(size=12, bold=True)
     sheet.append(["", company.address()])
-    sheet.append(["", "Email:"+str(company.email)])
+    sheet.append(["", "Email: "+str(company.email)])
     sheet.append(
         ["", "Mobile: " + str(company.phoneNumber) + str(company.company_name)])
     sheet.append([""])
@@ -345,14 +343,19 @@ def download_estimate_excel_file(request, project_id, project_name):
     sheet.append(["", "Estimate"])
     # sheet.append(["", project.client.address])
     sheet.append([""])
-    sheet.append(["Sl.No", "Description", "Unit", "Quantity",
-                  "Rate", "Amount"])
+    sheet.append(["Sl.No", "Description", "length", "width", "Sqm", "sqft", "Quantity",
+                  "Rate", "Amount", "disc. amount"])
     sheet["A14"].font = Font(bold=True)
     sheet["B14"].font = Font(bold=True)
     sheet["C14"].font = Font(bold=True)
     sheet["D14"].font = Font(bold=True)
     sheet["E14"].font = Font(bold=True)
     sheet["F14"].font = Font(bold=True)
+    sheet["G14"].font = Font(bold=True)
+    sheet["H14"].font = Font(bold=True)
+    sheet["I14"].font = Font(bold=True)
+    sheet["J14"].font = Font(bold=True)
+    sheet["K14"].font = Font(bold=True)
     # sheet["B14"].alignment = Alignment(wrapText=True)
     index = 1
     # room_obj = Room.objects.all()
@@ -372,12 +375,18 @@ def download_estimate_excel_file(request, project_id, project_name):
             index_j = index_j + 1
             sheet.append([
                 str(index)+"." + str(index_j),
-                str(item.room_item.name) + " - " +
-                str(item.room_item_description.description),
-                str(item.room_item_description.unit.unit),
+                str(item.room_item.name) + " - " + str(item.room_item_description.description) +
+                "\n" + str(item.discount) +
+                "(" + str(item.discount_amount) + ")",
+                str(item.length),
+                str(item.width),
+                str(item.sqm),
+                str(item.sqft),
                 str(item.quantity),
-                str(item.room_item_description.rate),
-                str(item.calculate_amount())
+                str(item.room_item_description.rate) + " / " +
+                str(item.room_item_description.unit.unit),
+                str(item.calculate_amount()),
+                str(item.total_after_discount()),
             ])
         index += 1
 
