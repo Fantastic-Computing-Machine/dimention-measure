@@ -88,6 +88,11 @@ class Project(models.Model):
         sum_amount = sum(item.total_after_discount() for item in estimates)
         return sum_amount
 
+    def total_itemised_discount(self):
+        estimates = Estimate.objects.filter(project=self, is_deleted=False)
+        sum_discount = sum(item.discount_amount() for item in estimates)
+        return sum_discount
+
     def discount_amount(self):
         return (self.total_amount() * self.discount)/100
 

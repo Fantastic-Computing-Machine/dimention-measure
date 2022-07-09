@@ -292,8 +292,8 @@
                             <!-- <th class="text-center mx-2 text-nowrap">Unit</th> -->
                             <th class="text-center mx-2 text-nowrap">Length</th>
                             <th class="text-center mx-2 text-nowrap">Width</th>
-                            <th class="text-center mx-2 text-nowrap">Sq Meter</th>
-                            <th class="text-center mx-2 text-nowrap">Sq Ft.</th>
+                            <th class="text-center mx-2 text-nowrap">Sq Meter (SqFt.)</th>
+                            <!-- <th class="text-center mx-2 text-nowrap">Sq Ft.</th> -->
                             <th class="text-center mx-2 text-nowrap">Quantity</th>
                             <th class="text-center mx-2 text-nowrap">Rate</th>
                             <th class="text-center mx-2 text-nowrap">Amount</th>
@@ -323,10 +323,11 @@
                             </td>
                             <td class="text-end col-1">
                                 {{item.sqm}}
+                                <div>({{item.sqft}})</div>
                             </td>
-                            <td class="text-end col-1">
+                            <!-- <td class="text-end col-1">
                                 {{item.sqft}}
-                            </td>
+                            </td> -->
                             <td class="text-end col-1">
                                 {{item.quantity}}
                             </td>
@@ -363,7 +364,7 @@
                                             </div>
                                             <div class="modal-body text-start">
                                                 You wish to permanently delete ?
-                                               
+
                                                 <b class="my-1">Be Careful!</b>
                                             </div>
                                             <div class="modal-footer">
@@ -392,6 +393,16 @@
                     </table>
                     {% endif %}
                 </div>
+                <li class="list-group-item list-group-item-action list-group-item-primary">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            Total itemized Discount
+                        </div>
+                        <span class="badge bg-primary fs-6 font-monospace">
+                            ₹ {{project.total_itemised_discount|floatformat:2|intcomma}}
+                        </span>
+                    </div>
+                </li>
             </div>
         </div>
     </div>
@@ -409,28 +420,25 @@
                             {{project.total_amount|floatformat:2|intcomma}}</span>
                     </div>
                 </li>
+
                 <a data-bs-toggle="modal" data-bs-target="#exampleModal">
                     <li class="list-group-item list-group-item-action list-group-item-primary">
                         <div class="d-flex justify-content-between">
                             <div>
                                 Discount Percentage
                             </div>
-                            <span class="badge bg-primary fs-6 font-monospace">
-                                % {{project.discount}}
-                            </span>
+                            <div class="d-flex justify-content-end">
+                                <span class="badge bg-primary fs-6 font-monospace">
+                                    % {{project.discount}}
+                                </span> @
+                                <span class="badge bg-primary fs-6 font-monospace">
+                                    ₹ {{project.discount_amount|floatformat:2|intcomma}}
+                                </span>
+                            </div>
                         </div>
                     </li>
                 </a>
-                <li class="list-group-item list-group-item-action list-group-item-primary">
-                    <div class="d-flex justify-content-between">
-                        <div>
-                            Discount Amount
-                        </div>
-                        <span class="badge bg-primary fs-6 font-monospace">
-                            ₹ {{project.discount_amount|floatformat:2|intcomma}}
-                        </span>
-                    </div>
-                </li>
+
                 <li class="list-group-item list-group-item-action list-group-item-primary">
                     <div class="d-flex justify-content-between">
                         <div>
@@ -448,18 +456,15 @@
                     <div class="modal-content">
                         <form action="{% url 'update_estimate_discount' project.id project.name%}" method="POST"
                             name="updateDiscount_name" id="updateDiscount_id">
-
                             <div class="modal-body">
-
                                 {% csrf_token %}
                                 <p>
-
                                 <div class="input-group mb-3">
-                                    <span class = 'input-group-text'>Discount</span>
+                                    <span class='input-group-text'>Discount</span>
                                     <input type="number" name="discount" class="form-control"
-                                        aria-label=".form-control-sm"  step=".10" maxlength="3"
-                                        id="id_discount" required aria-describedby="discountChangeSubmit">
-                                        <span class = 'input-group-text'>%</span>
+                                        aria-label=".form-control-sm" step=".10" maxlength="3" id="id_discount" required
+                                        aria-describedby="discountChangeSubmit">
+                                    <span class='input-group-text'>%</span>
                                     <button type="submit" id="discountChangeSubmit"
                                         class="btn btn-success">Submit</button>
                                 </div>
@@ -469,49 +474,36 @@
                                         ** Please enter a valid discount amount(Range: 0 to 100).
                                     </small>
                                 </div>
+                            </div>
                         </form>
                     </div>
                 </div>
             </div>
 
+            <li class="list-group-item list-group-item-action list-group-item-danger">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        GST @ 18%
+                    </div>
+                    <span class="badge bg-danger fs-6 font-monospace">
+                        ₹ {{project.gst_amount|floatformat:2|intcomma}}
+                    </span>
+                </div>
+            </li>
 
-
+            <li class="list-group-item list-group-item-action list-group-item-success">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        Grand Total after GST
+                    </div>
+                    <span class="badge bg-success fs-6 my-auto font-monospace">
+                        ₹ {{project.total_with_gst|floatformat:2|intcomma}}</span>
+                </div>
+            </li>
 
             </p>
         </div>
     </div>
-
-    <!-- <div class="row flex-md-row pb-3 mb-3">
-        <div class="col" style="height: 200px;"> -->
-    <div class="card mb-3">
-        <div class="card-body">
-            <p class="fs-5 fw-bold">
-
-                <li class="list-group-item list-group-item-action list-group-item-primary">
-                    <div class="d-flex justify-content-between">
-                        <div>
-                            GST @ 18%
-                        </div>
-                        <span class="badge bg-primary fs-6 font-monospace">
-                            ₹ {{project.gst_amount|floatformat:2|intcomma}}
-                        </span>
-                    </div>
-                </li>
-
-                <li class="list-group-item list-group-item-action list-group-item-success">
-                    <div class="d-flex justify-content-between">
-                        <div>
-                            Grand Total after GST
-                        </div>
-                        <span class="badge bg-success fs-6 my-auto font-monospace">
-                            ₹ {{project.total_with_gst|floatformat:2|intcomma}}</span>
-                    </div>
-                </li>
-            </p>
-        </div>
-    </div>
-    <!-- </div>
-    </div> -->
 
 </div>
 {% endblock %}
