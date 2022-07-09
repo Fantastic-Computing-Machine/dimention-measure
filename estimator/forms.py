@@ -1,4 +1,5 @@
 from faulthandler import disable
+from typing_extensions import Required
 from django import forms
 
 from .models import Estimate, Project, Room, RoomItem, RoomItemDescription
@@ -285,4 +286,38 @@ class NewRoomItemDescriptionForm(forms.ModelForm):
             "description",
             "unit",
             "rate"
+        )
+
+
+class DiscountForm(forms.ModelForm):
+
+    discount = forms.CharField(
+        max_length=200,
+        required=False,
+        widget=forms.TextInput(
+            attrs={
+                "class": "form-control",
+                "aria-label": ".form-control-sm",
+                "type": "number",
+                "placeholder": "Discount",
+                "step": ".01",
+            }
+        )
+    )
+
+    discount_in_percentage = forms.BooleanField(
+        required=False,
+        widget=forms.CheckboxInput(
+            attrs={
+                "class": "form-check-input",
+                "type": "checkbox",
+            }
+        )
+    )
+
+    class Meta:
+        model = Project
+        fields = (
+            "discount_in_percentage",
+            "discount"
         )

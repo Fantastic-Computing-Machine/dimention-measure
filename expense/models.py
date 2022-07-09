@@ -62,7 +62,7 @@ class Expense(models.Model):
         Project, on_delete=models.CASCADE, default=1)
     payee = models.ForeignKey(Payee, on_delete=models.CASCADE)
     amount = models.DecimalField(
-        max_digits=10, decimal_places=2, blank=True, null=True)
+        max_digits=20, decimal_places=2, blank=True, null=True)
     created_on = models.DateTimeField(auto_now_add=True)
     payment_status = models.CharField(
         max_length=2,

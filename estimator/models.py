@@ -42,7 +42,7 @@ class RoomItem(models.Model):
 
 class RoomItemDescription(models.Model):
     description = models.TextField(blank=True, null=True)
-    rate = models.DecimalField(max_digits=10, decimal_places=2)
+    rate = models.DecimalField(max_digits=20, decimal_places=2)
     unit = models.ForeignKey(
         Unit, on_delete=models.CASCADE, blank=True, null=True, default=1)
     created_on = models.DateTimeField(auto_now_add=True)
@@ -51,6 +51,12 @@ class RoomItemDescription(models.Model):
 
     def __str__(self):
         return str(self.description) + " @ " + str(self.rate)
+
+
+DISCOUNT_TYPE = [
+    ("AMT", "Amount"),
+    ("PCT", "Percentage"),
+]
 
 
 class Project(models.Model):
@@ -65,6 +71,16 @@ class Project(models.Model):
     created_on = models.DateTimeField(auto_now_add=True)
     is_deleted = models.BooleanField(default=False)
     deleted_on = models.DateTimeField(blank=True, null=True)
+    # discount_type = models.CharField(
+    #     max_length=3,
+    #     choices=DISCOUNT_TYPE,
+    #     default=None,
+    #     blank=True,
+    #     null=True
+    # )
+    discount_in_percentage = models.BooleanField(default=False)
+    discount = models.DecimalField(
+        max_digits=20, decimal_places=2, blank=True, null=True)
     reference_number = models.CharField(max_length=225, blank=True, null=True)
 
     def __str__(self):
@@ -111,17 +127,17 @@ class Estimate(models.Model):
     room_item_description = models.ForeignKey(
         RoomItemDescription, on_delete=models.CASCADE)
     quantity = models.DecimalField(
-        max_digits=10, decimal_places=2, blank=True, null=True)
+        max_digits=20, decimal_places=2, blank=True, null=True)
     length = models.DecimalField(
-        max_digits=10, decimal_places=2, blank=True, null=True)
+        max_digits=20, decimal_places=2, blank=True, null=True)
     width = models.DecimalField(
-        max_digits=10, decimal_places=2, blank=True, null=True)
+        max_digits=20, decimal_places=2, blank=True, null=True)
     sqm = models.DecimalField(
-        max_digits=10, decimal_places=2, blank=True, null=True)
+        max_digits=20, decimal_places=2, blank=True, null=True)
     sqft = models.DecimalField(
-        max_digits=10, decimal_places=2, blank=True, null=True)
+        max_digits=20, decimal_places=2, blank=True, null=True)
     amount = models.DecimalField(
-        max_digits=10, decimal_places=2, blank=True, null=True)
+        max_digits=20, decimal_places=2, blank=True, null=True)
     description = models.TextField(
         max_length=255, blank=True, null=True)
     created_on = models.DateTimeField(auto_now_add=True)
@@ -182,12 +198,6 @@ class Estimate(models.Model):
             return super(Estimate, self).save()
 
     def calculate_amount(self):
-        print(",,,,,,,,,,,,,,,,,,,,,")
-        print(self.sqm)
-        print(self.sqft)
-        print(self.quantity)
-        print(self.room_item_description.rate)
-        print(",,,,,,,,,,,,,,,,,,,,,")
         if self.quantity is not None:
             return decimal.Decimal(self.quantity) * self.room_item_description.rate
         return decimal.Decimal(self.sqm) * self.room_item_description.rate

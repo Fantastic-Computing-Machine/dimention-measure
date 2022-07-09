@@ -30,6 +30,7 @@ from estimator.forms import (
     NewRoomForm,
     NewRoomItemForm,
     NewRoomItemDescriptionForm,
+    DiscountForm
 )
 from client_and_company.models import Client
 from authentication.models import Organization
@@ -73,7 +74,7 @@ class EstimateDetailView(LoginRequiredMixin, CreateView):
     login_url = '/user/login/'
     redirect_field_name = 'redirect_to'
     model = Estimate
-    form_class = NewEstimateItemForm
+    form_class = DiscountForm
     template_name = 'estimate.html'
 
     def get_context_data(self, **kwargs):
@@ -87,7 +88,9 @@ class EstimateDetailView(LoginRequiredMixin, CreateView):
     def post(self, request, **kwargs):
         active_project = Project.objects.filter(id=kwargs['pk'])[0]
 
+        print("000000000000000000000000000000000000")
         print(request.POST)
+        print("000000000000000000000000000000000000")
 
         if request.method == 'POST':
             request.POST._mutable = True

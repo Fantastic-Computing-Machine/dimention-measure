@@ -47,17 +47,17 @@ class Dimension(models.Model):
     name = models.CharField(max_length=255)
     description = models.TextField(blank=True, null=True)
     # length & width are in meters
-    length = models.DecimalField(max_digits=10, decimal_places=2)
+    length = models.DecimalField(max_digits=20, decimal_places=2)
     width = models.DecimalField(
-        max_digits=10, decimal_places=2, blank=True, null=True)
+        max_digits=20, decimal_places=2, blank=True, null=True)
     sqm = models.DecimalField(
-        max_digits=10, decimal_places=2, blank=True, null=True)
+        max_digits=20, decimal_places=2, blank=True, null=True)
     sqft = models.DecimalField(
-        max_digits=10, decimal_places=2, blank=True, null=True)
+        max_digits=20, decimal_places=2, blank=True, null=True)
     # rate will be in rs/sqft
-    rate = models.DecimalField(max_digits=10, decimal_places=2)
+    rate = models.DecimalField(max_digits=20, decimal_places=2)
     amount = models.DecimalField(
-        max_digits=10, decimal_places=2, blank=True, null=True)
+        max_digits=20, decimal_places=2, blank=True, null=True)
     created_on = models.DateTimeField(auto_now_add=True)
     is_deleted = models.BooleanField(default=False)
     deleted_on = models.DateTimeField(blank=True, null=True)
