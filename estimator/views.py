@@ -15,7 +15,6 @@ from django.views.generic import (
 )
 from django.views.generic.edit import FormMixin
 
-
 from estimator.models import (
     Room,
     RoomItemDescription,
@@ -74,7 +73,7 @@ class EstimateDetailView(LoginRequiredMixin, CreateView):
     login_url = '/user/login/'
     redirect_field_name = 'redirect_to'
     model = Estimate
-    form_class = DiscountForm
+    form_class = NewEstimateItemForm
     template_name = 'estimate.html'
 
     def get_context_data(self, **kwargs):
@@ -139,6 +138,7 @@ class FolioView(LoginRequiredMixin, CreateView):
     redirect_field_name = 'redirect_to'
     model = Estimate
     form_class = NewEstimateItemForm
+    # HELP: How is the data form the 3 forms is Posted to the DB???
     template_name = 'folio/folio.html'
 
     def get_context_data(self, **kwargs):

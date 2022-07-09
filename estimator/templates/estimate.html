@@ -388,24 +388,47 @@
         <div class="card-body">
             <p class="fs-5 fw-bold">
                 <a data-bs-toggle="modal" data-bs-target="#exampleModal">
+                    <li class="list-group-item list-group-item-action list-group-item-info ">
+                        <div class="d-flex justify-content-between">
+                            <div>
+                                Grand Total
+                            </div>
+                            <span class="badge bg-info fs-6 font-monospace">₹
+                                {{project.total_amount|floatformat:2|intcomma}}</span>
+                        </div>
+                    </li>
                     <li class="list-group-item list-group-item-action list-group-item-primary">
                         <div class="d-flex justify-content-between">
                             <div>
-                                Discount
+                                Discount Percentage
                             </div>
                             <span class="badge bg-primary fs-6 font-monospace">
-                                ₹ {{project.gst_amount|floatformat:2|intcomma}}
+                                {{project.discount}} %
+                            </span>
+                        </div>
+                    </li>
+                    <li class="list-group-item list-group-item-action list-group-item-primary">
+                        <div class="d-flex justify-content-between">
+                            <div>
+                                Discount Amount
+                            </div>
+                            <span class="badge bg-primary fs-6 font-monospace">
+                                ₹ {{project.discount_amount|floatformat:2|intcomma}}
+                            </span>
+                        </div>
+                    </li>
+                    <li class="list-group-item list-group-item-action list-group-item-primary">
+                        <div class="d-flex justify-content-between">
+                            <div>
+                                Total after discount
+                            </div>
+                            <span class="badge bg-primary fs-6 font-monospace">
+                                ₹ {{project.total_after_discount|floatformat:2|intcomma}}
                             </span>
                         </div>
                     </li>
                 </a>
 
-
-
-                <!-- Button trigger modal -->
-
-
-                <!-- Modal -->
             <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
                 aria-hidden="true">
                 <div class="modal-dialog">
@@ -455,16 +478,7 @@
     <div class="card mb-3">
         <div class="card-body">
             <p class="fs-5 fw-bold">
-                <li class="list-group-item list-group-item-action list-group-item-info ">
 
-                    <div class="d-flex justify-content-between">
-                        <div>
-                            Grand Total
-                        </div>
-                        <span class="badge bg-info fs-6 font-monospace">₹
-                            {{project.total_amount|floatformat:2|intcomma}}</span>
-                    </div>
-                </li>
                 <li class="list-group-item list-group-item-action list-group-item-primary">
                     <div class="d-flex justify-content-between">
                         <div>

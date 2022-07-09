@@ -71,16 +71,8 @@ class Project(models.Model):
     created_on = models.DateTimeField(auto_now_add=True)
     is_deleted = models.BooleanField(default=False)
     deleted_on = models.DateTimeField(blank=True, null=True)
-    # discount_type = models.CharField(
-    #     max_length=3,
-    #     choices=DISCOUNT_TYPE,
-    #     default=None,
-    #     blank=True,
-    #     null=True
-    # )
-    discount_in_percentage = models.BooleanField(default=False)
     discount = models.DecimalField(
-        max_digits=20, decimal_places=2, blank=True, null=True)
+        max_digits=20, decimal_places=2, blank=True, null=True, default=0)
     reference_number = models.CharField(max_length=225, blank=True, null=True)
 
     def __str__(self):
@@ -102,8 +94,14 @@ class Project(models.Model):
         sum_amount = sum(item.calculate_amount() for item in estimates)
         return sum_amount
 
+    def discount_amount(self):
+        return (self.total_amount() * self.discount)/100
+
+    def total_after_discount(self):
+        return self.total_amount() - self.discount_amount()
+
     def gst_amount(self):
-        return decimal.Decimal(format(self.total_amount() * decimal.Decimal(0.18), ".2f"))
+        return decimal.Decimal(format(self.total_after_discount() * decimal.Decimal(0.18), ".2f"))
 
     def total_with_gst(self):
         return self.total_amount() + self.gst_amount()

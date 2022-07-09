@@ -305,19 +305,8 @@ class DiscountForm(forms.ModelForm):
         )
     )
 
-    discount_in_percentage = forms.BooleanField(
-        required=False,
-        widget=forms.CheckboxInput(
-            attrs={
-                "class": "form-check-input",
-                "type": "checkbox",
-            }
-        )
-    )
-
     class Meta:
         model = Project
         fields = (
-            "discount_in_percentage",
-            "discount"
+            "discount",
         )
