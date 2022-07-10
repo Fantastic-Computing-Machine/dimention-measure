@@ -8,24 +8,14 @@
 {% block header %}
 <ul class="nav justify-content-end">
     <li class="nav-item">
-        <div class="dropdown">
-            <a class="nav-link active text-light dropdown-toggle" id="dropdownMenuButton2" data-bs-toggle="dropdown"
-                aria-expanded="false">
-                More
-            </a>
-            <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="dropdownMenuButton2">
-                <li>
-                    <a class="dropdown-item" href="{% url 'all_estimates' %}">
-                        Estimates
-                    </a>
-                </li>
-                <li>
-                    <a href="{% url 'clients' %}" class="dropdown-item" aria-current="page">
-                        Clients
-                    </a>
-                </li>
-            </ul>
-        </div>
+        <a class="nav-link text-light active" href="{% url 'all_estimates' %}">
+            Estimates
+        </a>
+    </li>
+    <li class="nav-item">
+        <a href="{% url 'clients' %}" class="nav-link text-light active" aria-current="page">
+            Clients
+        </a>
     </li>
 </ul>
 {% endblock %}
@@ -458,10 +448,6 @@
                                         <select name="unit" class="form-select" aria-label=".form-control-sm"
                                             placeholder="Unit" maxlength="100" id="unit">
                                             <option value="" selected>---------</option>
-                                            <!-- <option value="1">Sqft</option>
-                                            <option value="2">Rft</option>
-                                            <option value="3">LS</option>
-                                            <option value="4">No.</option> -->
                                             {% for unit in units %}
                                             <option value="{{unit.pk}}">{{unit.unit}}</option>
                                             {% endfor %}

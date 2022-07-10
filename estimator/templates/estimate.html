@@ -49,70 +49,100 @@
                 <form method="POST" action="">
                     {% csrf_token %}
                     <p>
-                        {{form.room.label}}
-                        {{form.room}}
-                    </p>
-                    <p>
-                        {{form.room_item.label}}
-                        {{form.room_item}}
+                    <div class="row">
+                        <div class="col">
+                            {{form.room.label}}
+                            {{form.room}}
+                        </div>
+                        <div class="col">
+                            {{form.room_item.label}}
+                            {{form.room_item}}
+                        </div>
+                    </div>
                     </p>
                     <p>
                         {{form.room_item_description.label}}
                         {{form.room_item_description}}
                     </p>
                     <p>
-                        {{form.unit.label}}
-                        {{form.unit}}
+                    <p>
+                    <fieldset class="reset">
+                        <legend class="reset">Area</legend>
+
+                        <div class="form-check">
+                            <input onclick="area_enable()" class="form-check-input" type="radio" name="flexRadio"
+                                id="flexRadioDefault1" checked>
+
+                            <label class="form-check-label" for="flexRadioDefault1">Area</label>
+
+                            <label class="form-check-label" for="flexRadioDefault1" id="areaBox">
+                                <div class="row">
+                                    <div class="col">
+                                        {{form.length.label}}
+                                        {{form.length}}
+                                    </div>
+                                    <div class="col">
+                                        {{form.width.label}}
+                                        {{form.width}}
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div id="sqm_box" class="col">
+                                        Sqm
+                                        <input class="form-control" id="sqm" type="text" placeholder="Sqm"
+                                            aria-label=".form-control-sm" value="{{dimension.sqm}}" disabled readonly>
+                                    </div>
+                                    <div id="sqft_box" class="col">
+                                        Sqft
+                                        <input class="form-control" id="sqft" type="text" placeholder="Sqft"
+                                            aria-label=".form-control-sm" value="{{dimension.sqft}}" disabled readonly>
+                                    </div>
+                                </div>
+                            </label>
+                        </div>
+                    </fieldset>
                     </p>
                     <p>
-                        <hr>
+                    <fieldset class="reset">
+                        <legend class="reset">Quantity</legend>
+
+                        <div class="form-check">
+                            <input onclick="quantity_enable()" class="form-check-input" type="radio" name="flexRadio"
+                                id="flexRadioDefault2">
+                            <label class="form-check-label" for="flexRadioDefault2" id="quantityBox">
+                                <div>
+                                    {{form.quantity.label}}
+                                    {{form.quantity}}
+                                </div>
+                            </label>
+                        </div>
+                    </fieldset>
+                    </p>
+
                     <p>
-                    <div class="form-check">
-                        <input onclick="area_enable()" class="form-check-input" type="radio" name="flexRadio"
-                            id="flexRadioDefault1" checked>
+                    <div class="input-group">
+                        {{form.rate}}
+                        <span class="input-group-text" id="rate_per_unit">/</span>
+                        <select name="unit" class="form-select" aria-label=".form-control-sm" placeholder="Unit"
+                            maxlength="100" id="unit">
+                            <option value="" selected>Unit</option>
+                            {% for unit in units %}
+                            <option value="{{unit.pk}}">{{unit.unit}}</option>
+                            {% endfor %}
+                        </select>
 
-                        <label class="form-check-label" for="flexRadioDefault1">Area</label>
-
-                        <label class="form-check-label" for="flexRadioDefault1" id="areaBox">
-                            <div class="row">
-                                <div class="col">
-                                    {{form.length.label}}
-                                    {{form.length}}
-                                </div>
-                                <div class="col">
-                                    {{form.width.label}}
-                                    {{form.width}}
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div id="sqm_box" class="col">
-                                    Sqm
-                                    <input class="form-control" id="sqm" type="text" placeholder="Sqm"
-                                        aria-label=".form-control-sm" value="{{dimension.sqm}}" disabled readonly>
-                                </div>
-                                <div id="sqft_box" class="col">
-                                    Sqft
-                                    <input class="form-control" id="sqft" type="text" placeholder="Sqft"
-                                        aria-label=".form-control-sm" value="{{dimension.sqft}}" disabled readonly>
-                                </div>
-                            </div>
-                        </label>
+                        <!-- <select class="form-select" id="inputGroupSelect03"
+                            aria-label="Example select with button addon">
+                            <option selected>Choose...</option>
+                            <option value="1">One</option>
+                            <option value="2">Two</option>
+                            <option value="3">Three</option>
+                        </select> -->
                     </div>
                     </p>
-                    <hr>
-                    <p>
-                    <div class="form-check">
-                        <input onclick="quantity_enable()" class="form-check-input" type="radio" name="flexRadio"
-                            id="flexRadioDefault2">
-                        <label class="form-check-label" for="flexRadioDefault2" id="quantityBox">
-                            <div>
-                                {{form.quantity.label}}
-                                {{form.quantity}}
-                            </div>
-                        </label>
-                    </div>
-                    </p>
-                    <hr>
+
+
+
                     <p>
                         {{form.discount.label}}
                         {{form.discount}}

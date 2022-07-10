@@ -82,6 +82,7 @@ class EstimateDetailView(LoginRequiredMixin, CreateView):
         estimates = Estimate.objects.filter(
             project=project, is_deleted=False).order_by('room')
         kwargs['project'] = project
+        kwargs['units'] = Unit.objects.all()
         kwargs['all_estimates'] = estimates
         return super(EstimateDetailView, self).get_context_data(**kwargs)
 
@@ -94,8 +95,8 @@ class EstimateDetailView(LoginRequiredMixin, CreateView):
 
         if request.method == 'POST':
             request.POST._mutable = True
-            if(request.POST['discount']=="" or request.POST['discount']==None):
-                request.POST['discount']=0.0
+            if(request.POST['discount'] == "" or request.POST['discount'] == None):
+                request.POST['discount'] = 0.0
             # SECURITY: CHECK FOR EXCEPTIONS LIKE LETTERS/SYMBOLS/NONE-TYPE/EMPTY (check is_integer)
             if 'width' in request.POST:
                 # if request.POST['width']:
