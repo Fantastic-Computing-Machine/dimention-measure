@@ -376,8 +376,8 @@ def download_estimate_excel_file(request, project_id, project_name):
             sheet.append([
                 str(index)+"." + str(index_j),
                 str(item.room_item.name) + " - " + str(item.room_item_description.description) +
-                "\n" + str(item.discount) +
-                "(" + str(item.discount_amount) + ")",
+                " - " + str(item.discount) +
+                "( " + str(item.discount_amount()) + " )",
                 str(item.length),
                 str(item.width),
                 str(item.sqm),
