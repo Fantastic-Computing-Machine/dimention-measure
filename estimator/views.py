@@ -94,6 +94,8 @@ class EstimateDetailView(LoginRequiredMixin, CreateView):
 
         if request.method == 'POST':
             request.POST._mutable = True
+            if(request.POST['discount']=="" or request.POST['discount']==None):
+                request.POST['discount']=0.0
             # SECURITY: CHECK FOR EXCEPTIONS LIKE LETTERS/SYMBOLS/NONE-TYPE/EMPTY (check is_integer)
             if 'width' in request.POST:
                 # if request.POST['width']:
