@@ -72,7 +72,7 @@ class Organization(models.Model):
                              max_length=255, default='abc')
 
     def __str__(self):
-        return str(self.company_name) + ' | ' + str(self.manager_name)
+        return str(self.company_name)
 
     def save(self):
         self.address_1 = self.address_1.strip()
@@ -96,7 +96,8 @@ class Organization(models.Model):
 
 class CompanyUser(AbstractBaseUser):
     phoneNumber = models.CharField(
-        blank=True,
+        blank=False,
+        null=True,
         validators=[settings.PHONE_NUMBER_FORMAT],
         max_length=11,
     )
@@ -122,11 +123,11 @@ class CompanyUser(AbstractBaseUser):
         default="SITE_USR",
         null=True,
     )
-    email = models.EmailField(max_length=255, null=True, blank=True)
+    email = models.EmailField(max_length=255, null=True, blank=False)
     first_name = models.CharField(max_length=35)
     last_name = models.CharField(max_length=35)
     username = models.CharField(max_length=70, unique=True)
-    date_of_birth = models.DateField(null=True, blank=True)
+    date_of_birth = models.DateField()
     is_active = models.BooleanField(default=True)
     is_admin = models.BooleanField(default=False)
     is_staff = models.BooleanField(default=False)
