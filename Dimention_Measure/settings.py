@@ -65,6 +65,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.contrib.admindocs.middleware.XViewMiddleware',
+    'kolo.middleware.KoloMiddleware',
 ]
 
 ROOT_URLCONF = 'Dimention_Measure.urls'

@@ -5,6 +5,13 @@ from django.contrib.auth.models import (Group as DjangoGroup)
 from django.utils.translation import gettext_lazy as _
 
 from authentication.models import Organization, CompanyUser,  Group
+from authentication.forms import UserChangeForm, UserCreationForm
+
+#new imports
+from django import forms
+from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
+from django.contrib.auth.forms import ReadOnlyPasswordHashField
+from django.core.exceptions import ValidationError
 
 
 @admin.register(LogEntry)
@@ -42,13 +49,51 @@ class LogEntryAdmin(admin.ModelAdmin):
         'action_flag',
     ]
 
+admin.site.register(Organization)
 
-@admin.register(CompanyUser)
-class CompanyUser(admin.ModelAdmin):
-    # readonly_fields = ['organization',
-    #                    'last_login', 'date_joined', ]
+admin.site.unregister(DjangoGroup)
+# admin.site.unregister(Group)
 
-    exclude = ['password', 'is_superuser', 'is_staff']
+@admin.register(Group)
+class GroupAdmin(BaseGroupAdmin):
+    pass
+
+class UserAdmin(BaseUserAdmin):
+    # The forms to add and change user instances
+    form = UserChangeForm
+    add_form = UserCreationForm
+
+    # The fields to be used in displaying the User model.
+    # These override the definitions on the base UserAdmin
+    # that reference specific fields on auth.User.
+    list_display = ('username', 'date_of_birth', 'is_admin')
+    list_filter = ('is_admin',)
+    fieldsets = (
+        (None, {'fields': ('username', 'password')}),
+        ('Personal info', {'fields': ('date_of_birth',)}),
+        ('Permissions', {'fields': ('is_admin',)}),
+    )
+    # add_fieldsets is not a standard ModelAdmin attribute. UserAdmin
+    # overrides get_fieldsets to use this attribute when creating a user.
+    add_fieldsets = (
+        (None, {
+            'classes': ('wide',),
+            'fields': ('username', 'date_of_birth', 'password1', 'password2'),
+        }),
+    )
+    search_fields = ('username',)
+    ordering = ('username',)
+    filter_horizontal = ()
+
+admin.site.register(CompanyUser, UserAdmin)
+
+
+# @admin.register(CompanyUser)
+# class CompanyUser(admin.ModelAdmin):
+#     # readonly_fields = ['organization',
+#     #                    'last_login', 'date_joined', ]
+
+#     exclude = ['is_superuser', 'is_staff']
 
     # def get_form(self, request, obj=None, **kwargs):
     #     form = super().get_form(request, obj, **kwargs)
@@ -78,14 +123,3 @@ class CompanyUser(admin.ModelAdmin):
     #     print(form.base_fields['access_level'])
 
     #     return form
-
-
-admin.site.register(Organization)
-
-
-admin.site.unregister(DjangoGroup)
-
-
-@admin.register(Group)
-class GroupAdmin(BaseGroupAdmin):
-    pass

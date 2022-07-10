@@ -1,16 +1,18 @@
 from django_countries.fields import CountryField
 from django.core.exceptions import ValidationError
-from django.contrib.auth.models import AbstractUser
+from django.contrib.auth.models import AbstractUser, AbstractBaseUser
 from django.contrib.auth.models import Group as DjangoGroup
 from django.core.validators import RegexValidator
 from django.db import models
 from django.utils.translation import gettext as _
 
 from django.conf import settings
-# from django.contrib.auth import get_user_model as user_model
-# User = user_model()
 
-
+from django.db import models
+from django.contrib.auth.models import (
+    BaseUserManager, AbstractBaseUser, 
+)
+# Gender and Access levels details
 GENDER = [
     ("MA", "Male"),
     ("FE", "Female"),
@@ -24,6 +26,36 @@ ACCESS_LEVEL = [
     ("ORG_USR", "ORGANIZATION USER"),
 ]
 
+class MyUserManager(BaseUserManager):
+    #just user
+    def create_user(self, username, password=None):
+        """
+        Creates and saves a User with the given username and password.
+        """
+        if not username:
+            raise ValueError('Users must have an username')
+
+        user = self.model(
+            username=username,
+        )
+
+        user.set_password(password)
+        user.save(using=self._db)
+        return user
+
+    #superusers
+    def create_superuser(self, username, password=None):
+        """
+        Creates and saves a superuser with the given username and password.
+        """
+        user = self.create_user(
+            username,
+            password=password,
+        )
+        user.is_staff = True
+        user.is_admin = True
+        user.save(using=self._db)
+        return user
 
 class Organization(models.Model):
     company_name = models.CharField(max_length=255)
@@ -62,7 +94,7 @@ class Organization(models.Model):
         return full_address
 
 
-class CompanyUser(AbstractUser):
+class CompanyUser(AbstractBaseUser):
     phoneNumber = models.CharField(
         blank=True,
         validators=[settings.PHONE_NUMBER_FORMAT],
@@ -90,26 +122,41 @@ class CompanyUser(AbstractUser):
         default="SITE_USR",
         null=True,
     )
+    email = models.EmailField(max_length=255, null=True, blank=True)
+    first_name = models.CharField(max_length=35)
+    last_name = models.CharField(max_length=35)
+    username = models.CharField(max_length=70, unique=True)
+    date_of_birth = models.DateField(null=True, blank=True)
+    is_active = models.BooleanField(default=True)
+    is_admin = models.BooleanField(default=False)
+    is_staff = models.BooleanField(default=False)
+    objects = MyUserManager()
+    USERNAME_FIELD = 'username'
 
     def __str__(self):
-        return str(self.username)
+        return self.username
 
-    # def save(self, **kwargs):
-    #     return super(CompanyUser, self).save(**kwargs)
+    def has_perm(self, perm, obj=None):
+        "Does the user have a specific permission?"
+        # Simplest possible answer: Yes, always
+        return True
 
-    # def clean(self, request):
-    #     if request.access_level == 'ORG_USR' or request.access_level == 'ORG_ADM' and self.access_level == 'SITE_USR':
+    def has_module_perms(self, app_label):
+        "Does the user have permissions to view the app `app_label`?"
+        # Simplest possible answer: Yes, always
+        return True
 
-    #         raise ValidationError(
-    #             "YOU ARE NOT ALLOWED TO GAIN ACCESS TO 'SITE USER' PRIVILEGES.")
-
+    # @property
+    # def is_staff(self):
+    #     "Is the user a member of staff?"
+    #     # Simplest possible answer: All admins are staff
+    #     return self.is_admin
 
 class Group(DjangoGroup):
     """Instead of trying to get new user under existing `Aunthentication and Authorization`
     banner, create a proxy group model under our Accounts app label.
     Refer to: https://github.com/tmm/django-username-email/blob/master/cuser/admin.py
     """
-
     class Meta:
         verbose_name = _('group')
         verbose_name_plural = _('groups')
