@@ -95,13 +95,6 @@ class EstimateDetailView(LoginRequiredMixin, CreateView):
 
         if request.method == 'POST':
             request.POST._mutable = True
-            if(request.POST['discount'] == "" or request.POST['discount'] == None):
-                request.POST['discount'] = 0.0
-            # SECURITY: CHECK FOR EXCEPTIONS LIKE LETTERS/SYMBOLS/NONE-TYPE/EMPTY (check is_integer)
-            if 'width' in request.POST:
-                # if request.POST['width']:
-                if request.POST['width'] == '':
-                    request.POST['width'] = '0'
             request.POST["project"] = active_project
             request.POST._mutable = False
             print(request.POST)
@@ -129,11 +122,14 @@ class UpdateEstimateItemView(LoginRequiredMixin, UpdateView):
         req = request.POST
         super(UpdateEstimateItemView, self).post(request, **kwargs)
         estimate = Estimate.objects.get(pk=self.kwargs['pk'])
-        print("---", estimate)
+        print("---\n", estimate)
 
         estimate.room_id = req['room']
         estimate.room_item_id = req['room_item']
         estimate.room_item_description_id = req['room_item_description']
+
+        if req['unit'] != '':
+            estimate.unit = req['unit']
         if('quantity' in req):
             estimate.quantity = req['quantity']
             estimate.length = None
@@ -142,6 +138,12 @@ class UpdateEstimateItemView(LoginRequiredMixin, UpdateView):
             estimate.length = decimal.Decimal(req['length'])
             estimate.width = decimal.Decimal(req['width'])
             estimate.quantity = None
+        if 'rate' in req:
+            if req['rate'] == None:
+                estimate.rate = decimal.Decimal(0)
+            else:
+                estimate.rate = decimal.Decimal(req['rate'])
+
         estimate.discount = req['discount']
         estimate.save()
 
@@ -386,8 +388,8 @@ def download_estimate_excel_file(request, project_id, project_name):
                 str(item.sqm),
                 str(item.sqft),
                 str(item.quantity),
-                str(item.room_item_description.rate) + " / " +
-                str(item.room_item_description.unit.unit),
+                str(item.rate) + " / " +
+                str(item.unit.unit),
                 str(item.calculate_amount()),
                 str(item.total_after_discount()),
             ])

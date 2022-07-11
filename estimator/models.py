@@ -138,9 +138,9 @@ class Estimate(models.Model):
     discount = models.DecimalField(
         max_digits=20, decimal_places=2, default=0)
     rate = models.DecimalField(
-        max_digits=20, blank=True, null=True, decimal_places=2)
+        max_digits=20, default=0, decimal_places=2)
     unit = models.ForeignKey(
-        Unit, on_delete=models.CASCADE, blank=True, null=True, default=1)
+        Unit, on_delete=models.CASCADE, null=True)
     description = models.TextField(
         max_length=255, blank=True, null=True)
     created_on = models.DateTimeField(auto_now_add=True)
@@ -151,13 +151,20 @@ class Estimate(models.Model):
         return str(self.project.name) + ' | ' + str(self.room.name) + '|' + str(self.width)
 
     def save(self):
+        if(self.rate == "" or self.rate == None):
+            self.rate = 0.0
+        if(self.unit == "" or self.unit == None):
+            self.unit = None
+        if(self.discount == "" or self.discount == None):
+            self.discount = 0.0
+
         if self.quantity:
             self.length = None
             self.width = None
             self.sqm = None
             self.sqft = None
             self.amount = decimal.Decimal(
-                self.quantity) * self.room_item_description.rate
+                self.quantity) * self.rate
             return super(Estimate, self).save()
 
         else:
@@ -176,11 +183,10 @@ class Estimate(models.Model):
                 self.sqft = self.length * decimal.Decimal(3.28084)
 
                 self.amount = decimal.Decimal(
-                    self.length) * self.room_item_description.rate
+                    self.length) * self.rate
 
             elif self.width > 0:
                 # AREA
-
                 # SECURITY: CHECK FOR EXCEPTIONS LIKE LETTERS/SYMBOLS/NONE-TYPE/EMPTY
 
                 if self.description != None and self.description != '':
@@ -192,7 +198,7 @@ class Estimate(models.Model):
                 self.sqft = self.length * self.width * decimal.Decimal(10.7639)
 
                 self.amount = decimal.Decimal(
-                    self.sqm) * self.room_item_description.rate
+                    self.sqm) * self.rate
 
             self.quantity = None
 
@@ -200,8 +206,8 @@ class Estimate(models.Model):
 
     def calculate_amount(self):
         if self.quantity is not None:
-            return decimal.Decimal(self.quantity) * self.room_item_description.rate
-        return decimal.Decimal(self.sqm) * self.room_item_description.rate
+            return decimal.Decimal(self.quantity) * self.rate
+        return decimal.Decimal(self.sqm) * self.rate
 
     def discount_amount(self):
         return (self.calculate_amount() * self.discount)/100

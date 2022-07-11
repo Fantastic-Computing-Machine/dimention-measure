@@ -20,30 +20,28 @@
                         <form action="" method="POST">
                             {% csrf_token %}
                             <p>
-                                {{form.room.label}}
-                                {{form.room}}
-                            </p>
-                            <p>
-                                {{form.room_item.label}}
-                                {{form.room_item}}
+                            <div class="row">
+                                <div class="col">
+                                    {{form.room.label}}
+                                    {{form.room}}
+                                </div>
+                                <div class="col">
+                                    {{form.room_item.label}}
+                                    {{form.room_item}}
+                                </div>
+                            </div>
                             </p>
                             <p>
                                 {{form.room_item_description.label}}
                                 {{form.room_item_description}}
                             </p>
-                            <p>
-                                {{form.unit.label}}
-                                {{form.unit}}
-                            </p>
+
                             <hr>
 
                             <p>
                             <div class="form-check">
                                 <input onclick="area_enable()" class="form-check-input" type="radio" name="flexRadio"
                                     id="flexRadioDefault1" checked>
-                                <!-- <label class="form-check-label" for="flexRadioDefault1">Area</label> -->
-
-
                                 <label class="form-check-label" for="flexRadioDefault1" id="areaBox">
                                     <div class="row">
                                         <div class="col">
@@ -86,6 +84,14 @@
                             </div>
                             </p>
                             <hr>
+                            <p>
+                            <div class="input-group">
+                                {{form.rate}}
+                                <span class="input-group-text" id="rate_per_unit">/</span>
+                                {{form.unit}}
+                            </div>
+                            </p>
+
                             <p>
                                 {{form.discount.label}}
                                 {{form.discount}}

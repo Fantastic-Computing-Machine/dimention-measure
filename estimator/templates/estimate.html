@@ -123,25 +123,9 @@
                     <div class="input-group">
                         {{form.rate}}
                         <span class="input-group-text" id="rate_per_unit">/</span>
-                        <select name="unit" class="form-select" aria-label=".form-control-sm" placeholder="Unit"
-                            maxlength="100" id="unit">
-                            <option value="" selected>Unit</option>
-                            {% for unit in units %}
-                            <option value="{{unit.pk}}">{{unit.unit}}</option>
-                            {% endfor %}
-                        </select>
-
-                        <!-- <select class="form-select" id="inputGroupSelect03"
-                            aria-label="Example select with button addon">
-                            <option selected>Choose...</option>
-                            <option value="1">One</option>
-                            <option value="2">Two</option>
-                            <option value="3">Three</option>
-                        </select> -->
+                        {{form.unit}}
                     </div>
                     </p>
-
-
 
                     <p>
                         {{form.discount.label}}
@@ -322,7 +306,7 @@
                             <!-- <th class="text-center mx-2 text-nowrap">Unit</th> -->
                             <th class="text-center mx-2 text-nowrap">Length</th>
                             <th class="text-center mx-2 text-nowrap">Width</th>
-                            <th class="text-center mx-2 text-nowrap">Sq Meter (SqFt.)</th>
+                            <th class="text-center mx-2 text-nowrap">Sqm (SqFt.)</th>
                             <!-- <th class="text-center mx-2 text-nowrap">Sq Ft.</th> -->
                             <th class="text-center mx-2 text-nowrap">Quantity</th>
                             <th class="text-center mx-2 text-nowrap">Rate</th>
@@ -355,21 +339,18 @@
                                 {{item.sqm}}
                                 <div>({{item.sqft}})</div>
                             </td>
-                            <!-- <td class="text-end col-1">
-                                {{item.sqft}}
-                            </td> -->
                             <td class="text-end col-1">
                                 {{item.quantity}}
                             </td>
                             <td class="text-center col-1">
-                                &#8377 {{item.room_item_description.rate}} / {{item.room_item_description.unit.unit}}
+                                &#8377 {{item.rate}} / {{item.unit.unit}}
                             </td>
                             <td class="text-end col-1">
                                 &#8377 {{item.calculate_amount | floatformat:2}}
                             </td>
                             <td class="text-end col-1">
+                                <div>&#8377 {{item.total_after_discount | floatformat:2}}</div>
                                 <div class="text-danger">- &#8377 {{item.discount_amount | floatformat:2}}</div>
-                                &#8377 {{item.total_after_discount | floatformat:2}}
                             </td>
                             <td class="text-center col-2">
                                 <a href="{% url 'update_estimate_item' item.id project.id project.name %}">

@@ -215,14 +215,10 @@ class NewEstimateItemForm(forms.ModelForm):
         queryset=Unit.objects.all(),
         widget=forms.Select(
             attrs={
-                # "class": "form-select",
-                "class": "btn btn-outline-secondary dropdown-toggle",
+                "class": "form-select",
                 "aria-label": ".form-control-sm",
                 "placeholder": "Unit",
                 "type": "button",
-                "data-bs-toggle": "dropdown",
-                "aria-expanded": "false",
-                "value": "Unit"
             }
         )
     )
