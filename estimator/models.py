@@ -41,7 +41,8 @@ class RoomItem(models.Model):
 
 
 class RoomItemDescription(models.Model):
-    description = models.TextField(blank=True, null=True)
+    description = models.TextField()
+    working = models.TextField(null=True)
     rate = models.DecimalField(max_digits=20, decimal_places=2)
     unit = models.ForeignKey(
         Unit, on_delete=models.CASCADE, blank=True, null=True, default=1)

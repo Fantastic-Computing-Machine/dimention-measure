@@ -276,7 +276,7 @@
                         <div class="mx-auto">
                             <div class="modal-content">
                                 <div class="modal-header">
-                                    <h5 class="modal-title" id="staticBackdropLabel">Add Room Element</h5>
+                                    <h5 class="modal-title" id="staticBackdropLabel">Add Room Component</h5>
                                     <button type="button" class="btn-close" data-bs-dismiss="modal"
                                         aria-label="Close"></button>
                                 </div>
@@ -434,11 +434,16 @@
                                     {% csrf_token %}
                                     <p>
                                         <label for="roomName">Room Component Item Description</label>
-                                        <input name="description" type="text" class="form-control" id="description"
+                                        <input name="description" type="textarea" class="form-control" id="description"
                                             placeholder="Enter Description">
                                     </p>
-
                                     <p>
+                                        <label for="roomName">Working</label>
+                                        <input name="working" type="textarea" class="form-control" id="working"
+                                            placeholder="Working">
+                                    </p>
+
+                                    <!-- <p>
                                         <label for="rate">Rate</label>
                                         <input type="number" name="rate" class="form-control"
                                             aria-label=".form-control-sm" placeholder="Enter Rate" step=".01"
@@ -453,7 +458,7 @@
                                             <option value="{{unit.pk}}">{{unit.unit}}</option>
                                             {% endfor %}
                                         </select>
-                                    </p>
+                                    </p> -->
 
 
                                 </div>
