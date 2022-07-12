@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 
-{% load static %} {% load humanize %}
+{% load static %} {% load humanize %} {% load unit_conversion %}
 
 {% block title %} - Dimension: {{project.name| capfirst }} {% endblock %}
 
@@ -333,7 +333,10 @@
                             </td>
                             <td class="text-end col-1">
                                 {% if item.length %}
-                                {{item.length}}
+                                {{item.length}} m
+                                <div>
+                                    ({% meter_to_feet item.length %} ft)
+                                </div>
                                 {%else%}
                                 -
                                 {% endif %}
@@ -341,7 +344,10 @@
                             </td>
                             <td class="text-end col-1">
                                 {% if item.width %}
-                                {{item.width}}
+                                {{item.width}} m
+                                <div>
+                                    ({% meter_to_feet item.width %} ft)
+                                </div>
                                 {%else%}
                                 -
                                 {% endif %}
