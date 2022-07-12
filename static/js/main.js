@@ -113,7 +113,8 @@ function area_enable() {
 }
 
 
-function quantity_enable() {
+function quantity_enable() 
+{
     document.getElementById('id_length').value = '';
     document.getElementById('id_length').disabled = true;
 
@@ -147,3 +148,15 @@ $(document).ready(function () {
         }
     });
 });
+
+// $(document).ready(function(){
+//     check();
+//     });
+
+//     function check() {
+//         var Q1 = $("#flexRadioDefault1").val();
+//         var Q2 = $("#flexRadioDefault2").val();
+
+//         // window.print(Q1);
+//         // window.print(Q2);
+//     }

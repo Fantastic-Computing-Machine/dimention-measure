@@ -127,7 +127,8 @@ class UpdateEstimateItemView(LoginRequiredMixin, UpdateView):
         estimate.room_id = req['room']
         estimate.room_item_id = req['room_item']
         estimate.room_item_description_id = req['room_item_description']
-        estimate.unit = req['unit']
+        print(Unit.objects.get(id=int(req['unit'])))
+        estimate.unit = Unit.objects.get(id=int(req['unit']))
 
         # if req['unit'] != '':
         if('quantity' in req):
