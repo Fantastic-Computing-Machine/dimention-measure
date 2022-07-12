@@ -306,12 +306,12 @@
                             <!-- <th class="text-center mx-2 text-nowrap">Unit</th> -->
                             <th class="text-center mx-2 text-nowrap">Length</th>
                             <th class="text-center mx-2 text-nowrap">Width</th>
-                            <th class="text-center mx-2 text-nowrap">Sqm (SqFt.)</th>
-                            <!-- <th class="text-center mx-2 text-nowrap">Sq Ft.</th> -->
                             <th class="text-center mx-2 text-nowrap">Quantity</th>
+                            <!-- <th class="text-center mx-2 text-nowrap">Sq Ft.</th> -->
+                            <!-- <th class="text-center mx-2 text-nowrap">Quantity</th> -->
                             <th class="text-center mx-2 text-nowrap">Rate</th>
                             <th class="text-center mx-2 text-nowrap">Amount</th>
-                            <th class="text-center mx-2 text-nowrap">Disc. Amt</th>
+                            <th class="text-center mx-2 text-nowrap">Total</th>
                             <th class="text-center mx-2 text-nowrap">Action</th>
                         </thead>
 
@@ -325,22 +325,34 @@
                                 <div class="text-wrap ps-2">
                                     {{item.room_item_description.description}}
                                 </div>
-                                <div>
+                                <div class="text-danger">
+                                    {% if item.discount != 0.0 %}
                                     <b>Discount: </b> {{item.discount | floatformat:1}} %
+                                    {% endif %}
                                 </div>
                             </td>
                             <td class="text-end col-1">
+                                {% if item.length %}
                                 {{item.length}}
+                                {%else%}
+                                -
+                                {% endif %}
+
                             </td>
                             <td class="text-end col-1">
+                                {% if item.width %}
                                 {{item.width}}
+                                {%else%}
+                                -
+                                {% endif %}
                             </td>
                             <td class="text-end col-1">
-                                {{item.sqm}}
-                                <div>({{item.sqft}})</div>
-                            </td>
-                            <td class="text-end col-1">
+                                {% if item.sqm %}
+                                {{item.sqm}} sqm
+                                <div>({{item.sqft}} sqft)</div>
+                                {%else%}
                                 {{item.quantity}}
+                                {% endif %}
                             </td>
                             <td class="text-center col-1">
                                 &#8377 {{item.rate}} / {{item.unit.unit}}
@@ -350,9 +362,11 @@
                             </td>
                             <td class="text-end col-1">
                                 <div>&#8377 {{item.total_after_discount | floatformat:2}}</div>
+                                {% if item.discount != 0.0 %}
                                 <div class="text-danger">- &#8377 {{item.discount_amount | floatformat:2}}</div>
+                                {% endif %}
                             </td>
-                            <td class="text-center col-2">
+                            <td class="text-center col-1">
                                 <a href="{% url 'update_estimate_item' item.id project.id project.name %}">
                                     <img class="icon_ud" src="https://img.icons8.com/ios/20/fff/edit-row.png" />
                                 </a>

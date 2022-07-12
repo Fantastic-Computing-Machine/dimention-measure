@@ -41,17 +41,14 @@ class RoomItem(models.Model):
 
 
 class RoomItemDescription(models.Model):
-    description = models.TextField()
-    working = models.TextField(null=True)
-    rate = models.DecimalField(max_digits=20, decimal_places=2)
-    unit = models.ForeignKey(
-        Unit, on_delete=models.CASCADE, blank=True, null=True, default=1)
+    description = models.TextField(null=True)
+    working = models.TextField(null=True, blank=True)
     created_on = models.DateTimeField(auto_now_add=True)
     is_deleted = models.BooleanField(default=False)
     deleted_on = models.DateTimeField(blank=True, null=True)
 
     def __str__(self):
-        return str(self.description) + " @ " + str(self.rate)
+        return str(self.description)
 
 
 class Project(models.Model):
@@ -158,6 +155,8 @@ class Estimate(models.Model):
             self.unit = None
         if(self.discount == "" or self.discount == None):
             self.discount = 0.0
+        if(self.width == "" or self.width == None):
+            self.width = 0.0
 
         if self.quantity:
             self.length = None
@@ -170,9 +169,8 @@ class Estimate(models.Model):
 
         else:
             if self.width == '' or self.width == 0 or self.width == 0.0:
+                # when there is no width (RUNNING LENGTH)
                 # SECURITY: CHECK FOR EXCEPTIONS LIKE LETTERS/SYMBOLS/NONE-TYPE/EMPTY
-
-                # when there is width (RUNNING LENGTH)
                 if self.description != None and self.description != '':
                     if '**NOTE: THIS IS RUNNING LENGTH.**' not in self.description:
                         self.description = "**NOTE: THIS IS RUNNING LENGTH.** \n" + \
@@ -189,7 +187,6 @@ class Estimate(models.Model):
             elif self.width > 0:
                 # AREA
                 # SECURITY: CHECK FOR EXCEPTIONS LIKE LETTERS/SYMBOLS/NONE-TYPE/EMPTY
-
                 if self.description != None and self.description != '':
                     if '**NOTE: THIS IS RUNNING LENGTH.**' in self.description:
                         self.description.replace(
