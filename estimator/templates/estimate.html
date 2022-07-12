@@ -304,15 +304,14 @@
                         <thead class="table-primary align-middle row-cols-auto">
                             <th class="text-center mx-2 text-nowrap">Description</th>
                             <!-- <th class="text-center mx-2 text-nowrap">Unit</th> -->
-                            <th class="text-center mx-2 text-nowrap">Length</th>
-                            <th class="text-center mx-2 text-nowrap">Width</th>
+                            <th class="text-center mx-2 text-nowrap hide_items_print">Length</th>
+                            <th class="text-center mx-2 text-nowrap hide_items_print">Width</th>
                             <th class="text-center mx-2 text-nowrap">Quantity</th>
-                            <!-- <th class="text-center mx-2 text-nowrap">Sq Ft.</th> -->
-                            <!-- <th class="text-center mx-2 text-nowrap">Quantity</th> -->
+                            <th class="text-center mx-2 text-nowrap">Unit</th>
                             <th class="text-center mx-2 text-nowrap">Rate</th>
                             <th class="text-center mx-2 text-nowrap">Amount</th>
                             <th class="text-center mx-2 text-nowrap">Total</th>
-                            <th class="text-center mx-2 text-nowrap">Action</th>
+                            <th class="text-center mx-2 text-nowrap hide_items_print">Action</th>
                         </thead>
 
 
@@ -331,48 +330,54 @@
                                     {% endif %}
                                 </div>
                             </td>
-                            <td class="text-end col-1">
+                            <td class="text-end col-1 hide_items_print">
                                 {% if item.length %}
-                                {{item.length}} m
-                                <div>
-                                    ({% meter_to_feet item.length %} ft)
-                                </div>
+                                <div class="text-nowrap">{{item.length}} m</div>
+                                <div class="text-nowrap">({% meter_to_feet item.length %} ft)</div>
                                 {%else%}
                                 -
                                 {% endif %}
 
                             </td>
-                            <td class="text-end col-1">
+                            <td class="text-end col-1 hide_items_print">
                                 {% if item.width %}
-                                {{item.width}} m
-                                <div>
-                                    ({% meter_to_feet item.width %} ft)
-                                </div>
+                                <div class="text-nowrap">{{item.width}} m</div>
+                                <div class="text-nowrap">({% meter_to_feet item.width %} ft)</div>
                                 {%else%}
                                 -
                                 {% endif %}
                             </td>
                             <td class="text-end col-1">
                                 {% if item.sqm %}
-                                {{item.sqm}} sqm
-                                <div>({{item.sqft}} sqft)</div>
+                                {% if item.width %}
+                                <div class="text-nowrap">{{item.sqm}} sqm</div>
+                                <div class="text-nowrap">({{item.sqft}} sqft)</div>
                                 {%else%}
-                                {{item.quantity}}
+                                <div class="text-nowrap">{{item.sqm}} m</div>
+                                <div class="text-nowrap">({{item.sqft}} ft)</div>
+                                {% endif %}
+                                {%else%}
+                                <div class="text-nowrap">{{item.quantity}}</div>
                                 {% endif %}
                             </td>
                             <td class="text-center col-1">
-                                &#8377 {{item.rate}} / {{item.unit.unit}}
+                                {{item.unit.unit}}
                             </td>
-                            <td class="text-end col-1">
+
+                            <td class="text-end text-nowrap col-1">
+                                &#8377 {{item.rate}}
+                            </td>
+                            <td class="text-end text-nowrap col-1">
                                 &#8377 {{item.calculate_amount | floatformat:2}}
                             </td>
                             <td class="text-end col-1">
-                                <div>&#8377 {{item.total_after_discount | floatformat:2}}</div>
+                                <div class="text-nowrap">&#8377 {{item.total_after_discount | floatformat:2}}</div>
                                 {% if item.discount != 0.0 %}
-                                <div class="text-danger">- &#8377 {{item.discount_amount | floatformat:2}}</div>
+                                <div class="text-danger text-nowrap">- &#8377 {{item.discount_amount | floatformat:2}}
+                                </div>
                                 {% endif %}
                             </td>
-                            <td class="text-center col-1">
+                            <td class="text-center col-1 hide_items_print">
                                 <a href="{% url 'update_estimate_item' item.id project.id project.name %}">
                                     <img class="icon_ud" src="https://img.icons8.com/ios/20/fff/edit-row.png" />
                                 </a>
@@ -424,16 +429,18 @@
                     </table>
                     {% endif %}
                 </div>
-                <li class="list-group-item list-group-item-action list-group-item-primary">
-                    <div class="d-flex justify-content-between">
-                        <div>
-                            Total itemized Discount
+                <div class="hide_items_print">
+                    <li class="list-group-item list-group-item-action list-group-item-primary">
+                        <div class="d-flex justify-content-between">
+                            <div>
+                                Total itemized Discount
+                            </div>
+                            <span class="badge bg-primary fs-6 font-monospace">
+                                ₹ {{project.total_itemised_discount|floatformat:2|intcomma}}
+                            </span>
                         </div>
-                        <span class="badge bg-primary fs-6 font-monospace">
-                            ₹ {{project.total_itemised_discount|floatformat:2|intcomma}}
-                        </span>
-                    </div>
-                </li>
+                    </li>
+                </div>
             </div>
         </div>
     </div>

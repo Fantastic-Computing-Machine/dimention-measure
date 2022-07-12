@@ -127,10 +127,13 @@ class UpdateEstimateItemView(LoginRequiredMixin, UpdateView):
         estimate.room_id = req['room']
         estimate.room_item_id = req['room_item']
         estimate.room_item_description_id = req['room_item_description']
-        print(Unit.objects.get(id=int(req['unit'])))
-        estimate.unit = Unit.objects.get(id=int(req['unit']))
 
-        # if req['unit'] != '':
+        if req['unit'] != '':
+            print(Unit.objects.get(id=int(req['unit'])))
+            estimate.unit = Unit.objects.get(id=int(req['unit']))
+        else:
+            estimate.unit = None
+
         if('quantity' in req):
             estimate.quantity = req['quantity']
             estimate.length = None
@@ -319,6 +322,7 @@ def download_estimate_excel_file(request, project_id, project_name):
         pk=project_id, is_deleted=False)[0]
 
     company = request.user.organization
+    print(company)
 
     # create a workbook object
     workbook = Workbook()
@@ -382,7 +386,7 @@ def download_estimate_excel_file(request, project_id, project_name):
             sheet.append([
                 str(index)+"." + str(index_j),
                 str(item.room_item.name) + " - " + str(item.room_item_description.description) +
-                " - " + str(item.discount) +
+                " - " + str("{:.2f}".format(item.discount)) +
                 "( " + str(item.discount_amount()) + " )",
                 str(item.length),
                 str(item.width),
@@ -391,8 +395,8 @@ def download_estimate_excel_file(request, project_id, project_name):
                 str(item.quantity),
                 str(item.rate) + " / " +
                 str(item.unit.unit),
-                str(item.calculate_amount()),
-                str(item.total_after_discount()),
+                str("{:.2f}".format(item.calculate_amount())),
+                str("{:.2f}".format(item.total_after_discount())),
             ])
         index += 1
 
