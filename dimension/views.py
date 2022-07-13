@@ -47,12 +47,6 @@ class HomeView(LoginRequiredMixin, FormMixin, ListView):
         queryset = super().get_queryset()
         return queryset.filter(is_deleted=False).order_by('-created_on')
 
-    # def get_context_data(self, *args, **kwargs):
-    #     context = super(HomeView, self).get_context_data(*args, **kwargs)
-    #     context["projects_list"] = Project.objects.filter(
-    #         is_deleted=False).order_by('-created_on')
-    #     return context
-
     def post(self, request, **kwargs):
         request.POST._mutable = True
         request.POST["author"] = request.session["_auth_user_id"]

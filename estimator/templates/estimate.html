@@ -326,13 +326,13 @@
                                 </div>
                                 <div class="text-danger">
                                     {% if item.discount != 0.0 %}
-                                    <b>Discount: </b> {{item.discount | floatformat:1}} %
+                                    <b>Discount: </b> {{item.discount | floatformat:1|intcomma}} %
                                     {% endif %}
                                 </div>
                             </td>
                             <td class="text-end col-1 hide_items_print">
                                 {% if item.length %}
-                                <div class="text-nowrap">{{item.length}} m</div>
+                                <div class="text-nowrap">{{item.length|intcomma}} m</div>
                                 <div class="text-nowrap">({% meter_to_feet item.length %} ft)</div>
                                 {%else%}
                                 -
@@ -341,7 +341,7 @@
                             </td>
                             <td class="text-end col-1 hide_items_print">
                                 {% if item.width %}
-                                <div class="text-nowrap">{{item.width}} m</div>
+                                <div class="text-nowrap">{{item.width|intcomma}} m</div>
                                 <div class="text-nowrap">({% meter_to_feet item.width %} ft)</div>
                                 {%else%}
                                 -
@@ -350,14 +350,14 @@
                             <td class="text-end col-1">
                                 {% if item.sqm %}
                                 {% if item.width %}
-                                <div class="text-nowrap">{{item.sqm}} sqm</div>
-                                <div class="text-nowrap">({{item.sqft}} sqft)</div>
+                                <div class="text-nowrap">{{item.sqm|intcomma}} sqm</div>
+                                <div class="text-nowrap">({{item.sqft|intcomma}} sqft)</div>
                                 {%else%}
-                                <div class="text-nowrap">{{item.sqm}} m</div>
-                                <div class="text-nowrap">({{item.sqft}} ft)</div>
+                                <div class="text-nowrap">{{item.sqm|intcomma}} m</div>
+                                <div class="text-nowrap">({{item.sqft|intcomma}} ft)</div>
                                 {% endif %}
                                 {%else%}
-                                <div class="text-nowrap">{{item.quantity}}</div>
+                                <div class="text-nowrap">{{item.quantity|intcomma}}</div>
                                 {% endif %}
                             </td>
                             <td class="text-center col-1">
@@ -365,15 +365,17 @@
                             </td>
 
                             <td class="text-end text-nowrap col-1">
-                                &#8377 {{item.rate}}
+                                &#8377 {{item.rate|intcomma}}
                             </td>
                             <td class="text-end text-nowrap col-1">
-                                &#8377 {{item.calculate_amount | floatformat:2}}
+                                &#8377 {{item.calculate_amount | floatformat:2|intcomma}}
                             </td>
                             <td class="text-end col-1">
-                                <div class="text-nowrap">&#8377 {{item.total_after_discount | floatformat:2}}</div>
+                                <div class="text-nowrap">&#8377 {{item.total_after_discount | floatformat:2|intcomma}}
+                                </div>
                                 {% if item.discount != 0.0 %}
-                                <div class="text-danger text-nowrap">- &#8377 {{item.discount_amount | floatformat:2}}
+                                <div class="text-danger text-nowrap">- &#8377
+                                    {{item.discount_amount | floatformat:2|intcomma}}
                                 </div>
                                 {% endif %}
                             </td>
