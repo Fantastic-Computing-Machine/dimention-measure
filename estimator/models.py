@@ -180,7 +180,6 @@ class Estimate(models.Model):
 
                 self.sqm = self.length
                 self.sqft = self.length * decimal.Decimal(3.28084)
-
                 self.amount = decimal.Decimal(
                     self.length) * self.rate
 
@@ -194,9 +193,8 @@ class Estimate(models.Model):
 
                 self.sqm = self.length * self.width
                 self.sqft = self.length * self.width * decimal.Decimal(10.7639)
-
                 self.amount = decimal.Decimal(
-                    self.sqm) * self.rate
+                    self.sqft) * self.rate
 
             self.quantity = None
 
@@ -205,7 +203,7 @@ class Estimate(models.Model):
     def calculate_amount(self):
         if self.quantity is not None:
             return decimal.Decimal(self.quantity) * self.rate
-        return decimal.Decimal(self.sqm) * self.rate
+        return decimal.Decimal(self.sqft) * self.rate
 
     def discount_amount(self):
         return (self.calculate_amount() * self.discount)/100
