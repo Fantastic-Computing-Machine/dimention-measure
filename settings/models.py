@@ -1,5 +1,7 @@
 from django.db import models
 
+from authentication.models import Organization
+
 
 class Unit(models.Model):
     unit = models.CharField(max_length=255)
@@ -11,6 +13,9 @@ class Unit(models.Model):
 class TermsHeading(models.Model):
     name = models.CharField(
         max_length=255)
+    organization = models.ForeignKey(
+        Organization,
+        on_delete=models.CASCADE)
 
     def __str__(self):
         return str(self.name)
