@@ -120,18 +120,24 @@
             <div class="card-body">
                 <div class="py-2 display-6">Terms and Conditions</div>
                 <div>
-
-
-                    {%for key in terms%}
+                    {% for key, value in data.items %}
                     <div>
+                        <b>
+                            {{key}}
+                        </b>
 
-                        {{key}}
+                        {% for item in value %}
+                        <div>
+                            <li>
+                                {{item}}
+                            </li>
+                        </div>
+                        {%endfor%}
                     </div>
                     {%endfor%}
                 </div>
-            </div>
-            <div>
-                {{terms}}
+
+
             </div>
         </div>
     </div>

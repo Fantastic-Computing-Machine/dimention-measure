@@ -31,21 +31,20 @@ class OrganizationDetails(LoginRequiredMixin, UpdateView):
     def get_context_data(self, **kwargs):
         curr_org = self.request.user.organization
         context = super().get_context_data(**kwargs)
-        context['headings'] = TermsHeading.objects.filter(
-            organization=curr_org)
-        context['content'] = TermsContent.objects.filter(
-            heading__organization=curr_org)
+        heading = TermsHeading.objects.filter(organization=curr_org)
+        content = TermsContent.objects.filter(heading__organization=curr_org)
         context['org'] = curr_org
+        context['headings'] = heading
+        context['content'] = content
 
-        # context['terms'] = TermsContent.objects.values(
-        #     'heading', 'description').order_by(
-        #     'heading', 'description')
+        data = dict()
+        for item in heading:
+            x = []
+            for desc in content:
+                if desc.heading == item:
+                    x.append(desc)
+            data[item] = x
 
-        description = defaultdict(list)
-        for result in TermsContent.objects.filter(
-                heading__organization=curr_org).values('heading', 'description').order_by('heading', 'description'):
-            description[result['heading']].append(result['description'])
-
-        context['terms'] = description
+        context['data'] = data
 
         return context
