@@ -11,8 +11,7 @@ class Unit(models.Model):
 
 
 class TermsHeading(models.Model):
-    name = models.CharField(
-        max_length=255)
+    name = models.CharField(max_length=255)
     organization = models.ForeignKey(
         Organization,
         on_delete=models.CASCADE)
@@ -27,4 +26,4 @@ class TermsContent(models.Model):
         blank=True, null=True)
 
     def __str__(self):
-        return str(self.heading.name) + ' | ' + str(self.description[:15])
+        return str(self.heading.name) + ' | ' + str(self.description[:30])

@@ -326,11 +326,14 @@
                                 </div>
                                 <div class="text-danger">
                                     {% if item.discount != 0.0 %}
-                                    <b>Discount: </b> {{item.discount | floatformat:1|intcomma}} %
+                                    <b>Discount: </b>
+                                    <span class="font-monospace">
+                                        {{item.discount | floatformat:1|intcomma}} %
+                                    </span>
                                     {% endif %}
                                 </div>
                             </td>
-                            <td class="text-end col-1 hide_items_print">
+                            <td class="text-end font-monospace col-1 hide_items_print">
                                 {% if item.length %}
                                 <div class="text-nowrap">{{item.length|intcomma}} m</div>
                                 <div class="text-nowrap">({% meter_to_feet item.length %} ft)</div>
@@ -339,7 +342,7 @@
                                 {% endif %}
 
                             </td>
-                            <td class="text-end col-1 hide_items_print">
+                            <td class="text-end font-monospace col-1 hide_items_print">
                                 {% if item.width %}
                                 <div class="text-nowrap">{{item.width|intcomma}} m</div>
                                 <div class="text-nowrap">({% meter_to_feet item.width %} ft)</div>
@@ -347,7 +350,7 @@
                                 -
                                 {% endif %}
                             </td>
-                            <td class="text-end col-1">
+                            <td class="text-end font-monospace col-1">
                                 {% if item.sqm %}
                                 {% if item.width %}
                                 <div class="text-nowrap">{{item.sqm|intcomma}} sqm</div>
@@ -360,17 +363,17 @@
                                 <div class="text-nowrap">{{item.quantity|intcomma}}</div>
                                 {% endif %}
                             </td>
-                            <td class="text-center col-1">
+                            <td class="text-center font-monospace col-1">
                                 {{item.unit.unit}}
                             </td>
 
-                            <td class="text-end text-nowrap col-1">
+                            <td class="text-end font-monospace text-nowrap col-1">
                                 &#8377 {{item.rate|intcomma}}
                             </td>
-                            <td class="text-end text-nowrap col-1">
+                            <td class="text-end font-monospace text-nowrap col-1">
                                 &#8377 {{item.calculate_amount | floatformat:2|intcomma}}
                             </td>
-                            <td class="text-end col-1">
+                            <td class="text-end font-monospace col-1">
                                 <div class="text-nowrap">&#8377 {{item.total_after_discount | floatformat:2|intcomma}}
                                 </div>
                                 {% if item.discount != 0.0 %}

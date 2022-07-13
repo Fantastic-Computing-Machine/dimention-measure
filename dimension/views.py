@@ -22,7 +22,7 @@ import datetime
 from openpyxl import Workbook
 import re
 
-from .forms import NewProjectForm, NewDimensionForm, DeleteProjectForm
+from .forms import NewProjectForm, NewDimensionForm
 from .forms import UpdateDimensionForm
 from .models import Project, Dimension
 

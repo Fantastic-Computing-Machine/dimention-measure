@@ -11,6 +11,9 @@ from authentication.forms import OrganizationForm
 
 from settings.models import TermsHeading, TermsContent
 from collections import defaultdict
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import HttpResponseRedirect
+
 
 User = user_model()
 
