@@ -137,7 +137,6 @@ class NewEstimateItemForm(forms.ModelForm):
             }
         )
     )
-
     length = forms.CharField(
         max_length=200,
         required=False,
@@ -307,32 +306,6 @@ class NewRoomItemDescriptionForm(forms.ModelForm):
             }
         )
     )
-
-    # rate = forms.CharField(
-    #     max_length=200,
-    #     required=False,
-    #     widget=forms.TextInput(
-    #         attrs={
-    #             "class": "form-control",
-    #             "aria-label": ".form-control-sm",
-    #             "type": "number",
-    #             "placeholder": "Rate",
-    #             "step": ".01",
-    #         }
-    #     )
-    # )
-
-    # unit = forms.ModelChoiceField(
-    #     required=True,
-    #     queryset=Unit.objects.all(),
-    #     widget=forms.Select(
-    #         attrs={
-    #             "class": "form-select",
-    #             "aria-label": ".form-control-sm",
-    #             "placeholder": "Unit",
-    #         }
-    #     )
-    # )
 
     class Meta:
         model = RoomItemDescription

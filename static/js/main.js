@@ -113,8 +113,7 @@ function area_enable() {
 }
 
 
-function quantity_enable() 
-{
+function quantity_enable() {
     document.getElementById('id_length').value = '';
     document.getElementById('id_length').disabled = true;
 
@@ -136,13 +135,12 @@ function quantity_enable()
 }
 
 $(document).ready(function () {
-    $("#id_discount").on('input', function() {
-        if($(this).val() < 0 || $(this).val() > 100){
+    $("#id_discount").on('input', function () {
+        if ($(this).val() < 0 || $(this).val() > 100) {
             $('#DiscountError').prop('hidden', false);
             $('#discountChangeSubmit').prop('disabled', true);
         }
-        else
-        {
+        else {
             $('#DiscountError').prop('hidden', true);
             $('#discountChangeSubmit').prop('disabled', false);
         }
@@ -160,3 +158,19 @@ $(document).ready(function () {
 //         // window.print(Q1);
 //         // window.print(Q2);
 //     }
+
+
+function edit_organization_form() {
+    console.log("Admin method");
+    document.getElementById('id_company_name').disabled = false;
+    document.getElementById('id_manager_name').disabled = false;
+    document.getElementById('id_email').disabled = false;
+    document.getElementById('id_phoneNumber').disabled = false;
+    document.getElementById('id_address_1').disabled = false;
+    document.getElementById('id_address_2').disabled = false;
+    document.getElementById('id_landmark').disabled = false;
+    document.getElementById('id_town_city').disabled = false;
+    document.getElementById('id_zip_code').disabled = false;
+    document.getElementById('id_state').disabled = false;
+    document.getElementById('save_organization_details').disabled = false;
+}
