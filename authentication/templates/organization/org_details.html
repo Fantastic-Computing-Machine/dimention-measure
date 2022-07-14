@@ -146,10 +146,11 @@
 
                 <p>
                 <div class="d-grid gap-2">
-                    <div class="btn-group" role="group" aria-label="Basic mixed styles example">
+                    <div class="btn-group" role="group" aria-label="Basic mixed styles">
                         <button type="button" class="btn btn-primary" data-bs-toggle="modal"
                             data-bs-target="#newSection">New Section</button>
-                        <button type="button" class="btn btn-info">New Condition</button>
+                        <button type="button" data-bs-toggle="modal" data-bs-target="#newConditionModal"
+                            class="btn btn-info">New Condition</button>
                     </div>
                 </div>
                 </p>
@@ -175,8 +176,42 @@
 
                         </div>
                     </div>
-                    <!-- New Section Modal -->
                 </div>
+                <!-- New Section Modal -->
+
+                <!-- New Condition Modal -->
+                <div class="modal fade" id="newConditionModal" tabindex="-1" aria-labelledby="newConditionModalLabel"
+                    aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-body">
+                                <form action="{% url 'add_terms_content' %}" method="POST">
+                                    {%csrf_token%}
+                                    <p>
+                                        Heading
+                                        <select class="form-select" name="condition_heading"
+                                            aria-label="Default select">
+                                            <option selected>Headings</option>
+                                            {% for head in headings %}
+                                            <option value="{{head.pk}}">{{head.name}}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </p>
+                                    <p>
+                                        Condition
+                                        <textarea class="form-control" name="description" id="conditionDescription"
+                                            rows="2"></textarea>
+                                    </p>
+                                    <button class="btn btn-primary" type="submit"
+                                        id="new-condition-button">Save</button>
+                                </form>
+
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                <!-- New Condition Modal -->
             </div>
         </div>
     </div>

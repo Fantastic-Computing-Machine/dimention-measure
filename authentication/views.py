@@ -38,7 +38,7 @@ class OrganizationDetails(LoginRequiredMixin, UpdateView):
         content = TermsContent.objects.filter(heading__organization=curr_org)
         context['org'] = curr_org
         context['headings'] = heading
-        context['content'] = content
+        # context['content'] = content
 
         data = dict()
         for item in heading:

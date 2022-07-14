@@ -3,8 +3,7 @@ from django.contrib.auth import get_user_model as user_model
 
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import HttpResponseRedirect
-
-from settings.forms import TermsHeadingForm
+from settings.models import TermsHeading, TermsContent
 
 User = user_model()
 
@@ -13,16 +12,20 @@ User = user_model()
 def add_terms_heading(request):
     print(request.POST)
     if request.method == 'POST':
-        request.POST._mutable = True
-        request.POST["organization_id"] = request.user.organization.id
-        request.POST._mutable = False
+        TermsHeading.objects.create(
+            name=str(request.POST['name']),
+            organization=request.user.organization
+        )
+        return HttpResponseRedirect(reverse('organization'))
 
-        print('----------------------------------------')
-        print(request.POST)
-        print('----------------------------------------')
-        form = TermsHeadingForm(request.POST)
 
-        if form.is_valid():
-            form.save()
-        print('----------------------------------------')
+@login_required
+def add_terms_content(request):
+    print(request.POST)
+    if request.method == 'POST':
+        TermsContent.objects.create(
+            heading=TermsHeading.objects.filter(
+                pk=int(request.POST['condition_heading']))[0],
+            description=request.POST['description'],
+        )
         return HttpResponseRedirect(reverse('organization'))

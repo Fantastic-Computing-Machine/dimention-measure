@@ -7,8 +7,9 @@ from django.urls import include
 
 from authentication.views import OrganizationDetails
 
-from settings.views import add_terms_heading
+from settings.views import add_terms_heading, add_terms_content
 
 urlpatterns = [
     path("add_terms_heading/", add_terms_heading, name="add_terms_heading"),
+    path("add_terms_content/", add_terms_content, name="add_terms_content"),
 ]
