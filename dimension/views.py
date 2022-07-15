@@ -22,7 +22,7 @@ import datetime
 from openpyxl import Workbook
 import re
 
-from .forms import NewProjectForm, NewDimensionForm, DeleteProjectForm
+from .forms import NewProjectForm, NewDimensionForm
 from .forms import UpdateDimensionForm
 from .models import Project, Dimension
 
@@ -46,12 +46,6 @@ class HomeView(LoginRequiredMixin, FormMixin, ListView):
     def get_queryset(self):
         queryset = super().get_queryset()
         return queryset.filter(is_deleted=False).order_by('-created_on')
-
-    # def get_context_data(self, *args, **kwargs):
-    #     context = super(HomeView, self).get_context_data(*args, **kwargs)
-    #     context["projects_list"] = Project.objects.filter(
-    #         is_deleted=False).order_by('-created_on')
-    #     return context
 
     def post(self, request, **kwargs):
         request.POST._mutable = True

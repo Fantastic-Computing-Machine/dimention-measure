@@ -31,7 +31,7 @@ class RoomItemAdmin(admin.ModelAdmin):
 
 @admin.register(RoomItemDescription)
 class RoomItemDescriptionAdmin(admin.ModelAdmin):
-    list_display = ["id", "description", "rate", "created_on",  "is_deleted"]
+    list_display = ["id", "description", "created_on",  "is_deleted"]
     search_fields = [
         "description"
     ]
@@ -39,7 +39,7 @@ class RoomItemDescriptionAdmin(admin.ModelAdmin):
     date_hierarchy = "created_on"
     ordering = ["-created_on"]
     show_full_result_count = True
-    list_display_links = ["id", "description", "rate",
+    list_display_links = ["id", "description",
                           "created_on", "is_deleted"]
 
 
@@ -86,11 +86,6 @@ class ProjectInline(admin.TabularInline):
         "quantity",
         "amount",
     ]
-
-
-# @admin.register(Unit)
-# class UnitAdmin(admin.ModelAdmin):
-#     list_display = ['unit']
 
 
 @admin.register(Project)

@@ -10,7 +10,7 @@ from django.conf import settings
 
 from django.db import models
 from django.contrib.auth.models import (
-    BaseUserManager, AbstractBaseUser, 
+    BaseUserManager, AbstractBaseUser,
 )
 # Gender and Access levels details
 GENDER = [
@@ -26,8 +26,9 @@ ACCESS_LEVEL = [
     ("ORG_USR", "ORGANIZATION USER"),
 ]
 
+
 class MyUserManager(BaseUserManager):
-    #just user
+    # just user
     def create_user(self, username, password=None):
         """
         Creates and saves a User with the given username and password.
@@ -43,7 +44,7 @@ class MyUserManager(BaseUserManager):
         user.save(using=self._db)
         return user
 
-    #superusers
+    # superusers
     def create_superuser(self, username, password=None):
         """
         Creates and saves a superuser with the given username and password.
@@ -56,6 +57,7 @@ class MyUserManager(BaseUserManager):
         user.is_admin = True
         user.save(using=self._db)
         return user
+
 
 class Organization(models.Model):
     company_name = models.CharField(max_length=255)
@@ -152,6 +154,7 @@ class CompanyUser(AbstractBaseUser):
     #     "Is the user a member of staff?"
     #     # Simplest possible answer: All admins are staff
     #     return self.is_admin
+
 
 class Group(DjangoGroup):
     """Instead of trying to get new user under existing `Aunthentication and Authorization`
