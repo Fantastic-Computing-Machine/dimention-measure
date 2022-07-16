@@ -114,103 +114,15 @@
         </div>
     </div>
     <div class="mt-3">
-        <div class="card">
-            <div class="card-body">
-                <div class="py-2 display-6">Terms and Conditions</div>
-
-
-
-                <div class="accordion" id="accordionExample">
-                    {% for key, value in data.items %}
-                    <div class="accordion-item">
-                        <h2 class="accordion-header" id="heading{{key.pk}}">
-                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                                data-bs-target="#collapse{{key.pk}}" aria-expanded="false"
-                                aria-controls="collapse{{key.pk}}">
-                                <b class="">{{key.name}}</b>
-                            </button>
-                        </h2>
-                        <div id="collapse{{key.pk}}" class="accordion-collapse collapse"
-                            aria-labelledby="heading{{key.pk}}" data-bs-parent="#accordionExample">
-                            <div class="accordion-body">
-                                {% for item in value %}
-                                <li>{{item.description}}</li>
-                                {%endfor%}
-                            </div>
-                        </div>
-                    </div>
-                    {%endfor%}
-                </div>
-
-                <p>
-                <div class="d-grid gap-2">
-                    <div class="btn-group" role="group" aria-label="Basic mixed styles">
-                        <button type="button" class="btn btn-primary" data-bs-toggle="modal"
-                            data-bs-target="#newSection">New Section</button>
-                        <button type="button" data-bs-toggle="modal" data-bs-target="#newConditionModal"
-                            class="btn btn-info">New Condition</button>
-                    </div>
-                </div>
-                </p>
-                <!-- New Section Modal -->
-                <div class="modal fade" id="newSection" tabindex="-1" aria-labelledby="newSectionLabel"
-                    aria-hidden="true">
-                    <div class="modal-dialog">
-                        <div class="modal-content">
-                            <div class="modal-body">
-                                New Section
-                                <form name="new_section" id="new_section" action="{% url 'add_terms_heading'%}"
-                                    method="POST">
-                                    <div class="input-group mb-3">
-                                        {%csrf_token%}
-                                        <input type="text" class="form-control" placeholder="New Section" name="name"
-                                            id="new_section" aria-label=" Recipient's username"
-                                            aria-describedby="new-section-button">
-                                        <button class="btn btn-primary" type="submit"
-                                            id="new-section-button">Save</button>
-                                    </div>
-                                </form>
-                            </div>
-
-                        </div>
-                    </div>
-                </div>
-                <!-- New Section Modal -->
-
-                <!-- New Condition Modal -->
-                <div class="modal fade" id="newConditionModal" tabindex="-1" aria-labelledby="newConditionModalLabel"
-                    aria-hidden="true">
-                    <div class="modal-dialog">
-                        <div class="modal-content">
-                            <div class="modal-body">
-                                <form action="{% url 'add_terms_content' %}" method="POST">
-                                    {%csrf_token%}
-                                    <p>
-                                        Heading
-                                        <select class="form-select" name="condition_heading"
-                                            aria-label="Default select">
-                                            <option selected>Headings</option>
-                                            {% for head in headings %}
-                                            <option value="{{head.pk}}">{{head.name}}</option>
-                                            {% endfor %}
-                                        </select>
-                                    </p>
-                                    <p>Condition
-                                        <textarea class="form-control" name="description" id="conditionDescription"
-                                            rows="2"></textarea>
-                                    </p>
-                                    <button class="btn btn-primary" type="submit"
-                                        id="new-condition-button">Save</button>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!-- New Condition Modal -->
-            </div>
-        </div>
+        <a class="btn btn-primary" href="{% url 'terms_and_conditions' %}">Terms and Conditions <img
+                src="https://img.icons8.com/ios-filled/20/ffffff/right--v1.png" /></a>
     </div>
+
 </div>
+
+
+
+
 {% endblock %}
 
 

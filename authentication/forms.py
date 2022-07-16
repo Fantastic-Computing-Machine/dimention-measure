@@ -1,6 +1,4 @@
-from settings.models import TermsHeading, TermsContent
 from django import forms
-from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.contrib.auth.forms import ReadOnlyPasswordHashField
 from django.core.exceptions import ValidationError
 
@@ -62,7 +60,7 @@ class OrganizationForm(forms.ModelForm):
                 "aria-label": ".form-control-sm",
                 "type": "text",
                 "placeholder": "Company Name",
-                # "disabled": True,
+
             }
         )
     )
@@ -75,7 +73,7 @@ class OrganizationForm(forms.ModelForm):
                 "aria-label": ".form-control-sm",
                 "type": "text",
                 "placeholder": "Manager name",
-                # "disabled": True,
+
             }
         )
     )
@@ -87,7 +85,7 @@ class OrganizationForm(forms.ModelForm):
                 "class": "form-control",
                 "aria-label": ".form-control-sm",
                 "type": "email",
-                # "disabled": True,
+
                 "placeholder": "Email",
             }
         )
@@ -102,7 +100,7 @@ class OrganizationForm(forms.ModelForm):
                 "aria-label": ".form-control-sm",
                 "type": "tel",
                 "placeholder": "Phone Number (optional)",
-                # "disabled": True,
+
                 "maxlength": "11",
             }
         )
@@ -114,7 +112,7 @@ class OrganizationForm(forms.ModelForm):
             attrs={
                 "class": "form-control",
                 "aria-label": ".form-control-sm",
-                # "disabled": True,
+
                 "type": "text",
                 "placeholder": "Address 1",
             }
@@ -129,7 +127,7 @@ class OrganizationForm(forms.ModelForm):
                 "class": "form-control",
                 "aria-label": ".form-control-sm",
                 "type": "text",
-                # "disabled": True,
+
                 "placeholder": "Address 2 (optional)",
             }
         )
@@ -143,7 +141,7 @@ class OrganizationForm(forms.ModelForm):
                 "class": "form-control",
                 "aria-label": ".form-control-sm",
                 "type": "text",
-                # "disabled": True,
+
                 "placeholder": "Landmark (optional)",
             }
         )
@@ -157,7 +155,7 @@ class OrganizationForm(forms.ModelForm):
                 "class": "form-control",
                 "aria-label": ".form-control-sm",
                 "type": "text",
-                # "disabled": True,
+
                 "placeholder": "Town/City",
             }
         )
@@ -171,7 +169,7 @@ class OrganizationForm(forms.ModelForm):
                 "class": "form-control",
                 "aria-label": ".form-control-sm",
                 "type": "number",
-                # "disabled": True,
+
                 "placeholder": "Zip code",
                 "maxlength": "7",
             }
@@ -185,7 +183,7 @@ class OrganizationForm(forms.ModelForm):
             choices=settings.STATE_CHOICES,
             attrs={
                 "class": "form-select",
-                # "disabled": True,
+
                 "aria-label": ".form-control-sm",
                 "placeholder": "State"
             }
@@ -205,28 +203,4 @@ class OrganizationForm(forms.ModelForm):
             "town_city",
             "zip_code",
             "state",
-        ]
-
-
-class TermsHeadingForm(forms.ModelForm):
-
-    name = forms.CharField(
-        max_length=200,
-        required=True,
-        widget=forms.TextInput(
-            attrs={
-                "class": "form-control",
-                "aria-label": ".form-control-sm",
-                "type": "text",
-                "placeholder": "Section Name",
-                "readonly": True,
-
-            }
-        )
-    )
-
-    class Meta:
-        model = TermsHeading
-        fields = [
-            "name"
         ]

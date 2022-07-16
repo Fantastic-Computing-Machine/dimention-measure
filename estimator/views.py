@@ -35,7 +35,7 @@ from estimator.forms import (
 from client_and_company.models import Client
 from authentication.models import Organization
 from client_and_company.forms import NewClientForm
-from settings.models import Unit, TermsHeading, TermsContent
+from settings.models import Unit, TermsHeading
 
 
 class AllEstimates(LoginRequiredMixin, FormMixin, ListView):
@@ -406,18 +406,24 @@ def download_estimate_excel_file(request, project_id, project_name):
                  "", "", project.total_with_gst()])
     sheet.append([""])
 
-    terms_heading_obj = TermsHeading.objects.all()
+    terms_obj = TermsHeading.objects.filter(
+        organization=request.user.organization)
 
-    for item in terms_heading_obj:
+    for item in terms_obj:
         sheet.append(["", item.name.upper()])
-        terms_content_obj = TermsContent.objects.filter(heading__id=item.pk)
+        print(item.content)
+        sheet.append(["", item.content])
 
-        index = 1
-        for term_item in terms_content_obj:
+        # for i in item.content:
+        #     print(i)
+        # terms_content_obj = TermsContent.objects.filter(heading__id=item.pk)
 
-            sheet.append([index, term_item.description])
+        # index = 1
+        # for term_item in terms_content_obj:
 
-            index += 1
+        #     sheet.append([index, term_item.description])
+
+        #     index += 1
         sheet.append([""])
     sheet.append([""])
 

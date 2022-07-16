@@ -1,6 +1,7 @@
+from ckeditor.fields import RichTextField
+from django.urls import reverse
 from django.db import models
 
-from django_quill.fields import QuillField
 
 from authentication.models import Organization
 
@@ -17,16 +18,19 @@ class TermsHeading(models.Model):
     organization = models.ForeignKey(
         Organization,
         on_delete=models.CASCADE)
+    content = RichTextField(null=False)
 
     def __str__(self):
         return str(self.name)
 
+    def get_absolute_url(self):
+        return reverse("terms_and_conditions")
 
-class TermsContent(models.Model):
-    heading = models.ForeignKey(TermsHeading, on_delete=models.CASCADE)
-    description = models.TextField(
-        blank=True, null=True)
-    content = QuillField(blank=True)
 
-    def __str__(self):
-        return str(self.heading.name) + ' | ' + str(self.description[:30])
+# class TermsContent(models.Model):
+#     heading = models.ForeignKey(TermsHeading, on_delete=models.CASCADE)
+#     description = models.TextField(
+#         blank=True, null=True)
+
+#     def __str__(self):
+#         return str(self.heading.name) + ' | ' + str(self.description[:30])

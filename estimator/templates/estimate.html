@@ -174,16 +174,16 @@
                         <li>
                             <hr class="dropdown-divider">
                         </li>
-                        <li>
-                            <a href="{% url 'update_estimate_project' project.id project.name %}" class="dropdown-item">
-                                Update Estimate
-                            </a>
+                        <li><a href="{% url 'update_estimate_project' project.id project.name %}" class="dropdown-item">
+                                Update Project</a>
+                        </li>
+                        <li><a class="dropdown-item" id="delete_button" data-bs-toggle="modal"
+                                data-bs-target="#deleteModal">Delete Project</a>
                         </li>
                         <li>
-                            <a class="dropdown-item" id="delete_button" data-bs-toggle="modal"
-                                data-bs-target="#deleteModal">
-                                Delete Estimate
-                            </a>
+                            <hr class="dropdown-divider">
+                        </li>
+                        <li><a class="dropdown-item" id="">Terms and Conditions</a>
                         </li>
                     </ul>
                 </span>

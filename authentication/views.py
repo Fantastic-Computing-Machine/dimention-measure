@@ -1,18 +1,11 @@
-from django.urls import reverse, reverse_lazy
-from django.shortcuts import HttpResponseRedirect, render, redirect
-from audioop import reverse
-import http
-from http.client import HTTPResponse
-from django.contrib.auth.decorators import login_required
+from django.urls import reverse_lazy
 from django.contrib.auth import get_user_model as user_model
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
-from django.views.generic import UpdateView, TemplateView
+from django.views.generic import UpdateView
 
 from authentication.models import Organization
 from authentication.forms import OrganizationForm
-from settings.models import TermsHeading, TermsContent
-from django.views.generic.edit import FormMixin, ProcessFormView
 
 
 User = user_model()
@@ -29,7 +22,7 @@ class OrganizationDetails(LoginRequiredMixin, UpdateView):
     def get_object(self):
         return self.request.user.organization
 
-    def put(self, request, *args, **kwargs):
+    def put(self):
         """
         Handle POST requests: instantiate a form instance with the passed
         POST variables and then check if it's valid.
@@ -39,20 +32,3 @@ class OrganizationDetails(LoginRequiredMixin, UpdateView):
             return self.form_valid(form)
         else:
             return self.form_invalid(form)
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        curr_org = self.request.user.organization
-        heading = TermsHeading.objects.filter(organization=curr_org)
-        content = TermsContent.objects.filter(heading__organization=curr_org)
-        context['headings'] = heading
-
-        data = dict()
-        for item in heading:
-            x = []
-            for desc in content:
-                if desc.heading == item:
-                    x.append(desc)
-            data[item] = x
-        context['data'] = data
-        return context
