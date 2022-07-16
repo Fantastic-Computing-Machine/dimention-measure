@@ -112,6 +112,7 @@ class NewEstimateItemForm(forms.ModelForm):
                 "class": "form-select",
                 "aria-label": ".form-control-sm",
                 "placeholder": "Room",
+                # "disabled": "disabled"
             }
         )
     )
@@ -123,6 +124,7 @@ class NewEstimateItemForm(forms.ModelForm):
                 "class": "form-select",
                 "aria-label": ".form-control-sm",
                 "placeholder": "Room Item",
+                # "disabled": "disabled"
             }
         )
     )
@@ -134,6 +136,7 @@ class NewEstimateItemForm(forms.ModelForm):
                 "class": "form-select",
                 "aria-label": ".form-control-sm",
                 "placeholder": "Item Description",
+                # "disabled": "disabled"
             }
         )
     )
@@ -148,6 +151,7 @@ class NewEstimateItemForm(forms.ModelForm):
                 "placeholder": "Lenght (in meters)",
                 "step": ".01",
                 "oninput": "areas()",
+                # "disabled": "disabled"
             }
         )
     )
@@ -162,6 +166,7 @@ class NewEstimateItemForm(forms.ModelForm):
                 "placeholder": "Width (in meters)",
                 "step": ".01",
                 "oninput": "areas()",
+                # "disabled": "disabled"
             }
         )
     )
@@ -176,6 +181,7 @@ class NewEstimateItemForm(forms.ModelForm):
                 "type": "number",
                 "placeholder": "Discount percentage",
                 "step": ".01",
+                # "disabled": "disabled"
             }
         )
     )
@@ -191,7 +197,7 @@ class NewEstimateItemForm(forms.ModelForm):
                 "placeholder": "Quantity",
                 "step": ".01",
                 "id": "forQuantity",
-                "disabled": "disabled"
+                # "disabled": "disabled"
             }
         )
     )
@@ -205,6 +211,7 @@ class NewEstimateItemForm(forms.ModelForm):
                 "type": "number",
                 "placeholder": "Rate",
                 "step": ".01",
+                # "disabled": "disabled"
             }
         )
     )
@@ -218,6 +225,7 @@ class NewEstimateItemForm(forms.ModelForm):
                 "aria-label": ".form-control-sm",
                 "placeholder": "Unit",
                 "type": "button",
+                # "disabled": "disabled"
             }
         )
     )

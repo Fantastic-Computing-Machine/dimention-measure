@@ -147,18 +147,46 @@ $(document).ready(function () {
     });
 });
 
-// $(document).ready(function(){
-//     check();
-//     });
+function enableNewitemPage() {
+    console.log("enableNewitemPage2");
+    document.getElementById('flexRadioDefault1').disabled = false;
+    document.getElementById('id_length').disabled = false;
+    document.getElementById('id_width').disabled = false;
+    document.getElementById('flexRadioDefault2').disabled = false;
+    document.getElementById('forQuantity').disabled = false;
+    document.getElementById('id_discount').disabled = false;
+    document.getElementById('id_rate').disabled = false;
+    document.getElementById('id_unit').disabled = false;
+    document.getElementById('id_room').disabled = false;
+    document.getElementById('id_room_item').disabled = false;
+    document.getElementById('id_room_item_description').disabled = false;
+}
+$(document).ready(function () {
+    $("#edit_update_estimate").click(function () {
+        var Q1 = $("#forQuantity").val();
+        var Q2 = $("#id_length").val();
+        var Q3 = $("#id_width").val();
+        if (Q1 != undefined && Q1 != "") {
+            $('#flexRadioDefault2').prop('checked', true);
+            $('#flexRadioDefault1').prop('checked', false);
+            $('#flexRadioDefault1').prop('disable', true);
+            $('#id_length').prop('disabled', true);
+            $('#id_width').prop('disabled', true);
+            $('#sqm_box').prop('hidden', true);
+            $('#sqft_box').prop('hidden', true);
 
-//     function check() {
-//         var Q1 = $("#flexRadioDefault1").val();
-//         var Q2 = $("#flexRadioDefault2").val();
 
-//         // window.print(Q1);
-//         // window.print(Q2);
-//     }
 
+        }
+        else {
+            console.log("for area");
+            $('#flexRadioDefault2').prop('disable', true);
+            $('#flexRadioDefault1').prop('checked', true);
+            $('#flexRadioDefault2').prop('checked', false);
+            $('#forQuantity').prop('disabled', true);
+        }
+    });
+});
 
 // function edit_organization_form() {
 //     console.log("Admin method");
