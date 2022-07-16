@@ -74,7 +74,7 @@ class OrganizationForm(forms.ModelForm):
                 "class": "form-control",
                 "aria-label": ".form-control-sm",
                 "type": "text",
-                "placeholder": "Manager n ame",
+                "placeholder": "Manager name",
                 # "disabled": True,
             }
         )

@@ -1,5 +1,5 @@
 from django.urls import reverse, reverse_lazy
-from django.shortcuts import HttpResponseRedirect
+from django.shortcuts import HttpResponseRedirect,render,redirect
 from audioop import reverse
 import http
 from http.client import HTTPResponse
@@ -46,9 +46,26 @@ class OrganizationDetails(LoginRequiredMixin, UpdateView):
         """
         form = self.get_form()
         if form.is_valid():
-            return self.form_valid(form)
+            return self.form_valid(request,form)
         else:
             return self.form_invalid(form)
+    
+    def form_valid(self,request, form):
+        print("Hello")
+        print(form.cleaned_data)
+        org = self.get_object()
+        org.company_name = request.POST['company_name']
+        org.manager_name = request.POST['manager_name']
+        org.email = request.POST['email']
+        org.phoneNumber = request.POST['phoneNumber']
+        org.address1 = request.POST.get('address1', "")
+        org.address2 = request.POST.get('address2', "")
+        org.landmark = request.POST['landmark']
+        org.town_city = request.POST['town_city']
+        org.zip_code = request.POST['zip_code']
+        org.state = request.POST['state']
+        org.save()
+        return render(request, 'organization/org_details.html', {'form': form})
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -68,18 +85,18 @@ class OrganizationDetails(LoginRequiredMixin, UpdateView):
         return context
 
 
-@login_required
-def update_organization_details(request):
-    if request.method == "POST":
-        print(request.POST)
-        form = OrganizationForm(request.POST)
-        if form.is_valid():
-            print(form.save())
-            print("Form Valid and Saved")
-        else:
-            print(form.errors)
-        print("Organization details submitted")
-    return HttpResponseRedirect(reverse('organization'))
+# @login_required
+# def update_organization_details(request):
+#     if request.method == "POST":
+#         print(request.POST)
+#         form = OrganizationForm(request.POST)
+#         if form.is_valid():
+#             print(form.save())
+#             print("Form Valid and Saved")
+#         else:
+#             print(form.errors)
+#         print("Organization details submitted")
+#     return HttpResponseRedirect(reverse('organization'))
 
 
 #  action="{% url 'organization_update' %}"
