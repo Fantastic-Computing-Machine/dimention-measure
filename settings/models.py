@@ -1,5 +1,7 @@
 from django.db import models
 
+from django_quill.fields import QuillField
+
 from authentication.models import Organization
 
 
@@ -24,6 +26,7 @@ class TermsContent(models.Model):
     heading = models.ForeignKey(TermsHeading, on_delete=models.CASCADE)
     description = models.TextField(
         blank=True, null=True)
+    content = QuillField(blank=True)
 
     def __str__(self):
         return str(self.heading.name) + ' | ' + str(self.description[:30])

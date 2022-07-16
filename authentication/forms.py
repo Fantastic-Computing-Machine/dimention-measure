@@ -198,10 +198,12 @@ class OrganizationForm(forms.ModelForm):
             "company_name",
             "manager_name",
             "phoneNumber",
+            "email",
             "address_1",
             "address_2",
             "landmark",
             "town_city",
+            "zip_code",
             "state",
         ]
 

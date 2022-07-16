@@ -29,17 +29,7 @@ class OrganizationDetails(LoginRequiredMixin, UpdateView):
     def get_object(self):
         return self.request.user.organization
 
-    # def post(self, request):
-    #     print(request.POST)
-    #     form = OrganizationForm(request.POST)
-    #     if form.is_valid():
-    #         form.save()
-    #         print("Valid and Saved")
-    #     else:
-    #         print(form.errors)
-    #     return super(OrganizationDetails, self).post(request)
-
-    def post(self, request, *args, **kwargs):
+    def put(self, request, *args, **kwargs):
         """
         Handle POST requests: instantiate a form instance with the passed
         POST variables and then check if it's valid.
@@ -66,20 +56,3 @@ class OrganizationDetails(LoginRequiredMixin, UpdateView):
             data[item] = x
         context['data'] = data
         return context
-
-
-@login_required
-def update_organization_details(request):
-    if request.method == "POST":
-        print(request.POST)
-        form = OrganizationForm(request.POST)
-        if form.is_valid():
-            print(form.save())
-            print("Form Valid and Saved")
-        else:
-            print(form.errors)
-        print("Organization details submitted")
-    return HttpResponseRedirect(reverse('organization'))
-
-
-#  action="{% url 'organization_update' %}"
