@@ -160,17 +160,17 @@ $(document).ready(function () {
 //     }
 
 
-function edit_organization_form() {
-    console.log("Admin method");
-    document.getElementById('id_company_name').disabled = false;
-    document.getElementById('id_manager_name').disabled = false;
-    document.getElementById('id_email').disabled = false;
-    document.getElementById('id_phoneNumber').disabled = false;
-    document.getElementById('id_address_1').disabled = false;
-    document.getElementById('id_address_2').disabled = false;
-    document.getElementById('id_landmark').disabled = false;
-    document.getElementById('id_town_city').disabled = false;
-    document.getElementById('id_zip_code').disabled = false;
-    document.getElementById('id_state').disabled = false;
-    document.getElementById('save_organization_details').disabled = false;
-}
+// function edit_organization_form() {
+//     console.log("Admin method");
+//     document.getElementById('id_company_name').disabled = false;
+//     document.getElementById('id_manager_name').disabled = false;
+//     document.getElementById('id_email').disabled = false;
+//     document.getElementById('id_phoneNumber').disabled = false;
+//     document.getElementById('id_address_1').disabled = false;
+//     document.getElementById('id_address_2').disabled = false;
+//     document.getElementById('id_landmark').disabled = false;
+//     document.getElementById('id_town_city').disabled = false;
+//     document.getElementById('id_zip_code').disabled = false;
+//     document.getElementById('id_state').disabled = false;
+//     document.getElementById('save_organization_details').disabled = false;
+// }

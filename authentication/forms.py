@@ -62,7 +62,7 @@ class OrganizationForm(forms.ModelForm):
                 "aria-label": ".form-control-sm",
                 "type": "text",
                 "placeholder": "Company Name",
-                "disabled": True,
+                # "disabled": True,
             }
         )
     )
@@ -75,7 +75,7 @@ class OrganizationForm(forms.ModelForm):
                 "aria-label": ".form-control-sm",
                 "type": "text",
                 "placeholder": "Manager n ame",
-                "disabled": True,
+                # "disabled": True,
             }
         )
     )
@@ -87,7 +87,7 @@ class OrganizationForm(forms.ModelForm):
                 "class": "form-control",
                 "aria-label": ".form-control-sm",
                 "type": "email",
-                "disabled": True,
+                # "disabled": True,
                 "placeholder": "Email",
             }
         )
@@ -102,7 +102,7 @@ class OrganizationForm(forms.ModelForm):
                 "aria-label": ".form-control-sm",
                 "type": "tel",
                 "placeholder": "Phone Number (optional)",
-                "disabled": True,
+                # "disabled": True,
                 "maxlength": "11",
             }
         )
@@ -114,7 +114,7 @@ class OrganizationForm(forms.ModelForm):
             attrs={
                 "class": "form-control",
                 "aria-label": ".form-control-sm",
-                "disabled": True,
+                # "disabled": True,
                 "type": "text",
                 "placeholder": "Address 1",
             }
@@ -129,7 +129,7 @@ class OrganizationForm(forms.ModelForm):
                 "class": "form-control",
                 "aria-label": ".form-control-sm",
                 "type": "text",
-                "disabled": True,
+                # "disabled": True,
                 "placeholder": "Address 2 (optional)",
             }
         )
@@ -143,7 +143,7 @@ class OrganizationForm(forms.ModelForm):
                 "class": "form-control",
                 "aria-label": ".form-control-sm",
                 "type": "text",
-                "disabled": True,
+                # "disabled": True,
                 "placeholder": "Landmark (optional)",
             }
         )
@@ -157,7 +157,7 @@ class OrganizationForm(forms.ModelForm):
                 "class": "form-control",
                 "aria-label": ".form-control-sm",
                 "type": "text",
-                "disabled": True,
+                # "disabled": True,
                 "placeholder": "Town/City",
             }
         )
@@ -171,7 +171,7 @@ class OrganizationForm(forms.ModelForm):
                 "class": "form-control",
                 "aria-label": ".form-control-sm",
                 "type": "number",
-                "disabled": True,
+                # "disabled": True,
                 "placeholder": "Zip code",
                 "maxlength": "7",
             }
@@ -185,7 +185,7 @@ class OrganizationForm(forms.ModelForm):
             choices=settings.STATE_CHOICES,
             attrs={
                 "class": "form-select",
-                "disabled": True,
+                # "disabled": True,
                 "aria-label": ".form-control-sm",
                 "placeholder": "State"
             }
