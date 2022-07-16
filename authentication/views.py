@@ -1,5 +1,5 @@
 from django.urls import reverse, reverse_lazy
-from django.shortcuts import HttpResponseRedirect
+from django.shortcuts import HttpResponseRedirect, render, redirect
 from audioop import reverse
 import http
 from http.client import HTTPResponse
