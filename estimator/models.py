@@ -139,14 +139,13 @@ class Estimate(models.Model):
         max_digits=20, default=0, decimal_places=2)
     unit = models.ForeignKey(
         Unit, on_delete=models.CASCADE, null=True)
-    description = models.TextField(
-        max_length=255, blank=True, null=True)
+
     created_on = models.DateTimeField(auto_now_add=True)
     is_deleted = models.BooleanField(default=False)
     deleted_on = models.DateTimeField(blank=True, null=True)
 
     def __str__(self):
-        return str(self.project.name) + ' | ' + str(self.room.name) + '|' + str(self.width)
+        return str(self.project.name) + ' | ' + str(self.room.name)
 
     def save(self):
         if(self.rate == "" or self.rate == None):
@@ -171,12 +170,6 @@ class Estimate(models.Model):
             if self.width == '' or self.width == 0 or self.width == 0.0:
                 # when there is no width (RUNNING LENGTH)
                 # SECURITY: CHECK FOR EXCEPTIONS LIKE LETTERS/SYMBOLS/NONE-TYPE/EMPTY
-                if self.description != None and self.description != '':
-                    if '**NOTE: THIS IS RUNNING LENGTH.**' not in self.description:
-                        self.description = "**NOTE: THIS IS RUNNING LENGTH.** \n" + \
-                            str(self.description)
-                else:
-                    self.description = '**NOTE: THIS IS RUNNING LENGTH.**'
 
                 self.sqm = self.length
                 self.sqft = self.length * decimal.Decimal(3.28084)
@@ -186,10 +179,6 @@ class Estimate(models.Model):
             elif self.width > 0:
                 # AREA
                 # SECURITY: CHECK FOR EXCEPTIONS LIKE LETTERS/SYMBOLS/NONE-TYPE/EMPTY
-                if self.description != None and self.description != '':
-                    if '**NOTE: THIS IS RUNNING LENGTH.**' in self.description:
-                        self.description.replace(
-                            '**NOTE: THIS IS RUNNING LENGTH.**', '')
 
                 self.sqm = self.length * self.width
                 self.sqft = self.length * self.width * decimal.Decimal(10.7639)

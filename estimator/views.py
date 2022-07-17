@@ -353,8 +353,7 @@ def download_estimate_excel_file(request, project_id, project_name):
     sheet.append(["", "Estimate"])
     # sheet.append(["", project.client.address])
     sheet.append([""])
-    sheet.append(["Sl.No", "Description", "length", "width", "Sqm", "sqft", "Quantity",
-                  "Rate", "Amount", "disc. amount"])
+    sheet.append(["Sl.No", "Description", "Quantity", "Unit", "Rate", "Amount", "Total"])
     sheet["A14"].font = Font(bold=True)
     sheet["B14"].font = Font(bold=True)
     sheet["C14"].font = Font(bold=True)
@@ -362,10 +361,7 @@ def download_estimate_excel_file(request, project_id, project_name):
     sheet["E14"].font = Font(bold=True)
     sheet["F14"].font = Font(bold=True)
     sheet["G14"].font = Font(bold=True)
-    sheet["H14"].font = Font(bold=True)
-    sheet["I14"].font = Font(bold=True)
-    sheet["J14"].font = Font(bold=True)
-    sheet["K14"].font = Font(bold=True)
+    
     # sheet["B14"].alignment = Alignment(wrapText=True)
     index = 1
     # room_obj = Room.objects.all()
@@ -383,18 +379,18 @@ def download_estimate_excel_file(request, project_id, project_name):
         index_j = 0
         for item in estimate_room_obj:
             index_j = index_j + 1
+            if(item.unit == None):
+                unit = None
+            else:
+                unit = item.unit.unit
             sheet.append([
                 str(index)+"." + str(index_j),
                 str(item.room_item.name) + " - " + str(item.room_item_description.description) +
                 " - " + str("{:.2f}".format(item.discount)) +
                 "( " + str(item.discount_amount()) + " )",
-                str(item.length),
-                str(item.width),
-                str(item.sqm),
-                str(item.sqft),
                 str(item.quantity),
-                str(item.rate) + " / " +
-                str(item.unit.unit),
+                str(unit),
+                str(item.rate),
                 str("{:.2f}".format(item.calculate_amount())),
                 str("{:.2f}".format(item.total_after_discount())),
             ])
