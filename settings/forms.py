@@ -1,3 +1,4 @@
+from authentication.models import Organization
 from settings.models import TermsHeading
 from django import forms
 from ckeditor.widgets import CKEditorWidget
@@ -18,7 +19,30 @@ class TermsAndConditionForm(forms.ModelForm):
             }
         )
     )
-    content = forms.CharField(widget=CKEditorWidget())
+    content = forms.CharField(
+        required=True,
+        widget=CKEditorWidget(
+            attrs={
+                "class": "form-control",
+            }
+        )
+    )
+
+    organization = forms.ModelChoiceField(
+        required=False,
+        queryset=Organization.objects.all(),
+        label=False,
+        widget=forms.Select(
+            attrs={
+                "class": "form-select",
+                "aria-label": ".form-control",
+                "placeholder": "Unit",
+                "type": "button",
+                "readonly": True,
+                "hidden": True,
+            }
+        )
+    )
 
     class Meta:
         model = TermsHeading

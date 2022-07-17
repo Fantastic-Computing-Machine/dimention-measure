@@ -34,7 +34,6 @@ class ClientView(LoginRequiredMixin, FormMixin, ListView):
         request.POST["organization"] = str(request.user.organization.id)
         request.POST._mutable = False
         form = NewClientForm(request.POST)
-        print(form.errors)
         if form.is_valid():
             form.save()
         return HttpResponseRedirect(reverse('clients'))

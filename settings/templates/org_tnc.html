@@ -5,7 +5,9 @@
 {% block title %} - Company Settings {% endblock %}
 
 {% block head %}
-
+{% load static %}
+<script type="text/javascript" src="{% static 'ckeditor/ckeditor-init.js' %}"></script>
+<script type="text/javascript" src="{% static 'ckeditor/ckeditor/ckeditor.js' %}"></script>
 {% endblock %}
 
 {% block header %}
@@ -83,7 +85,6 @@
                                 <div class="modal-body">
                                     <div class="input-group mb-3">
                                         {%csrf_token%}
-                                        {{ form.media }}
                                         {{form.as_p}}
                                     </div>
                                 </div>
