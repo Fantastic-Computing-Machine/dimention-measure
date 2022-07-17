@@ -1,3 +1,5 @@
+from ckeditor.fields import RichTextField
+from settings.models import TermsHeading
 import decimal
 from datetime import datetime
 from django.contrib.auth import get_user_model as user_model
@@ -213,3 +215,14 @@ class Estimate(models.Model):
 
     def get_absolute_url(self):
         return reverse("estimate", args=[str(self.project.pk), str(self.project.name)])
+
+
+class ProjectTermsAndConditions(models.Model):
+    # Project TNC
+    heading = models.CharField(max_length=255)
+    org_terms = models.ForeignKey(TermsHeading, on_delete=models.CASCADE)
+    project = models.ForeignKey(Project, on_delete=models.CASCADE)
+    content = RichTextField(null=False)
+
+    def __str__(self):
+        return str(self.heading)

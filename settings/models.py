@@ -14,6 +14,7 @@ class Unit(models.Model):
 
 
 class TermsHeading(models.Model):
+    # Organization TNC
     name = models.CharField(max_length=255)
     organization = models.ForeignKey(
         Organization,
@@ -25,12 +26,3 @@ class TermsHeading(models.Model):
 
     def get_absolute_url(self):
         return reverse("terms_and_conditions")
-
-
-# class TermsContent(models.Model):
-#     heading = models.ForeignKey(TermsHeading, on_delete=models.CASCADE)
-#     description = models.TextField(
-#         blank=True, null=True)
-
-#     def __str__(self):
-#         return str(self.heading.name) + ' | ' + str(self.description[:30])
