@@ -189,3 +189,12 @@ $(document).ready(function () {
     });
 });
 
+$(document).ready(function () {
+    $('.checkboxSelector').change(function() {
+        if ($('.checkboxSelector:checked').length) {
+            $('#delete_button').prop('disabled', false);
+        } else {
+            $('#delete_button').prop('disabled', true);
+        }
+    });
+});
