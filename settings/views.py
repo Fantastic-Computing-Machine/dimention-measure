@@ -55,7 +55,7 @@ class ProjectTNC(LoginRequiredMixin, CreateView):
     template_name = "project_tnc.html"
     succes_url = reverse_lazy("terms_and_conditions")
 
-#delete function for deleting selected components isdeleted = true
+# delete selected terms and conditions
 def deleteSelectedTnC(request):
     if request.method == "POST":
         list_to_delete = request.POST.getlist('termsAndConditionCheckBox')
