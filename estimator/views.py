@@ -407,30 +407,48 @@ def DeleteEstimateComponentView(request, pk, project_id, project_name):
     return HttpResponseRedirect(reverse('estimate', args=(project_id, project_name,)))
 
 
-class ProjectTermsAndConditionView(LoginRequiredMixin, ListView):
-    login_url = '/user/login/'
-    redirect_field_name = 'redirect_to'
-    model = ProjectTermsAndConditions
-    # form_class = NewEstimateItemForm
-    template_name = 'tnc/project_tnc.html'
+def select_project_terms_and_conditions_view(request, pk: int, project_name: str):
+    project_tnc = ProjectTermsAndConditions.objects.filter(
+        project_id=pk).count()
 
+    print(project_tnc)
 
-def select_project_terms_and_conditions_view(request, pk, project_name):
+    if int(project_tnc) != 0:
+        return HttpResponseRedirect(reverse('project_terms_and_conditions', args=(pk, project_name)))
+
     template_name = "tnc/select_project_tnc.html"
-    form = ""
     context = dict()
     org_tnc = TermsHeading.objects.filter(
         organization=request.user.organization)
 
     context['org_tnc'] = org_tnc
-    # context['form'] = form
+    context['project_name'] = project_name
 
     if request.method == 'POST':
-        return HttpResponseRedirect(reverse(""))
+        to_import = list(map(int, request.POST.getlist('select_project_tnc')))
+        tnc_to_import = TermsHeading.objects.filter(pk__in=to_import)
+        project_instance = Project.objects.get(pk=pk)
 
+        for item in tnc_to_import:
+            ProjectTermsAndConditions.objects.create(
+                heading=item.name,
+                org_terms=item,
+                project=project_instance,
+                content=item.content,
+            )
+            print(item.name, " : ", item.content)
+
+        return HttpResponseRedirect(reverse('project_terms_and_conditions', args=(pk, project_name)))
     return render(request, template_name, context)
 
 
-def project_terms_and_conditions_view(request):
+def project_terms_and_conditions_view(request, pk: int, project_name: str):
+    template_name = 'tnc/project_tnc.html'
+    context = dict()
 
-    return
+    project_tnc = ProjectTermsAndConditions.objects.filter(project_id=pk)
+
+    context['project_name'] = project_name
+    context['project_tnc'] = project_tnc
+
+    return render(request, template_name, context)

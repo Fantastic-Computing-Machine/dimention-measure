@@ -2,7 +2,7 @@
 {% load static %} {% load humanize %}
 
 
-{% block title %} - Company Settings {% endblock %}
+{% block title %} - {{project_name}} TNC {% endblock %}
 
 {% block head %}
 <script type="text/javascript" src="{% static 'ckeditor/ckeditor-init.js' %}"></script>
@@ -46,13 +46,13 @@
             <div class="card-body">
 
                 <div class="accordion" id="accordionExample">
-                    {% for item in headings %}
+                    {% for item in project_tnc %}
                     <div class="accordion-item">
                         <h2 class="accordion-header" id="heading{{item.pk}}">
                             <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
                                 data-bs-target="#collapse{{item.pk}}" aria-expanded="false"
                                 aria-controls="collapse{{item.pk}}">
-                                <b class="">{{item.name}}</b>
+                                <b class="">{{item.heading}}</b>
                             </button>
                         </h2>
                         <div id="collapse{{item.pk}}" class="accordion-collapse collapse"
@@ -64,39 +64,6 @@
                     </div>
                     {%endfor%}
                 </div>
-
-                <p>
-                <div class="btn-group" role="group" aria-label="Basic mixed styles">
-                    <button type="button" class="btn btn-primary" data-bs-toggle="modal"
-                        data-bs-target="#newSection">New TNC</button>
-                </div>
-
-                </p>
-                <!-- New Section Modal -->
-                <div class="modal fade" id="newSection" tabindex="-1" aria-labelledby="newSectionLabel"
-                    aria-hidden="true">
-                    <div class="modal-dialog">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                T 'n C
-                            </div>
-                            <form name="new_section" id="new_section" method="POST">
-                                <div class="modal-body">
-                                    <div class="input-group mb-3">
-                                        {%csrf_token%}
-                                        {{form.as_p}}
-                                    </div>
-                                </div>
-
-                                <div class="modal-footer">
-                                    <button class="btn btn-primary" type="submit" id="new-section-button">Save</button>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-                <!-- New Section Modal -->
-
             </div>
         </div>
     </div>

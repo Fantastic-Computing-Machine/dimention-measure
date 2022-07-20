@@ -2,7 +2,7 @@
 {% load static %} {% load humanize %}
 
 
-{% block title %} - Company Settings {% endblock %}
+{% block title %} - Select {{project_name}} TNC {% endblock %}
 
 
 {% block head %}
@@ -40,33 +40,45 @@
 
 
 <div class="container-lg pb-4">
-    <div class="text-light py-2 display-4">Terms and Conditions</div>
+    <div class="text-light pt-2 display-4">Terms and Conditions</div>
+
     <div class="mt-3">
         <div class="card">
             <div class="card-body">
+                <div class="text h4 mb-2">
+                    <div class="">Select Terms and Conditions to import form Organization.</div>
+                    <div class="text-muted h6">You will later on be able to change/manage these ters and conditions
+                        independently.
+                    </div>
+                </div>
+                <form method="POST">{%csrf_token%}
+                    <div class="accordion" id="accordionExample">
+                        {% for item in org_tnc %}
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="heading{{item.pk}}">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                    data-bs-target="#collapse{{item.pk}}" aria-expanded="false"
+                                    aria-controls="collapse{{item.pk}}">
 
-                <div class="accordion" id="accordionExample">
-                    {% for item in org_tnc %}
-                    <div class="accordion-item">
-                        <h2 class="accordion-header" id="heading{{item.pk}}">
-                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                                data-bs-target="#collapse{{item.pk}}" aria-expanded="false"
-                                aria-controls="collapse{{item.pk}}">
+                                    <input class="form-check-input me-1" type="checkbox" name="select_project_tnc"
+                                        value="{{item.pk}}">
+                                    <b class="ms-1">{{item.name}}</b>
 
-                                <input class="form-check-input me-1" type="checkbox" value="">
-                                <b class="ms-1">{{item.name}}</b>
-
-                            </button>
-                        </h2>
-                        <div id="collapse{{item.pk}}" class="accordion-collapse collapse"
-                            aria-labelledby="heading{{item.pk}}" data-bs-parent="#accordionExample">
-                            <div class="accordion-body">
-                                {{item.content|safe}}
+                                </button>
+                            </h2>
+                            <div id="collapse{{item.pk}}" class="accordion-collapse collapse"
+                                aria-labelledby="heading{{item.pk}}" data-bs-parent="#accordionExample">
+                                <div class="accordion-body">
+                                    {{item.content|safe}}
+                                </div>
                             </div>
                         </div>
+                        {%endfor%}
                     </div>
-                    {%endfor%}
-                </div>
+                    <p class="mt-2">
+                        <button class="btn btn-primary" type="submit">Import</button>
+                    </p>
+                </form>
             </div>
         </div>
     </div>
