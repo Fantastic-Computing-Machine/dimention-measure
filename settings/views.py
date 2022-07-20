@@ -5,9 +5,10 @@ from django.shortcuts import HttpResponseRedirect
 from authentication.models import Organization
 from settings.models import TermsHeading
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.views.generic import CreateView
+from django.views.generic import CreateView, UpdateView
 from django.urls import reverse, reverse_lazy
 
+from datetime import datetime
 
 from settings.forms import TermsAndConditionForm
 
@@ -40,6 +41,7 @@ class TermsAndConditions(LoginRequiredMixin, CreateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         curr_org = self.request.user.organization
+        
         heading = TermsHeading.objects.filter(organization=curr_org)
         context['headings'] = heading
         return context
@@ -52,3 +54,12 @@ class ProjectTNC(LoginRequiredMixin, CreateView):
     form_class = TermsAndConditionForm
     template_name = "project_tnc.html"
     succes_url = reverse_lazy("terms_and_conditions")
+
+# delete selected terms and conditions
+def deleteSelectedTnC(request):
+    if request.method == "POST":
+        list_to_delete = request.POST.getlist('termsAndConditionCheckBox')
+        for item in list_to_delete:
+            # WARNING! This is a hard delete, it will delete the item from the database
+            TermsHeading.objects.filter(id=item).delete()
+    return HttpResponseRedirect(reverse('terms_and_conditions'))
