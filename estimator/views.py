@@ -1,3 +1,5 @@
+from django.shortcuts import render
+from typing import List
 from django.shortcuts import HttpResponseRedirect
 from datetime import datetime
 from openpyxl import Workbook
@@ -22,6 +24,7 @@ from estimator.models import (
     RoomItem,
     Project,
     Estimate,
+    ProjectTermsAndConditions
 )
 from estimator.forms import (
     NewProjectForm,
@@ -30,7 +33,7 @@ from estimator.forms import (
     NewRoomForm,
     NewRoomItemForm,
     NewRoomItemDescriptionForm,
-    DiscountForm
+    DiscountForm,
 )
 from client_and_company.models import Client
 from authentication.models import Organization
@@ -159,7 +162,6 @@ class FolioView(LoginRequiredMixin, CreateView):
     redirect_field_name = 'redirect_to'
     model = Estimate
     form_class = NewEstimateItemForm
-    # HELP: How is the data form the 3 forms is Posted to the DB???
     template_name = 'folio/folio.html'
 
     def get_context_data(self, **kwargs):
@@ -207,44 +209,6 @@ def DeleteEstimate(request, pk, project_name):
         estimate = Project.objects.filter(pk=pk).update(
             is_deleted=True, deleted_on=datetime.now())
         return HttpResponseRedirect(reverse('all_estimates'))
-
-
-# class ClientView(LoginRequiredMixin, FormMixin, ListView):
-#     login_url = '/user/login/'
-#     redirect_field_name = 'redirect_to'
-#     model = Client
-#     form_class = NewClientForm
-#     context_object_name = 'clients_list'
-#     template_name = 'clients/clients.html'
-#     success_url = reverse_lazy("clients")
-#     paginate_by = 15
-
-#     def get_queryset(self):
-#         queryset = super().get_queryset()
-#         return queryset.filter(is_deleted=False).order_by('-created_on')
-
-#     def post(self, request, **kwargs):
-#         form = NewClientForm(request.POST)
-#         if form.is_valid():
-#             form.save()
-#         return HttpResponseRedirect(reverse('clients'))
-
-
-# class UpdateClientView(LoginRequiredMixin, UpdateView):
-#     login_url = '/user/login/'
-#     redirect_field_name = 'redirect_to'
-#     model = Client
-#     template_name = 'clients/update_client.html'
-#     form_class = NewClientForm
-#     success_url = reverse_lazy('clients')
-
-
-# @login_required
-# def DeleteClient(request, pk):
-#     if request.method == 'POST':
-#         client = Client.objects.filter(pk=pk).update(
-#             is_deleted=True, deleted_on=datetime.now())
-#         return HttpResponseRedirect(reverse('clients'))
 
 
 @login_required
@@ -353,7 +317,8 @@ def download_estimate_excel_file(request, project_id, project_name):
     sheet.append(["", "Estimate"])
     # sheet.append(["", project.client.address])
     sheet.append([""])
-    sheet.append(["Sl.No", "Description", "Quantity", "Unit", "Rate", "Amount", "Total"])
+    sheet.append(["Sl.No", "Description", "Quantity",
+                 "Unit", "Rate", "Amount", "Total"])
     sheet["A14"].font = Font(bold=True)
     sheet["B14"].font = Font(bold=True)
     sheet["C14"].font = Font(bold=True)
@@ -361,7 +326,7 @@ def download_estimate_excel_file(request, project_id, project_name):
     sheet["E14"].font = Font(bold=True)
     sheet["F14"].font = Font(bold=True)
     sheet["G14"].font = Font(bold=True)
-    
+
     # sheet["B14"].alignment = Alignment(wrapText=True)
     index = 1
     # room_obj = Room.objects.all()
@@ -409,17 +374,6 @@ def download_estimate_excel_file(request, project_id, project_name):
         sheet.append(["", item.name.upper()])
         print(item.content)
         sheet.append(["", item.content])
-
-        # for i in item.content:
-        #     print(i)
-        # terms_content_obj = TermsContent.objects.filter(heading__id=item.pk)
-
-        # index = 1
-        # for term_item in terms_content_obj:
-
-        #     sheet.append([index, term_item.description])
-
-        #     index += 1
         sheet.append([""])
     sheet.append([""])
 
@@ -451,3 +405,32 @@ def DeleteEstimateComponentView(request, pk, project_id, project_name):
         estimate = Estimate.objects.filter(pk=pk).update(
             is_deleted=True, deleted_on=datetime.now())
     return HttpResponseRedirect(reverse('estimate', args=(project_id, project_name,)))
+
+
+class ProjectTermsAndConditionView(LoginRequiredMixin, ListView):
+    login_url = '/user/login/'
+    redirect_field_name = 'redirect_to'
+    model = ProjectTermsAndConditions
+    # form_class = NewEstimateItemForm
+    template_name = 'tnc/project_tnc.html'
+
+
+def select_project_terms_and_conditions_view(request, pk, project_name):
+    template_name = "tnc/select_project_tnc.html"
+    form = ""
+    context = dict()
+    org_tnc = TermsHeading.objects.filter(
+        organization=request.user.organization)
+
+    context['org_tnc'] = org_tnc
+    # context['form'] = form
+
+    if request.method == 'POST':
+        return HttpResponseRedirect(reverse(""))
+
+    return render(request, template_name, context)
+
+
+def project_terms_and_conditions_view(request):
+
+    return
