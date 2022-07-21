@@ -21,6 +21,7 @@ from estimator.views import (
     DeleteEstimateComponentView,
     project_terms_and_conditions_view,
     select_project_terms_and_conditions_view,
+    UpdateProjectTermsAndCondition,
 )
 
 
@@ -81,4 +82,6 @@ urlpatterns = [
     path("<int:pk>/<str:project_name>/select_project_terms_and_conditions/",
          select_project_terms_and_conditions_view, name="select_project_terms_and_conditions"),
 
+    path("tnc/<int:pk>/<str:project_name>/update_terms/",
+         UpdateProjectTermsAndCondition.as_view(), name="update_tnc"),
 ]

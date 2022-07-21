@@ -1,8 +1,8 @@
-from faulthandler import disable
-from typing_extensions import Required
+from ckeditor.widgets import CKEditorWidget
+from authentication.models import Organization
 from django import forms
 
-from .models import Estimate, Project, Room, RoomItem, RoomItemDescription
+from .models import Estimate, Project, Room, RoomItem, RoomItemDescription, ProjectTermsAndConditions
 from client_and_company.models import Client
 from settings.models import Unit
 
@@ -326,7 +326,6 @@ class NewRoomItemDescriptionForm(forms.ModelForm):
 
 
 class DiscountForm(forms.ModelForm):
-
     discount = forms.CharField(
         max_length=200,
         required=False,
@@ -345,4 +344,35 @@ class DiscountForm(forms.ModelForm):
         model = Project
         fields = (
             "discount",
+        )
+
+
+class UpdateProjectTermsAndConditionForm(forms.ModelForm):
+    name = forms.CharField(
+        max_length=200,
+        required=True,
+        widget=forms.TextInput(
+            attrs={
+                "class": "form-control",
+                "aria-label": ".form-control",
+                "type": "text",
+                "placeholder": "Heading",
+
+            }
+        )
+    )
+    content = forms.CharField(
+        required=True,
+        widget=CKEditorWidget(
+            attrs={
+                "class": "form-control",
+            }
+        )
+    )
+
+    class Meta:
+        model = ProjectTermsAndConditions
+        fields = (
+            "name",
+            "content",
         )

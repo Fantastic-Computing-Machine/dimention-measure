@@ -34,6 +34,7 @@ from estimator.forms import (
     NewRoomItemForm,
     NewRoomItemDescriptionForm,
     DiscountForm,
+    UpdateProjectTermsAndConditionForm,
 )
 from client_and_company.models import Client
 from authentication.models import Organization
@@ -407,6 +408,7 @@ def DeleteEstimateComponentView(request, pk, project_id, project_name):
     return HttpResponseRedirect(reverse('estimate', args=(project_id, project_name,)))
 
 
+@login_required
 def select_project_terms_and_conditions_view(request, pk: int, project_name: str):
     project_tnc = ProjectTermsAndConditions.objects.filter(
         project_id=pk).count()
@@ -442,6 +444,7 @@ def select_project_terms_and_conditions_view(request, pk: int, project_name: str
     return render(request, template_name, context)
 
 
+@login_required
 def project_terms_and_conditions_view(request, pk: int, project_name: str):
     template_name = 'tnc/project_tnc.html'
     context = dict()
@@ -449,6 +452,15 @@ def project_terms_and_conditions_view(request, pk: int, project_name: str):
     project_tnc = ProjectTermsAndConditions.objects.filter(project_id=pk)
 
     context['project_name'] = project_name
+    context['pk'] = pk
     context['project_tnc'] = project_tnc
 
     return render(request, template_name, context)
+
+
+class UpdateProjectTermsAndCondition(LoginRequiredMixin, UpdateView):
+    login_url = '/user/login/'
+    redirect_field_name = 'redirect_to'
+    model = ProjectTermsAndConditions
+    template_name = 'tnc/update_project_tnc.html'
+    form_class = UpdateProjectTermsAndConditionForm

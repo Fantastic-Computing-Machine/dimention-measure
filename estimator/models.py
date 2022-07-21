@@ -1,13 +1,13 @@
 from ckeditor.fields import RichTextField
-from settings.models import TermsHeading
 import decimal
 from datetime import datetime
+
 from django.contrib.auth import get_user_model as user_model
 from django.urls import reverse
 from django.db import models
 
 from client_and_company.models import Client
-from settings.models import Unit
+from settings.models import TermsHeading, Unit
 
 User = user_model()
 
@@ -215,6 +215,9 @@ class ProjectTermsAndConditions(models.Model):
 
     def __str__(self):
         return str(self.heading)
+
+    def get_absolute_url(self):
+        return reverse("project_terms_and_conditions", args=[str(self.pk), str(self.name)])
 
     class Meta:
         unique_together = (('project', 'org_terms'))

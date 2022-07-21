@@ -2,7 +2,6 @@ from ckeditor.fields import RichTextField
 from django.urls import reverse
 from django.db import models
 
-
 from authentication.models import Organization
 
 
