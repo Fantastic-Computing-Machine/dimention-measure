@@ -121,3 +121,12 @@ footer {
 .reset {
   all: revert;
 }
+
+.django-ckeditor-widget {
+  width: 100%;
+  display: block;
+}
+
+#id_content {
+  width: auto !important;
+}

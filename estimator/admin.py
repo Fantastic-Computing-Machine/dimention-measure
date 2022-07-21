@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Room, RoomItem, RoomItemDescription, Estimate, Project
+from .models import Room, RoomItem, RoomItemDescription, Estimate, Project, ProjectTermsAndConditions
 
 
 @admin.register(Room)
@@ -103,3 +103,6 @@ class ProjectAdmin(admin.ModelAdmin):
         "author",
     ]
     inlines = [ProjectInline, ]
+
+
+admin.site.register(ProjectTermsAndConditions)
