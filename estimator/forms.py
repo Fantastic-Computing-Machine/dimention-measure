@@ -348,7 +348,7 @@ class DiscountForm(forms.ModelForm):
 
 
 class UpdateProjectTermsAndConditionForm(forms.ModelForm):
-    name = forms.CharField(
+    heading = forms.CharField(
         max_length=200,
         required=True,
         widget=forms.TextInput(
@@ -373,6 +373,6 @@ class UpdateProjectTermsAndConditionForm(forms.ModelForm):
     class Meta:
         model = ProjectTermsAndConditions
         fields = (
-            "name",
+            "heading",
             "content",
         )

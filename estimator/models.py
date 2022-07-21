@@ -217,7 +217,7 @@ class ProjectTermsAndConditions(models.Model):
         return str(self.heading)
 
     def get_absolute_url(self):
-        return reverse("project_terms_and_conditions", args=[str(self.pk), str(self.name)])
+        return reverse("project_terms_and_conditions", args=[str(self.project.pk), str(self.project.name)])
 
     class Meta:
         unique_together = (('project', 'org_terms'))
