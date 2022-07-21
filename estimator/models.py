@@ -215,3 +215,6 @@ class ProjectTermsAndConditions(models.Model):
 
     def __str__(self):
         return str(self.heading)
+
+    class Meta:
+        unique_together = (('project', 'org_terms'))
