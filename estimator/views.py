@@ -464,3 +464,35 @@ class UpdateProjectTermsAndCondition(LoginRequiredMixin, UpdateView):
     model = ProjectTermsAndConditions
     template_name = 'tnc/update_project_tnc.html'
     form_class = UpdateProjectTermsAndConditionForm
+
+
+def edit_project_terms_and_conditions_list(request, pk, project_name):
+
+    template_name = "tnc/edit_project_terms_and_conditions_list.html"
+    context = dict()
+
+    project_tnc = ProjectTermsAndConditions.objects.filter(project_id=pk)
+    org_tnc = TermsHeading.objects.filter(
+        organization=request.user.organization)
+
+    project_pk = list()
+    org_pk = list()
+
+    for item in project_tnc:
+        project_pk.append(int(item.org_terms.pk))
+
+    for item in org_tnc:
+        org_pk.append(int(item.pk))
+
+    sol = list(set(org_pk) ^ set(project_pk))
+
+    org_tnc = org_tnc.filter(pk__in=sol)
+
+    context['org_tnc'] = org_tnc
+    context['project_tnc'] = project_tnc
+    context['project_name'] = project_name
+    context['pk'] = pk
+
+    # print(list(set(org_tnc) - set(project_tnc)))
+
+    return render(request, template_name, context)

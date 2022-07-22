@@ -1,3 +1,4 @@
+from django.utils.translation import gettext as _
 from ckeditor.fields import RichTextField
 import decimal
 from datetime import datetime
@@ -221,3 +222,5 @@ class ProjectTermsAndConditions(models.Model):
 
     class Meta:
         unique_together = (('project', 'org_terms'))
+        verbose_name = _('Project TNC')
+        verbose_name_plural = _('Project TNC')
