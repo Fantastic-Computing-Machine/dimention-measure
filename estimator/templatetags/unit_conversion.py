@@ -3,9 +3,9 @@ from decimal import Decimal
 register = template.Library()
 
 
-@register.simple_tag()
-def meter_to_feet(meter, *args, **kwargs):
-    return Decimal(meter * 3.28084)
+# @register.simple_tag()
+# def meter_to_feet(meter, *args, **kwargs):
+#     return Decimal(meter * 3.28084)
 
 
 @register.simple_tag()

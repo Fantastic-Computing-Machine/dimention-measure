@@ -466,6 +466,7 @@ class UpdateProjectTermsAndCondition(LoginRequiredMixin, UpdateView):
     form_class = UpdateProjectTermsAndConditionForm
 
 
+@login_required
 def edit_project_terms_and_conditions_list(request, pk, project_name):
 
     template_name = "tnc/edit_project_terms_and_conditions_list.html"
@@ -493,6 +494,22 @@ def edit_project_terms_and_conditions_list(request, pk, project_name):
     context['project_name'] = project_name
     context['pk'] = pk
 
-    # print(list(set(org_tnc) - set(project_tnc)))
+    if request.method == 'POST':
+
+        to_import = list(map(int, request.POST.getlist('select_project_tnc')))
+
+        tnc_to_import = TermsHeading.objects.filter(pk__in=to_import)
+        project_instance = Project.objects.get(pk=pk)
+
+        for item in tnc_to_import:
+            ProjectTermsAndConditions.objects.create(
+                heading=item.name,
+                org_terms=item,
+                project=project_instance,
+                content=item.content,
+            )
+            print(item.name, " : ", item.content)
+
+        return HttpResponseRedirect(reverse('project_terms_and_conditions', args=(pk, project_name)))
 
     return render(request, template_name, context)

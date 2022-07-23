@@ -116,3 +116,9 @@ footer {
     page-break-inside: avoid;
   }
 }
+
+
+.project_edit_tnc {
+  overflow-y: scroll;
+  height: 700px;
+}
