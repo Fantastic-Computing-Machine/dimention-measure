@@ -9,10 +9,8 @@ from django.contrib.auth.models import User
 from django.http import FileResponse
 from django.shortcuts import HttpResponseRedirect
 from django.views.generic import (
-    DetailView,
     CreateView,
     UpdateView,
-    DeleteView,
     TemplateView,
     ListView,
 )
@@ -189,8 +187,8 @@ class MongoDatabase:
             collection = db[self.clusterName]
             return collection
         except Exception as ex:
-            # print("MongoDB: Exception occured while Connecting to the database.")
-            # print(ex)
+            print("MongoDB: Exception occured while Connecting to the database.")
+            print(ex)
             return False
 
     def __disconnect(self):
@@ -199,9 +197,9 @@ class MongoDatabase:
             self.client.close()
             return True
         except Exception as ex:
-            # print(
-            # "MongoDB: Exception occured while disconnecting to the database. \nTrying...")
-            # print(ex)
+            print(
+            "MongoDB: Exception occured while disconnecting to the database. \nTrying...")
+            print(ex)
             return False
 
     def find(self, query=None, projection=None):
@@ -213,8 +211,6 @@ class MongoDatabase:
             return result
         except Exception as ex:
             query_status = False
-            # print("MongoDB: Exception occured while performing Find in the database.")
-            # print(ex)
             return query_status
         finally:
             self.__disconnect()
@@ -230,14 +226,12 @@ class MigrateData(LoginRequiredMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         mongo_obj = MongoDatabase()
-        # print("\nMongo Object Created")
 
         user_obj = User.objects.get(username="admin")
         ct = 0
 
         for item in mongo_obj.find():
             projectName = item["projectName"]
-            # print("project Name:", projectName)
 
             project_obj = Project(
                 name=projectName,
@@ -246,14 +240,10 @@ class MigrateData(LoginRequiredMixin, TemplateView):
 
             project_obj = Project.objects.get(name=projectName)
             ct += 1
-            # print(ct, ' | ', project_obj)
-
             cnt = 0
 
             for dim in range(len(item["dims"])):
                 curr_dim = item["dims"][dim]
-
-                # print("Current Dimention: #", dim)
 
                 dims_obj = Dimension(
                     project=project_obj,
@@ -264,9 +254,6 @@ class MigrateData(LoginRequiredMixin, TemplateView):
                 )
 
                 dims_obj.save()
-
                 cnt = +1
-                # print(cnt, ' | ', dims_obj)
-            # print()
 
         return super(MigrateData, self).get_context_data(**kwargs)

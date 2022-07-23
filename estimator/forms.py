@@ -1,5 +1,4 @@
 from ckeditor.widgets import CKEditorWidget
-from authentication.models import Organization
 from django import forms
 
 from .models import Estimate, Project, Room, RoomItem, RoomItemDescription, ProjectTermsAndConditions

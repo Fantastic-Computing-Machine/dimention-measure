@@ -1,6 +1,3 @@
-import re
-from django.contrib.admin.models import LogEntry, ADDITION
-from django.contrib.contenttypes.models import ContentType
 from django.contrib import admin
 from .models import Project, Dimension
 

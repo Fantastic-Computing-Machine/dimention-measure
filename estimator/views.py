@@ -37,9 +37,6 @@ from estimator.forms import (
     DiscountForm,
     UpdateProjectTermsAndConditionForm,
 )
-from client_and_company.models import Client
-from authentication.models import Organization
-from client_and_company.forms import NewClientForm
 from settings.models import Unit, TermsHeading
 
 
@@ -528,7 +525,6 @@ def edit_project_terms_and_conditions_list(request, pk, project_name):
                 project=project_instance,
                 content=item.content,
             )
-            # print(item.name, " : ", item.content)
 
         return HttpResponseRedirect(reverse('project_terms_and_conditions', args=(pk, project_name)))
 

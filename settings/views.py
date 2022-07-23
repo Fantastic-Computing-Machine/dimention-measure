@@ -2,13 +2,11 @@ from django.urls import reverse
 from django.contrib.auth import get_user_model as user_model
 
 from django.shortcuts import HttpResponseRedirect
-from authentication.models import Organization
 from settings.models import TermsHeading
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.views.generic import CreateView, UpdateView
+from django.views.generic import CreateView
 from django.urls import reverse, reverse_lazy
 
-from datetime import datetime
 
 from settings.forms import TermsAndConditionForm
 
@@ -28,13 +26,12 @@ class TermsAndConditions(LoginRequiredMixin, CreateView):
         request.POST._mutable = True
         request.POST["organization"] = str(request.user.organization.id)
         request.POST._mutable = False
-
         form = TermsAndConditionForm(request.POST)
         try:
             if form.is_valid():
                 form.save()
         except:
-            # print(form.error())
+            print(form.error())
 
         return HttpResponseRedirect(reverse('terms_and_conditions'))
 
@@ -55,10 +52,9 @@ class ProjectTNC(LoginRequiredMixin, CreateView):
     template_name = "project_tnc.html"
     succes_url = reverse_lazy("terms_and_conditions")
 
-# delete selected terms and conditions
-
 
 def deleteSelectedTnC(request):
+    # delete selected terms and conditions
     if request.method == "POST":
         list_to_delete = request.POST.getlist('termsAndConditionCheckBox')
         for item in list_to_delete:
