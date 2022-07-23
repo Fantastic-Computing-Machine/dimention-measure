@@ -1,8 +1,8 @@
 {% extends 'base.html' %}
 
-{% load static %} {% load humanize %} {% load unit_conversion %}
+{% load static %} {% load humanize %} {% load unit_conversion %} {% load utility %}
 
-{% block title %} - Dimension: {{project.name| capfirst }} {% endblock %}
+{% block title %} - Dimension: {% replaceItem project.name|capfirst %}{% endblock %}
 
 {% block header %}
 <ul class="nav justify-content-end">
@@ -156,7 +156,7 @@
                         {{project.reference_number}}
                     </div>
                     <span class="h2">
-                        {{project.name | title}}
+                        {% replaceItem project.name|title %}
                     </span>
                 </span>
 
@@ -217,7 +217,7 @@
 
                 <div>
                     <p class="h4">
-                        {{project.client.name|title}}
+                        {% replaceItem project.client.name|title %}  
                         <span class="h5">
                             (+91-{{project.client.phoneNumber}})
                         </span>
@@ -250,12 +250,14 @@
                 <div class="modal-header">
                     <h5 class="modal-title" id="deleteModalLabel">
                         Confirm
-                        delete estimate "{{project.name | capfirst }}"</h5>
+                        delete estimate "{% replaceItem project.name|capfirst %}"</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body text-start">
                     You wish to permanently delete estimate &rarr;
-                    <b>"{{project.name | capfirst }}"</b>?<br>
+                    <b>"{% replaceItem project.name|capfirst %}"
+                    
+                    </b>?<br>
                     <b class="my-1">Be Careful!</b>
                 </div>
                 <div class="modal-footer">
@@ -320,7 +322,7 @@
                         <tr class="table align-middle">
                             <td class="mx-2 fs-6 col-4">
                                 <b>
-                                    {{item.room.name}}
+                                    {% replaceItem item.room.name %}
                                 </b>- {{item.room_item.name}}
                                 <div class="text-wrap ps-2">
                                     {{item.room_item_description.description}}

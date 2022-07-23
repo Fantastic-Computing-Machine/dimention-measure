@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% load static %} {% load humanize %}
+{% load static %} {% load humanize %} {% load utility %}
 
 
 {% block title %} - Estimate {% endblock %}
@@ -129,7 +129,7 @@
                                         {{item.reference_number}}
                                     </span>
                                     <span class="text-wrap">
-                                        {{item.name|capfirst}}
+                                    {% replaceItem item.name|capfirst %}                                    
                                     </span>
                                 </div>
                                 <span class="badge bg-secondary mt-1" data-bs-toggle="tooltip"
@@ -160,12 +160,12 @@
                     <div class="modal-header">
                         <h5 class="modal-title" id="delete{{item.id}}ModalLabel">
                             Confirm
-                            delete123 "{{item.name | capfirst }}"</h5>
+                            delete "{% replaceItem item.name|capfirst %}"</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body text-start">
                         You wish to permanently delete estimate ::&rarr;
-                        <b>"{{item.name | capfirst }}"</b>?<br>
+                        <b>"{% replaceItem item.name|capfirst %}"</b>?<br>
                         <b class="my-1">Be Careful!</b>
                     </div>
                     <div class="modal-footer">
