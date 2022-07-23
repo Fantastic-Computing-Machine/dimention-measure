@@ -94,19 +94,19 @@ class EstimateDetailView(LoginRequiredMixin, CreateView):
     def post(self, request, **kwargs):
         active_project = Project.objects.filter(id=kwargs['pk'])[0]
 
-        print("000000000000000000000000000000000000")
-        print(request.POST)
-        print("000000000000000000000000000000000000")
+        # print("000000000000000000000000000000000000")
+        # print(request.POST)
+        # print("000000000000000000000000000000000000")
 
         if request.method == 'POST':
             request.POST._mutable = True
             request.POST["project"] = active_project
             request.POST._mutable = False
-            print(request.POST)
+            # print(request.POST)
             try:
                 form = NewEstimateItemForm(request.POST)
-                if not form.is_valid():
-                    print(form.errors)
+                # if not form.is_valid():
+                #     print(form.errors)
             except Exception as e:
                 print(e)
 
@@ -122,19 +122,19 @@ class UpdateEstimateItemView(LoginRequiredMixin, UpdateView):
 
     def post(self, request, **kwargs):
 
-        print(request.POST)
+        # print(request.POST)
 
         req = request.POST
         super(UpdateEstimateItemView, self).post(request, **kwargs)
         estimate = Estimate.objects.get(pk=self.kwargs['pk'])
-        print("---\n", estimate)
+        # print("---\n", estimate)
 
         estimate.room_id = req['room']
         estimate.room_item_id = req['room_item']
         estimate.room_item_description_id = req['room_item_description']
 
         if req['unit'] != '':
-            print(Unit.objects.get(id=int(req['unit'])))
+            # print(Unit.objects.get(id=int(req['unit'])))
             estimate.unit = Unit.objects.get(id=int(req['unit']))
         else:
             estimate.unit = None
@@ -247,7 +247,7 @@ def DeleteComponentDescription(request):
 
 @login_required
 def AddRoom(request):
-    print(request.POST)
+    # print(request.POST)
     if request.method == 'POST':
         form = NewRoomForm(request.POST)
         if form.is_valid():
@@ -275,9 +275,10 @@ def AddRoomItemDescription(request):
 
 @login_required
 def download_estimate_excel_file(request, project_id, project_name):
-    print()
-    project_tnc_obj = ProjectTermsAndConditions.objects.filter(project=project_id)
-    print(project_tnc_obj)
+    # print()
+    project_tnc_obj = ProjectTermsAndConditions.objects.filter(
+        project=project_id)
+    # print(project_tnc_obj)
     if project_tnc_obj.count() == 0:
         return HttpResponseRedirect(reverse('select_project_terms_and_conditions', kwargs={'pk': project_id, 'project_name': project_name}))
 
@@ -294,7 +295,7 @@ def download_estimate_excel_file(request, project_id, project_name):
         pk=project_id, is_deleted=False)[0]
 
     company = request.user.organization
-    print("company: ",company)
+    # print("company: ",company)
 
     # create a workbook object
     workbook = Workbook()
@@ -342,8 +343,8 @@ def download_estimate_excel_file(request, project_id, project_name):
     estimate = Estimate.objects.filter(
         project__id=project_id, is_deleted=False).order_by('room')
 
-    print(estimate)
-    print(project.get_all_rooms())
+    # print(estimate)
+    # print(project.get_all_rooms())
 
     for room_item in project.get_all_rooms():
 
@@ -378,20 +379,20 @@ def download_estimate_excel_file(request, project_id, project_name):
 
     for item in project_tnc_obj:
         sheet.append(["", item.heading.upper()])
-        print(type(item.content))
-        print("content",item.content)
+        # print(type(item.content))
+        # print("content",item.content)
 
         ree = re.compile('<.*?>')
         cleantext = re.sub(ree, '', item.content)
-        
+
         repr_string = repr(cleantext)
-        print(repr_string)
+        # print(repr_string)
         new_string = re.sub(r'\\r|\\n', '!&', repr_string)
-        print(new_string)
-        new_string=new_string.strip("'")
+        # print(new_string)
+        new_string = new_string.strip("'")
         c = new_string.split('!&!&!&!&')
 
-        print(c)
+        # print(c)
         for i in c:
             sheet.append(["", i])
         sheet.append([""])
@@ -399,7 +400,7 @@ def download_estimate_excel_file(request, project_id, project_name):
 
     workbook.save(filename=str(file_path))
     workbook.close()
-    print("WB--- CLOSE")
+    # print("WB--- CLOSE")
     file_ecxel = FileResponse(open(file_path, 'rb'))
     delete_file = os.remove(file_path)
     return file_ecxel
@@ -408,7 +409,7 @@ def download_estimate_excel_file(request, project_id, project_name):
 @login_required
 def updateDiscount(request, pk, project_name):
     if request.method == 'POST':
-        print("Inside Update Discount", request.POST)
+        # print("Inside Update Discount", request.POST)
         form = DiscountForm(request.POST)
         if form.is_valid():
             project = Project.objects.filter(
@@ -432,7 +433,7 @@ def select_project_terms_and_conditions_view(request, pk: int, project_name: str
     project_tnc = ProjectTermsAndConditions.objects.filter(
         project_id=pk).count()
 
-    print(project_tnc)
+    # print(project_tnc)
 
     if int(project_tnc) != 0:
         return HttpResponseRedirect(reverse('project_terms_and_conditions', args=(pk, project_name)))
@@ -457,7 +458,7 @@ def select_project_terms_and_conditions_view(request, pk: int, project_name: str
                 project=project_instance,
                 content=item.content,
             )
-            print(item.name, " : ", item.content)
+            # print(item.name, " : ", item.content)
 
         return HttpResponseRedirect(reverse('project_terms_and_conditions', args=(pk, project_name)))
     return render(request, template_name, context)
@@ -527,7 +528,7 @@ def edit_project_terms_and_conditions_list(request, pk, project_name):
                 project=project_instance,
                 content=item.content,
             )
-            print(item.name, " : ", item.content)
+            # print(item.name, " : ", item.content)
 
         return HttpResponseRedirect(reverse('project_terms_and_conditions', args=(pk, project_name)))
 

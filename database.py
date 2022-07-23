@@ -4,7 +4,7 @@ import certifi
 
 import CONFIG
 
-print("Database.py")
+# print("Database.py")
 
 
 class MongoDatabase:
@@ -21,8 +21,8 @@ class MongoDatabase:
             collection = db[self.clusterName]
             return collection
         except Exception as ex:
-            print("MongoDB: Exception occured while Connecting to the database.")
-            print(ex)
+            # print("MongoDB: Exception occured while Connecting to the database.")
+            # print(ex)
             return False
 
     def __disconnect(self):
@@ -31,13 +31,13 @@ class MongoDatabase:
             self.client.close()
             return True
         except Exception as ex:
-            print(
+            # print(
                 "MongoDB: Exception occured while disconnecting to the database. \nTrying...")
-            print(ex)
+            # print(ex)
             return False
 
     # def postQuery(self, query):
-    #     # Insert/Post One
+    # Insert/Post One
     #     query_status = None
     #     collection = self.__connect()
     #     try:
@@ -45,22 +45,22 @@ class MongoDatabase:
     #         query_status = True
     #     except Exception as ex:
     #         query_status = False
-    #         print("MongoDB: Exception occured while Inserting to the database.")
-    #         print(ex)
+    #         # print("MongoDB: Exception occured while Inserting to the database.")
+    #         # print(ex)
     #     finally:
     #         self.__disconnect()
     #         return query_status
 
     # def findOne(self, query):
-    #     # Find one
+    # Find one
     #     query_status = None
     #     collection = self.__connect()
     #     try:
     #         result = collection.find_one(query)
     #     except Exception as ex:
     #         query_status = False
-    #         print("MongoDB: Exception occured while performing FindAll in the database.")
-    #         print(ex)
+    #         # print("MongoDB: Exception occured while performing FindAll in the database.")
+    #         # print(ex)
     #     finally:
     #         self.__disconnect()
     #         if query_status == False:
@@ -68,7 +68,7 @@ class MongoDatabase:
     #         return result
 
     # def updateData(self, query, operation, projection):
-    #     # Update
+    # Update
     #     query_status = None
     #     collection = self.__connect()
     #     try:
@@ -77,14 +77,14 @@ class MongoDatabase:
     #         query_status = True
     #     except Exception as ex:
     #         query_status = False
-    #         print("MongoDB: Exception occured while Updating to the database.")
-    #         print(ex)
+    #         # print("MongoDB: Exception occured while Updating to the database.")
+    #         # print(ex)
     #     finally:
     #         self.__disconnect()
     #         return query_status
 
     # def deleteData(self, projectName):
-    #     # Delete one
+    # Delete one
     #     query_status = None
     #     collection = self.__connect()
     #     try:
@@ -93,23 +93,23 @@ class MongoDatabase:
     #         query_status = True
     #     except Exception as ex:
     #         query_status = False
-    #         print("MongoDB: Exception occured while Deleting to the database.")
-    #         print(ex)
+    #         # print("MongoDB: Exception occured while Deleting to the database.")
+    #         # print(ex)
     #     finally:
     #         self.__disconnect()
     #         return query_status
 
-    def find(self, query=None, projection=None):
+    def find(self, query = None, projection = None):
         # Find Many
-        query_status = None
-        collection = self.__connect()
+        query_status=None
+        collection=self.__connect()
         try:
-            result = collection.find(query, projection)
+            result=collection.find(query, projection)
             return result
         except Exception as ex:
-            query_status = False
-            print("MongoDB: Exception occured while performing Find in the database.")
-            print(ex)
+            query_status=False
+            # print("MongoDB: Exception occured while performing Find in the database.")
+            # print(ex)
             return query_status
         finally:
             self.__disconnect()
@@ -151,7 +151,7 @@ class MongoDatabase:
 #             self.__commit()
 #             return True
 #         except pymysql.MySQLError as e:
-#             print("Mysql Error:", e)
+#             # print("Mysql Error:", e)
 #             return False
 #         finally:
 #             self.__disconnect()
@@ -166,7 +166,7 @@ class MongoDatabase:
 #                 return
 #             return result
 #         except pymysql.MySQLError as e:
-#             print("Mysql Error:", e)
+#             # print("Mysql Error:", e)
 #             return False
 #         finally:
 #             self.__disconnect()

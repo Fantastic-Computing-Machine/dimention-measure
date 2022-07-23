@@ -12,7 +12,7 @@ mongo_obj = MongoDatabase()
 #     tables = []
 #     for item in result:
 #         tables.append(item['Tables_in_dimention_db'])
-#     print(tables)
+# print(tables)
 #     return tables
 
 
@@ -20,13 +20,13 @@ mongo_obj = MongoDatabase()
 #     tables_required = ['projects', 'dimention']
 #     tables_in_db = fetch_tables()
 #     tables_to_create = list(set(tables_required) - set(tables_in_db))
-#     print(tables_to_create)
+# print(tables_to_create)
 #     if len(tables_to_create) != len(tables_required):
 
 #         if 'projects' in tables_to_create:
 #             query = "CREATE TABLE PROJECTS(PID INT NOT NULL AUTO_INCREMENT, PNAME VARCHAR(30) NOT NULL UNIQUE, PRIMARY KEY (PID));"
 #             sql_obj.executeWrite(query)
-#             print("CREATED PROJECTS TABLE...")
+#             # print("CREATED PROJECTS TABLE...")
 
 #         if 'dimention' in tables_to_create:
 #             query = '''create table dimention(dimid int not null auto_increment,
@@ -41,7 +41,7 @@ mongo_obj = MongoDatabase()
 #                                               primary key(dimid),
 #                                               foreign key(PID) references projects(PID));'''
 #             sql_obj.executeWrite(query)
-#             print("CREATED DIMENTION TABLE...")
+#             # print("CREATED DIMENTION TABLE...")
 
 # return True
 
@@ -55,19 +55,19 @@ def migrate():
             projectName)
 
         project_id = sql_obj.fetchRead(fetch_pid_query)[0]['pid']
-        print(projectName, project_id)
+        # print(projectName, project_id)
 
         project = Project(
             name=(projectName),
             author=2,
         )
 
-        print(project)
+        # print(project)
         # project.save()
 
         # for dim in range(len(item["dims"])):
         #     curr_dim = item["dims"][dim]
-        #     print("Current Dimention: #", dim)
+        # print("Current Dimention: #", dim)
 
         #     curr_dim["length"] = str(
         #         curr_dim["length"]).replace("N/A", "0")
@@ -80,9 +80,9 @@ def migrate():
         # query = '''insert into dimention(tag, length, width, area_sqm, area_sqft, rate, amount, pid)
         #                             VALUES('%s', '%f', '%f', '%f', '%f', '%f', '%f', '%i');''' % (str(curr_dim["name"]), float(curr_dim["length"]), float(curr_dim["width"]), float(curr_dim["sqm"]), float(curr_dim["sqft"]), float(curr_dim["rate"]), float(curr_dim["amount"]), project_id)
         # sql_obj.executeWrite(query)
-        # print(curr_dim)
+        # # print(curr_dim)
 
-        print("-->###<--")
+        # print("-->###<--")
 
 
 # migrate()

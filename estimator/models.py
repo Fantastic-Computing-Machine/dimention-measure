@@ -110,7 +110,7 @@ class Project(models.Model):
         estimate_room_obj = Estimate.objects.values_list(
             'room__id', 'room__name').filter(project__id=self.id).distinct()
 
-        print(estimate_room_obj)
+        # print(estimate_room_obj)
 
         return estimate_room_obj
 

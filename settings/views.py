@@ -34,14 +34,14 @@ class TermsAndConditions(LoginRequiredMixin, CreateView):
             if form.is_valid():
                 form.save()
         except:
-            print(form.error())
+            # print(form.error())
 
         return HttpResponseRedirect(reverse('terms_and_conditions'))
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         curr_org = self.request.user.organization
-        
+
         heading = TermsHeading.objects.filter(organization=curr_org)
         context['headings'] = heading
         return context
@@ -56,6 +56,8 @@ class ProjectTNC(LoginRequiredMixin, CreateView):
     succes_url = reverse_lazy("terms_and_conditions")
 
 # delete selected terms and conditions
+
+
 def deleteSelectedTnC(request):
     if request.method == "POST":
         list_to_delete = request.POST.getlist('termsAndConditionCheckBox')
