@@ -6,6 +6,7 @@ from openpyxl import Workbook
 from openpyxl.styles import Font, Alignment
 import os
 import decimal
+import re
 
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -274,6 +275,12 @@ def AddRoomItemDescription(request):
 
 @login_required
 def download_estimate_excel_file(request, project_id, project_name):
+    print()
+    project_tnc_obj = ProjectTermsAndConditions.objects.filter(project=project_id)
+    print(project_tnc_obj)
+    if project_tnc_obj.count() == 0:
+        return HttpResponseRedirect(reverse('select_project_terms_and_conditions', kwargs={'pk': project_id, 'project_name': project_name}))
+
     date_time_obj = datetime.now()
     current_date = date_time_obj.strftime('%x')
     current_time = date_time_obj.strftime('%X')
@@ -287,7 +294,7 @@ def download_estimate_excel_file(request, project_id, project_name):
         pk=project_id, is_deleted=False)[0]
 
     company = request.user.organization
-    print(company)
+    print("company: ",company)
 
     # create a workbook object
     workbook = Workbook()
@@ -303,19 +310,20 @@ def download_estimate_excel_file(request, project_id, project_name):
     sheet["E1"].font = Font(size=9)
     sheet["F1"].font = Font(size=9)
     sheet.append([""])
-    sheet.append(["", company.company_name])
+    sheet.append(["", company.company_name.replace("-", " ").title()])
     sheet["B3"].font = Font(size=12, bold=True)
     sheet.append(["", company.address()])
     sheet.append(["", "Email: "+str(company.email)])
     sheet.append(
-        ["", "Mobile: " + str(company.phoneNumber) + str(company.company_name)])
+        ["", "Mobile: " + str(company.phoneNumber)])
     sheet.append([""])
     sheet.append(["", "To"])
-    sheet.append(["", project.client.name])
+    sheet.append(["", project.client.name.replace("-", " ").title()])
     sheet["B9"].font = Font(size=12, bold=True)
     sheet.append(["", project.client.address()])
     sheet.append([""])
     sheet.append(["", "Estimate"])
+    sheet["B12"].font = Font(bold=True)
     # sheet.append(["", project.client.address])
     sheet.append([""])
     sheet.append(["Sl.No", "Description", "Quantity",
@@ -368,13 +376,24 @@ def download_estimate_excel_file(request, project_id, project_name):
                  "", "", project.total_with_gst()])
     sheet.append([""])
 
-    terms_obj = TermsHeading.objects.filter(
-        organization=request.user.organization)
+    for item in project_tnc_obj:
+        sheet.append(["", item.heading.upper()])
+        print(type(item.content))
+        print("content",item.content)
 
-    for item in terms_obj:
-        sheet.append(["", item.name.upper()])
-        print(item.content)
-        sheet.append(["", item.content])
+        ree = re.compile('<.*?>')
+        cleantext = re.sub(ree, '', item.content)
+        
+        repr_string = repr(cleantext)
+        print(repr_string)
+        new_string = re.sub(r'\\r|\\n', '!&', repr_string)
+        print(new_string)
+        new_string=new_string.strip("'")
+        c = new_string.split('!&!&!&!&')
+
+        print(c)
+        for i in c:
+            sheet.append(["", i])
         sheet.append([""])
     sheet.append([""])
 
