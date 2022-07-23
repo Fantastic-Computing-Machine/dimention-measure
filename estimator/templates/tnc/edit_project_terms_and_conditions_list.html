@@ -33,71 +33,73 @@
             {{project_name}}
         </div>
     </div>
-    <div class="mt-3">
-        <div class="card">
-            <div class="card-body">
-                <div class="text h4 mb-2">
-                    <div class="">Select Terms and Conditions to import form Organization.</div>
-                </div>
-                <form method="POST">{%csrf_token%}
+    <div class="row flex-md-row-reverse pb-3" dir="rtl">
+        <div class="col-md-6 col_height">
+            <div class="order-md-2 card my-2">
+                <div class="card-body project_edit_tnc">
+                    <div class="text h5 mb-2">
+                        <div class="mb-2">Select Terms and Conditions to import from Organization.</div>
+                    </div>
+                    <form method="POST">{%csrf_token%}
 
-                    <div class="accordion" id="accordionExample">
-                        {% for item in org_tnc %}
+                        <div class="accordion" id="accordionExample">
+                            {% for item in org_tnc %}
+                            <div class="accordion-item">
+                                <h2 class="accordion-header" id="heading{{item.pk}}">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                        data-bs-target="#collapse{{item.pk}}" aria-expanded="false"
+                                        aria-controls="collapse{{item.pk}}">
+                                        <input class="form-check-input me-2" type="checkbox" name="select_project_tnc"
+                                            value="{{item.pk}}">
+                                        <b class="">{{item.name|capfirst}}</b>
+                                    </button>
+                                </h2>
+                                <div id="collapse{{item.pk}}" class="accordion-collapse collapse"
+                                    aria-labelledby="heading{{item.pk}}" data-bs-parent="#accordionExample">
+                                    <div class="accordion-body">
+
+                                        {{item.content|safe}}
+                                    </div>
+                                </div>
+                            </div>
+                            {%endfor%}
+                        </div>
+                        <p class="mt-2">
+                            <button class="btn btn-primary" type="submit">Import</button>
+                        </p>
+                    </form>
+                    <!-- </div> -->
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6 col_height">
+            <div class="order-md-3 card my-2">
+                <div class="card-body project_edit_tnc">
+
+                    <div class="text h5 mb-2">
+                        <div class="mb-2">Existing Terms and conditions in the Project.</div>
+                    </div>
+                    <div class="accordion" id="existingTNCAccordian">
+                        {% for item in project_tnc %}
                         <div class="accordion-item">
                             <h2 class="accordion-header" id="heading{{item.pk}}">
                                 <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
                                     data-bs-target="#collapse{{item.pk}}" aria-expanded="false"
                                     aria-controls="collapse{{item.pk}}">
-                                    <input class="form-check-input me-1" type="checkbox" name="select_project_tnc"
-                                        value="{{item.pk}}">
-                                    <b class="">{{item.name}}</b>
+                                    <b class="">{{item.heading}}</b>
                                 </button>
                             </h2>
                             <div id="collapse{{item.pk}}" class="accordion-collapse collapse"
-                                aria-labelledby="heading{{item.pk}}" data-bs-parent="#accordionExample">
+                                aria-labelledby="heading{{item.pk}}" data-bs-parent="#existingTNCAccordian">
                                 <div class="accordion-body">
-                                    <a href="{% url 'update_project_tnc' item.pk project_name %}">update</a> | <a
-                                        href="">delete</a>
+
                                     {{item.content|safe}}
                                 </div>
                             </div>
                         </div>
                         {%endfor%}
                     </div>
-                    <p class="mt-2">
-                        <button class="btn btn-primary" type="submit">Import</button>
-                    </p>
-                </form>
-            </div>
-        </div>
-    </div>
-
-    <div class="mt-3">
-        <div class="card">
-            <div class="card-body">
-                <div class="text h4 mb-2">
-                    <div class="">Existing Terms and conditions in the Project.</div>
-                </div>
-                <div class="accordion" id="accordionExample">
-                    {% for item in project_tnc %}
-                    <div class="accordion-item">
-                        <h2 class="accordion-header" id="heading{{item.pk}}">
-                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                                data-bs-target="#collapse{{item.pk}}" aria-expanded="false"
-                                aria-controls="collapse{{item.pk}}">
-                                <b class="">{{item.heading}}</b>
-                            </button>
-                        </h2>
-                        <div id="collapse{{item.pk}}" class="accordion-collapse collapse"
-                            aria-labelledby="heading{{item.pk}}" data-bs-parent="#accordionExample">
-                            <div class="accordion-body">
-                                <a href="{% url 'update_project_tnc' item.pk project_name %}">update</a> | <a
-                                    href="">delete</a>
-                                {{item.content|safe}}
-                            </div>
-                        </div>
-                    </div>
-                    {%endfor%}
                 </div>
             </div>
         </div>
