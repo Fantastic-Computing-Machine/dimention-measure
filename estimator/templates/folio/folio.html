@@ -359,10 +359,15 @@
                                                     <label class="form-check-label"
                                                         for="elementDescriptionCheckbox_{{item.id}}">
                                                         <span class="px-1">
-                                                            {{item.description}} @
-                                                            <span class="text-primary">
-                                                                ₹ {{item.rate}}/{{item.unit.unit}}
-                                                            </span>
+                                                            {{item.description}}
+                                                            {%if item.working%}
+                                                            <div class="">
+                                                                Working:
+                                                                <span class="text-primary">
+                                                                    {{item.working}}
+                                                                </span>
+                                                            </div>
+                                                            {%endif%}
                                                         </span>
                                                     </label>
                                                 </div>
