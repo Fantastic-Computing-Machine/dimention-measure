@@ -541,3 +541,12 @@ def edit_project_terms_and_conditions_list(request, pk, project_name):
         return HttpResponseRedirect(reverse('project_terms_and_conditions', args=(pk, project_name)))
 
     return render(request, template_name, context)
+
+def deleteSelectedProjectTnC(request,pk, project_name):
+    # delete selected terms and conditions
+    if request.method == "POST":
+        list_to_delete = request.POST.getlist('termsAndConditionCheckBox')
+        for item in list_to_delete:
+            # WARNING! This is a hard delete, it will delete the item from the database
+            ProjectTermsAndConditions.objects.filter(pk=item).delete()
+    return HttpResponseRedirect(reverse('project_terms_and_conditions', args=(pk, project_name)))
