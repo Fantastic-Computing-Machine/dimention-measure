@@ -109,6 +109,7 @@ footer {
 
   @page {
     size: landscape;
+    text: black;
   }
 
   table,
@@ -118,7 +119,15 @@ footer {
 }
 
 
-.project_edit_tnc {
-  overflow-y: scroll;
-  height: 700px;
+.reset {
+  all: revert;
+}
+
+.django-ckeditor-widget {
+  width: 100%;
+  display: block;
+}
+
+#id_content {
+  width: auto !important;
 }
