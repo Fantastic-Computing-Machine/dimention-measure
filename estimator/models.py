@@ -203,6 +203,12 @@ class Estimate(models.Model):
     def total_after_discount(self):
         return self.calculate_amount() - self.discount_amount()
 
+    def get_actual_quantity(self):
+        print(self.width)
+        if self.length:
+            return self.sqft
+        return self.quantity
+
     def get_absolute_url(self):
         return reverse("estimate", args=[str(self.project.pk), str(self.project.name)])
 

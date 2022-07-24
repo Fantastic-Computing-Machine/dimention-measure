@@ -9,6 +9,7 @@ import decimal
 import re
 import html
 
+
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import FileResponse
@@ -325,7 +326,7 @@ def download_estimate_excel_file(request, project_id, project_name):
     sheet["B12"].font = Font(bold=True)
     # sheet.append(["", project.client.address])
     sheet.append([""])
-    sheet.append(["Sl.No", "Description", "Quantity(m/sqm)",
+    sheet.append(["Sl.No", "Description", "Quantity(ft/sqft)",
                  "Unit", "Rate", "Amount", "Total"])
     sheet["A14"].font = Font(bold=True)
     sheet["B14"].font = Font(bold=True)
@@ -356,13 +357,16 @@ def download_estimate_excel_file(request, project_id, project_name):
                 unit = None
             else:
                 unit = item.unit.unit
-            description = str(item.room_item.name).replace("-", " ") + " - " + str(item.room_item_description.description).replace("-", " ").title()
+            description = str(item.room_item.name).replace(
+                "-", " ") + " - " + str(item.room_item_description.description).replace("-", " ").title()
             if(item.discount != 0):
-                description = description +" - " + str("{:.2f}".format(item.discount) + "%") + "-( Rs. " + str("{:.2f}".format(item.discount_amount())) + " )"
+                description = description + " - " + \
+                    str("{:.2f}".format(item.discount) + "%") + "-( Rs. " + \
+                    str("{:.2f}".format(item.discount_amount())) + " )"
             sheet.append([
                 str(index)+"." + str(index_j),
                 description,
-                str(item.quantity),
+                str(item.get_actual_quantity()),
                 str(unit),
                 str(item.rate),
                 str("{:.2f}".format(item.calculate_amount())),
@@ -370,7 +374,13 @@ def download_estimate_excel_file(request, project_id, project_name):
             ])
         index += 1
 
+    sheet.append(["", "Total itemized Discount", "",
+                 "", "", project.total_itemised_discount()])
     sheet.append(["", "Grand Total", "", "", "", project.total_amount()])
+    sheet.append(["", "Discount ( " + str(project.discount) + "% )", "",
+                 "", "", project.discount_amount()])
+    sheet.append(["", "Total After discount", "",
+                 "", "", project.total_after_discount()])
     sheet.append(["", "GST @ 18%", "", "", "", project.gst_amount()])
     sheet.append(["", "Total including GST", "",
                  "", "", project.total_with_gst()])
