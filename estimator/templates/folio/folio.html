@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% load static %} {% load humanize %}
+{% load static %} {% load humanize %} {% load utility %}
 
 
 {% block title %} - Estimate-Folio {% endblock %}
@@ -74,7 +74,7 @@
                                                     <input class="form-check-input" name="roomCheckbox" type="checkbox"
                                                         value="{{item.id}}" id="roomCheckbox_{{item.id}}">
                                                     <label class="form-check-label" for="roomCheckbox_{{item.id}}">
-                                                        {{item.name}}
+                                                        {% replaceItem item.name|capfirst %}
                                                     </label>
                                                 </div>
                                                 <span>
@@ -218,7 +218,7 @@
                                                         id="roomElementCheckbox_{{item.id}}">
                                                     <label class="form-check-label"
                                                         for="roomElementCheckbox_{{item.id}}">
-                                                        {{item.name}}
+                                                        {% replaceItem item.name|capfirst %}
                                                     </label>
                                                 </div>
                                                 <span>

@@ -109,6 +109,7 @@ footer {
 
   @page {
     size: landscape;
+    text: black;
   }
 
   table,
