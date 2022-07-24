@@ -357,9 +357,10 @@ def download_estimate_excel_file(request, project_id, project_name):
                 unit = item.unit.unit
             sheet.append([
                 str(index)+"." + str(index_j),
-                str(item.room_item.name) + " - " + str(item.room_item_description.description) +
-                " - " + str("{:.2f}".format(item.discount)) +
-                "( " + str(item.discount_amount()) + " )",
+                str(item.room_item.name).replace("-", " ") + " - " + str(item.room_item_description.description).replace("-", " ").title() +
+                " - " + str("{:.2f}".format(item.discount) + "%") +
+                "(- Rs. " +
+                str("{:.2f}".format(item.discount_amount())) + " )",
                 str(item.quantity),
                 str(unit),
                 str(item.rate),
