@@ -23,6 +23,7 @@ from estimator.views import (
     select_project_terms_and_conditions_view,
     UpdateProjectTermsAndCondition,
     edit_project_terms_and_conditions_list,
+    deleteSelectedProjectTnC,
 )
 
 
@@ -88,4 +89,7 @@ urlpatterns = [
 
     path("<int:pk>/<str:project_name>/edit_project_terms_and_conditions_list/",
          edit_project_terms_and_conditions_list, name="edit_project_terms_and_conditions_list"),
+
+     # url for delete selected prject TNC
+    path("<int:pk>/<str:project_name>/delete_selected_project_TnC/", deleteSelectedProjectTnC, name="delete_selected_project_TnC"),
 ]
