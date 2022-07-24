@@ -7,6 +7,7 @@ from openpyxl.styles import Font, Alignment
 import os
 import decimal
 import re
+import html
 
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -324,7 +325,7 @@ def download_estimate_excel_file(request, project_id, project_name):
     sheet["B12"].font = Font(bold=True)
     # sheet.append(["", project.client.address])
     sheet.append([""])
-    sheet.append(["Sl.No", "Description", "Quantity",
+    sheet.append(["Sl.No", "Description", "Quantity(m/sqm)",
                  "Unit", "Rate", "Amount", "Total"])
     sheet["A14"].font = Font(bold=True)
     sheet["B14"].font = Font(bold=True)
@@ -355,12 +356,12 @@ def download_estimate_excel_file(request, project_id, project_name):
                 unit = None
             else:
                 unit = item.unit.unit
+            description = str(item.room_item.name).replace("-", " ") + " - " + str(item.room_item_description.description).replace("-", " ").title()
+            if(item.discount != 0):
+                description = description +" - " + str("{:.2f}".format(item.discount) + "%") + "-( Rs. " + str("{:.2f}".format(item.discount_amount())) + " )"
             sheet.append([
                 str(index)+"." + str(index_j),
-                str(item.room_item.name).replace("-", " ") + " - " + str(item.room_item_description.description).replace("-", " ").title() +
-                " - " + str("{:.2f}".format(item.discount) + "%") +
-                "(- Rs. " +
-                str("{:.2f}".format(item.discount_amount())) + " )",
+                description,
                 str(item.quantity),
                 str(unit),
                 str(item.rate),
@@ -392,7 +393,7 @@ def download_estimate_excel_file(request, project_id, project_name):
 
         # print(c)
         for i in c:
-            sheet.append(["", i])
+            sheet.append(["", html.unescape(i)])
         sheet.append([""])
     sheet.append([""])
 
