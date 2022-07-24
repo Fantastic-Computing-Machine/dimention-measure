@@ -103,7 +103,8 @@
             <img src="https://img.icons8.com/ios-filled/20/ffffff/right--v1.png" /></a>
         <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteSelectedTnCModal"
                         id="delete_button" disabled>Delete Selected</button>
-        <a class="btn btn-success" href="{% url 'download_estimate_excel_file' pk project_name %}" download>
+        
+        <a class="btn btn-success" href="{% url 'download_estimate_excel_file' pk project_name %}" >
                                 Download Excel
                             </a>
     </div>

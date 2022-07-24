@@ -274,13 +274,12 @@ def AddRoomItemDescription(request):
 
 @login_required
 def download_estimate_excel_file(request, project_id, project_name):
-    # print()
     project_tnc_obj = ProjectTermsAndConditions.objects.filter(
         project=project_id)
     # print(project_tnc_obj)
     if project_tnc_obj.count() == 0:
         return HttpResponseRedirect(reverse('select_project_terms_and_conditions', kwargs={'pk': project_id, 'project_name': project_name}))
-
+        
     date_time_obj = datetime.now()
     current_date = date_time_obj.strftime('%x')
     current_time = date_time_obj.strftime('%X')
@@ -326,7 +325,7 @@ def download_estimate_excel_file(request, project_id, project_name):
     sheet["B12"].font = Font(bold=True)
     # sheet.append(["", project.client.address])
     sheet.append([""])
-    sheet.append(["Sl.No", "Description", "Quantity(ft/sqft)",
+    sheet.append(["Sl.No", "Description", "Quantity",
                  "Unit", "Rate", "Amount", "Total"])
     sheet["A14"].font = Font(bold=True)
     sheet["B14"].font = Font(bold=True)
@@ -479,7 +478,8 @@ def project_terms_and_conditions_view(request, pk: int, project_name: str):
     context = dict()
 
     project_tnc = ProjectTermsAndConditions.objects.filter(project_id=pk)
-
+    if(project_tnc.count() == 0):
+        return HttpResponseRedirect(reverse('select_project_terms_and_conditions', kwargs={'pk': pk, 'project_name': project_name}))
     context['project_name'] = project_name
     context['pk'] = pk
     context['project_tnc'] = project_tnc
@@ -549,4 +549,8 @@ def deleteSelectedProjectTnC(request,pk, project_name):
         for item in list_to_delete:
             # WARNING! This is a hard delete, it will delete the item from the database
             ProjectTermsAndConditions.objects.filter(pk=item).delete()
+
+    all_project_tnc_count = ProjectTermsAndConditions.objects.filter(project_id=pk).count()
+    if(all_project_tnc_count == 0):
+        return HttpResponseRedirect(reverse('select_project_terms_and_conditions', kwargs={'pk': pk, 'project_name': project_name}))
     return HttpResponseRedirect(reverse('project_terms_and_conditions', args=(pk, project_name)))
