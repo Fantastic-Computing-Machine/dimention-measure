@@ -58,8 +58,7 @@
                                 <div id="collapse{{item.pk}}" class="accordion-collapse collapse"
                                     aria-labelledby="heading{{item.pk}}" data-bs-parent="#accordionExample">
                                     <div class="accordion-body">
-                                        <a href="{% url 'update_project_tnc' item.pk project_name %}">update</a> | <a
-                                            href="">delete</a>
+                                        <a href="{% url 'update_project_tnc' item.pk project_name %}">update</a>
                                         {{item.content|safe}}
                                     </div>
                                 </div>
