@@ -1,0 +1,142 @@
+{% extends 'base.html' %}
+{% load static %} {% load humanize %}
+
+
+{% block title %} - Company Settings {% endblock %}
+
+{% block head %}
+
+{% endblock %}
+
+{% block header %}
+<ul class="nav justify-content-end">
+    <li class="nav-item">
+        <a class="nav-link text-light active" href="{% url 'all_estimates' %}">
+            Estimates
+        </a>
+    </li>
+    <li class="nav-item">
+        <a href="{% url 'clients' %}" class="nav-link text-light active" aria-current="page">
+            Clients
+        </a>
+    </li>
+</ul>
+{% endblock %}
+
+{% block body %}
+<div class="container-lg pb-4">
+    <div class="text-light py-2 display-4">Console</div>
+    <div class="card">
+        <div class="card-body">
+            <div class="py-2 display-6">Profile</div>
+
+            <div class="">
+                <form method="POST">
+                    {% csrf_token %}
+                    <div class="row">
+                        <div class="col">
+                            <p>
+                                {{form.company_name.label}}
+                                {{form.company_name}}
+                            </p>
+                        </div>
+                        <div class="col">
+                            <p>
+                                {{form.manager_name.label}}
+                                {{form.manager_name}}
+                            </p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <p>
+                                {{form.email.label}}
+                                {{form.email}}
+                            </p>
+                        </div>
+                        <div class="col">
+                            <p>
+                                {{form.phoneNumber.label}}
+                                {{form.phoneNumber}}
+                            </p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <p>
+                                {{form.address_1.label}}
+                                {{form.address_1}}
+                            </p>
+                        </div>
+                        <div class="col">
+                            <p>
+                                {{form.address_2.label}}
+                                {{form.address_2}}
+                            </p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <p>
+                                {{form.landmark.label}}
+                                {{form.landmark}}
+                            </p>
+                        </div>
+                        <div class="col">
+                            <p>
+                                {{form.town_city.label}}
+                                {{form.town_city}}
+                            </p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <p>
+                                {{form.zip_code.label}}
+                                {{form.zip_code}}
+                            </p>
+                        </div>
+                        <div class="col">
+                            <p>
+                                {{form.state.label}}
+                                {{form.state}}
+                            </p>
+                        </div>
+                    </div>
+                    <a type="button" onClick="edit_organization_form()" class="btn btn-success">
+                        Edit Details</a>
+                    <button id="save_organization_details" type="submit" class="btn btn-primary">
+                        Save changes</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="mt-3">
+        <a class="btn btn-primary" href="{% url 'terms_and_conditions' %}">Terms and Conditions <img
+                src="https://img.icons8.com/ios-filled/20/ffffff/right--v1.png" /></a>
+    </div>
+
+</div>
+
+
+
+
+{% endblock %}
+
+
+{% block scripts %}
+
+<script src="{% static 'js/console.js' %}"></script>
+
+{% endblock %}
+
+{% block expense_button %}
+<a aria-label="all-expenses" href="{% url 'all_expenses' %}" type="button" class="btn btn-success btn-lg">
+    <img alt="all-expenses" src="https://img.icons8.com/ios/30/ffffff/money-circulation.png" />
+</a>
+
+<a aria-label="all-expenses" href="{% url 'all_estimates' %}" type="button" class="btn btn-info btn-lg">
+    <img src="https://img.icons8.com/ios/30/000000/estimates.png" />
+</a>
+
+{% endblock %}

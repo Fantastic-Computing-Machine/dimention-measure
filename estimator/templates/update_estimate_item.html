@@ -1,0 +1,139 @@
+{% extends 'base.html' %}
+{% load static %} {% load humanize %}
+
+{% block title %} - Estimate/Update{% endblock %}
+ 
+{% block head %} 
+{% endblock %}
+{% block body %}
+
+
+<div class="container-lg container-md container-sm py-4">
+    <div class="mx-auto">
+        <div class="row justify-content-center">
+            <div class="col-lg-7 col-md-6 col-xl-6">
+                <div class="card">
+
+                    <div class="card-header">
+                        <h5 class="card-title" id="{{expense.name}}expense">Update Estimate
+                        </h5>
+                    </div>
+                    {{pk}}
+                    <div class="card-body">
+                        <form action="" method="POST">
+                            {% csrf_token %}
+                            <p>
+                            <div class="row">
+                                <div class="col">
+                                    {{form.room.label}}
+                                    {{form.room}}
+                                </div>
+                                <div class="col">
+                                    {{form.room_item.label}}
+                                    {{form.room_item}}
+                                </div>
+                            </div>
+                            </p>
+                            <p>
+                                {{form.room_item_description.label}}
+                                {{form.room_item_description}}
+                            </p>
+
+                            <hr>
+
+                            <p>
+                            <div class="form-check">
+                                <input onclick="area_enable()" class="form-check-input" type="radio" name="flexRadio"
+                                    id="flexRadioDefault1">
+                                <label class="form-check-label" for="flexRadioDefault1" id="areaBox">
+                                    <div class="row">
+                                        <div class="col">
+                                            {{form.length.label}}
+                                            {{form.length}}
+                                        </div>
+                                        <div class="col">
+                                            {{form.width.label}}
+                                            {{form.width}}
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div id="sqm_box" class="col">
+                                            Sqm
+                                            <input class="form-control" id="sqm" type="text" placeholder="Sqm"
+                                                aria-label=".form-control-sm" value="{{dimension.sqm}}" disabled
+                                                readonly>
+                                        </div>
+                                        <div id="sqft_box" class="col">
+                                            Sqft
+                                            <input class="form-control" id="sqft" type="text" placeholder="Sqft"
+                                                aria-label=".form-control-sm" value="{{dimension.sqft}}" disabled
+                                                readonly>
+                                        </div>
+                                    </div>
+                                </label>
+                            </div>
+                            </p>
+                            <hr>
+                            <p>
+                            <div class="form-check">
+                                <input onclick="quantity_enable()" class="form-check-input" type="radio"
+                                    name="flexRadio" id="flexRadioDefault2">
+                                <label class="form-check-label" for="flexRadioDefault2" id="quantityBox">
+                                    <div>
+                                        {{form.quantity.label}}
+                                        {{form.quantity}}
+                                    </div>
+                                </label>
+                            </div>
+                            </p>
+                            <hr>
+                            <p>
+                            <div class="input-group">
+                                {{form.rate}}
+                                <span class="input-group-text" id="rate_per_unit">/</span>
+                                {{form.unit}}
+                            </div>
+                            </p>
+
+                            <p>
+                                {{form.discount.label}}
+                                {{form.discount}}
+                            </p>
+
+                            <button type="submit" class="btn btn-primary">
+                                Save changes
+                            </button>
+                            <button type="button" onClick = enableNewitemPage() class="btn btn-primary" id ="edit_update_estimate" >
+                                Edit
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    function disableNewitemPage()
+    {
+        console.log("disableNewitemPage");
+        document.getElementById('flexRadioDefault1').disabled = true;
+        document.getElementById('id_length').disabled = true;
+        document.getElementById('id_width').disabled = true;
+        document.getElementById('flexRadioDefault2').disabled = true;
+        document.getElementById('forQuantity').disabled = true;
+        document.getElementById('id_discount').disabled = true;
+        document.getElementById('id_rate').disabled = true;
+        document.getElementById('id_unit').disabled = true;
+        document.getElementById('id_room').disabled = true;
+        document.getElementById('id_room_item').disabled = true;
+        document.getElementById('id_room_item_description').disabled = true;
+        
+
+    }
+    disableNewitemPage();
+    
+</script>
+
+{% endblock %}
+

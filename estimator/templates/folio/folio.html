@@ -1,0 +1,502 @@
+{% extends 'base.html' %}
+{% load static %} {% load humanize %} {% load utility %}
+
+
+{% block title %} - Estimate-Folio {% endblock %}
+
+
+{% block header %}
+<ul class="nav justify-content-end">
+    <li class="nav-item">
+        <a class="nav-link text-light active" href="{% url 'all_estimates' %}">
+            Estimates
+        </a>
+    </li>
+    <li class="nav-item">
+        <a href="{% url 'clients' %}" class="nav-link text-light active" aria-current="page">
+            Clients
+        </a>
+    </li>
+</ul>
+{% endblock %}
+
+
+{% block body %}
+<div class="container-lg py-3">
+
+    <div class="row justify-content-evenly">
+        <div class="col-md-4 col-sm-12 mb-3">
+
+            <div class="accordion" id="accordianRoom">
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="headingOne">
+                        <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                            <div class="text-dark">
+                                <div class="fs-4 text-wrap">Rooms</div>
+
+                            </div>
+                        </button>
+                    </h2>
+                    <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne"
+                        data-bs-parent="#accordianRoom">
+                        <div class="accordion-body">
+                            <div class="d-flex justify-content-between">
+                                <span class="pb-2">
+                                    <a type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal"
+                                        data-bs-target="#addRoomModal">
+                                        Add new
+                                    </a>
+                                </span>
+                                <span class="pb-2">
+                                    <a data-bs-toggle="modal" class="btn btn-outline-danger btn-sm"
+                                        data-bs-target="#deleteRoom{{item.id}}Modal">
+                                        Delete Selected
+                                    </a>
+                                </span>
+                            </div>
+                            <div class="folio_card">
+                                {% if rooms|length == 0 %}
+                                <div class=" text-center my-3">
+                                    <img alt="void" class="img-fluid m-2" src="{% static 'img/void.svg' %}">
+                                    <div class="text-center">
+                                        <p class="py-1 fw-light my-3 fs-1">Nothing Here</p>
+                                    </div>
+                                </div>
+                                {% else %}
+                                <ul class="list-group">
+                                    {% for item in rooms %}
+                                    <form action="{% url 'delete_room' %}" id="formDeleteRoom" method="POST">
+                                        {% csrf_token %}
+                                        <li class="list-group-item list-group-item-action">
+                                            <div class="d-flex justify-content-between align-items-start">
+                                                <div class="form-check">
+                                                    <input class="form-check-input" name="roomCheckbox" type="checkbox"
+                                                        value="{{item.id}}" id="roomCheckbox_{{item.id}}">
+                                                    <label class="form-check-label" for="roomCheckbox_{{item.id}}">
+                                                        {% replaceItem item.name|capfirst %}
+                                                    </label>
+                                                </div>
+                                                <span>
+                                                    <span class="px-1">
+                                                        <a href="{% url 'update_room' item.pk %}">
+                                                            <img class="icon_ud"
+                                                                src="https://img.icons8.com/ios/20/fff/edit-row.png" />
+                                                        </a>
+                                                    </span>
+                                                </span>
+                                            </div>
+                                        </li>
+                                        {% endfor %}
+                                    </form>
+                                </ul>
+                                <div class="modal fade" id="deleteRoom{{item.id}}Modal" tabindex="-1"
+                                    aria-labelledby="deleteRoom{{item.id}}ModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="deleteRoom{{item.id}}ModalLabel">
+                                                    Confirm
+                                                    delete</h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                    aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body text-start">
+                                                You wish to permanently delete selected Rooms
+                                                ?<br>
+                                                <b class="my-1">Be Careful!</b>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-outline-success"
+                                                    data-bs-dismiss="modal">Get
+                                                    back to safety</button>
+                                                <button class="confirm_delete btn btn-danger align-bottom" type="submit"
+                                                    form="formDeleteRoom">
+                                                    Chop Chop!
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <!-- add room  -->
+            <div class="modal fade" id="addRoomModal" tabindex="-1" aria-labelledby="expenseModalLabel" width="75%"
+                aria-hidden="true">
+                <div class="modal-dialog">
+                    <form action="{% url 'add_room'%}" method="POST" name="new_expense" id="expense">
+                        <div class="mx-auto">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="staticBackdropLabel">Add Room</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                        aria-label="Close"></button>
+                                </div>
+
+                                <div class="modal-body">
+                                    {% csrf_token %}
+
+                                    <p>
+                                        <label for="roomName">Room Name</label>
+                                        <input name="name" type="text" class="form-control" id="name"
+                                            placeholder="Enter Room Name">
+                                    </p>
+                                </div>
+
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary"
+                                        data-bs-dismiss="modal">Close</button>
+                                    <button type="submit" name="new_expense" value="expenseModal" id="expenseModal"
+                                        class="btn btn-success">Save</button>
+
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <!-- add room -->
+        </div>
+
+        <div class="col-md-4 col-sm-12 mb-3">
+            <div class="accordion" id="accordianRoomItem">
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="headingTwo">
+                        <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
+                            <div class="text-dark">
+
+                                <div class="fs-4 text-wrap">Room Component</div>
+                                <div>
+
+                                </div>
+                            </div>
+                        </button>
+                    </h2>
+                    <div id="collapseTwo" class="accordion-collapse collapse show" aria-labelledby="headingTwo"
+                        data-bs-parent="#accordianRoomItem">
+                        <div class="accordion-body">
+                            <div class="d-flex justify-content-between">
+                                <span class="pb-2">
+                                    <a type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal"
+                                        data-bs-target="#add_room_components">
+                                        Add new
+                                    </a>
+                                </span>
+                                <span class="pb-2">
+                                    <a data-bs-toggle="modal" class="btn btn-outline-danger btn-sm"
+                                        data-bs-target="#deleteRoomComponent{{item.id}}Modal">
+                                        Delete Selected
+                                    </a>
+                                </span>
+                            </div>
+                            <div class="folio_card">
+                                {% if room_item|length == 0 %}
+                                <div class=" text-center my-3">
+                                    <img alt="void" class="img-fluid m-2" src="{% static 'img/void.svg' %}">
+                                    <div class="text-center">
+                                        <p class="py-1 fw-light my-3 fs-1">Nothing Here
+                                        </p>
+                                    </div>
+                                </div>
+                                {% else %}
+                                <ul class="list-group">
+                                    {% for item in room_item %}
+                                    <form action="{% url 'delete_room_component' %}" id="formDeleteRoomComponent"
+                                        method="POST">
+                                        {% csrf_token %}
+                                        <li class="list-group-item list-group-item-action">
+                                            <div class="d-flex justify-content-between align-items-start">
+                                                <div class="form-check">
+                                                    <input class="form-check-input" name="roomElementCheckbox"
+                                                        type="checkbox" value="{{item.id}}"
+                                                        id="roomElementCheckbox_{{item.id}}">
+                                                    <label class="form-check-label"
+                                                        for="roomElementCheckbox_{{item.id}}">
+                                                        {% replaceItem item.name|capfirst %}
+                                                    </label>
+                                                </div>
+                                                <span>
+                                                    <span class="px-1">
+                                                        <a href="{% url 'update_room_item' item.pk %}">
+                                                            <img class="icon_ud"
+                                                                src="https://img.icons8.com/ios/20/fff/edit-row.png" />
+                                                        </a>
+                                                    </span>
+                                                </span>
+                                            </div>
+                                        </li>
+                                        {% endfor %}
+                                    </form>
+                                </ul>
+                                <div class="modal fade" id="deleteRoomComponent{{item.id}}Modal" tabindex="-1"
+                                    aria-labelledby="deleteRoomComponent{{item.id}}ModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="deleteRoomComponent{{item.id}}ModalLabel">
+                                                    Confirm
+                                                    delete</h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                    aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body text-start">
+                                                You wish to permanently delete selected Room Components
+                                                ?<br>
+                                                <b class="my-1">Be Careful!</b>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-outline-success"
+                                                    data-bs-dismiss="modal">Get
+                                                    back to safety</button>
+                                                <button class="confirm_delete btn btn-danger align-bottom" type="submit"
+                                                    form="formDeleteRoomComponent">
+                                                    Chop Chop!
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- add room Component element -->
+            <div class="modal fade" id="add_room_components" tabindex="-1" aria-labelledby="expenseModalLabel"
+                width="75%" aria-hidden="true">
+                <div class="modal-dialog">
+                    <form action="{% url 'add_room_component'%}" method="POST" name="new_expense" id="expense">
+                        <div class="mx-auto">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="staticBackdropLabel">Add Room Component</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                        aria-label="Close"></button>
+                                </div>
+
+                                <div class="modal-body">
+                                    {% csrf_token %}
+                                    <p>
+                                        <label for="roomName">Room Component Name</label>
+                                        <input name="name" type="text" class="form-control" id="name"
+                                            placeholder="Enter Room Component Name">
+                                    </p>
+                                </div>
+
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary"
+                                        data-bs-dismiss="modal">Close</button>
+                                    <button type="submit" name="new_expense" value="expenseModal" id="expenseModal"
+                                        class="btn btn-success">Save</button>
+
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <!-- add room element -->
+        </div>
+
+
+        <div class="col-md-4 col-sm-12 mb-3">
+            <div class="accordion" id="accordianRoomItemDesc">
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="headingThree">
+                        <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#collapseThree" aria-expanded="true" aria-controls="collapseThree">
+                            <div class="text-dark">
+                                <div class="fs-4 text-wrap">Room Component Item Description</div>
+
+                            </div>
+                        </button>
+                    </h2>
+                    <div id="collapseThree" class="accordion-collapse collapse show" aria-labelledby="headingThree"
+                        data-bs-parent="#accordianRoomItemDesc">
+                        <div class="accordion-body">
+                            <div class="d-flex justify-content-between">
+                                <span class="pb-2">
+                                    <a type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal"
+                                        data-bs-target="#addRoomDesc">
+                                        Add new
+                                    </a>
+                                </span>
+                                <span class="pb-2">
+                                    <a data-bs-toggle="modal" class="btn btn-outline-danger btn-sm"
+                                        data-bs-target="#deleteComponentDescription{{item.id}}Modal">
+                                        Delete Selected
+                                    </a>
+                                </span>
+                            </div>
+                            <div class="folio_card">
+                                {% if room_item_description|length == 0 %}
+                                <div class=" text-center my-3">
+                                    <img alt="void" class="img-fluid m-2" src="{% static 'img/void.svg' %}">
+                                    <div class="text-center">
+                                        <p class="py-1 fw-light my-3 fs-1">Nothing Here
+                                        </p>
+                                    </div>
+                                </div>
+                                {% else %}
+                                <ul class="list-group">
+                                    {% for item in room_item_description %}
+                                    <form action="{% url 'delete_component_description' %}"
+                                        id="formDeleteComponentDescription" method="POST">
+                                        {% csrf_token %}
+                                        <li href="#" class="list-group-item list-group-item-action">
+                                            <div class="d-flex justify-content-between">
+                                                <div class="form-check text-wraps">
+                                                    <input class="form-check-input" name="elementDescriptionCheckbox"
+                                                        type="checkbox" value="{{item.id}}"
+                                                        id="elementDescriptionCheckbox_{{item.id}}">
+                                                    <label class="form-check-label"
+                                                        for="elementDescriptionCheckbox_{{item.id}}">
+                                                        <span class="px-1">
+                                                            {{item.description}}
+                                                            {%if item.working%}
+                                                            <div class="">
+                                                                Working:
+                                                                <span class="text-primary">
+                                                                    {{item.working}}
+                                                                </span>
+                                                            </div>
+                                                            {%endif%}
+                                                        </span>
+                                                    </label>
+                                                </div>
+
+                                                <div class="text-nowrap text-primary">
+                                                    <span class="px-1">
+                                                        <a href="{% url 'update_room_item_desc' item.pk %}">
+                                                            <img class="icon_ud"
+                                                                src="https://img.icons8.com/ios/20/fff/edit-row.png" />
+                                                        </a>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </li>
+                                        {% endfor %}
+                                    </form>
+                                </ul>
+                                <div class="modal fade" id="deleteComponentDescription{{item.id}}Modal" tabindex="-1"
+                                    aria-labelledby="deleteComponentDescription{{item.id}}ModalLabel"
+                                    aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title"
+                                                    id="deleteComponentDescription{{item.id}}ModalLabel">
+                                                    Confirm
+                                                    delete</h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                    aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body text-start">
+                                                You wish to permanently delete selected Component Descriptions
+                                                ?<br>
+                                                <b class="my-1">Be Careful!</b>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-outline-success"
+                                                    data-bs-dismiss="modal">Get
+                                                    back to safety</button>
+                                                <button class="confirm_delete btn btn-danger align-bottom" type="submit"
+                                                    form="formDeleteComponentDescription">
+                                                    Chop Chop!
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- add room desc  -->
+            <div class="modal fade" id="addRoomDesc" tabindex="-1" aria-labelledby="expenseModalLabel" width="75%"
+                aria-hidden="true">
+                <div class="modal-dialog">
+                    <form action="{% url 'add_component_description'%}" method="POST" name="new_expense" id="expense">
+                        <div class="mx-auto">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="staticBackdropLabel">Room Component Item Description
+                                    </h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                        aria-label="Close"></button>
+                                </div>
+
+                                <div class="modal-body">
+                                    {% csrf_token %}
+                                    <p>
+                                        <label for="roomName">Room Component Item Description</label>
+                                        <input name="description" type="textarea" class="form-control" id="description"
+                                            placeholder="Enter Description">
+                                    </p>
+                                    <p>
+                                        <label for="roomName">Working</label>
+                                        <input name="working" type="textarea" class="form-control" id="working"
+                                            placeholder="Working">
+                                    </p>
+
+                                    <!-- <p>
+                                        <label for="rate">Rate</label>
+                                        <input type="number" name="rate" class="form-control"
+                                            aria-label=".form-control-sm" placeholder="Enter Rate" step=".01"
+                                            maxlength="200" id="rate">
+                                    </p>
+                                    <p>
+                                        <label for="unit">Unit</label>
+                                        <select name="unit" class="form-select" aria-label=".form-control-sm"
+                                            placeholder="Unit" maxlength="100" id="unit">
+                                            <option value="" selected>---------</option>
+                                            {% for unit in units %}
+                                            <option value="{{unit.pk}}">{{unit.unit}}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </p> -->
+
+
+                                </div>
+
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary"
+                                        data-bs-dismiss="modal">Close</button>
+                                    <button type="submit" name="new_expense" value="expenseModal" id="expenseModal"
+                                        class="btn btn-success">Save</button>
+
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <!-- add room desc -->
+        </div>
+
+    </div>
+</div>
+
+
+{% endblock %}
+
+
+{% block expense_button %}
+<a aria-label="all-expenses" href="{% url 'all_expenses' %}" type="button" class="btn btn-success btn-lg">
+    <img alt="all-expenses" src="https://img.icons8.com/ios/30/ffffff/money-circulation.png" />
+</a>
+
+<a aria-label="all-expenses" href="{% url 'all_estimates' %}" type="button" class="btn btn-info btn-lg">
+    <img src="https://img.icons8.com/ios/30/000000/estimates.png" />
+</a>
+
+{% endblock %}

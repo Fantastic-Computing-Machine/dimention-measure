@@ -1,0 +1,122 @@
+{% extends 'base.html' %}
+{% load static %} {% load humanize %}
+
+
+{% block title %} - {{project_name}} TNC {% endblock %}
+
+{% block head %}
+<script type="text/javascript" src="{% static 'ckeditor/ckeditor-init.js' %}"></script>
+<script type="text/javascript" src="{% static 'ckeditor/ckeditor/ckeditor.js' %}"></script>
+{% endblock %}
+
+{% block header %}
+<ul class="nav justify-content-end">
+    <li class="nav-item">
+        <a class="nav-link text-light active" href="{% url 'all_estimates' %}">
+            Estimates
+        </a>
+    </li>
+    <li class="nav-item">
+        <a href="{% url 'clients' %}" class="nav-link text-light active" aria-current="page">
+            Clients
+        </a>
+    </li>
+</ul>
+{% endblock %}
+
+{% block body %}
+
+
+<div class="container-lg pb-4">
+    <div class="text-light py-2 display-4">Terms and Conditions
+        <div class="text-muted display-6">
+            {{project_name}}
+        </div>
+    </div>
+    <div class="mt-3">
+        <div class="card">
+            <div class="card-body">
+                <div class="accordion" id="accordionExample">
+                    <form action="{% url 'delete_selected_project_TnC' pk project_name %}" id="formDeleteTnc"
+                        method="POST">
+                        {% csrf_token %}
+                        {% for item in project_tnc %}
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="heading{{item.pk}}">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                    data-bs-target="#collapse{{item.pk}}" aria-expanded="false"
+                                    aria-controls="collapse{{item.pk}}">
+                                    {% comment %} <b class="">{{item.heading}}</b> {% endcomment %}
+                                    <input class="checkboxSelector form-check-input" name="termsAndConditionCheckBox"
+                                        type="checkbox" value="{{item.pk}}" id="termsAndConditionCheckBox_{{item.pk}}">
+                                    <label class="form-check-label" for="termsAndConditionCheckBox_{{item.pk}}">
+                                        <b class="ms-1">{{item.heading}}</b>
+                                    </label>
+                                </button>
+                            </h2>
+                            <div id="collapse{{item.pk}}" class="accordion-collapse collapse"
+                                aria-labelledby="heading{{item.pk}}" data-bs-parent="#accordionExample">
+                                <div class="accordion-body">
+                                    <a href="{% url 'update_project_tnc' item.pk project_name %}">update</a>
+                                    {{item.content|safe}}
+                                </div>
+                            </div>
+                        </div>
+                        {%endfor%}
+                    </form>
+                    <div class="modal fade" id="deleteSelectedTnCModal" tabindex="-1"
+                        aria-labelledby="deleteSelectedTnCModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="deleteSelectedTnCModalLabel">
+                                        Confirm
+                                        delete</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                        aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body text-start">
+                                    You wish to permanently delete selected Terms and Conditions
+                                    ?<br>
+                                    <b class="my-1">Be Careful!</b>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-outline-success" data-bs-dismiss="modal">Get
+                                        back to safety</button>
+                                    <button class="confirm_delete btn btn-danger align-bottom" type="submit"
+                                        form="formDeleteTnc">
+                                        Chop Chop!
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="mt-3">
+        <a class="btn btn-primary" href="{% url 'edit_project_terms_and_conditions_list' pk project_name %}">Import more
+            Terms
+            <img src="https://img.icons8.com/ios-filled/20/ffffff/right--v1.png" /></a>
+        <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteSelectedTnCModal"
+            id="delete_button" disabled>Delete Selected</button>
+
+        <a class="btn btn-success" href="{% url 'download_estimate_excel_file' pk project_name %}">
+            Download Excel
+        </a>
+    </div>
+</div>
+{% endblock %}
+
+
+{% block expense_button %}
+<a aria-label="all-expenses" href="{% url 'all_expenses' %}" type="button" class="btn btn-success btn-lg">
+    <img alt="all-expenses" src="https://img.icons8.com/ios/30/ffffff/money-circulation.png" />
+</a>
+
+<a aria-label="all-expenses" href="{% url 'all_estimates' %}" type="button" class="btn btn-info btn-lg">
+    <img src="https://img.icons8.com/ios/30/000000/estimates.png" />
+</a>
+
+{% endblock %}

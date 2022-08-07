@@ -1,0 +1,94 @@
+{% load static %} {% load humanize %}
+
+<!-- PAYEES CARD -->
+<div class="order-md-4 card my-2">
+    <div class="card-body payee_card">
+
+        <p class="fs-4">Payees</p>
+        {% if payees|length == 0 %}
+        <div class="text-center my-3">
+            <img alt="blank-image" class="img-fluid m-2" style="width: 300px;" src="{% static 'img/blank.svg' %}">
+            <div class="text-center">
+                <p class="py-1 fw-light my-3 fs-1">Nothing Here
+                    <button type="button" class="btn btn-outline-success" data-bs-toggle="modal"
+                        data-bs-target="#newPayee">
+                        Add Payee
+                    </button>
+                </p>
+            </div>
+        </div>
+        {% endif %}
+
+
+        <ul class="list-group">
+            {% for item in payees %}
+            <li class="list-group-item">
+
+                <div class="d-flex justify-content-between">
+                    <div calss="fw-bold">
+                        <!-- payee expense: all expenses for a payee -->
+                        <a href="{% url 'payee_expense' item.id item.name %}" class="text-dark">
+                            <div class="fw-bold">{{item.name| capfirst }}: <a class="text-dark"
+                                    href="tel:+{{item.phoneNumber}}">{{item.phoneNumber}}</a></div>
+                        </a>
+                        {% if item.description %}
+                        {{item.description|capfirst }}
+                        {% endif %}
+                    </div>
+                    <div>
+                        <span class="align-items-start">
+                            <a class="btn btn-light" href="{% url 'payee_update' item.id item.name %}">
+                                <img alt="edit-button" src="https://img.icons8.com/ios/20/000000/edit--v2.png" />
+                            </a>
+                            <!-- Delete Payee -->
+                            {% if project_id and project_name %}
+                            <a class="delete_button badge bg-light" id="delete_button_{{item.id}}"
+                                data-bs-toggle="modal" data-bs-target="#deleteModal_{{item.id}}">
+                                <img class="icon_ud" width="28" height="28"
+                                    src="https://img.icons8.com/ios/50/000000/delete-forever--v2.png" />
+                            </a>
+                            <div class="modal fade" id="deleteModal_{{item.id}}" tabindex="-1"
+                                aria-labelledby="deleteModalLabel" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="deleteModalLabel">
+                                                Confirm
+                                                delete payee "{{item.name | capfirst }}"</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body text-start">
+                                            You wish to permanently delete Payee&rarr;
+                                            <b>"{{item.name | capfirst }}"</b>?<br>
+                                            <b class="my-1">Be Careful!</b>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-outline-success"
+                                                data-bs-dismiss="modal">Get
+                                                back to safety</button>
+                                            <form
+                                                action="{% url 'delete_Payee_Project' item.id project_id project_name%}"
+                                                method="POST">
+                                                {% csrf_token %}
+
+                                                <button class="confirm_delete btn btn-danger align-bottom"
+                                                    type="submit">
+                                                    Chop Chop!
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endif %}
+                        </span>
+                    </div>
+                </div>
+            </li>
+
+            {% endfor %}
+        </ul>
+    </div>
+</div>
+<!-- PAYEES CARD -->

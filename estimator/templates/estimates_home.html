@@ -1,0 +1,237 @@
+{% extends 'base.html' %}
+{% load static %} {% load humanize %} {% load utility %}
+
+
+{% block title %} - Estimate {% endblock %}
+
+{% block header %}
+
+<ul class="nav justify-content-end">
+
+    <li class="nav-item">
+        <a data-bs-toggle="modal" data-bs-target="#newEstimate" class="nav-link active text-light" aria-current="page">
+            New Estimate
+        </a>
+    </li>
+
+    <li class="nav-item">
+        <div class="dropdown">
+            <a class="nav-link active text-light dropdown-toggle" id="dropdownMenuButton2" data-bs-toggle="dropdown"
+                aria-expanded="false">
+                More
+            </a>
+            <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="dropdownMenuButton2">
+                <li>
+                    <a href="{% url 'folio' %}" class="dropdown-item" aria-current="page">Folio</a>
+                </li>
+                <li>
+                    <a href="{% url 'clients' %}" class="dropdown-item" aria-current="page">
+                        Clients
+                    </a>
+                </li>
+                <li>
+                    <hr class="dropdown-divider">
+                </li>
+                <li>
+                    <a href="{% url 'organization' %}" class="dropdown-item" aria-current="page">
+                        Admin
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </li>
+
+</ul>
+<!-- new estimate modal trigger -->
+
+{% endblock %}
+
+
+{% block modal %}
+<!-- new estimate modal -->
+<div class="modal fade" id="newEstimate" tabindex="-1" aria-labelledby="newEstimateLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <form action="" method="POST" id="newEstimate">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="newEstimateLabel">New Estimate</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <p>
+                            {{form.name.label}}
+                            {{form.name}}
+                        </p>
+                        <p>
+                            {{form.client.label}}
+                            {{form.client}}
+                        </p>
+                        <p>
+                            {{form.description.label}}
+                            {{form.description}}
+                        </p>
+
+                    </div>
+                    <div class="text-center">
+                        <button class="btn btn-outline-success" type="submit" id="button-addon2">Launch</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<!-- new estimate modal -->
+{% endblock %}
+
+
+
+{% block body %}
+
+
+<div class="container-lg pb-4">
+    <div class="text-light py-2 display-4">Estimate</div>
+    <div class="row">
+
+        {% if projects_list|length == 0 %}
+        <div class="card">
+            <div class="card-body">
+                <div class=" text-center my-3">
+                    <img alt="void" class="img-fluid m-2" style="width: 400px;" src="{% static 'img/void.svg' %}">
+                    <div class="text-center">
+                        <p class="py-1 fw-light my-3 fs-1">Nothing Here
+                            <a class="btn btn-outline-success" data-bs-toggle="modal" data-bs-target="#newEstimate"
+                                class="nav-link active text-light" aria-current="page">
+                                <span class="align-bottom">
+                                    New Estimate
+                                </span>
+                            </a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+
+        {% if projects_list %}
+
+        {% for item in projects_list %}
+        <div class="col-lg-4 col-md-6 sm-10">
+            <a href="{% url 'estimate' item.id item.name %}" class="text-dark" aria-label="project-{{item.name}}">
+                <div class="card my-2 index_project_card">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div class="ms-2 me-auto">
+                                <div class="fw-bold text-nowrap">
+                                    <span class="text-muted small">
+                                        {{item.reference_number}}
+                                    </span>
+                                    <span class="text-wrap">
+                                    {% replaceItem item.name|capfirst %}                                    
+                                    </span>
+                                </div>
+                                <span class="badge bg-secondary mt-1" data-bs-toggle="tooltip"
+                                    data-bs-placement="bottom" title="{{item.created_on}}">
+                                    <small>
+                                        Created {{item.created_on|naturalday}}
+                                    </small>
+                                </span>
+                            </div>
+                            <!-- Delete modal -->
+                            <span>
+                                <a class="delete_button badge bg-light" id="delete_button{{item.id}}"
+                                    data-bs-toggle="modal" data-bs-target="#delete{{item.id}}Modal">
+                                    <img class="icon_ud" width="28" height="28"
+                                        src="https://img.icons8.com/ios/50/000000/delete-forever--v2.png" />
+                                </a>
+                            </span>
+                            <!-- Delete modal -->
+                        </div>
+                    </div>
+                </div>
+            </a>
+        </div>
+        <div class="modal fade" id="delete{{item.id}}Modal" tabindex="-1" aria-labelledby="delete{{item.id}}ModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="delete{{item.id}}ModalLabel">
+                            Confirm
+                            delete "{% replaceItem item.name|capfirst %}"</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body text-start">
+                        You wish to permanently delete estimate ::&rarr;
+                        <b>"{% replaceItem item.name|capfirst %}"</b>?<br>
+                        <b class="my-1">Be Careful!</b>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-outline-success" data-bs-dismiss="modal">Get
+                            back to safety</button>
+                        <form action="{% url 'delete_estimate' item.id item.name %}" method="POST">
+                            {% csrf_token %}
+
+                            <button class="confirm_delete btn btn-danger align-bottom" type="submit">
+                                Chop Chop!
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {% endfor %}
+
+        {% endif %}
+    </div>
+
+</div>
+
+
+{% if projects_list|length == 0 %}
+<nav aria-label="Page navigation mt-2">
+    <ul class="pagination pagination-sm justify-content-center">
+        {% if page_obj.has_previous %}
+        <li class="page-item">
+            <a class="page-link" href="?page=1" aria-label="Previous">
+                <span aria-hidden="true">&laquo;</span>
+            </a>
+        </li>
+        <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">Prev.</a>
+        </li>
+        {% endif %}
+        <li class="page-item">
+            <span class="page-link">
+                {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+            </span>
+        </li>
+        {% if page_obj.has_next %}
+        <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a></li>
+        <li class="page-item">
+            <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}" aria-label="Next">
+                <span aria-hidden="true">&raquo;</span>
+            </a>
+        </li>
+        {% endif %}
+    </ul>
+</nav>
+{% endif %}
+
+
+{% endblock %}
+
+
+
+{% block expense_button %}
+<a aria-label="all-expenses" href="{% url 'all_expenses' %}" type="button" class="btn btn-success btn-lg">
+    <img alt="all-expenses" src="https://img.icons8.com/ios/30/ffffff/money-circulation.png" />
+</a>
+
+<a aria-label="all-expenses" href="{% url 'all_estimates' %}" type="button" class="btn btn-info btn-lg">
+    <img src="https://img.icons8.com/ios/30/000000/estimates.png" />
+</a>
+
+{% endblock %}

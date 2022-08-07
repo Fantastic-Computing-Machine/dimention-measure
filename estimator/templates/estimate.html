@@ -1,0 +1,568 @@
+{% extends 'base.html' %}
+
+{% load static %} {% load humanize %} {% load unit_conversion %} {% load utility %}
+
+{% block title %} - Dimension: {% replaceItem project.name|capfirst %}{% endblock %}
+
+{% block header %}
+<ul class="nav justify-content-end">
+
+    <li class="nav-item">
+        <a class="nav-link active text-light" data-bs-toggle="modal" data-bs-target="#newItemModal">
+            New Item
+        </a>
+    </li>
+
+    <li class="nav-item">
+        <div class="dropdown">
+            <a class="nav-link active text-light dropdown-toggle" id="dropdownMenuButton2" data-bs-toggle="dropdown"
+                aria-expanded="false">
+                More
+            </a>
+            <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="dropdownMenuButton2">
+                <li>
+                    <a href="{% url 'folio' %}" class="dropdown-item" aria-current="page">Folio</a>
+                </li>
+                <li>
+                    <a href="{% url 'clients' %}" class="dropdown-item" aria-current="page">
+                        Clients
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </li>
+</ul>
+{% endblock %}
+
+
+{% block modal %}
+
+<!-- Modal -->
+<div class="modal fade" id="newItemModal" tabindex="-1" aria-labelledby="newItemModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="newItemModalLabel">New Item</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form method="POST" action="">
+                    {% csrf_token %}
+                    <p>
+                    <div class="row">
+                        <div class="col">
+                            {{form.room.label}}
+                            {{form.room}}
+                        </div>
+                        <div class="col">
+                            {{form.room_item.label}}
+                            {{form.room_item}}
+                        </div>
+                    </div>
+                    </p>
+                    <p>
+                        {{form.room_item_description.label}}
+                        {{form.room_item_description}}
+                    </p>
+                    <p>
+                    <p>
+                    <fieldset class="reset">
+                        <legend class="reset">Area</legend>
+
+                        <div class="form-check">
+                            <input onclick="area_enable()" class="form-check-input" type="radio" name="flexRadio"
+                                id="flexRadioDefault1" checked>
+
+                            <label class="form-check-label" for="flexRadioDefault1">Area</label>
+
+                            <label class="form-check-label" for="flexRadioDefault1" id="areaBox">
+                                <div class="row">
+                                    <div class="col">
+                                        {{form.length.label}}
+                                        {{form.length}}
+                                    </div>
+                                    <div class="col">
+                                        {{form.width.label}}
+                                        {{form.width}}
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div id="sqm_box" class="col">
+                                        Sqm
+                                        <input class="form-control" id="sqm" type="text" placeholder="Sqm"
+                                            aria-label=".form-control-sm" value="{{dimension.sqm}}" disabled readonly>
+                                    </div>
+                                    <div id="sqft_box" class="col">
+                                        Sqft
+                                        <input class="form-control" id="sqft" type="text" placeholder="Sqft"
+                                            aria-label=".form-control-sm" value="{{dimension.sqft}}" disabled readonly>
+                                    </div>
+                                </div>
+                            </label>
+                        </div>
+                    </fieldset>
+                    </p>
+                    <p>
+                    <fieldset class="reset">
+                        <legend class="reset">Quantity</legend>
+
+                        <div class="form-check">
+                            <input onclick="quantity_enable()" class="form-check-input" type="radio" name="flexRadio"
+                                id="flexRadioDefault2">
+                            <label class="form-check-label" for="flexRadioDefault2" id="quantityBox">
+                                <div>
+                                    {{form.quantity.label}}
+                                    {{form.quantity}}
+                                </div>
+                            </label>
+                        </div>
+                    </fieldset>
+                    </p>
+
+                    <p>
+                    <div class="input-group">
+                        {{form.rate}}
+                        <span class="input-group-text" id="rate_per_unit">/</span>
+                        {{form.unit}}
+                    </div>
+                    </p>
+
+                    <p>
+                        {{form.discount.label}}
+                        {{form.discount}}
+                    </p>
+                    <div class="text-center">
+                        <button class="btn btn-outline-success" type="submit" id="button-addon2">Add to
+                            Estimate</button>
+                    </div>
+                </form>
+
+                <div class="text-muted">**Area will be calculated using Sq Meters.</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+
+{% block body %}
+<div class="container-lg pt-2 px-3">
+    <div class="d-flex justify-content-between align-middle">
+        <div class="text-light pb-1">
+            <span class="align-middle">
+                <span class="align-middle">
+                    <div class="text-muted fw-bold">
+                        {{project.reference_number}}
+                    </div>
+                    <span class="h2">
+                        {% replaceItem project.name|title %}
+                    </span>
+                </span>
+
+                <span class="dropdown">
+                    <a type="button" id="dropdownMenuButton2" data-bs-toggle="dropdown" aria-expanded="false">
+                        <img src="https://img.icons8.com/ios/27/ffffff/menu-2.png" />
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="dropdownMenuButton2">
+                        <li>
+                            <a href="{% url 'download_estimate_excel_file' project.id project.name %}"
+                                class="dropdown-item">
+                                Download Excel
+                            </a>
+                        </li>
+                        <li>
+                            <hr class="dropdown-divider">
+                        </li>
+                        <li><a href="{% url 'update_estimate_project' project.id project.name %}" class="dropdown-item">
+                                Update Project</a>
+                        </li>
+                        <li><a class="dropdown-item" id="delete_button" data-bs-toggle="modal"
+                                data-bs-target="#deleteModal">Delete Project</a>
+                        </li>
+                        <li>
+                            <hr class="dropdown-divider">
+                        </li>
+                        <li><a href="{% url 'select_project_terms_and_conditions' project.id project.name %}"
+                                class="dropdown-item" id="">Terms and Conditions</a>
+                        </li>
+                    </ul>
+                </span>
+            </span>
+        </div>
+
+        <div class="pt-1">
+            <span class="align-middle">
+                <span class="badge bg-secondary" data-bs-toggle="tooltip" data-bs-placement="bottom"
+                    title="{{project.created_on}}">
+                    Created {{project.created_on | naturalday}}
+                </span>
+            </span>
+        </div>
+    </div>
+
+    {%if project.description%}
+    <div class="mb-3">
+        <span class="text-light">
+            {{project.description}}
+        </span>
+    </div>
+    {% endif %}
+
+    <hr class="text-light">
+
+    <div class="my-2">
+        <div class="card">
+            <div class="card-body">
+
+                <div>
+                    <p class="h4">
+                        {% replaceItem project.client.name|title %}
+                        <span class="h5">
+                            (+91-{{project.client.phoneNumber}})
+                        </span>
+                    </p>
+                </div>
+
+                <p><span class="fw-bold">Address: </span>
+                    <span>{{project.client.address_1}}</span>
+
+                    <span>{% if project.client.address_2 %},
+                        {{project.client.address_2}}{%endif%}</span>
+
+                    <span> {% if project.client.landmark %},
+                        {{project.client.landmark}}{%endif%}</span>
+                    <span>
+                        , {{project.client.town_city}}, {{project.client.state}}- {{project.client.zip_code}}
+                    </span>
+                </p>
+
+                <div>
+                    <!-- address -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="deleteModalLabel">
+                        Confirm
+                        delete estimate "{% replaceItem project.name|capfirst %}"</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body text-start">
+                    You wish to permanently delete estimate &rarr;
+                    <b>"{% replaceItem project.name|capfirst %}"
+
+                    </b>?<br>
+                    <b class="my-1">Be Careful!</b>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-success" data-bs-dismiss="modal">Get
+                        back to safety</button>
+                    <form action="{% url 'delete_estimate' project.id project.name %}" method="POST">
+                        <!-- Delete Estimate -->
+                        {% csrf_token %}
+
+                        <button class="confirm_delete btn btn-danger align-bottom" type="submit">
+                            Chop Chop!
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="my-2">
+
+        <div class="card">
+            <div class="card-body">
+                <div class="table-responsive">
+
+                    {% if all_estimates|length == 0 %}
+                    <div class="card">
+                        <div class="card-body">
+                            <div class=" text-center my-3">
+                                <img alt="void" class="img-fluid m-2" style="width: 350px;"
+                                    src="{% static 'img/void.svg' %}">
+                                <div class="text-center">
+                                    <p class="py-1 fw-light my-3 fs-1">Nothing Here
+                                        <a class="btn btn-outline-success" data-bs-toggle="modal"
+                                            data-bs-target="#newItemModal">
+                                            New Item
+                                        </a>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+
+                    {% if all_estimates %}
+
+                    <table class="table table-bordered table-hover table-sm">
+                        <thead class="table-primary align-middle row-cols-auto">
+                            <th class="text-center mx-2 text-nowrap">Description</th>
+                            <!-- <th class="text-center mx-2 text-nowrap">Unit</th> -->
+                            <th class="text-center mx-2 text-nowrap hide_items_print">Length</th>
+                            <th class="text-center mx-2 text-nowrap hide_items_print">Width</th>
+                            <th class="text-center mx-2 text-nowrap">Quantity</th>
+                            <th class="text-center mx-2 text-nowrap">Unit</th>
+                            <th class="text-center mx-2 text-nowrap">Rate</th>
+                            <th class="text-center mx-2 text-nowrap">Amount</th>
+                            <th class="text-center mx-2 text-nowrap">Total</th>
+                            <th class="text-center mx-2 text-nowrap hide_items_print">Action</th>
+                        </thead>
+
+
+                        {% for item in all_estimates %}
+                        <tr class="table align-middle">
+                            <td class="mx-2 fs-6 col-4">
+                                <b>
+                                    {% replaceItem item.room.name %}
+                                </b>- {% replaceItem item.room_item.name|capfirst %}
+                                <div class="text-wrap ps-2">
+                                    {{item.room_item_description.description|capfirst}}
+                                </div>
+                                <div class="text-danger">
+                                    {% if item.discount != 0.0 %}
+                                    <b>Discount: </b>
+                                    <span class="font-monospace">
+                                        {{item.discount | floatformat:1|intcomma}} %
+                                    </span>
+                                    {% endif %}
+                                </div>
+                            </td>
+                            <td class="text-end font-monospace col-1 hide_items_print">
+                                {% if item.length %}
+                                <div class="text-nowrap">{{item.length|intcomma}} m</div>
+                                <div class="text-nowrap">({% meter_to_feet item.length %} ft)</div>
+                                {%else%}
+                                -
+                                {% endif %}
+
+                            </td>
+                            <td class="text-end font-monospace col-1 hide_items_print">
+                                {% if item.width %}
+                                <div class="text-nowrap">{{item.width|intcomma}} m</div>
+                                <div class="text-nowrap">({% meter_to_feet item.width %} ft)</div>
+                                {%else%}
+                                -
+                                {% endif %}
+                            </td>
+                            <td class="text-end font-monospace col-1">
+                                {% if item.sqm %}
+                                {% if item.width %}
+                                <div class="text-nowrap">{{item.sqm|intcomma}} sqm</div>
+                                <div class="text-nowrap">({{item.sqft|intcomma}} sqft)</div>
+                                {%else%}
+                                <div class="text-nowrap">{{item.sqm|intcomma}} m</div>
+                                <div class="text-nowrap">({{item.sqft|intcomma}} ft)</div>
+                                {% endif %}
+                                {%else%}
+                                <div class="text-nowrap">{{item.quantity|intcomma}}</div>
+                                {% endif %}
+                            </td>
+                            <td class="text-center font-monospace col-1">
+                                {{item.unit.unit}}
+                            </td>
+
+                            <td class="text-end font-monospace text-nowrap col-1">
+                                &#8377 {{item.rate|intcomma}}
+                            </td>
+                            <td class="text-end font-monospace text-nowrap col-1">
+                                &#8377 {{item.calculate_amount | floatformat:2|intcomma}}
+                            </td>
+                            <td class="text-end font-monospace col-1">
+                                <div class="text-nowrap">&#8377 {{item.total_after_discount | floatformat:2|intcomma}}
+                                </div>
+                                {% if item.discount != 0.0 %}
+                                <div class="text-danger text-nowrap">- &#8377
+                                    {{item.discount_amount | floatformat:2|intcomma}}
+                                </div>
+                                {% endif %}
+                            </td>
+                            <td class="text-center col-1 hide_items_print">
+                                <a href="{% url 'update_estimate_item' item.id project.id project.name %}">
+                                    <img class="icon_ud" src="https://img.icons8.com/ios/20/fff/edit-row.png" />
+                                </a>
+
+                                <!-- Delete modal -->
+                                <a class="align-bottom" data-bs-toggle="modal" data-bs-target="#delete{{item.id}}Modal">
+                                    <img class="icon_ud"
+                                        src="https://img.icons8.com/ios/20/000000/delete-sign--v1.png" />
+                                </a>
+                                <div class="modal fade" id="delete{{item.id}}Modal" tabindex="-1"
+                                    aria-labelledby="delete{{item.id}}ModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="delete{{item.id}}ModalLabel">
+                                                    Confirm
+                                                    delete estimate</h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                    aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body text-start">
+                                                You wish to permanently delete ?
+
+                                                <b class="my-1">Be Careful!</b>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-outline-success"
+                                                    data-bs-dismiss="modal">Get
+                                                    back to safety</button>
+                                                <form
+                                                    action="{% url 'delete_estimate_row' item.id item.project.id item.project.name %}"
+                                                    method="POST">
+                                                    {% csrf_token %}
+
+                                                    <button class="confirm_delete btn btn-danger align-bottom"
+                                                        type="submit">
+                                                        Chop Chop!
+                                                    </button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Delete modal -->
+                            </td>
+                        </tr>
+                        {% endfor %}
+
+                    </table>
+                    {% endif %}
+                </div>
+                <div class="hide_items_print">
+                    <li class="list-group-item list-group-item-action list-group-item-primary">
+                        <div class="d-flex justify-content-between">
+                            <div>
+                                Total itemized Discount
+                            </div>
+                            <span class="badge bg-primary fs-6 font-monospace">
+                                ₹ {{project.total_itemised_discount|floatformat:2|intcomma}}
+                            </span>
+                        </div>
+                    </li>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card mb-3">
+        <div class="card-body">
+            <p class="fs-5 fw-bold">
+
+                <li class="list-group-item list-group-item-action list-group-item-info ">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            Grand Total
+                        </div>
+                        <span class="badge bg-info fs-6 font-monospace">₹
+                            {{project.total_amount|floatformat:2|intcomma}}</span>
+                    </div>
+                </li>
+
+                <a data-bs-toggle="modal" data-bs-target="#exampleModal">
+                    <li class="list-group-item list-group-item-action list-group-item-primary">
+                        <div class="d-flex justify-content-between">
+                            <div>
+                                Discount Percentage
+                                <img class="hide_items_print"
+                                    src="https://img.icons8.com/ios/20/000000/pencil--v1.png" />
+                            </div>
+                            <div class="d-flex justify-content-end">
+                                <span class="badge bg-primary fs-6 font-monospace">
+                                    % {{project.discount}}
+                                </span> @
+                                <span class="badge bg-primary fs-6 font-monospace">
+                                    ₹ {{project.discount_amount|floatformat:2|intcomma}}
+                                </span>
+                            </div>
+                        </div>
+                    </li>
+                </a>
+
+                <li class="list-group-item list-group-item-action list-group-item-primary">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            Total after discount
+                        </div>
+                        <span class="badge bg-primary fs-6 font-monospace">
+                            ₹ {{project.total_after_discount|floatformat:2|intcomma}}
+                        </span>
+                    </div>
+                </li>
+
+            <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+                aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <form action="{% url 'update_estimate_discount' project.id project.name%}" method="POST"
+                            name="updateDiscount_name" id="updateDiscount_id">
+                            <div class="modal-body">
+                                {% csrf_token %}
+                                <p>
+                                <div class="input-group mb-3">
+                                    <span class='input-group-text'>Discount</span>
+                                    <input type="number" name="discount" class="form-control"
+                                        aria-label=".form-control-sm" step=".10" maxlength="3" id="id_discount" required
+                                        aria-describedby="discountChangeSubmit">
+                                    <span class='input-group-text'>%</span>
+                                    <button type="submit" id="discountChangeSubmit"
+                                        class="btn btn-success">Submit</button>
+                                </div>
+                                </p>
+                                <div class="m-0 p-0">
+                                    <small id="DiscountError" class="text-danger" hidden>
+                                        ** Please enter a valid discount amount(Range: 0 to 100).
+                                    </small>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <li class="list-group-item list-group-item-action list-group-item-danger">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        GST @ 18%
+                    </div>
+                    <span class="badge bg-danger fs-6 font-monospace">
+                        ₹ {{project.gst_amount|floatformat:2|intcomma}}
+                    </span>
+                </div>
+            </li>
+
+            <li class="list-group-item list-group-item-action list-group-item-success">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        Grand Total after GST
+                    </div>
+                    <span class="badge bg-success fs-6 my-auto font-monospace">
+                        ₹ {{project.total_with_gst|floatformat:2|intcomma}}</span>
+                </div>
+            </li>
+
+            </p>
+        </div>
+    </div>
+
+</div>
+{% endblock %}
+
+{% block expense_button %}
+<a aria-label="all-expenses" href="{% url 'all_expenses' %}" type="button" class="btn btn-success btn-lg">
+    <img alt="all-expenses" src="https://img.icons8.com/ios/30/ffffff/money-circulation.png" />
+</a>
+
+<a aria-label="all-expenses" href="{% url 'all_estimates' %}" type="button" class="btn btn-info btn-lg">
+    <img src="https://img.icons8.com/ios/30/000000/estimates.png" />
+</a>
+
+{% endblock %}

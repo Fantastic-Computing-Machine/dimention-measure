@@ -1,0 +1,142 @@
+{% load static %} {% load humanize %}
+
+<div class="col-md-6 col_height">
+    <div class="order-md-3 card my-2">
+        <div class="card-body scroll_card_expense">
+            <p class="fs-4"> All Expenses</p>
+
+            {% if expenses|length == 0 %}
+            <div class=" text-center my-3">
+                <img alt="void" class="img-fluid m-2" style="width: 450px;" src="{% static 'img/void.svg' %}">
+                <div class="text-center">
+                    <p class="py-1 fw-light my-3 fs-1">Nothing Here
+                    </p>
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- EXPENSE LIST -->
+            <ol class="list-group list-group-numbered">
+                {% for item in expenses %}
+                <li class="list-group-item d-flex justify-content-between align-items-start" data-bs-toggle="modal"
+                    data-bs-target="#{{item.payee.name}}{{item.id}}Expense">
+                    <div class="ms-2 me-auto">
+                        <div class="fw-bold">
+                            <a class="text-dark" href="{%url 'project_expense' item.project.id item.project.name%}">
+                                {% if not project_name %}
+                                {{item.project.name | capfirst }}:
+                                {% endif %}
+                                <span class="fst-normal">{{item.payee.name | capfirst }}</span>
+                            </a>
+                        </div>
+                        <small>
+                            <span class="badge bg-secondary">{{item.created_on | date}}</span>
+                        </small>
+                    </div>
+
+                    <h5>
+                        {% if item.payment_status == "P" %}
+                        <span class="badge bg-danger font-monospace">
+                            ₹ {{item.amount | intcomma}}</span>
+                        {% elif item.payment_status == "R" %}
+                        <span class="badge bg-success font-monospace">
+                            ₹ {{item.amount | intcomma}}</span>
+                        {% elif item.payment_status == "PE" %}
+                        <span class="badge bg-primary font-monospace">
+                            ₹ {{item.amount | intcomma}}</span>
+                        {% elif item.payment_status == "NA" %}
+                        <span class="badge bg-secondary font-monospace">
+                            ₹ {{item.amount | intcomma}}</span>
+                        {% endif %}
+
+                        <span class="ps-1">
+                            <a class="setting" data-bs-toggle="dropdown" aria-expanded="false">
+                                <img width="25" height="25"
+                                    src="https://img.icons8.com/ios/28/000000/settings--v2.png" />
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-dark">
+                                <li><a class="dropdown-item"
+                                        href="{% url 'expense_update' item.id item.project.id  item.project.name %}">Update</a>
+                                </li>
+                                <li>
+                                    <!-- <a class="dropdown-item" href="#">Delete</a> -->
+                                    <a class="dropdown-item" data-bs-toggle="modal"
+                                        data-bs-target="#delete{{item.id}}Modal">Delete
+                                    </a>
+
+                                </li>
+                            </ul>
+                        </span>
+                    </h5>
+                </li>
+                <div class="modal fade" id="delete{{item.id}}Modal" tabindex="-1"
+                    aria-labelledby="delete{{item.id}}ModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="delete{{item.id}}ModalLabel">
+                                    Confirm
+                                    delete expense for"{{item.payee.name | capfirst }}"</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                    aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body text-start">
+                                You wish to permanently delete this Expense for value&rarr;
+                                <p class="h6">"₹ {{item.amount}}"?</p>
+                                <p class="my-1">Be Careful!</p>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-outline-success" data-bs-dismiss="modal">Get
+                                    back to safety</button>
+                                <form action="{% url 'delete_expense' item.id item.project.id item.project.name %}"
+                                    method="POST">
+                                    {% csrf_token %}
+
+                                    <button class="confirm_delete btn btn-danger align-bottom" type="submit">
+                                        Chop Chop!
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </ol>
+            <!-- EXPENSE LIST -->
+
+            <div class="mt-3">
+
+                {% if expenses|length != 0 %}
+                <nav aria-label="Page navigation mt-2">
+                    <ul class="pagination pagination-sm justify-content-center">
+                        {% if page_obj.has_previous %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page=1" aria-label="Previous">
+                                <span aria-hidden="true">&laquo;</span>
+                            </a>
+                        </li>
+                        <li class="page-item"><a class="page-link"
+                                href="?page={{ page_obj.previous_page_number }}">Prev.</a>
+                        </li>
+                        {% endif %}
+                        <li class="page-item">
+                            <span class="page-link">
+                                {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+                            </span>
+                        </li>
+                        {% if page_obj.has_next %}
+                        <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a>
+                        </li>
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}" aria-label="Next">
+                                <span aria-hidden="true">&raquo;</span>
+                            </a>
+                        </li>
+                        {% endif %}
+                    </ul>
+                </nav>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>

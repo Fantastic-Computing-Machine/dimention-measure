@@ -1,0 +1,242 @@
+{% extends 'base.html' %}
+{% load static %} {% load humanize %}
+
+
+{% block title %} - Clients{% endblock %}
+
+{% block header %}
+<ul class="nav justify-content-end">
+
+    <li class="nav-item">
+        <a data-bs-toggle="modal" data-bs-target="#newClient" class="nav-link active text-light" aria-current="page">
+            New Client
+        </a>
+    </li>
+
+    <li class="nav-item">
+        <div class="dropdown">
+            <a class="nav-link active text-light dropdown-toggle" id="dropdownMenuButton2" data-bs-toggle="dropdown"
+                aria-expanded="false">
+                More
+            </a>
+            <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="dropdownMenuButton2">
+                <li>
+                    <a href="{% url 'folio' %}" class="dropdown-item" aria-current="page">Folio</a>
+                </li>
+                <li>
+                    <a href="{% url 'all_estimates' %}" class="dropdown-item" aria-current="page">
+                        Estimates
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </li>
+
+</ul>
+{% endblock %}
+
+
+
+
+
+{% block modal %}
+<!-- new client modal -->
+<div class="modal fade" id="newClient" tabindex="-1" aria-labelledby="newClientLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <form action="" method="POST" id="newClient">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="newClientLabel">New Estimate</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <p>
+                            {{form.name.label}}
+                            {{form.name}}
+                        </p>
+                        <p>
+                            Phone Number
+                            {{form.phoneNumber}}
+                        </p>
+                        <p>
+                            {{form.description.label}}
+                            {{form.description}}
+                        </p>
+                        <p>
+                            {{form.address_1.label}}
+                            {{form.address_1}}
+                        </p>
+                        <p>
+                            {{form.address_2.label}}
+                            {{form.address_2}}
+                        </p>
+                        <p>
+                            {{form.landmark.label}}
+                            {{form.landmark}}
+                        </p>
+                        <p>
+                            Town/City
+                            {{form.town_city}}
+                        </p>
+                        <p>
+                            {{form.zip_code.label}}
+                            {{form.zip_code}}
+                        </p>
+                        <p>
+                            {{form.state.label}}
+                            {{form.state}}
+                        </p>
+
+                    </div>
+                    <div class="text-center">
+                        <button class="btn btn-outline-success" type="submit" id="button-addon2">Save</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<!-- new client modal -->
+{% endblock %}
+
+
+
+
+
+{% block body %}
+
+<div class="container-lg pb-4">
+
+
+    <div class="row justify-content-between py-2">
+        <div class="col-4">
+            <div class="text-light display-4">Clients</div>
+        </div>
+    </div>
+
+
+    <div class="accordion" id="accordionExample">
+
+        {% for item in clients_list %}
+
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="heading_{{item.id}}">
+                <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#collapse_{{item.id}}_accordion" aria-expanded="true"
+                    aria-controls="collapse_{{item.id}}_accordion">
+                    <span class="fw-bold text-dark">
+                        {{item.name|title}} ({{item.phoneNumber}}) - {{item.town_city}}
+                    </span>
+                </button>
+            </h2>
+            <div id="collapse_{{item.id}}_accordion" class="accordion-collapse collapse"
+                aria-labelledby="heading_{{item.id}}" data-bs-parent="#accordionExample">
+                <div class="accordion-body">
+                    {% if item.description %}
+                    <p>{{item.description}}</p>
+                    {%endif%}
+
+                    <p><span class="fw-bold">Address: </span>
+                        <span>{{item.address_1}}</span>
+
+                        <span>{% if item.address_2 %},
+                            {{item.address_2}}{%endif%}</span>
+
+                        <span> {% if item.landmark %},
+                            {{item.landmark}}{%endif%}</span>
+                        <span>
+                            , {{item.town_city}}, {{item.state}}- {{item.zip_code}}
+                        </span>
+                    </p>
+                    <p>
+                        <a href="{% url 'update_client' item.id item.name %}" class="btn btn-outline-primary">Update</a>
+                        <a class="delete_button btn btn-outline-danger" id="delete_button{{item.id}}"
+                            data-bs-toggle="modal" data-bs-target="#delete{{item.id}}Modal">
+                            Delete
+                        </a>
+                    </p>
+
+                </div>
+            </div>
+            <div class="modal fade" id="delete{{item.id}}Modal" tabindex="-1"
+                aria-labelledby="delete{{item.id}}ModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="delete{{item.id}}ModalLabel">
+                                Confirm
+                                delete "{{item.name | capfirst }}"</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body text-start">
+                            You wish to permanently delete Client ::&rarr;
+                            <b>"{{item.name | capfirst }}"</b>?<br>
+                            <b class="my-1">Be Careful!</b>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-outline-success" data-bs-dismiss="modal">Get
+                                back to safety</button>
+                            <form action="{% url 'delete_client' item.id %}" method="POST">
+                                {% csrf_token %}
+
+                                <button class="confirm_delete btn btn-danger align-bottom" type="submit">
+                                    Chop Chop!
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {% endfor %}
+    </div>
+
+</div>
+
+
+{% if clients_list|length != 0 %}
+<nav aria-label="Page navigation mt-2">
+    <ul class="pagination pagination-sm justify-content-center">
+        {% if page_obj.has_previous %}
+        <li class="page-item">
+            <a class="page-link" href="?page=1" aria-label="Previous">
+                <span aria-hidden="true">&laquo;</span>
+            </a>
+        </li>
+        <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">Prev.</a>
+        </li>
+        {% endif %}
+        <li class="page-item">
+            <span class="page-link">
+                {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+            </span>
+        </li>
+        {% if page_obj.has_next %}
+        <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a></li>
+        <li class="page-item">
+            <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}" aria-label="Next">
+                <span aria-hidden="true">&raquo;</span>
+            </a>
+        </li>
+        {% endif %}
+    </ul>
+</nav>
+{% endif %}
+
+
+{% endblock %}
+
+
+{% block expense_button %}
+<a aria-label="all-expenses" href="{% url 'all_expenses' %}" type="button" class="btn btn-success btn-lg">
+    <img alt="all-expenses" src="https://img.icons8.com/ios/30/ffffff/money-circulation.png" />
+</a>
+
+<a aria-label="all-expenses" href="{% url 'all_estimates' %}" type="button" class="btn btn-info btn-lg">
+    <img src="https://img.icons8.com/ios/30/000000/estimates.png" />
+</a>
+
+{% endblock %}

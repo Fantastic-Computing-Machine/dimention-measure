@@ -1,0 +1,28 @@
+{% load static %} {% load humanize %}
+
+<!-- SUM CARD -->
+<div class="order-md-2 card my-2">
+    <div class="card-body">
+        <ul class="list-group">
+            <h5>
+                <li class="list-group-item d-flex justify-content-between list-group-item-danger">
+                    Sum Paid
+                    <span class="badge font-monospace bg-danger">₹ {{total_paid|intcomma}}</span>
+                </li>
+                <li class="list-group-item d-flex justify-content-between list-group-item-success">
+                    Sum Recieved
+                    <span class="badge font-monospace bg-success">₹ {{total_recieved|intcomma}}</span>
+                </li>
+                <li class="list-group-item d-flex justify-content-between list-group-item-primary">
+                    Sum Pending
+                    <span class="badge font-monospace bg-primary">₹ {{total_pending|intcomma}}</span>
+                </li>
+                <li class="list-group-item d-flex justify-content-between list-group-item-secondary">
+                    No Status
+                    <span class="badge font-monospace bg-secondary">₹ {{total_nostatus|intcomma}}</span>
+                </li>
+            </h5>
+        </ul>
+    </div>
+</div>
+<!-- SUM CARD -->

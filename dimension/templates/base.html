@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        {% load static %}
+        <meta charset="UTF-8">
+        <meta name="description" content="To keep a record of dimentions and expenses of construction project.">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+        <!-- ========================= Favicon ========================= -->
+        <link rel="shortcut icon" type="image/x-icon" href="">
+
+        <!-- ========================= CSS ========================= -->
+        <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+
+        <!-- Bootstrap CSS -->
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+            integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+
+        <title>Insight{% block title %} {% endblock %}</title>
+
+        <!-- AJAX JQUERY -->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+        {% block head %} {% endblock %}
+
+    </head>
+
+    <body>
+        <main class="container-lg">
+            <header class="text-white hide_items_print">
+                <nav class="navbar navbar-expand-lg navbar-light nav_bg_translucent m-2">
+                    <div class="container-fluid">
+
+                        <strong>
+                            <a class="navbar-brand justify-content-center h2 text-white fs-4"
+                                href="{% url 'home' %}"><span class="branding">
+                                    <img class="px-1"
+                                        src="https://img.icons8.com/fluency/35/000000/customer-insight.png" />Insight
+                                </span></a>
+                        </strong>
+
+                        <div class="p-1">
+                            {% block header %} {% endblock %}
+                        </div>
+                </nav>
+            </header>
+
+
+            {% block modal %}{% endblock %}
+
+            <div id="content">
+                <!-- <span class="text-light" id="date-time"></span> -->
+
+                <!-- ===== Content ===== -->
+                {% block body %}
+
+                {% endblock %}
+                <!-- ===== Content ===== -->
+
+            </div>
+
+        </main>
+
+
+        <div class="hide_items_print" id="mybutton">
+
+            <!-- Converter button modal -->
+            <button type="button" class="btn btn-secondary btn-lg" data-bs-toggle="modal"
+                data-bs-target="#calculatorModal">
+                <img alt="converter-button" src="https://img.icons8.com/ios/30/ffffff/design--v2.png" />
+            </button>
+            <!-- Converter button modal -->
+
+            {% block expense_button %}
+            {% endblock %}
+
+        </div>
+
+
+
+        <!-- Modal -->
+        <div class="modal fade" id="calculatorModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Calculate</h5>
+                    </div>
+                    <div class="modal-body">
+
+                        <div class="row">
+                            <div class="col">
+                                Meter
+                                <input class="form-control form-control-sm" oninput="mtr_ft()" id="mt" name="mt"
+                                    type="number" placeholder="Meter" aria-label=".form-control-sm">
+                            </div>
+                            <div class="col">
+                                Feet
+                                <input class="form-control form-control-sm" oninput="ft_mtr()" id="ft" name="ft"
+                                    type="number" placeholder="Feet" aria-label=".form-control-sm">
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <footer>
+            {% include "footer.html" %}
+        </footer>
+    </body>
+
+    <!--===== MAIN JS =====-->
+
+    {% block scripts %} {% endblock %}
+    <script src="{% static 'js/main.js' %}"></script>
+    <!-- Option 1: Bootstrap Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+        crossorigin="anonymous"></script>
+
+</html>
