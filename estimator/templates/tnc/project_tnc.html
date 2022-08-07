@@ -37,33 +37,31 @@
         <div class="card">
             <div class="card-body">
                 <div class="accordion" id="accordionExample">
-                    <form action="{% url 'delete_selected_project_TnC' pk project_name %}" id="formDeleteTnc" method="POST">
+                    <form action="{% url 'delete_selected_project_TnC' pk project_name %}" id="formDeleteTnc"
+                        method="POST">
                         {% csrf_token %}
                         {% for item in project_tnc %}
-                            <div class="accordion-item">
-                                <h2 class="accordion-header" id="heading{{item.pk}}">
-                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                                        data-bs-target="#collapse{{item.pk}}" aria-expanded="false"
-                                        aria-controls="collapse{{item.pk}}">
-                                        {% comment %} <b class="">{{item.heading}}</b> {% endcomment %}
-                                        <input class="checkboxSelector form-check-input"
-                                            name="termsAndConditionCheckBox" type="checkbox" value="{{item.pk}}"
-                                            id="termsAndConditionCheckBox_{{item.pk}}">
-                                        <label class="form-check-label"
-                                            for="termsAndConditionCheckBox_{{item.pk}}">
-                                            <b class="ms-1">{{item.heading}}</b>
-                                        </label>
-                                    </button>
-                                </h2>
-                                <div id="collapse{{item.pk}}" class="accordion-collapse collapse"
-                                    aria-labelledby="heading{{item.pk}}" data-bs-parent="#accordionExample">
-                                    <div class="accordion-body">
-                                        <a href="{% url 'update_project_tnc' item.pk project_name %}">update</a> | <a
-                                            href="">delete</a>
-                                        {{item.content|safe}}
-                                    </div>
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="heading{{item.pk}}">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                    data-bs-target="#collapse{{item.pk}}" aria-expanded="false"
+                                    aria-controls="collapse{{item.pk}}">
+                                    {% comment %} <b class="">{{item.heading}}</b> {% endcomment %}
+                                    <input class="checkboxSelector form-check-input" name="termsAndConditionCheckBox"
+                                        type="checkbox" value="{{item.pk}}" id="termsAndConditionCheckBox_{{item.pk}}">
+                                    <label class="form-check-label" for="termsAndConditionCheckBox_{{item.pk}}">
+                                        <b class="ms-1">{{item.heading}}</b>
+                                    </label>
+                                </button>
+                            </h2>
+                            <div id="collapse{{item.pk}}" class="accordion-collapse collapse"
+                                aria-labelledby="heading{{item.pk}}" data-bs-parent="#accordionExample">
+                                <div class="accordion-body">
+                                    <a href="{% url 'update_project_tnc' item.pk project_name %}">update</a>
+                                    {{item.content|safe}}
                                 </div>
                             </div>
+                        </div>
                         {%endfor%}
                     </form>
                     <div class="modal fade" id="deleteSelectedTnCModal" tabindex="-1"
@@ -102,11 +100,11 @@
             Terms
             <img src="https://img.icons8.com/ios-filled/20/ffffff/right--v1.png" /></a>
         <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteSelectedTnCModal"
-                        id="delete_button" disabled>Delete Selected</button>
-        
-        <a class="btn btn-success" href="{% url 'download_estimate_excel_file' pk project_name %}" >
-                                Download Excel
-                            </a>
+            id="delete_button" disabled>Delete Selected</button>
+
+        <a class="btn btn-success" href="{% url 'download_estimate_excel_file' pk project_name %}">
+            Download Excel
+        </a>
     </div>
 </div>
 {% endblock %}

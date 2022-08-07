@@ -279,7 +279,7 @@ def download_estimate_excel_file(request, project_id, project_name):
     # print(project_tnc_obj)
     if project_tnc_obj.count() == 0:
         return HttpResponseRedirect(reverse('select_project_terms_and_conditions', kwargs={'pk': project_id, 'project_name': project_name}))
-        
+
     date_time_obj = datetime.now()
     current_date = date_time_obj.strftime('%x')
     current_time = date_time_obj.strftime('%X')
@@ -542,7 +542,8 @@ def edit_project_terms_and_conditions_list(request, pk, project_name):
 
     return render(request, template_name, context)
 
-def deleteSelectedProjectTnC(request,pk, project_name):
+
+def deleteSelectedProjectTnC(request, pk, project_name):
     # delete selected terms and conditions
     if request.method == "POST":
         list_to_delete = request.POST.getlist('termsAndConditionCheckBox')
@@ -550,7 +551,8 @@ def deleteSelectedProjectTnC(request,pk, project_name):
             # WARNING! This is a hard delete, it will delete the item from the database
             ProjectTermsAndConditions.objects.filter(pk=item).delete()
 
-    all_project_tnc_count = ProjectTermsAndConditions.objects.filter(project_id=pk).count()
+    all_project_tnc_count = ProjectTermsAndConditions.objects.filter(
+        project_id=pk).count()
     if(all_project_tnc_count == 0):
         return HttpResponseRedirect(reverse('select_project_terms_and_conditions', kwargs={'pk': pk, 'project_name': project_name}))
     return HttpResponseRedirect(reverse('project_terms_and_conditions', args=(pk, project_name)))
