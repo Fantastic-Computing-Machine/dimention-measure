@@ -129,7 +129,7 @@ class CompanyUser(AbstractBaseUser):
     first_name = models.CharField(max_length=35)
     last_name = models.CharField(max_length=35)
     username = models.CharField(max_length=70, unique=True)
-    date_of_birth = models.DateField()
+    date_of_birth = models.DateField(null = True)
     is_active = models.BooleanField(default=True)
     is_admin = models.BooleanField(default=False)
     is_staff = models.BooleanField(default=False)
