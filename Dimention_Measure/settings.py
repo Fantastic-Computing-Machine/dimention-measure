@@ -30,15 +30,15 @@ SECRET_KEY = os.getenv("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 # DEBUG = False
-DEBUG = True
+DEBUG = False
 
 ADMINS = [
     ("Aditya Agarwal", "aditya.ag1234@gmail.com"),
     ("Nilesh Kumar Mandal", "s.nileshkm@gmail.com"),
 ]
 
-ALLOWED_HOSTS = ["0.tcp.in.ngrok.io", "127.0.0.1", "localhost", "0.0.0.0", ]
-
+ALLOWED_HOSTS = ["0.tcp.in.ngrok.io", "127.0.0.1", "localhost", "0.0.0.0","13.234.231.51","3.6.80.190" ]
+#ALLOWED_HOST = ['*']
 AUTH_USER_MODEL = "authentication.CompanyUser"
 
 # Application definition
@@ -83,6 +83,7 @@ CACHES = {
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.BrokenLinkEmailsMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -94,8 +95,8 @@ MIDDLEWARE = [
     "django.middleware.locale.LocaleMiddleware",
 ]
 
-STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.ManifestStaticFilesStorage'
-
+#STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.ManifestStaticFilesStorage'
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
 IGNORABLE_404_URLS = [
     re.compile(r'^/apple-touch-icon.*\.png$'),
     re.compile(r'^/favicon\.ico$'),
@@ -139,15 +140,7 @@ WSGI_APPLICATION = 'Dimention_Measure.wsgi.application'
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 
 
-if DEBUG:
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': BASE_DIR / 'db.sqlite3',
-        }
-    }
-
-else:
+if DEBUG == False:
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.mysql',
@@ -194,14 +187,23 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.0/howto/static-files/
 
-STATIC_URL = 'static/'
-STATIC_ROOT = 'staticfiles'
-STATICFILES_DIRS = [
-    BASE_DIR / "static",
-]
+#STATIC_URL = 'static/'
+#STATIC_ROOT = 'staticfiles'
+#STATICFILES_DIRS = [
+#    BASE_DIR / "static",
+#]
+
+#MEDIA_URL = "/media/"
+#MEDIA_ROOT = os.path.join(BASE_DIR, "media")
+
+STATIC_URL = "/assets/"
+STATIC_ROOT = "static"
+STATICFILES_DIRS = (os.path.join(BASE_DIR, "assets/"),)
+
 
 MEDIA_URL = "/media/"
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
+
 
 ADMIN_MEDIA_PREFIX = '/static/admin/'
 
@@ -214,14 +216,14 @@ LOGIN_REDIRECT_URL = "home"
 LOGOUT_REDIRECT_URL = "home"
 LOGIN_URL = "login"
 
-CSRF_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = False
 SECURE_HSTS_SECONDS = 3600
 SECURE_HSTS_INCLUDE_SUBDOMAINS = True
 
 # for supplying site over Https ONLY = True
 # SECURE_SSL_REDIRECT = False
 
-SESSION_COOKIE_SECURE = True
+SESSION_COOKIE_SECURE = False
 SECURE_HSTS_PRELOAD = True
 
 
