@@ -11,7 +11,7 @@ from django.views.generic.edit import FormMixin
 from django.shortcuts import HttpResponseRedirect
 
 from client_and_company.models import Client
-from client_and_company.forms import NewClientForm
+from client_and_company.forms import NewClientForm,UpdateClientForm
 
 
 class ClientView(LoginRequiredMixin, FormMixin, ListView):
@@ -44,7 +44,7 @@ class UpdateClientView(LoginRequiredMixin, UpdateView):
     redirect_field_name = 'redirect_to'
     model = Client
     template_name = 'clients/update_client.html'
-    form_class = NewClientForm
+    form_class = UpdateClientForm
     success_url = reverse_lazy('clients')
 
 
