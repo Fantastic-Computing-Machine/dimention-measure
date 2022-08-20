@@ -302,7 +302,7 @@ class NewRoomItemDescriptionForm(forms.ModelForm):
         )
     )
     working = forms.CharField(
-        required=True,
+        required=False,
         widget=forms.Textarea(
             attrs={
                 "class": "form-control",
