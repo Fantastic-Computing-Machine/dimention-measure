@@ -54,7 +54,7 @@ class AllEstimates(LoginRequiredMixin, FormMixin, ListView):
 
     def get_queryset(self):
         queryset = super().get_queryset()
-        return queryset.filter(is_deleted=False).order_by('-created_on')
+        return queryset.filter(is_deleted=False,client__is_deleted=False).order_by('-created_on')
 
     def post(self, request, **kwargs):
         request.POST._mutable = True
@@ -408,9 +408,10 @@ def download_estimate_excel_file(request, project_id, project_name):
 
     workbook.save(filename=str(file_path))
     workbook.close()
-    # print("WB--- CLOSE")
+    print("WB--- CLOSE",flush=True)
+    print("file_path: ",file_path,flush=True)
     file_ecxel = FileResponse(open(file_path, 'rb'))
-    delete_file = os.remove(file_path)
+    # delete_file = os.remove(file_path)
     return file_ecxel
 
 

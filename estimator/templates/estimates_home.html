@@ -29,6 +29,7 @@
                         Clients
                     </a>
                 </li>
+		{% if user.is_staff or user.is_admin %}
                 <li>
                     <hr class="dropdown-divider">
                 </li>
@@ -37,6 +38,7 @@
                         Admin
                     </a>
                 </li>
+		{% endif %}
             </ul>
         </div>
     </li>
