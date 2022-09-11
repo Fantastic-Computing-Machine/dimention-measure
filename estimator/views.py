@@ -20,7 +20,7 @@ from django.views.generic import (
     UpdateView
 )
 from django.views.generic.edit import FormMixin
-
+from django.http import HttpResponse
 from estimator.models import (
     Room,
     RoomItemDescription,
@@ -408,11 +408,19 @@ def download_estimate_excel_file(request, project_id, project_name):
 
     workbook.save(filename=str(file_path))
     workbook.close()
+    with open(file_path, "rb") as excel:
+        data = excel.read()
+
     print("WB--- CLOSE",flush=True)
-    print("file_path: ",file_path,flush=True)
-    file_ecxel = FileResponse(open(file_path, 'rb'))
-    # delete_file = os.remove(file_path)
-    return file_ecxel
+    # print("file_path: ",file_path,flush=True)
+    # file_ecxel = FileResponse(open(file_path, 'rb'))
+    delete_file = os.remove(file_path)
+    return HttpResponse(data, headers={
+        'Content-Type': 'application/vnd.ms-excel',
+        'Content-Disposition': 'attachment; filename= "{}"'.format(
+            filename),
+    })
+    # return file_ecxel
 
 
 @login_required

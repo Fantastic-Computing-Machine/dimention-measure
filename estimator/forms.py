@@ -22,7 +22,7 @@ class NewProjectForm(forms.ModelForm):
 
     client = forms.ModelChoiceField(
         required=True,
-        queryset=Client.objects.all(),
+        queryset=Client.objects.filter(is_deleted = False),
         widget=forms.Select(
             attrs={
                 "class": "form-select",
