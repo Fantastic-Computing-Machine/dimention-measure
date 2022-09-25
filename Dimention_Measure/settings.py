@@ -13,14 +13,14 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 import re
 from pathlib import Path
 import os
-from dotenv import load_dotenv
+#from dotenv import load_dotenv
 from django.core.validators import RegexValidator
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-dotenv_path = BASE_DIR / ".env"
-load_dotenv(dotenv_path=dotenv_path)
+#dotenv_path = BASE_DIR / ".env"
+#load_dotenv(dotenv_path=dotenv_path)
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
@@ -68,11 +68,11 @@ INSTALLED_APPS = [
 X_FRAME_OPTIONS = "SAMEORIGIN"
 SILENCED_SYSTEM_CHECKS = ["security.W019"]
 
-EMAIL_USE_TLS = True
-EMAIL_PORT = 587
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_HOST_USER = os.getenv("EMAIL_ID")
-EMAIL_HOST_PASSWORD = os.getenv("EMAIL_PWD")
+#EMAIL_USE_TLS = True
+#EMAIL_PORT = 587
+#EMAIL_HOST = 'smtp.gmail.com'
+#EMAIL_HOST_USER = os.getenv("EMAIL_ID")
+#EMAIL_HOST_PASSWORD = os.getenv("EMAIL_PWD")
 
 CACHES = {
     "default": {
