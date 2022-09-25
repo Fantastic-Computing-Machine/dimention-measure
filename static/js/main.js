@@ -44,7 +44,7 @@ function areas() {
         // document.getElementById("amount").value = amount;
     }
 
-    // calculateAmount()
+     calculateAmount()
 }
 
 var meter = document.getElementById("mt");
