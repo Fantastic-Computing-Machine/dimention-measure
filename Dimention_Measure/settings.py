@@ -26,7 +26,7 @@ load_dotenv(dotenv_path=dotenv_path)
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.getenv("SECRET_KEY")
+SECRET_KEY = '82FVjSHeBYICqe82FVjSHeBYICqehAVbLvq1eCk6K1W98yhAVbLvq1eCk6K1W98y'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 # DEBUG = False
@@ -37,8 +37,8 @@ ADMINS = [
     ("Nilesh Kumar Mandal", "s.nileshkm@gmail.com"),
 ]
 
-ALLOWED_HOSTS = ["0.tcp.in.ngrok.io", "127.0.0.1", "localhost", "0.0.0.0","13.234.231.51","3.6.80.190" ]
-#ALLOWED_HOST = ['*']
+#ALLOWED_HOSTS = ["0.tcp.in.ngrok.io", "127.0.0.1", "localhost", "0.0.0.0","13.234.231.51","3.6.80.190" ]
+ALLOWED_HOST = ['*']
 AUTH_USER_MODEL = "authentication.CompanyUser"
 
 # Application definition
