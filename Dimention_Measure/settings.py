@@ -13,7 +13,7 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 import re
 from pathlib import Path
 import os
-#from dotenv import load_dotenv
+# from dotenv import load_dotenv
 from django.core.validators import RegexValidator
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -29,15 +29,15 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = '82FVjSHeBYICqe82FVjSHeBYICqehAVbLvq1eCk6K1W98yhAVbLvq1eCk6K1W98y'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
-#DEBUG = True
+# DEBUG = False
+DEBUG = True
 
 ADMINS = [
     ("Aditya Agarwal", "aditya.ag1234@gmail.com"),
     ("Nilesh Kumar Mandal", "s.nileshkm@gmail.com"),
 ]
 
-#ALLOWED_HOSTS = ["0.tcp.in.ngrok.io", "127.0.0.1", "localhost", "0.0.0.0","13.234.231.51","3.6.80.190" ]
+# ALLOWED_HOSTS = ["0.tcp.in.ngrok.io", "127.0.0.1", "localhost", "0.0.0.0","13.234.231.51","3.6.80.190" ]
 ALLOWED_HOSTS = ['*']
 AUTH_USER_MODEL = "authentication.CompanyUser"
 
@@ -68,11 +68,11 @@ INSTALLED_APPS = [
 X_FRAME_OPTIONS = "SAMEORIGIN"
 SILENCED_SYSTEM_CHECKS = ["security.W019"]
 
-#EMAIL_USE_TLS = True
-#EMAIL_PORT = 587
-#EMAIL_HOST = 'smtp.gmail.com'
-#EMAIL_HOST_USER = os.getenv("EMAIL_ID")
-#EMAIL_HOST_PASSWORD = os.getenv("EMAIL_PWD")
+# EMAIL_USE_TLS = True
+# EMAIL_PORT = 587
+# EMAIL_HOST = 'smtp.gmail.com'
+# EMAIL_HOST_USER = os.getenv("EMAIL_ID")
+# EMAIL_HOST_PASSWORD = os.getenv("EMAIL_PWD")
 
 CACHES = {
     "default": {
@@ -95,8 +95,8 @@ MIDDLEWARE = [
     "django.middleware.locale.LocaleMiddleware",
 ]
 
-#STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.ManifestStaticFilesStorage'
-#STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
+# STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.ManifestStaticFilesStorage'
+# STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 IGNORABLE_404_URLS = [
     re.compile(r'^/apple-touch-icon.*\.png$'),
@@ -141,17 +141,17 @@ WSGI_APPLICATION = 'Dimention_Measure.wsgi.application'
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 
 
-if DEBUG == False:
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.mysql',
-            'NAME': 'heroku_7d1d235a934ba7b',
-            'USER': 'b2ad8003626a52',
-            'PASSWORD': '5c5e94ce',
-            'HOST': 'eu-cdbr-west-01.cleardb.com',
-            'PORT': '3306',
-        }
+# if DEBUG == False:
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'heroku_7d1d235a934ba7b',
+        'USER': 'b2ad8003626a52',
+        'PASSWORD': '5c5e94ce',
+        'HOST': 'eu-cdbr-west-01.cleardb.com',
+        'PORT': '3306',
     }
+}
 
 
 # Password validation
@@ -188,11 +188,11 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.0/howto/static-files/
 
-#STATIC_URL = 'static/'
-#STATIC_ROOT = 'staticfiles'
-#STATICFILES_DIRS = [
+# STATIC_URL = 'static/'
+# STATIC_ROOT = 'staticfiles'
+# STATICFILES_DIRS = [
 #    BASE_DIR / "static",
-#]
+# ]
 
 #MEDIA_URL = "/media/"
 #MEDIA_ROOT = os.path.join(BASE_DIR, "media")
