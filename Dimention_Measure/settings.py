@@ -30,7 +30,7 @@ SECRET_KEY = '82FVjSHeBYICqe82FVjSHeBYICqehAVbLvq1eCk6K1W98yhAVbLvq1eCk6K1W98y'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 # DEBUG = False
-DEBUG = False
+DEBUG = True
 
 ADMINS = [
     ("Aditya Agarwal", "aditya.ag1234@gmail.com"),
