@@ -98,7 +98,7 @@ class Organization(models.Model):
 
 class CompanyUser(AbstractBaseUser):
     phoneNumber = models.CharField(
-        blank=False,
+        blank=True,
         null=True,
         validators=[settings.PHONE_NUMBER_FORMAT],
         max_length=11,
@@ -108,7 +108,7 @@ class CompanyUser(AbstractBaseUser):
         choices=GENDER,
         default="NS",
     )
-    location = CountryField()
+    location = CountryField(blank=True, null=True)
     profile_image = models.ImageField(
         null=True,
         blank=True,
@@ -125,16 +125,18 @@ class CompanyUser(AbstractBaseUser):
         default="SITE_USR",
         null=True,
     )
-    email = models.EmailField(max_length=255, null=True, blank=False)
-    first_name = models.CharField(max_length=35)
-    last_name = models.CharField(max_length=35)
+    email = models.EmailField(
+        unique=True, max_length=255, null=True, blank=False)
+    first_name = models.CharField(max_length=35, blank=True, null=True)
+    last_name = models.CharField(max_length=35, blank=True, null=True)
     username = models.CharField(max_length=70, unique=True)
-    date_of_birth = models.DateField(null = True)
+    date_of_birth = models.DateField(blank=True, null=True)
     is_active = models.BooleanField(default=True)
     is_admin = models.BooleanField(default=False)
     is_staff = models.BooleanField(default=False)
     objects = MyUserManager()
-    USERNAME_FIELD = 'username'
+
+    USERNAME_FIELD = 'email'
 
     def __str__(self):
         return self.username
