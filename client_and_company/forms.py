@@ -32,7 +32,7 @@ class NewClientForm(forms.ModelForm):
     )
 
     phoneNumber = forms.CharField(
-        max_length=200,
+        max_length=10,
         required=False,
         widget=forms.TextInput(
             attrs={
@@ -40,7 +40,6 @@ class NewClientForm(forms.ModelForm):
                 "aria-label": ".form-control-sm",
                 "type": 'tel',
                 "placeholder": "Phone Number (optional)",
-                "maxlength": "11",
             }
         )
     )
@@ -98,7 +97,7 @@ class NewClientForm(forms.ModelForm):
     )
 
     zip_code = forms.CharField(
-        max_length=200,
+        max_length=7,
         required=True,
         widget=forms.TextInput(
             attrs={
@@ -106,7 +105,6 @@ class NewClientForm(forms.ModelForm):
                 "aria-label": ".form-control-sm",
                 "type": 'number',
                 "placeholder": "Zip code",
-                "maxlength": "7",
             }
         )
     )
@@ -234,7 +232,7 @@ class UpdateClientForm(forms.ModelForm):
     )
 
     zip_code = forms.CharField(
-        max_length=200,
+        max_length=7,
         required=True,
         widget=forms.TextInput(
             attrs={
@@ -242,7 +240,6 @@ class UpdateClientForm(forms.ModelForm):
                 "aria-label": ".form-control-sm",
                 "type": 'number',
                 "placeholder": "Zip code",
-                "maxlength": "7",
             }
         )
     )
