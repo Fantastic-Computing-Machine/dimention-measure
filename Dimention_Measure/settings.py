@@ -144,11 +144,11 @@ if DEBUG == False:
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.mysql',
-            'NAME': os.environ['RDS_DB_NAME'],
-            'USER': os.environ['RDS_USERNAME'],
-            'PASSWORD': os.environ['RDS_PASSWORD'],
-            'HOST': os.environ['RDS_HOSTNAME'],
-            'PORT': os.environ['RDS_PORT'],
+            'NAME': 'heroku_7d1d235a934ba7b',
+            'USER': 'b2ad8003626a52',
+            'PASSWORD': '5c5e94ce',
+            'HOST': 'eu-cdbr-west-01.cleardb.com',
+            'PORT': '3306',
         }
     }
 
