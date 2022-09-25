@@ -29,28 +29,30 @@ ACCESS_LEVEL = [
 
 class MyUserManager(BaseUserManager):
     # just user
-    def create_user(self, username, password=None):
+    def create_user(self, email, password=None):
         """
-        Creates and saves a User with the given username and password.
+        Creates and saves a User with the given email and password.
         """
-        if not username:
-            raise ValueError('Users must have an username')
+        if not email:
+            raise ValueError('Users must have an email')
 
         user = self.model(
-            username=username,
+            email=email,
         )
 
         user.set_password(password)
+        user.is_staff = False
+        user.is_admin = False
         user.save(using=self._db)
         return user
 
     # superusers
-    def create_superuser(self, username, password=None):
+    def create_superuser(self, email, password=None):
         """
-        Creates and saves a superuser with the given username and password.
+        Creates and saves a superuser with the given email and password.
         """
         user = self.create_user(
-            username,
+            email,
             password=password,
         )
         user.is_staff = True
