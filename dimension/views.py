@@ -198,7 +198,7 @@ class MongoDatabase:
             return True
         except Exception as ex:
             print(
-            "MongoDB: Exception occured while disconnecting to the database. \nTrying...")
+                "MongoDB: Exception occured while disconnecting to the database. \nTrying...")
             print(ex)
             return False
 
