@@ -110,7 +110,7 @@ class CompanyUser(AbstractBaseUser):
         choices=GENDER,
         default="NS",
     )
-    location = CountryField(blank=True, null=True)
+    location = CountryField(blank=True, null=True, default="IN")
     profile_image = models.ImageField(
         null=True,
         blank=True,
