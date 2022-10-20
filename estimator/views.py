@@ -39,7 +39,7 @@ from estimator.forms import (
     DiscountForm,
     UpdateProjectTermsAndConditionForm,
 )
-from settings.models import Unit, TermsHeading
+from settings.models import Unit, OrganizationTNC
 
 
 class AllEstimates(LoginRequiredMixin, FormMixin, ListView):
@@ -54,7 +54,7 @@ class AllEstimates(LoginRequiredMixin, FormMixin, ListView):
 
     def get_queryset(self):
         queryset = super().get_queryset()
-        return queryset.filter(is_deleted=False,client__is_deleted=False).order_by('-created_on')
+        return queryset.filter(is_deleted=False, client__is_deleted=False).order_by('-created_on')
 
     def post(self, request, **kwargs):
         request.POST._mutable = True
@@ -411,7 +411,7 @@ def download_estimate_excel_file(request, project_id, project_name):
     with open(file_path, "rb") as excel:
         data = excel.read()
 
-    print("WB--- CLOSE",flush=True)
+    print("WB--- CLOSE", flush=True)
     # print("file_path: ",file_path,flush=True)
     # file_ecxel = FileResponse(open(file_path, 'rb'))
     delete_file = os.remove(file_path)
@@ -457,7 +457,7 @@ def select_project_terms_and_conditions_view(request, pk: int, project_name: str
 
     template_name = "tnc/select_project_tnc.html"
     context = dict()
-    org_tnc = TermsHeading.objects.filter(
+    org_tnc = OrganizationTNC.objects.filter(
         organization=request.user.organization)
 
     context['org_tnc'] = org_tnc
@@ -465,7 +465,7 @@ def select_project_terms_and_conditions_view(request, pk: int, project_name: str
 
     if request.method == 'POST':
         to_import = list(map(int, request.POST.getlist('select_project_tnc')))
-        tnc_to_import = TermsHeading.objects.filter(pk__in=to_import)
+        tnc_to_import = OrganizationTNC.objects.filter(pk__in=to_import)
         project_instance = Project.objects.get(pk=pk)
 
         for item in tnc_to_import:
@@ -511,7 +511,7 @@ def edit_project_terms_and_conditions_list(request, pk, project_name):
     context = dict()
 
     project_tnc = ProjectTermsAndConditions.objects.filter(project_id=pk)
-    org_tnc = TermsHeading.objects.filter(
+    org_tnc = OrganizationTNC.objects.filter(
         organization=request.user.organization)
 
     project_pk = list()
@@ -536,7 +536,7 @@ def edit_project_terms_and_conditions_list(request, pk, project_name):
 
         to_import = list(map(int, request.POST.getlist('select_project_tnc')))
 
-        tnc_to_import = TermsHeading.objects.filter(pk__in=to_import)
+        tnc_to_import = OrganizationTNC.objects.filter(pk__in=to_import)
         project_instance = Project.objects.get(pk=pk)
 
         for item in tnc_to_import:
