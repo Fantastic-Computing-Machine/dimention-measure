@@ -14,6 +14,78 @@
 
 
 {% block body %}
+
+
+<!-- New Dimentson Modal -->
+<form action="" method="POST" name="new_dimension" id="new_dimension">
+
+    <div class="modal fade" id="newDimension" tabindex="-1" aria-labelledby="newDimentionLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    {% csrf_token %}
+                    <h5 class="modal-title" id="newDimensionLabel">
+                        New Dimension
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>
+                        {{form.name.label}}
+                        {{form.name}}
+                    </p>
+                    <p>
+                        {{form.description.label}}
+                        {{form.description}}
+                    </p>
+                    <p>
+                    <div class="row">
+                        <div class="col">
+                            {{form.length.label}}
+                            {{form.length}}
+                        </div>
+                        <div class="col">
+                            {{form.width.label}}
+                            {{form.width}}
+                        </div>
+                    </div>
+                    </p>
+                    <p>
+                    <div class="row">
+                        <div class="col">
+                            Sqm
+                            <input class="form-control" id="sqm" type="text" placeholder="Sqm"
+                                aria-label=".form-control-sm" value="{{dimension.sqm}}" disabled readonly>
+                        </div>
+                        <div class="col">
+                            Sqft
+                            <input class="form-control" id="sqft" type="text" placeholder="Sqft"
+                                aria-label=".form-control-sm" value="{{dimension.sqft}}" disabled readonly>
+                        </div>
+                    </div>
+                    </p>
+                    <p>
+                        {{form.rate.label}}
+                        {{form.rate}}
+                    </p>
+                    <p>Amount<input class="form-control" id="amount" type="number" placeholder="Amount"
+                            aria-label=".form-control-sm" readonly>
+                    </p>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" name="new_dimension" value="new_dimension" class="btn btn-primary m-1">
+                        <img src="https://img.icons8.com/ios-filled/25/000000/save--v1.png" />
+                        Add Item</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+
+
 <div class="container-lg pt-2 px-3 pb-4">
     <div class="d-flex justify-content-between align-middle">
         <div class="h2 text-light pb-2">
@@ -63,7 +135,7 @@
 
 
     <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
+        <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="deleteModalLabel">
@@ -140,7 +212,7 @@
                             </a>
                             <div class="modal fade" id="delete{{item.id}}Modal" tabindex="-1"
                                 aria-labelledby="delete{{item.id}}ModalLabel" aria-hidden="true">
-                                <div class="modal-dialog">
+                                <div class="modal-dialog modal-dialog-centered">
                                     <div class="modal-content">
                                         <div class="modal-header">
                                             <h5 class="modal-title" id="delete{{item.id}}ModalLabel">
@@ -178,79 +250,7 @@
                     {% endfor %}
                     <!-- </form> -->
 
-                    <!-- Modal -->
-                    <form action="" method="POST" name="new_dimension" id="new_dimension">
 
-                        <div class="modal fade" id="newDimension" tabindex="-1" aria-labelledby="newDimentionLabel"
-                            aria-hidden="true">
-                            <div class="modal-dialog">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        {% csrf_token %}
-                                        <h5 class="modal-title" id="newDimensionLabel">
-                                            New Dimension
-                                        </h5>
-                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                            aria-label="Close"></button>
-                                    </div>
-                                    <div class="modal-body">
-                                        <p>
-                                            {{form.name.label}}
-                                            {{form.name}}
-                                        </p>
-                                        <p>
-                                            {{form.description.label}}
-                                            {{form.description}}
-                                        </p>
-                                        <p>
-                                        <div class="row">
-                                            <div class="col">
-                                                {{form.length.label}}
-                                                {{form.length}}
-                                            </div>
-                                            <div class="col">
-                                                {{form.width.label}}
-                                                {{form.width}}
-                                            </div>
-                                        </div>
-                                        </p>
-                                        <p>
-                                        <div class="row">
-                                            <div class="col">
-                                                Sqm
-                                                <input class="form-control" id="sqm" type="text" placeholder="Sqm"
-                                                    aria-label=".form-control-sm" value="{{dimension.sqm}}" disabled
-                                                    readonly>
-                                            </div>
-                                            <div class="col">
-                                                Sqft
-                                                <input class="form-control" id="sqft" type="text" placeholder="Sqft"
-                                                    aria-label=".form-control-sm" value="{{dimension.sqft}}" disabled
-                                                    readonly>
-                                            </div>
-                                        </div>
-                                        </p>
-                                        <p>
-                                            {{form.rate.label}}
-                                            {{form.rate}}
-                                        </p>
-                                        <p>Amount<input class="form-control" id="amount" type="number"
-                                                placeholder="Amount" aria-label=".form-control-sm" readonly>
-                                        </p>
-
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn btn-secondary"
-                                            data-bs-dismiss="modal">Close</button>
-                                        <button type="submit" name="new_dimension" value="new_dimension"
-                                            class="btn btn-primary m-1">
-                                            <img src="https://img.icons8.com/ios-filled/25/000000/save--v1.png" />
-                                            Add Item</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </form>
                 </table>
             </div>
             <div class="my-1 hide_items_print">
@@ -265,7 +265,7 @@
                 <a class="btn btn-outline-success m-1" href="{% url 'download_excel_file' project.id project.name %}">
                     <span class="text-nowrap">
                         <img class="px-2" src="https://img.icons8.com/ios-glyphs/25/000000/ms-excel.png">
-                        Save Excel ❌</span>
+                        Save Excel</span>
                 </a>
                 <!-- Download Excel file -->
                 <button type="button" class="btn btn-outline-danger m-1" onClick="window.print()">

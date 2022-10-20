@@ -111,7 +111,6 @@ CKEDITOR_CONFIGS = {
         'width': 'auto',
         'toolbar_Custom': [
             ['Bold', 'Italic', 'Underline'],
-            ['NumberedList', ]
         ]
     }
 }
