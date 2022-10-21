@@ -390,16 +390,22 @@
                                 </a>
 
                                 <!-- Delete modal -->
-                                <a class="align-bottom" data-bs-toggle="modal" data-bs-target="#delete{{item.id}}Modal">
+                                <a onclick="deleteThisItem({{item.id}},{{item.project.id}},'{{item.project.name}}')" class="align-bottom" data-bs-toggle="modal" data-bs-target="#deleteSpecificModal">
                                     <img class="icon_ud"
                                         src="https://img.icons8.com/ios/20/000000/delete-sign--v1.png" />
                                 </a>
-                                <div class="modal fade" id="delete{{item.id}}Modal" tabindex="-1"
-                                    aria-labelledby="delete{{item.id}}ModalLabel" aria-hidden="true">
+                                
+                                <!-- Delete modal -->
+                            </td>
+                        </tr>
+                        {% endfor %}         
+                    </table>
+                                <div class="modal fade" id="deleteSpecificModal" tabindex="-1"
+                                    aria-labelledby="deleteSpecificModalLabel" aria-hidden="true">
                                     <div class="modal-dialog">
                                         <div class="modal-content">
                                             <div class="modal-header">
-                                                <h5 class="modal-title" id="delete{{item.id}}ModalLabel">
+                                                <h5 class="modal-title" id="deleteSpecificModalModalLabel">
                                                     Confirm
                                                     delete estimate</h5>
                                                 <button type="button" class="btn-close" data-bs-dismiss="modal"
@@ -414,8 +420,8 @@
                                                 <button type="button" class="btn btn-outline-success"
                                                     data-bs-dismiss="modal">Get
                                                     back to safety</button>
-                                                <form
-                                                    action="{% url 'delete_estimate_row' item.id item.project.id item.project.name %}"
+                                                <form name = "deleteElementModelForm"
+                                                    action=""
                                                     method="POST">
                                                     {% csrf_token %}
 
@@ -428,12 +434,6 @@
                                         </div>
                                     </div>
                                 </div>
-                                <!-- Delete modal -->
-                            </td>
-                        </tr>
-                        {% endfor %}
-
-                    </table>
                     {% endif %}
                 </div>
                 <div class="hide_items_print">
