@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+
+{% block title %} - Dimension/Update: {{dimension.project.name|capfirst }} {% endblock %}
+
+{% block header %}
+<button type="button" class="btn btn-light" onclick="history.back()">Back </button>
+{% endblock %}
+
+
+{% block body %}
+
+<div class="container-lg container-md container-sm py-4">
+
+    <div class="mx-auto">
+        <div class="row justify-content-center">
+            <div class="col-lg-7 col-md-6 col-xl-6">
+                <div class="card">
+
+                    <div class="card-header">
+                        <h5 class="card-title" id="{{dimension.name}}dimentionLabel">Delete:
+                            {{project_name | capfirst }}/{{dimension.name | capfirst }}
+                        </h5>
+                    </div>
+
+                    <p>Are you sure you want to delete item {{project_name | capfirst }}/{{dimension.name | capfirst }}
+                        ?</p>
+
+                    <form action="{% url 'delete_dimension' dimension.id project_id project_name %}" method="POST"
+                        name="update_dimention" id="update_dimention">
+                        <div class="card-body">
+
+                            {%csrf_token%}
+
+                            <button type="submit" name="dimention" id="dimention" value="dimention"
+                                class="btn btn-danger">Detete Item</button>
+
+                    </form>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

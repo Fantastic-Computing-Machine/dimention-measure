@@ -15,6 +15,17 @@
 
 {% block body %}
 
+{% comment %}
+<script>
+    // function deleteThisItem(item_id, project_id, item_project_name) {
+    //     console.log("deleted " + item_id);
+    //     if (item_id) {
+    //         document.getElementsByName("deleteElementModelForm").getAttribute('action') = "{%" + " url " + "'delete_estimate_row' " + item_id + " " + project_id + " " + item_project_name + " %}";
+    //     }
+    // }
+</script>
+{% endcomment %}
+
 
 <!-- New Dimentson Modal -->
 <form action="" method="POST" name="new_dimension" id="new_dimension">
@@ -135,7 +146,7 @@
 
 
     <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="deleteModalLabel">
@@ -171,7 +182,7 @@
                     <thead class="table-primary align-middle row-cols-auto">
                         <th class="text-start mx-2 text-nowrap">Tag</th>
                         <th class="text-center mx-2 text-nowrap">Length (m)</th>
-                        <th class="text-center mx-2 text-nowrap">Width(m)</th>
+                        <th class="text-center mx-2 text-nowrap">Width (m)</th>
                         <th class="text-center mx-2 text-nowrap">Area: Sqm</th>
                         <th class="text-center mx-2 text-nowrap">Area: Sqft</th>
                         <th class="text-end mx-2 text-nowrap">Rate</th>
@@ -206,10 +217,16 @@
                             </a>
                             <!-- HERE MODAl UPDATE -->
 
+                            <a href="{% url 'delete_dimension' item.id item.project.id item.project.name %}">
+                                <img class="icon_ud"
+                                    src="https://img.icons8.com/ios/20/000000/delete-sign--v1.png" /></a>
+
+                            {% comment %}
                             <!-- Delete modal -->
                             <a class="align-bottom" data-bs-toggle="modal" data-bs-target="#delete{{item.id}}Modal">
                                 <img class="icon_ud" src="https://img.icons8.com/ios/20/000000/delete-sign--v1.png" />
                             </a>
+
                             <div class="modal fade" id="delete{{item.id}}Modal" tabindex="-1"
                                 aria-labelledby="delete{{item.id}}ModalLabel" aria-hidden="true">
                                 <div class="modal-dialog modal-dialog-centered">
@@ -231,7 +248,7 @@
                                                 data-bs-dismiss="modal">Get
                                                 back to safety</button>
                                             <form
-                                                action="{% url 'delete_dimention' item.id item.project.id item.project.name %}"
+                                                action="{% url 'delete_dimension' item.id item.project.id item.project.name %}"
                                                 method="POST">
                                                 {% csrf_token %}
 
@@ -245,6 +262,8 @@
                                 </div>
                             </div>
                             <!-- Delete modal -->
+                            {% endcomment %}
+
                         </td>
                     </tr>
                     {% endfor %}
@@ -278,8 +297,6 @@
             </div>
         </div>
     </div>
-
-    <!-- 5- 10 min bass -->
 
     <div class="row flex-md-row py-3 mb-3">
         <div class="col" style="height: 200px;">

@@ -37,7 +37,8 @@ ADMINS = [
     ("Nilesh Kumar Mandal", "s.nileshkm@gmail.com"),
 ]
 
-ALLOWED_HOSTS = ["0.tcp.in.ngrok.io", "127.0.0.1", "localhost", "0.0.0.0","13.234.231.51","3.6.80.190" ]
+ALLOWED_HOSTS = ["0.tcp.in.ngrok.io", "127.0.0.1",
+                 "localhost", "0.0.0.0", "13.234.231.51", "3.6.80.190"]
 #ALLOWED_HOST = ['*']
 AUTH_USER_MODEL = "authentication.CompanyUser"
 
@@ -150,13 +151,13 @@ if DEBUG == False:
             'PORT': os.environ['RDS_PORT'],
         }
     }
-else :
+else:
     DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
     }
-}
 
 # Password validation
 # https://docs.djangoproject.com/en/4.0/ref/settings/#auth-password-validators
@@ -194,9 +195,9 @@ USE_TZ = True
 
 #STATIC_URL = 'static/'
 #STATIC_ROOT = 'staticfiles'
-#STATICFILES_DIRS = [
+# STATICFILES_DIRS = [
 #    BASE_DIR / "static",
-#]
+# ]
 
 #MEDIA_URL = "/media/"
 #MEDIA_ROOT = os.path.join(BASE_DIR, "media")
@@ -230,6 +231,23 @@ SECURE_HSTS_INCLUDE_SUBDOMAINS = True
 
 SESSION_COOKIE_SECURE = False
 SECURE_HSTS_PRELOAD = True
+
+# LOGGING = {
+#     'version': 1,
+#     'handlers': {
+#         'console': {
+#             'class': 'logging.StreamHandler',
+#         },
+#     },
+#     'loggers': {
+#         'django.db.backends': {
+#             'level': 'DEBUG',
+#         },
+#     },
+#     'root': {
+#         'handlers': ['console'],
+#     }
+# }
 
 
 PHONE_NUMBER_FORMAT = RegexValidator(regex=r"^\+?1?\d{8,15}$")

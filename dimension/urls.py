@@ -23,7 +23,7 @@ urlpatterns = [
 
     # dimension_id, project_name
     path("project/<int:pk>/<int:project_id>/<str:project_name>/delete/dimension/",
-         DeleteDimensionView, name="delete_dimention"),
+         DeleteDimensionView, name="delete_dimension"),
 
     # project_id, project_name
     path("excel/<int:project_id>/<str:project_name>/download/",
