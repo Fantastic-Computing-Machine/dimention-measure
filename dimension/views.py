@@ -122,7 +122,7 @@ def DeleteDimensionView(request, pk, project_id, project_name):
     context = {}
     dimension = Dimension.objects.filter(pk=pk)
     context['dimension'] = dimension[0]
-    if request.method == 'POST':``
+    if request.method == 'POST':
         dimension.update(is_deleted=True, deleted_on=datetime.datetime.now())
         return HttpResponseRedirect(reverse('project_detail', args=(project_id, project_name,)))
 

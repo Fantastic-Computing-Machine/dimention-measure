@@ -390,10 +390,13 @@
                                 </a>
 
                                 <!-- Delete modal -->
-                                <a onclick="deleteThisItem({{item.id}},{{item.project.id}},'{{item.project.name}}')" class="align-bottom" data-bs-toggle="modal" data-bs-target="#deleteSpecificModal">
+                                <!--<a onclick="deleteThisItem({{item.id}},{{item.project.id}},'{{item.project.name}}')" class="align-bottom" data-bs-toggle="modal" data-bs-target="#deleteSpecificModal">
                                     <img class="icon_ud"
                                         src="https://img.icons8.com/ios/20/000000/delete-sign--v1.png" />
-                                </a>
+                                </a> -->
+                                <a href = "{% url 'delete_estimate_row' item.id project.id project.name %}" > 
+                                <img class="icon_ud"
+                                        src="https://img.icons8.com/ios/20/000000/delete-sign--v1.png" /></a>
                                 
                                 <!-- Delete modal -->
                             </td>
