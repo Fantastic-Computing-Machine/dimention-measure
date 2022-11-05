@@ -44,7 +44,7 @@ function areas() {
         // document.getElementById("amount").value = amount;
     }
 
-     calculateAmount()
+    calculateAmount()
 }
 
 var meter = document.getElementById("mt");
@@ -189,7 +189,7 @@ $(document).ready(function () {
 });
 
 $(document).ready(function () {
-    $('.checkboxSelector').change(function() {
+    $('.checkboxSelector').change(function () {
         if ($('.checkboxSelector:checked').length) {
             $('#delete_button').prop('disabled', false);
         } else {
@@ -198,8 +198,7 @@ $(document).ready(function () {
     });
 });
 
-function deleteThisItem(item_id, project_id, item_project_name)
-{
-    console.log("deleted "+ item_id);
-    document.getElementsByName("deleteElementModelForm").getAttribute('action') = "{% url 'delete_estimate_row' "+item_id+" "+project_id+" "+item_project_name+" %}" ;
-}
+// function deleteThisItem(item_id, project_id, item_project_name) {
+//     console.log("deleted " + item_id);
+//     document.getElementsByName("deleteElementModelForm").getAttribute('action') = "{% url 'delete_estimate_row' " + item_id + " " + project_id + " " + item_project_name + " %}";
+// }

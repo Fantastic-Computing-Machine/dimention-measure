@@ -120,12 +120,8 @@ def DeleteProjectView(request, pk, project_name):
 def DeleteDimensionView(request, pk, project_id, project_name):
     template_name = "delete_project.html"
     context = {}
-    context['project_name'] = project_name
-    context['project_id'] = project_id
-
     dimension = Dimension.objects.filter(pk=pk)
     context['dimension'] = dimension[0]
-    # print(dimension)
     print(request.method)
     if request.method == 'POST':
         print("here")

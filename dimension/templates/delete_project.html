@@ -1,10 +1,8 @@
 {% extends 'base.html' %}
+{% load utility %}
 
 {% block title %} - Dimension/Update: {{dimension.project.name|capfirst }} {% endblock %}
 
-{% block header %}
-<button type="button" class="btn btn-light" onclick="history.back()">Back </button>
-{% endblock %}
 
 
 {% block body %}
@@ -17,29 +15,49 @@
                 <div class="card">
 
                     <div class="card-header">
-                        <h5 class="card-title" id="{{dimension.name}}dimentionLabel">Delete:
-                            {{project_name | capfirst }}/{{dimension.name | capfirst }}
-                        </h5>
+                        <h5 class="card-title">
+                            Delete:
+                            {% replaceItem dimension.project.name|capfirst %} &#8594
+                            {% replaceItem dimension.name|capfirst %}
+                            <h5 />
                     </div>
+                    <div class="card-body">
 
-                    <p>Are you sure you want to delete item {{project_name | capfirst }}/{{dimension.name | capfirst }}
-                        ?</p>
+                        <p>Are you sure you want to delete item
+                            <b>{% replaceItem dimension.project.name|capfirst %} &#8594
+                                {% replaceItem dimension.name|capfirst %}
+                            </b>
+                        </p>
 
-                    <form action="{% url 'delete_dimension' dimension.id project_id project_name %}" method="POST"
-                        name="update_dimention" id="update_dimention">
-                        <div class="card-body">
-
+                        <form
+                            action="{% url 'delete_dimension' dimension.id dimension.project.id dimension.project.name %}"
+                            method="POST" name="update_dimention" id="update_dimention">
                             {%csrf_token%}
-
                             <button type="submit" name="dimention" id="dimention" value="dimention"
-                                class="btn btn-danger">Detete Item</button>
-
-                    </form>
-
+                                class="btn btn-danger btn-sm">Detete Item</button>
+                            <a class="btn btn-primary btn-sm"
+                                href="{% url 'project_detail' dimension.project.id dimension.project.name %}">Take me
+                                back</a>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
 
+{% endblock %}
+
+
+{% block expense_button %}
+<!-- Expense url for specific project -->
+<a href="{% url 'project_expense' dimension.project.id dimension.project.name %}" type="button"
+    class="btn btn-success btn-lg">
+    <img src="https://img.icons8.com/ios/30/ffffff/money-circulation.png" />
+</a>
+
+<a aria-label="all-expenses" href="{% url 'all_estimates' %}" type="button" class="btn btn-info btn-lg">
+    <img src="https://img.icons8.com/ios/30/000000/estimates.png" />
+</a>
+<!-- Expense url for specific project -->
 {% endblock %}

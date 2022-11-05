@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 
-{% load static %} {% load humanize %}
+{% load static %} {% load humanize %} {% load utility %}
 
 {% block title %} - Dimension: {{project.name| capfirst }} {% endblock %}
 
@@ -14,18 +14,6 @@
 
 
 {% block body %}
-
-{% comment %}
-<script>
-    // function deleteThisItem(item_id, project_id, item_project_name) {
-    //     console.log("deleted " + item_id);
-    //     if (item_id) {
-    //         document.getElementsByName("deleteElementModelForm").getAttribute('action') = "{%" + " url " + "'delete_estimate_row' " + item_id + " " + project_id + " " + item_project_name + " %}";
-    //     }
-    // }
-</script>
-{% endcomment %}
-
 
 <!-- New Dimentson Modal -->
 <form action="" method="POST" name="new_dimension" id="new_dimension">
@@ -102,7 +90,7 @@
         <div class="h2 text-light pb-2">
             <span class="align-middle">
                 <span class="align-middle">
-                    {{project.name | title}}
+                    {% replaceItem project.name|title %}
                 </span>
 
                 <span class="dropdown">
@@ -192,7 +180,8 @@
 
                     {% for item in dimentions %}
                     <tr class="table align-middle">
-                        <td class="mx-2 font-monospace">{{item.name | capfirst }}
+                        <td class="mx-2 font-monospace">
+                            {% replaceItem item.name|capfirst %}
                             <div class="text-muted">
                                 {% if item.description %}
                                 {{item.description}}
