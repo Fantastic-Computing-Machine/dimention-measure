@@ -10,6 +10,7 @@
         <div class="row justify-content-center">
             <div class="col-lg-7 col-md-6 col-xl-6">
                 <div class="card">
+                    {% if not dimension.is_deleted %}
 
                     <div class="card-header">
                         <h5 class="card-title">
@@ -37,7 +38,22 @@
                                 back</a>
                         </form>
                     </div>
+
+                    {% else %}
+
+                    <div class="card-body">
+                        <h6 class="card-title">
+                            This page does not exist.
+                        </h6>
+                        <a class="btn btn-primary btn-sm"
+                            href="{% url 'project_detail' dimension.project.id dimension.project.name %}">Take me
+                            back</a>
+
+                    </div>
+
+                    {% endif %}
                 </div>
+
             </div>
         </div>
     </div>

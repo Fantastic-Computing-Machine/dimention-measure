@@ -437,25 +437,22 @@ def updateDiscount(request, pk, project_name):
     return HttpResponseRedirect(reverse('estimate', args=(pk, project_name,)))
 
 
-# @login_required
-# def DeleteEstimateComponentView(request, pk, project_id, project_name):
-#     if request.method == 'POST':
-#         estimate = Estimate.objects.filter(pk=pk).update(
-#             is_deleted=True, deleted_on=datetime.now())
-#     return HttpResponseRedirect(reverse('estimate', args=(project_id, project_name,)))
-
-
 @login_required
 def delete_estimator_item_view(request, pk, project_id, project_name):
     template_name = "delete_estimate_item.html"
     context = {}
     estimate = Estimate.objects.filter(pk=pk)
     context['estimate'] = estimate[0]
+
+    if estimate[0].is_deleted:
+        return HttpResponseRedirect(reverse('estimate', args=(project_id, project_name,)))
+
     if request.method == 'POST':
         estimate.update(is_deleted=True, deleted_on=datetime.now())
         return HttpResponseRedirect(reverse('estimate', args=(project_id, project_name,)))
 
     return render(request, template_name, context)
+
 
 @login_required
 def select_project_terms_and_conditions_view(request, pk: int, project_name: str):
@@ -577,4 +574,3 @@ def deleteSelectedProjectTnC(request, pk, project_name):
     if(all_project_tnc_count == 0):
         return HttpResponseRedirect(reverse('select_project_terms_and_conditions', kwargs={'pk': pk, 'project_name': project_name}))
     return HttpResponseRedirect(reverse('project_terms_and_conditions', args=(pk, project_name)))
-
