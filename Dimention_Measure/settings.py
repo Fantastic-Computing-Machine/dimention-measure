@@ -35,7 +35,7 @@ ADMINS = [
 ]
 
 
-ALLOWED_HOSTS = ["0.tcp.in.ngrok.io", "127.0.0.1",
+ALLOWED_HOSTS = ["0.tcp.in.ngrok.io", "127.0.0.1", ".herokuapp.com",
                  "localhost", "0.0.0.0", "13.234.231.51", "3.6.80.190", "notfcminsight.herokuapp.com"]
 #ALLOWED_HOST = ['*']
 
