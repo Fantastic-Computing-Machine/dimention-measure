@@ -1,6 +1,12 @@
 from django.contrib import admin
 
-from .models import Unit, TermsHeading
+from .models import Unit, OrganizationTNC
 
 admin.site.register(Unit)
-admin.site.register(TermsHeading)
+
+
+@admin.register(OrganizationTNC)
+class OrganizationTNCAdmin(admin.ModelAdmin):
+    list_display = ('name', 'organization')
+    list_display_links = ('name', 'organization')
+    list_filter = ['organization']

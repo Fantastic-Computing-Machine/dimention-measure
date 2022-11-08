@@ -29,15 +29,15 @@ ACCESS_LEVEL = [
 
 class MyUserManager(BaseUserManager):
     # just user
-    def create_user(self, email, password=None):
+    def create_user(self, username, password=None):
         """
-        Creates and saves a User with the given email and password.
+        Creates and saves a User with the given username and password.
         """
-        if not email:
-            raise ValueError('Users must have an email')
+        if not username:
+            raise ValueError('Users must have an username')
 
         user = self.model(
-            email=email,
+            username=username,
         )
 
         user.set_password(password)
@@ -47,12 +47,12 @@ class MyUserManager(BaseUserManager):
         return user
 
     # superusers
-    def create_superuser(self, email, password=None):
+    def create_superuser(self, username, password=None):
         """
-        Creates and saves a superuser with the given email and password.
+        Creates and saves a superuser with the given username and password.
         """
         user = self.create_user(
-            email,
+            username,
             password=password,
         )
         user.is_staff = True
@@ -110,7 +110,7 @@ class CompanyUser(AbstractBaseUser):
         choices=GENDER,
         default="NS",
     )
-    location = CountryField(blank=True, null=True)
+    location = CountryField(blank=True, null=True, default="IN")
     profile_image = models.ImageField(
         null=True,
         blank=True,
@@ -138,7 +138,7 @@ class CompanyUser(AbstractBaseUser):
     is_staff = models.BooleanField(default=False)
     objects = MyUserManager()
 
-    USERNAME_FIELD = 'email'
+    USERNAME_FIELD = 'username'
 
     def __str__(self):
         return self.username

@@ -1,3 +1,4 @@
+from django.shortcuts import render
 import decimal
 from pymongo import MongoClient
 import CONFIG
@@ -89,7 +90,7 @@ class UpdateDimensionView(LoginRequiredMixin, UpdateView):
     redirect_field_name = 'redirect_to'
     model = Dimension
     form_class = UpdateDimensionForm
-    template_name = 'update_project.html'
+    template_name = 'update_item.html'
 
     def get_context_data(self, *args, **kwargs):
         dimension = Dimension.objects.filter(pk=self.kwargs['pk'])[0]
@@ -117,10 +118,20 @@ def DeleteProjectView(request, pk, project_name):
 
 @login_required
 def DeleteDimensionView(request, pk, project_id, project_name):
+    template_name = "delete_item.html"
+    context = {}
+    dimension = Dimension.objects.filter(pk=pk)
+    context['dimension'] = dimension[0]
+
+
+    if dimension[0].is_deleted:
+        return HttpResponseRedirect(reverse('project_detail', args=(project_id, project_name,)))
+
     if request.method == 'POST':
-        dimension = Dimension.objects.filter(pk=pk).update(
-            is_deleted=True, deleted_on=datetime.datetime.now())
-    return HttpResponseRedirect(reverse('project_detail', args=(project_id, project_name,)))
+        dimension.update(is_deleted=True, deleted_on=datetime.datetime.now())
+        return HttpResponseRedirect(reverse('project_detail', args=(project_id, project_name,)))
+
+    return render(request, template_name, context)
 
 
 @login_required

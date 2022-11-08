@@ -8,7 +8,7 @@ from django.urls import reverse
 from django.db import models
 
 from client_and_company.models import Client
-from settings.models import TermsHeading, Unit
+from settings.models import OrganizationTNC, Unit
 
 User = user_model()
 
@@ -216,7 +216,7 @@ class Estimate(models.Model):
 class ProjectTermsAndConditions(models.Model):
     # Project TNC
     heading = models.CharField(max_length=255)
-    org_terms = models.ForeignKey(TermsHeading, on_delete=models.CASCADE)
+    org_terms = models.ForeignKey(OrganizationTNC, on_delete=models.CASCADE)
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
     content = RichTextField(null=False)
 
@@ -229,4 +229,4 @@ class ProjectTermsAndConditions(models.Model):
     class Meta:
         unique_together = (('project', 'org_terms'))
         verbose_name = _('Project TNC')
-        verbose_name_plural = _('Project TNC')
+        verbose_name_plural = _('Project TNCs')

@@ -1,5 +1,5 @@
 from authentication.models import Organization
-from settings.models import TermsHeading
+from settings.models import OrganizationTNC
 from django import forms
 from ckeditor.widgets import CKEditorWidget
 
@@ -45,7 +45,7 @@ class TermsAndConditionForm(forms.ModelForm):
     )
 
     class Meta:
-        model = TermsHeading
+        model = OrganizationTNC
         fields = (
             "name",
             "organization",
