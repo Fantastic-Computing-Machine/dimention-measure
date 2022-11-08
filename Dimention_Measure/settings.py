@@ -27,7 +27,7 @@ SECRET_KEY = '82FVjSHeBYICqe82FVjSHeBYICqehAVbLvq1eCk6K1W98yhAVbLvq1eCk6K1W98y'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 # DEBUG = False
-DEBUG = True
+DEBUG = False
 
 ADMINS = [
     ("Aditya Agarwal", "aditya.ag1234@gmail.com"),
@@ -36,7 +36,7 @@ ADMINS = [
 
 
 ALLOWED_HOSTS = ["0.tcp.in.ngrok.io", "127.0.0.1",
-                 "localhost", "0.0.0.0", "13.234.231.51", "3.6.80.190"]
+                 "localhost", "0.0.0.0", "13.234.231.51", "3.6.80.190", "notfcminsight.herokuapp.com"]
 #ALLOWED_HOST = ['*']
 
 AUTH_USER_MODEL = "authentication.CompanyUser"
