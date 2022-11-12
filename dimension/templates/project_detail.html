@@ -166,6 +166,31 @@
     <div class="card">
         <div class="card-body">
             <div class="table-responsive">
+
+                {% if dimentions|length == 0 %}
+                <div class="card">
+                    <div class="card-body">
+                        <div class=" text-center my-3">
+                            <img alt="void" class="img-fluid m-2" style="width: 350px;"
+                                src="{% static 'img/void.svg' %}">
+                            <div class="text-center">
+                                <p class="py-1 fw-light my-3 fs-1">Nothing Here
+                                    <br>
+                                    <button type="button" class="btn btn-outline-primary m-1" data-bs-toggle="modal"
+                                        data-bs-target="#newDimension">
+                                        <span class="text-nowrap">
+                                            <img class="px-2" src="https://img.icons8.com/ios/25/000000/add--v2.png" />
+                                            Add Dimension
+                                        </span>
+                                    </button>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+
+                {% if dimentions %}
                 <table class="table table-bordered table-hover table-sm">
                     <thead class="table-primary align-middle row-cols-auto">
                         <th class="text-start mx-2 text-nowrap">Tag</th>
@@ -187,6 +212,18 @@
                                 {{item.description}}
                                 {% endif %}
                             </div>
+                            {% comment %}
+                            <span>
+                                <small>
+                                    <a href="{% url 'update_dimention' item.id project.name %}">
+                                        Update
+                                    </a>
+                                    <a href="{% url 'delete_dimension' item.id item.project.id item.project.name %}">
+                                        Delete
+                                    </a>
+                                </small>
+                            </span>
+                            {% endcomment %}
                         </td>
                         <td class="text-center mx-2 font-monospace text-nowrap">
                             {{item.length}}
@@ -199,68 +236,20 @@
                         <td class="text-center text-end mx-2 font-monospace text-nowrap">{{item.rate|intcomma}}</td>
                         <td class="text-center text-end mx-2 font-monospace text-nowrap">{{item.amount|intcomma}}</td>
                         <td class="text-center mx-2 hide_items_print">
-
-                            <!-- HERE MODAl UPDATE -->
                             <a href="{% url 'update_dimention' item.id project.name %}">
-                                <img class="icon_ud" src="https://img.icons8.com/ios/20/fff/edit-row.png" />
+                                <img class="icon_ud" src="https://img.icons8.com/ios/15/fff/edit-row.png" />
                             </a>
-                            <!-- HERE MODAl UPDATE -->
 
                             <a href="{% url 'delete_dimension' item.id item.project.id item.project.name %}">
                                 <img class="icon_ud"
-                                    src="https://img.icons8.com/ios/20/000000/delete-sign--v1.png" /></a>
-
-                            {% comment %}
-                            <!-- Delete modal -->
-                            <a class="align-bottom" data-bs-toggle="modal" data-bs-target="#delete{{item.id}}Modal">
-                                <img class="icon_ud" src="https://img.icons8.com/ios/20/000000/delete-sign--v1.png" />
-                            </a>
-
-                            <div class="modal fade" id="delete{{item.id}}Modal" tabindex="-1"
-                                aria-labelledby="delete{{item.id}}ModalLabel" aria-hidden="true">
-                                <div class="modal-dialog modal-dialog-centered">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h5 class="modal-title" id="delete{{item.id}}ModalLabel">
-                                                Confirm
-                                                delete dimension"{{item.name | capfirst }}"</h5>
-                                            <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                                aria-label="Close"></button>
-                                        </div>
-                                        <div class="modal-body text-start">
-                                            You wish to permanently delete dimension&rarr;
-                                            <b>"{{item.name | capfirst }}"</b>?<br>
-                                            <b class="my-1">Be Careful!</b>
-                                        </div>
-                                        <div class="modal-footer">
-                                            <button type="button" class="btn btn-outline-success"
-                                                data-bs-dismiss="modal">Get
-                                                back to safety</button>
-                                            <form
-                                                action="{% url 'delete_dimension' item.id item.project.id item.project.name %}"
-                                                method="POST">
-                                                {% csrf_token %}
-
-                                                <button class="confirm_delete btn btn-danger align-bottom"
-                                                    type="submit">
-                                                    Chop Chop!
-                                                </button>
-                                            </form>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- Delete modal -->
-                            {% endcomment %}
-
+                                    src="https://img.icons8.com/ios/15/000000/delete-sign--v1.png" /></a>
                         </td>
                     </tr>
                     {% endfor %}
-                    <!-- </form> -->
-
-
                 </table>
+                {% endif %}
             </div>
+            {% if dimentions %}
             <div class="my-1 hide_items_print">
                 <button type="button" class="btn btn-outline-primary m-1" data-bs-toggle="modal"
                     data-bs-target="#newDimension">
@@ -284,6 +273,7 @@
                     </span>
                 </button>
             </div>
+            {% endif %}
         </div>
     </div>
 

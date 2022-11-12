@@ -31,7 +31,7 @@ class MongoDatabase:
             self.client.close()
             return True
         except Exception as ex:
-            # print(
+            print(
                 "MongoDB: Exception occured while disconnecting to the database. \nTrying...")
             # print(ex)
             return False
@@ -99,15 +99,15 @@ class MongoDatabase:
     #         self.__disconnect()
     #         return query_status
 
-    def find(self, query = None, projection = None):
+    def find(self, query=None, projection=None):
         # Find Many
-        query_status=None
-        collection=self.__connect()
+        query_status = None
+        collection = self.__connect()
         try:
-            result=collection.find(query, projection)
+            result = collection.find(query, projection)
             return result
         except Exception as ex:
-            query_status=False
+            query_status = False
             # print("MongoDB: Exception occured while performing Find in the database.")
             # print(ex)
             return query_status

@@ -166,9 +166,10 @@
                     </a>
                     <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="dropdownMenuButton2">
                         <li>
-                               <a href="{% url 'download_estimate_excel_file' project.id project.name %}" class="dropdown-item">
+                            <a href="{% url 'download_estimate_excel_file' project.id project.name %}"
+                                class="dropdown-item">
                                 Download Excel
-                               </a> 
+                            </a>
                         </li>
                         <li>
                             <hr class="dropdown-divider">
@@ -289,6 +290,7 @@
                                     src="{% static 'img/void.svg' %}">
                                 <div class="text-center">
                                     <p class="py-1 fw-light my-3 fs-1">Nothing Here
+                                        <br>
                                         <a class="btn btn-outline-success" data-bs-toggle="modal"
                                             data-bs-target="#newItemModal">
                                             New Item
@@ -394,49 +396,45 @@
                                     <img class="icon_ud"
                                         src="https://img.icons8.com/ios/20/000000/delete-sign--v1.png" />
                                 </a> -->
-                                <a href = "{% url 'delete_estimate_row' item.id project.id project.name %}" > 
-                                <img class="icon_ud"
+                                <a href="{% url 'delete_estimate_row' item.id project.id project.name %}">
+                                    <img class="icon_ud"
                                         src="https://img.icons8.com/ios/20/000000/delete-sign--v1.png" /></a>
-                                
+
                                 <!-- Delete modal -->
                             </td>
                         </tr>
-                        {% endfor %}         
+                        {% endfor %}
                     </table>
-                                <div class="modal fade" id="deleteSpecificModal" tabindex="-1"
-                                    aria-labelledby="deleteSpecificModalLabel" aria-hidden="true">
-                                    <div class="modal-dialog">
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                                <h5 class="modal-title" id="deleteSpecificModalModalLabel">
-                                                    Confirm
-                                                    delete estimate</h5>
-                                                <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                                    aria-label="Close"></button>
-                                            </div>
-                                            <div class="modal-body text-start">
-                                                You wish to permanently delete ?
-
-                                                <b class="my-1">Be Careful!</b>
-                                            </div>
-                                            <div class="modal-footer">
-                                                <button type="button" class="btn btn-outline-success"
-                                                    data-bs-dismiss="modal">Get
-                                                    back to safety</button>
-                                                <form name = "deleteElementModelForm"
-                                                    action=""
-                                                    method="POST">
-                                                    {% csrf_token %}
-
-                                                    <button class="confirm_delete btn btn-danger align-bottom"
-                                                        type="submit">
-                                                        Chop Chop!
-                                                    </button>
-                                                </form>
-                                            </div>
-                                        </div>
-                                    </div>
+                    <div class="modal fade" id="deleteSpecificModal" tabindex="-1"
+                        aria-labelledby="deleteSpecificModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="deleteSpecificModalModalLabel">
+                                        Confirm
+                                        delete estimate</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                        aria-label="Close"></button>
                                 </div>
+                                <div class="modal-body text-start">
+                                    You wish to permanently delete ?
+
+                                    <b class="my-1">Be Careful!</b>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-outline-success" data-bs-dismiss="modal">Get
+                                        back to safety</button>
+                                    <form name="deleteElementModelForm" action="" method="POST">
+                                        {% csrf_token %}
+
+                                        <button class="confirm_delete btn btn-danger align-bottom" type="submit">
+                                            Chop Chop!
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                     {% endif %}
                 </div>
                 <div class="hide_items_print">
