@@ -27,7 +27,7 @@ SECRET_KEY = '82FVjSHeBYICqe82FVjSHeBYICqehAVbLvq1eCk6K1W98yhAVbLvq1eCk6K1W98y'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 # DEBUG = False
-DEBUG = True
+DEBUG = False
 
 ADMINS = [
     ("Aditya Agarwal", "aditya.ag1234@gmail.com"),
@@ -35,8 +35,8 @@ ADMINS = [
 ]
 
 
-ALLOWED_HOSTS = ["0.tcp.in.ngrok.io", "127.0.0.1",
-                 "localhost", "0.0.0.0", "13.234.231.51", "3.6.80.190"]
+ALLOWED_HOSTS = ["0.tcp.in.ngrok.io", "127.0.0.1", ".herokuapp.com",
+                 "localhost", "0.0.0.0", "13.234.231.51", "3.6.80.190", "notfcminsight.herokuapp.com"]
 #ALLOWED_HOST = ['*']
 
 AUTH_USER_MODEL = "authentication.CompanyUser"
@@ -267,3 +267,59 @@ STATE_CHOICES = (
     ("National Capital Territory of Delhi", "National Capital Territory of Delhi"),
     ("Puducherry", "Puducherry")
 )
+
+# LOGGING = {
+#     'version': 1,
+#     'handlers': {
+#         'console': {
+#             'class': 'logging.StreamHandler',
+#         },
+#     },
+#     'loggers': {
+#         'django.db.backends': {
+#             'level': 'DEBUG',
+#         },
+#     },
+#     'root': {
+#         'handlers': ['console'],
+#     }
+# }
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'verbose': {
+            'format': ('%(asctime)s [%(process)d] [%(levelname)s] '
+                       'pathname=%(pathname)s lineno=%(lineno)s '
+                       'funcname=%(funcName)s %(message)s'),
+            'datefmt': '%Y-%m-%d %H:%M:%S'
+        },
+        'simple': {
+            'format': '%(levelname)s %(message)s'
+        }
+    },
+    'handlers': {
+        'null': {
+            'level': 'DEBUG',
+            'class': 'logging.NullHandler',
+        },
+        'console': {
+            'level': 'INFO',
+            'class': 'logging.StreamHandler',
+            'formatter': 'verbose'
+        }
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['console'],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
+        'django.request': {
+            'handlers': ['console'],
+            'level': 'DEBUG',
+            'propagate': False,
+        },
+    }
+}
