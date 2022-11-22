@@ -54,12 +54,12 @@
                         <div class="col">
                             Sqm
                             <input class="form-control" id="sqm" type="text" placeholder="Sqm"
-                                aria-label=".form-control-sm" value="{{dimension.sqm}}" disabled readonly>
+                                aria-label=".form-control-sm" disabled readonly>
                         </div>
                         <div class="col">
                             Sqft
                             <input class="form-control" id="sqft" type="text" placeholder="Sqft"
-                                aria-label=".form-control-sm" value="{{dimension.sqft}}" disabled readonly>
+                                aria-label=".form-control-sm" disabled readonly>
                         </div>
                     </div>
                     </p>
@@ -70,7 +70,13 @@
                     <p>Amount<input class="form-control" id="amount" type="number" placeholder="Amount"
                             aria-label=".form-control-sm" readonly>
                     </p>
-
+                    <p>
+                        <span class="fs-6">
+                            <em class="fst-italic">*Amount calculated using Dimensions in </em>
+                            <span class="badge bg-secondary text-wrap font-monospace">Ft. | SqFt.
+                            </span>
+                        </span>
+                    </p>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
