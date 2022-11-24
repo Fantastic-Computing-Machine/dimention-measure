@@ -10,26 +10,25 @@ urlpatterns = [
     path("", HomeView.as_view(), name="home"),
 
     # project_id, project_name
-    path("project/<int:pk>/<str:project>/",
+    path("dimension/project/<int:pk>/<str:project>/details/",
          ProjectView.as_view(), name="project_detail"),
 
     # project_id, project_name
-    path("project/<int:pk>/<str:project_name>/delete/project/",
+    path("dimension/project/<int:pk>/<str:project_name>/delete_project/",
          DeleteProjectView, name="delete_project"),
 
     # dimension_id, project_name
-    path("project/<int:pk>/<str:project_name>/update/dimension/",
+    path("dimension/project/<int:pk>/<str:project_name>/update_dimension/",
          UpdateDimensionView.as_view(), name="update_dimention"),
 
-    # dimension_id, project_name
-    path("project/<int:pk>/<int:project_id>/<str:project_name>/delete/dimension/",
+    # dimension_id, project_id, project_name
+    path("dimension/project/<int:pk>/<int:project_id>/<str:project_name>/delete_dimension/",
          DeleteDimensionView, name="delete_dimension"),
 
     # project_id, project_name
-    path("excel/<int:project_id>/<str:project_name>/download/",
+    path("dimension/excel/<int:project_id>/<str:project_name>/download_project/",
          download_excel_view, name="download_excel_file"),
 
-
-    path("data/migrate/data/from/mongodb/to/mysqldb/",
+    path("dimension/data/migrate/data/from/mongodb/to/mysqldb/",
          MigrateData.as_view(), name="migrate_view"),
 ]

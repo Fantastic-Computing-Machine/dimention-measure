@@ -1,7 +1,7 @@
 from django.shortcuts import render
 import decimal
 from pymongo import MongoClient
-import CONFIG
+from database import MONGO
 import certifi
 
 from django.contrib.auth.decorators import login_required
@@ -123,7 +123,6 @@ def DeleteDimensionView(request, pk, project_id, project_name):
     dimension = Dimension.objects.filter(pk=pk)
     context['dimension'] = dimension[0]
 
-
     if dimension[0].is_deleted:
         return HttpResponseRedirect(reverse('project_detail', args=(project_id, project_name,)))
 
@@ -186,9 +185,9 @@ def download_excel_view(request, project_id, project_name):
 
 class MongoDatabase:
     def __init__(self):
-        self.databaseName = CONFIG.MONGO[0]
-        self.clusterName = CONFIG.MONGO[1]
-        self.connectionId = str(CONFIG.MONGO[2])
+        self.databaseName = MONGO[0]
+        self.clusterName = MONGO[1]
+        self.connectionId = str(MONGO[2])
 
     def __connect(self):
         try:

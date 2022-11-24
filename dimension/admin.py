@@ -38,7 +38,6 @@ class ProjectTabular(admin.StackedInline):
         return Dimension.objects.none()
 
 
-# @admin.register(Project)
 class ProjectAdmin(admin.ModelAdmin):
     formfield_overrides = {
         models.TextField: {'widget': Textarea(attrs={'rows': 4, 'cols': 40})},
