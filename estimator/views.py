@@ -284,8 +284,12 @@ def download_estimate_excel_file(request, project_id, project_name):
     current_date = date_time_obj.strftime('%x')
     current_time = date_time_obj.strftime('%X')
 
-    filename = project_name + '_' + str(current_date).replace('/', "-") + \
-        '_' + str(current_time).replace(":", "-") + ".xlsx"
+    if len(project_name) > 17:
+        project_name = project_name[:17]
+
+    filename = project_name + '_' + \
+        str(current_date).replace('/', "") + \
+        str(current_time).replace(":", "") + ".xlsx"
 
     file_path = "media/excel/" + filename
 
@@ -411,7 +415,7 @@ def download_estimate_excel_file(request, project_id, project_name):
     with open(file_path, "rb") as excel:
         data = excel.read()
 
-    print("WB--- CLOSE", flush=True)
+    # print("WB--- CLOSE", flush=True)
     # print("file_path: ",file_path,flush=True)
     # file_ecxel = FileResponse(open(file_path, 'rb'))
     delete_file = os.remove(file_path)

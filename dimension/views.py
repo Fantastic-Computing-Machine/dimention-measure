@@ -139,8 +139,12 @@ def download_excel_view(request, project_id, project_name):
     current_date = date_time_obj.strftime('%x')
     current_time = date_time_obj.strftime('%X')
 
-    filename = project_name + '_' + str(current_date).replace('/', "-") + \
-        '_' + str(current_time).replace(":", "-") + ".xlsx"
+    if len(project_name) > 17:
+        project_name = project_name[:17]
+
+    filename = project_name + '_' + \
+        str(current_date).replace('/', "") + \
+        str(current_time).replace(":", "") + ".xlsx"
 
     file_path = "media/excel/" + filename
 
