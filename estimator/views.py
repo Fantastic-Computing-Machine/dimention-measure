@@ -561,6 +561,7 @@ def edit_project_terms_and_conditions_list(request, pk, project_name):
     return render(request, template_name, context)
 
 
+@login_required
 def deleteSelectedProjectTnC(request, pk, project_name):
     # delete selected terms and conditions
     if request.method == "POST":
