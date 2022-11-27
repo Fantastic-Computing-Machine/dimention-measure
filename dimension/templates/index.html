@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% load static %}{% load humanize %}
+{% load static %} {% load humanize %} {% load utility %}
 
 {% block title %} - Dimensions {% endblock %}
 
@@ -66,7 +66,8 @@
                     <div class="card-body">
                         <div class="d-flex justify-content-between align-items-start">
                             <div class="ms-2 me-auto">
-                                <div class="fw-bold text-nowrap">{{ item.name | capfirst  }}
+                                <div class="fw-bold text-nowrap">
+                                    {% replaceItem item.name|capfirst %}
                                 </div>
                                 <span class="badge bg-secondary mt-1" data-bs-toggle="tooltip"
                                     data-bs-placement="bottom" title="{{item.created_on}}">
@@ -164,9 +165,4 @@
 <a aria-label="all-expenses" href="{% url 'all_estimates' %}" type="button" class="btn btn-info btn-lg">
     <img src="https://img.icons8.com/ios/30/000000/estimates.png" />
 </a>
-{% endblock %}
-
-
-{% block scripts %}
-<!-- <script src="{% static 'js/home.js' %}"></script> -->
 {% endblock %}

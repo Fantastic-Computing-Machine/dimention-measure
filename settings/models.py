@@ -12,7 +12,7 @@ class Unit(models.Model):
         return str(self.unit)
 
 
-class TermsHeading(models.Model):
+class OrganizationTNC(models.Model):
     # Organization TNC
     name = models.CharField(max_length=255)
     organization = models.ForeignKey(
@@ -25,3 +25,7 @@ class TermsHeading(models.Model):
 
     def get_absolute_url(self):
         return reverse("terms_and_conditions")
+
+    class Meta:
+        verbose_name = 'Organization TNC'
+        verbose_name_plural = 'Organization TNCs'

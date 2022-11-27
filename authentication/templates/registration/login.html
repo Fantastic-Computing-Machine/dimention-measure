@@ -67,14 +67,15 @@
                                             {% csrf_token %}
                                             <p>
                                                 <label for="id_username">Username:</label>
-                                                <input type="text" name="username" class="form-control" autofocus
-                                                    autocapitalize="none" autocomplete="username" maxlength="150"
-                                                    required id="id_username">
+                                                <input type="username" name="username" class="form-control" autofocus
+                                                    placeholder="Username" autocapitalize="none" autocomplete="Username"
+                                                    maxlength="150" required id="id_username">
                                             </p>
                                             <p>
                                                 <label for="id_password">Password:</label>
                                                 <input type="password" class="form-control" name="password"
-                                                    autocomplete="current-password" required id="id_password">
+                                                    autocomplete="current-password" required id="id_password"
+                                                    placeholder="Password">
                                             </p>
                                             <button type="submit" class="btn btn-primary">Login
                                             </button>

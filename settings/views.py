@@ -2,7 +2,7 @@ from django.urls import reverse
 from django.contrib.auth import get_user_model as user_model
 
 from django.shortcuts import HttpResponseRedirect
-from settings.models import TermsHeading
+from settings.models import OrganizationTNC
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import CreateView
 from django.urls import reverse, reverse_lazy
@@ -16,7 +16,7 @@ User = user_model()
 class TermsAndConditions(LoginRequiredMixin, CreateView):
     login_url = '/user/login/'
     redirect_field_name = 'redirect_to'
-    model = TermsHeading
+    model = OrganizationTNC
     form_class = TermsAndConditionForm
     template_name = "org_tnc.html"
     succes_url = reverse_lazy("terms_and_conditions")
@@ -39,7 +39,7 @@ class TermsAndConditions(LoginRequiredMixin, CreateView):
         context = super().get_context_data(**kwargs)
         curr_org = self.request.user.organization
 
-        heading = TermsHeading.objects.filter(organization=curr_org)
+        heading = OrganizationTNC.objects.filter(organization=curr_org)
         context['headings'] = heading
         return context
 
@@ -47,7 +47,7 @@ class TermsAndConditions(LoginRequiredMixin, CreateView):
 class ProjectTNC(LoginRequiredMixin, CreateView):
     login_url = '/user/login/'
     redirect_field_name = 'redirect_to'
-    model = TermsHeading
+    model = OrganizationTNC
     form_class = TermsAndConditionForm
     template_name = "project_tnc.html"
     succes_url = reverse_lazy("terms_and_conditions")
@@ -59,5 +59,5 @@ def deleteSelectedTnC(request):
         list_to_delete = request.POST.getlist('termsAndConditionCheckBox')
         for item in list_to_delete:
             # WARNING! This is a hard delete, it will delete the item from the database
-            TermsHeading.objects.filter(id=item).delete()
+            OrganizationTNC.objects.filter(id=item).delete()
     return HttpResponseRedirect(reverse('terms_and_conditions'))

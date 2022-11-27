@@ -1,71 +1,32 @@
 console.log("main.js loaded");
 
-var length = document.getElementById("id_length");
-var width = document.getElementById("id_width");
-var rate = document.getElementById("id_rate");
-
-function calculateAmount() {
-    var rt = parseFloat(rate.value);
-
-    if (isNaN(rt)) { rt = 0; }
-    var amount = document.getElementById("sqft").value * rt
-    document.getElementById("amount").value = amount;
-}
-
-function areas() {
-    // Find area of the lengths provided.
-    var len = parseFloat(length.value);
-    var wid = parseFloat(width.value);
-    // var rt = parseFloat(rate.value);
-    var flag = false;
-
-    if (isNaN(len)) { len = 0; }
-    if (isNaN(wid)) { wid = 1; flag = true; }
-    // if (isNaN(rt)) { rt = 0; }
-
-    var sqmtr = len * wid;
-    document.getElementById("sqm").value = sqmtr;
-
-    if (flag == true) {
-        var sqfeet = len * wid * 3.28;
-        document.getElementById("sqft").value = sqfeet;
-
-        // var amount = sqfeet * rt
-        // document.getElementById("amount").value = amount;
-
-        document.getElementById("sqm").value = 0.0;
-        // <!-- if you change "N/A" here then change the value in records.html file also -->
-        document.getElementById("sqft").value = 0.0;
-    } else {
-        var sqfeet = len * wid * 10.764;
-        document.getElementById("sqft").value = sqfeet;
-
-        // var amount = sqfeet * rt
-        // document.getElementById("amount").value = amount;
-    }
-
-    // calculateAmount()
-}
-
-var meter = document.getElementById("mt");
-var feet = document.getElementById("ft");
 
 function mtr_ft() {
     // Unit conversion meter to feet
-    var len = parseFloat(meter.value);
+    var len = parseFloat(document.getElementById("mt").value);
     if (isNaN(len)) { len = 0; }
-
-    var to_ft = len * 3.28;
-    document.getElementById("ft").value = to_ft;
+    document.getElementById("ft").value = len * 3.28;
 }
 
 function ft_mtr() {
     // Unit conversion feet to meter
-    var len = parseFloat(feet.value);
+    var len = parseFloat(document.getElementById("ft").value);
     if (isNaN(len)) { len = 0; }
+    document.getElementById("mt").value = len * 0.3048;
+}
 
-    var to_mt = len * 0.3048;
-    document.getElementById("mt").value = to_mt;
+function sqmtr_sqft() {
+    // Unit conversion sq. meter to sq. feet
+    var area = parseFloat(document.getElementById("calc_sqmt").value);
+    if (isNaN(area)) { area = 0; }
+    document.getElementById("calc_sqft").value = area * 10.764;
+}
+
+function sqft_sqmtr() {
+    // Unit conversion sq. feet to sq. meter
+    var area = parseFloat(document.getElementById("calc_sqft").value);
+    if (isNaN(area)) { area = 0; }
+    document.getElementById("calc_sqmt").value = area * 0.092903;
 }
 
 $(document).ready(function () {
@@ -94,45 +55,6 @@ $(document).ready(function () {
 document.getElementById("current_year").innerHTML = new Date().getFullYear();
 
 
-function area_enable() {
-    document.getElementById('id_length').disabled = false;
-    document.getElementById('id_length').required = true;
-
-    document.getElementById('id_width').disabled = false;
-
-    document.getElementById('forQuantity').disabled = true;
-    document.getElementById('forQuantity').value = '';
-
-    document.getElementById('sqm').hidden = false;
-    document.getElementById('sqft').hidden = false;
-
-    document.getElementById('sqm_box').hidden = false;
-    document.getElementById('sqft_box').hidden = false;
-
-    document.getElementById('quantityBox').hidden = '';
-}
-
-
-function quantity_enable() {
-    document.getElementById('id_length').value = '';
-    document.getElementById('id_length').disabled = true;
-
-    document.getElementById('id_width').value = '';
-    document.getElementById('id_width').disabled = true;
-
-    document.getElementById('sqm').value = '';
-    document.getElementById('sqm').hidden = true;
-    document.getElementById('sqm_box').hidden = true;
-    document.getElementById('forQuantity').required = true;
-
-    document.getElementById('sqft').value = '';
-    document.getElementById('sqft').hidden = true;
-    document.getElementById('sqft_box').hidden = true;
-
-    document.getElementById('areaBox').hidden = '';
-
-    document.getElementById('forQuantity').disabled = false;
-}
 
 $(document).ready(function () {
     $("#id_discount").on('input', function () {
@@ -175,8 +97,7 @@ $(document).ready(function () {
             $('#id_width').prop('disabled', true);
             $('#sqm_box').prop('hidden', true);
             $('#sqft_box').prop('hidden', true);
-
-
+            // this is comment
 
         }
         else {
@@ -190,7 +111,7 @@ $(document).ready(function () {
 });
 
 $(document).ready(function () {
-    $('.checkboxSelector').change(function() {
+    $('.checkboxSelector').change(function () {
         if ($('.checkboxSelector:checked').length) {
             $('#delete_button').prop('disabled', false);
         } else {
@@ -198,3 +119,20 @@ $(document).ready(function () {
         }
     });
 });
+
+
+
+document.onkeydown = function (e) {
+    if (event.keyCode == 123) {
+        return false;
+    }
+    if (e.ctrlKey && e.shiftKey && e.keyCode == 'I'.charCodeAt(0)) {
+        return false;
+    }
+    if (e.ctrlKey && e.shiftKey && e.keyCode == 'J'.charCodeAt(0)) {
+        return false;
+    }
+    if (e.ctrlKey && e.keyCode == 'U'.charCodeAt(0)) {
+        return false;
+    }
+}
