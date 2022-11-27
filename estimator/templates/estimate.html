@@ -180,12 +180,14 @@
                         <li><a class="dropdown-item" id="delete_button" data-bs-toggle="modal"
                                 data-bs-target="#deleteModal">Delete Project</a>
                         </li>
+                        {% if user.is_staff or user.is_admin %}
                         <li>
                             <hr class="dropdown-divider">
                         </li>
                         <li><a href="{% url 'select_project_terms_and_conditions' project.id project.name %}"
                                 class="dropdown-item" id="">Terms and Conditions</a>
                         </li>
+                        {% endif %}
                     </ul>
                 </span>
             </span>

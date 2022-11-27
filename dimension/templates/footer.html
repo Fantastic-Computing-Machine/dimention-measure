@@ -3,7 +3,9 @@
         <div class="text-center user-select-none text-dark p-3">
 
             {% if user.is_authenticated %}
-            <a class="btn sm-btn-secondary" href="{% url 'logout' %}">Logout</a>
+            <div class="mb-3">
+                <a class="btn btn-secondary btn-sm" href="{% url 'logout' %}">Logout</a>
+            </div>
             {% endif %}
             <h6>© <span id="current_year"></span> Copyright: Fantastic Computing Machine</h6>
             <div class="hide_items_print">
