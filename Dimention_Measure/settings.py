@@ -7,26 +7,30 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.0/ref/settings/
 """
 
-import re
-from pathlib import Path
+from dotenv import load_dotenv
+import logging
 import os
-# from dotenv import load_dotenv
+import pymysql
+from pathlib import Path
+import re
+
 from django.core.validators import RegexValidator
+
+pymysql.install_as_MySQLdb()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-#dotenv_path = BASE_DIR / ".env"
-#load_dotenv(dotenv_path=dotenv_path)
+dotenv_path = BASE_DIR / ".env"
+load_dotenv(dotenv_path=dotenv_path)
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '82FVjSHeBYICqe82FVjSHeBYICqehAVbLvq1eCk6K1W98yhAVbLvq1eCk6K1W98y'
+SECRET_KEY = os.getenv("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-# DEBUG = False
 DEBUG = False
 
 ADMINS = [
@@ -34,11 +38,11 @@ ADMINS = [
     ("Nilesh Kumar Mandal", "s.nileshkm@gmail.com"),
 ]
 
+ALLOWED_HOSTS = ["0.tcp.in.ngrok.io", "127.0.0.1", "localhost", "0.0.0.0","13.234.231.51","3.6.80.190" ]
 
-ALLOWED_HOSTS = ["0.tcp.in.ngrok.io", "127.0.0.1", ".herokuapp.com",
-                 "localhost", "0.0.0.0", "13.234.231.51", "3.6.80.190", "notfcminsight.herokuapp.com"]
-#ALLOWED_HOST = ['*']
-
+# CSRF_TRUSTED_ORIGINS = [
+#     "http://3.6.80.190"
+# ]
 AUTH_USER_MODEL = "authentication.CompanyUser"
 
 # Application definition
@@ -61,18 +65,18 @@ INSTALLED_APPS = [
     'authentication',
     'expense',
     'estimator',
-    'settings'
+    'settings',
 ]
 
 # For django-admin-interface installed app
 X_FRAME_OPTIONS = "SAMEORIGIN"
 SILENCED_SYSTEM_CHECKS = ["security.W019"]
 
-# EMAIL_USE_TLS = True
-# EMAIL_PORT = 587
-# EMAIL_HOST = 'smtp.gmail.com'
-# EMAIL_HOST_USER = os.getenv("EMAIL_ID")
-# EMAIL_HOST_PASSWORD = os.getenv("EMAIL_PWD")
+EMAIL_USE_TLS = True
+EMAIL_PORT = 587
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = os.getenv("EMAIL_ID")
+EMAIL_HOST_PASSWORD = os.getenv("EMAIL_PWD")
 
 CACHES = {
     "default": {
@@ -95,9 +99,8 @@ MIDDLEWARE = [
     "django.middleware.locale.LocaleMiddleware",
 ]
 
-# STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.ManifestStaticFilesStorage'
-# STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
+
 IGNORABLE_404_URLS = [
     re.compile(r'^/apple-touch-icon.*\.png$'),
     re.compile(r'^/favicon\.ico$'),
@@ -129,6 +132,7 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
             ],
+            'string_if_invalid': "CONTACT ADMIN WITH A SCREENSHOT."
         },
     },
 ]
@@ -138,19 +142,16 @@ WSGI_APPLICATION = 'Dimention_Measure.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
-
-
-# if DEBUG == False:
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'heroku_7d1d235a934ba7b',
-        'USER': 'b2ad8003626a52',
-        'PASSWORD': '5c5e94ce',
-        'HOST': 'eu-cdbr-west-01.cleardb.com',
-        'PORT': '3306',
+        'default': {
+            'ENGINE': 'django.db.backends.mysql',
+            'NAME': os.environ['RDS_DB_NAME'],
+            'USER': os.environ['RDS_USERNAME'],
+            'PASSWORD': os.environ['RDS_PASSWORD'],
+            'HOST': os.environ['RDS_HOSTNAME'],
+            'PORT': os.environ['RDS_PORT'],
+        }
     }
-}
 
 
 # Password validation
@@ -188,14 +189,14 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.0/howto/static-files/
 
 
-#STATIC_URL = 'static/'
-#STATIC_ROOT = 'staticfiles'
+# STATIC_URL = 'static/'
+# STATIC_ROOT = 'staticfiles'
 # STATICFILES_DIRS = [
 #    BASE_DIR / "static",
 # ]
 
-#MEDIA_URL = "/media/"
-#MEDIA_ROOT = os.path.join(BASE_DIR, "media")
+# MEDIA_URL = "/media/"
+# MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 
 STATIC_URL = "/assets/"
 STATIC_ROOT = "static"
@@ -285,41 +286,41 @@ STATE_CHOICES = (
 #     }
 # }
 
-LOGGING = {
-    'version': 1,
-    'disable_existing_loggers': False,
-    'formatters': {
-        'verbose': {
-            'format': ('%(asctime)s [%(process)d] [%(levelname)s] '
-                       'pathname=%(pathname)s lineno=%(lineno)s '
-                       'funcname=%(funcName)s %(message)s'),
-            'datefmt': '%Y-%m-%d %H:%M:%S'
-        },
-        'simple': {
-            'format': '%(levelname)s %(message)s'
-        }
-    },
-    'handlers': {
-        'null': {
-            'level': 'DEBUG',
-            'class': 'logging.NullHandler',
-        },
-        'console': {
-            'level': 'INFO',
-            'class': 'logging.StreamHandler',
-            'formatter': 'verbose'
-        }
-    },
-    'loggers': {
-        'django': {
-            'handlers': ['console'],
-            'level': 'DEBUG',
-            'propagate': True,
-        },
-        'django.request': {
-            'handlers': ['console'],
-            'level': 'DEBUG',
-            'propagate': False,
-        },
-    }
-}
+# LOGGING = {
+#     'version': 1,
+#     'disable_existing_loggers': False,
+#     'formatters': {
+#         'verbose': {
+#             'format': ('%(asctime)s [%(process)d] [%(levelname)s] '
+#                        'pathname=%(pathname)s lineno=%(lineno)s '
+#                        'funcname=%(funcName)s %(message)s'),
+#             'datefmt': '%Y-%m-%d %H:%M:%S'
+#         },
+#         'simple': {
+#             'format': '%(levelname)s %(message)s'
+#         }
+#     },
+#     'handlers': {
+#         'null': {
+#             'level': 'DEBUG',
+#             'class': 'logging.NullHandler',
+#         },
+#         'console': {
+#             'level': 'INFO',
+#             'class': 'logging.StreamHandler',
+#             'formatter': 'verbose'
+#         }
+#     },
+#     'loggers': {
+#         'django': {
+#             'handlers': ['console'],
+#             'level': 'DEBUG',
+#             'propagate': True,
+#         },
+#         'django.request': {
+#             'handlers': ['console'],
+#             'level': 'DEBUG',
+#             'propagate': False,
+#         },
+#     }
+# }
