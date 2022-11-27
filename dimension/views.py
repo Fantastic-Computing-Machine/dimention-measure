@@ -139,10 +139,11 @@ def download_excel_view(request, project_id, project_name):
     current_date = date_time_obj.strftime('%x')
     current_time = date_time_obj.strftime('%X')
 
-    if len(project_name) > 17:
-        project_name = project_name[:17]
+    file_name = project_name
+    if len(file_name) > 17:
+        file_name = file_name[:17]
 
-    filename = project_name + '_' + \
+    filename = file_name + '_' + \
         str(current_date).replace('/', "") + \
         str(current_time).replace(":", "") + ".xlsx"
 
