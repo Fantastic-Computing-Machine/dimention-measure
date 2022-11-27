@@ -187,17 +187,6 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.0/howto/static-files/
-
-
-# STATIC_URL = 'static/'
-# STATIC_ROOT = 'staticfiles'
-# STATICFILES_DIRS = [
-#    BASE_DIR / "static",
-# ]
-
-# MEDIA_URL = "/media/"
-# MEDIA_ROOT = os.path.join(BASE_DIR, "media")
-
 STATIC_URL = "/assets/"
 STATIC_ROOT = "static"
 STATICFILES_DIRS = (os.path.join(BASE_DIR, "assets/"),)
@@ -227,6 +216,7 @@ SECURE_HSTS_INCLUDE_SUBDOMAINS = True
 
 SESSION_COOKIE_SECURE = False
 SECURE_HSTS_PRELOAD = True
+SECURE_CROSS_ORIGIN_OPENER_POLICY = None
 
 
 PHONE_NUMBER_FORMAT = RegexValidator(regex=r"^\+?1?\d{8,15}$")
