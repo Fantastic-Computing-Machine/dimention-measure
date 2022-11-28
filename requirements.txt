@@ -31,4 +31,4 @@ six==1.16.0
 sqlparse==0.4.2
 toml==0.10.2
 typing-extensions==4.3.0
-virtualenv==20.14.0
+virtualenv==20.17.0
