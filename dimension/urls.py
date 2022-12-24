@@ -3,7 +3,7 @@ from django.urls import path
 from .views import HomeView, ProjectView, UpdateDimensionView
 from .views import DeleteDimensionView, DeleteProjectView
 from .views import download_excel_view
-from .views import MigrateData
+# from .views import MigrateData
 
 
 urlpatterns = [
@@ -29,6 +29,6 @@ urlpatterns = [
     path("dimension/excel/<int:project_id>/<str:project_name>/download_project/",
          download_excel_view, name="download_excel_file"),
 
-    path("dimension/data/migrate/data/from/mongodb/to/mysqldb/",
-         MigrateData.as_view(), name="migrate_view"),
+#     path("dimension/data/migrate/data/from/mongodb/to/mysqldb/",
+#          MigrateData.as_view(), name="migrate_view"),
 ]

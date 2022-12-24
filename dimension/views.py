@@ -1,8 +1,8 @@
 from django.shortcuts import render
 import decimal
-from pymongo import MongoClient
-from database import MONGO
-import certifi
+# from pymongo import MongoClient
+# from database import MONGO
+# import certifi
 
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -188,87 +188,87 @@ def download_excel_view(request, project_id, project_name):
     return file_ecxel
 
 
-class MongoDatabase:
-    def __init__(self):
-        self.databaseName = MONGO[0]
-        self.clusterName = MONGO[1]
-        self.connectionId = str(MONGO[2])
+# class MongoDatabase:
+#     def __init__(self):
+#         self.databaseName = MONGO[0]
+#         self.clusterName = MONGO[1]
+#         self.connectionId = str(MONGO[2])
 
-    def __connect(self):
-        try:
-            self.client = MongoClient(
-                self.connectionId, tlsCAFile=certifi.where())
-            db = self.client[self.databaseName]
-            collection = db[self.clusterName]
-            return collection
-        except Exception as ex:
-            print("MongoDB: Exception occured while Connecting to the database.")
-            print(ex)
-            return False
+#     def __connect(self):
+#         try:
+#             self.client = MongoClient(
+#                 self.connectionId, tlsCAFile=certifi.where())
+#             db = self.client[self.databaseName]
+#             collection = db[self.clusterName]
+#             return collection
+#         except Exception as ex:
+#             print("MongoDB: Exception occured while Connecting to the database.")
+#             print(ex)
+#             return False
 
-    def __disconnect(self):
-        try:
-            self.client = MongoClient(self.connectionId)
-            self.client.close()
-            return True
-        except Exception as ex:
-            print(
-                "MongoDB: Exception occured while disconnecting to the database. \nTrying...")
-            print(ex)
-            return False
+#     def __disconnect(self):
+#         try:
+#             self.client = MongoClient(self.connectionId)
+#             self.client.close()
+#             return True
+#         except Exception as ex:
+#             print(
+#                 "MongoDB: Exception occured while disconnecting to the database. \nTrying...")
+#             print(ex)
+#             return False
 
-    def find(self, query=None, projection=None):
-        # Find Many
-        query_status = None
-        collection = self.__connect()
-        try:
-            result = collection.find(query, projection)
-            return result
-        except Exception as ex:
-            query_status = False
-            return query_status
-        finally:
-            self.__disconnect()
-            if query_status == False:
-                return query_status
-            return result
+#     def find(self, query=None, projection=None):
+#         # Find Many
+#         query_status = None
+#         collection = self.__connect()
+#         try:
+#             result = collection.find(query, projection)
+#             return result
+#         except Exception as ex:
+#             query_status = False
+#             return query_status
+#         finally:
+#             self.__disconnect()
+#             if query_status == False:
+#                 return query_status
+#             return result
 
 
-class MigrateData(LoginRequiredMixin, TemplateView):
-    login_url = '/user/login/'
-    redirect_field_name = 'redirect_to'
-    model = Dimension
+# class MigrateData(LoginRequiredMixin, TemplateView):
+#     login_url = '/user/login/'
+#     redirect_field_name = 'redirect_to'
+#     model = Dimension
 
-    def get_context_data(self, **kwargs):
-        mongo_obj = MongoDatabase()
+#     def get_context_data(self, **kwargs):
+#         mongo_obj = MongoDatabase()
 
-        user_obj = User.objects.get(username="admin")
-        ct = 0
+#         user_obj = User.objects.get(username="admin")
+#         ct = 0
 
-        for item in mongo_obj.find():
-            projectName = item["projectName"]
+#         for item in mongo_obj.find():
+#             projectName = item["projectName"]
 
-            project_obj = Project(
-                name=projectName,
-                author=user_obj,
-            ).save()
+#             project_obj = Project(
+#                 name=projectName,
+#                 author=user_obj,
+#             ).save()
 
-            project_obj = Project.objects.get(name=projectName)
-            ct += 1
-            cnt = 0
+#             project_obj = Project.objects.get(name=projectName)
+#             ct += 1
+#             cnt = 0
 
-            for dim in range(len(item["dims"])):
-                curr_dim = item["dims"][dim]
+#             for dim in range(len(item["dims"])):
+#                 curr_dim = item["dims"][dim]
 
-                dims_obj = Dimension(
-                    project=project_obj,
-                    name=curr_dim["name"],
-                    length=decimal.Decimal(curr_dim["length"]),
-                    width=decimal.Decimal(curr_dim["width"]),
-                    rate=decimal.Decimal(curr_dim["rate"]),
-                )
+#                 dims_obj = Dimension(
+#                     project=project_obj,
+#                     name=curr_dim["name"],
+#                     length=decimal.Decimal(curr_dim["length"]),
+#                     width=decimal.Decimal(curr_dim["width"]),
+#                     rate=decimal.Decimal(curr_dim["rate"]),
+#                 )
 
-                dims_obj.save()
-                cnt = +1
+#                 dims_obj.save()
+#                 cnt = +1
 
-        return super(MigrateData, self).get_context_data(**kwargs)
+#         return super(MigrateData, self).get_context_data(**kwargs)
