@@ -29,11 +29,11 @@ urlpatterns = [
     path("project/<int:project_id>/<str:project_name>/",
          ProjectExpenseView.as_view(), name="project_expense"),
 
+    # payee_id, project_id, project_name
     path("payee/<int:payee_id>/<int:project_id>/<str:project_name>/delete/",
-         # payee_id, project_id, project_name
          DeletePayeeView, name="delete_Payee_Project"),
 
+    # payee_id, project_id, project_name
     path("expense/<int:expense_id>/<int:project_id>/<str:project_name>/delete/",
-         # payee_id, project_id, project_name
          DeleteExpenseView, name="delete_expense"),
 ]

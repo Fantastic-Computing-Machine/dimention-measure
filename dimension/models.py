@@ -68,6 +68,12 @@ class Dimension(models.Model):
     def save(self):
         self.name = self.name.strip().replace(" ", "-")
 
+        if not self.width or self.width == '0' or self.width == '':
+            self.width = 0
+
+        if not self.rate or self.rate == '0' or self.rate == '':
+            self.rate = 0
+
         if self.width == '' or self.width == 0:
 
             if self.description != None and self.description != '':

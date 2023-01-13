@@ -5,44 +5,10 @@ from django.db import models
 from django.forms import Textarea
 
 
-class ProjectInline(admin.TabularInline):
-    model = Dimension
-    show_change_link = True
-    view_on_site = False
-    can_delete = False
-    extra = 0
-    readonly_fields = ['name', "length",
-                       "width", "sqm", "sqft", "rate", "amount", "deleted_on", "description"]
-    fields = ['name', "length",
-              "width", "sqm", "sqft", "rate", "amount", "description"]
-
-
-class ProjectTabular(admin.StackedInline):
-    formfield_overrides = {
-        models.TextField: {'widget': Textarea(attrs={'rows': 4, 'cols': 40})},
-    }
-    model = Dimension
-    show_change_link = True
-    view_on_site = False
-    can_delete = False
-    extra = 1
-    readonly_fields = [
-        "sqm",
-        "sqft",
-        "amount",
-        "deleted_on",
-    ]
-    exclude = ["is_deleted"]
-
-    def get_queryset(self, request):
-        return Dimension.objects.none()
-
-
 class ProjectAdmin(admin.ModelAdmin):
     formfield_overrides = {
         models.TextField: {'widget': Textarea(attrs={'rows': 4, 'cols': 40})},
     }
-    inlines = [ProjectInline, ProjectTabular]
     list_display = [
         "id",
         "name",
@@ -75,15 +41,9 @@ class ProjectAdmin(admin.ModelAdmin):
     ]
     readonly_fields = ["deleted_on", "author"]
 
-    # def get_queryset(self, request):
-    #     qs = super(ProjectAdmin, self).get_queryset(request)
-    #     return qs.filter(author__organization=request.user.organization)
-
     def save_model(self, request, obj, form, change):
-        self.author = request.user
-        # if getattr(obj, "added_by", None) is None:
-        #     obj.author == request.user
-        # obj.save()
+        obj.author = request.user
+        super().save_model(request, obj, form, change)
 
 
 @admin.register(Dimension)

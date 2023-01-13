@@ -42,7 +42,6 @@ class ClientAdmin(admin.ModelAdmin):
     ]
 
     def save_model(self, request, obj, form, change):
-        # print(request.user)
         obj.organization = request.user.organization
         obj.created_by = request.user
-        super(ClientAdmin, self).save_model(request, obj, form, change)
+        super().save_model(request, obj, form, change)
