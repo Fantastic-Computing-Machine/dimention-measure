@@ -19,6 +19,7 @@ from django.conf.urls.static import static
 from django.urls import path
 from django.urls import include
 
+
 urlpatterns = [
     path('', include('dimension.urls')),
     path('admin/doc/', include('django.contrib.admindocs.urls')),
@@ -27,6 +28,7 @@ urlpatterns = [
     path('estimate/', include('estimator.urls')),
     path('settings/', include('settings.urls')),
     path('client_and_company/', include('client_and_company.urls')),
+    path('inspector/', include('inspector.urls')),
     path('user/', include('django.contrib.auth.urls')),
     path('user/', include('authentication.urls')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
