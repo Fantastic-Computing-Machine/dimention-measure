@@ -20,7 +20,7 @@ from django.views.generic import (
     UpdateView
 )
 from django.views.generic.edit import FormMixin
-
+from django.http import HttpResponse
 from estimator.models import (
     Room,
     RoomItemDescription,
@@ -39,7 +39,7 @@ from estimator.forms import (
     DiscountForm,
     UpdateProjectTermsAndConditionForm,
 )
-from settings.models import Unit, TermsHeading
+from settings.models import Unit, OrganizationTNC
 
 
 class AllEstimates(LoginRequiredMixin, FormMixin, ListView):
@@ -54,7 +54,7 @@ class AllEstimates(LoginRequiredMixin, FormMixin, ListView):
 
     def get_queryset(self):
         queryset = super().get_queryset()
-        return queryset.filter(is_deleted=False).order_by('-created_on')
+        return queryset.filter(is_deleted=False, client__is_deleted=False).order_by('-created_on')
 
     def post(self, request, **kwargs):
         request.POST._mutable = True
@@ -284,8 +284,13 @@ def download_estimate_excel_file(request, project_id, project_name):
     current_date = date_time_obj.strftime('%x')
     current_time = date_time_obj.strftime('%X')
 
-    filename = project_name + '_' + str(current_date).replace('/', "-") + \
-        '_' + str(current_time).replace(":", "-") + ".xlsx"
+    file_name = project_name
+    if len(file_name) > 17:
+        file_name = file_name[:17]
+
+    filename = file_name + '_' + \
+        str(current_date).replace('/', "") + \
+        str(current_time).replace(":", "") + ".xlsx"
 
     file_path = "media/excel/" + filename
 
@@ -408,10 +413,19 @@ def download_estimate_excel_file(request, project_id, project_name):
 
     workbook.save(filename=str(file_path))
     workbook.close()
-    # print("WB--- CLOSE")
-    file_ecxel = FileResponse(open(file_path, 'rb'))
+    with open(file_path, "rb") as excel:
+        data = excel.read()
+
+    # print("WB--- CLOSE", flush=True)
+    # print("file_path: ",file_path,flush=True)
+    # file_ecxel = FileResponse(open(file_path, 'rb'))
     delete_file = os.remove(file_path)
-    return file_ecxel
+    return HttpResponse(data, headers={
+        'Content-Type': 'application/vnd.ms-excel',
+        'Content-Disposition': 'attachment; filename= "{}"'.format(
+            filename),
+    })
+    # return file_ecxel
 
 
 @login_required
@@ -429,11 +443,20 @@ def updateDiscount(request, pk, project_name):
 
 
 @login_required
-def DeleteEstimateComponentView(request, pk, project_id, project_name):
+def delete_estimator_item_view(request, pk, project_id, project_name):
+    template_name = "delete_estimate_item.html"
+    context = {}
+    estimate = Estimate.objects.filter(pk=pk)
+    context['estimate'] = estimate[0]
+
+    if estimate[0].is_deleted:
+        return HttpResponseRedirect(reverse('estimate', args=(project_id, project_name,)))
+
     if request.method == 'POST':
-        estimate = Estimate.objects.filter(pk=pk).update(
-            is_deleted=True, deleted_on=datetime.now())
-    return HttpResponseRedirect(reverse('estimate', args=(project_id, project_name,)))
+        estimate.update(is_deleted=True, deleted_on=datetime.now())
+        return HttpResponseRedirect(reverse('estimate', args=(project_id, project_name,)))
+
+    return render(request, template_name, context)
 
 
 @login_required
@@ -448,7 +471,7 @@ def select_project_terms_and_conditions_view(request, pk: int, project_name: str
 
     template_name = "tnc/select_project_tnc.html"
     context = dict()
-    org_tnc = TermsHeading.objects.filter(
+    org_tnc = OrganizationTNC.objects.filter(
         organization=request.user.organization)
 
     context['org_tnc'] = org_tnc
@@ -456,7 +479,7 @@ def select_project_terms_and_conditions_view(request, pk: int, project_name: str
 
     if request.method == 'POST':
         to_import = list(map(int, request.POST.getlist('select_project_tnc')))
-        tnc_to_import = TermsHeading.objects.filter(pk__in=to_import)
+        tnc_to_import = OrganizationTNC.objects.filter(pk__in=to_import)
         project_instance = Project.objects.get(pk=pk)
 
         for item in tnc_to_import:
@@ -502,7 +525,7 @@ def edit_project_terms_and_conditions_list(request, pk, project_name):
     context = dict()
 
     project_tnc = ProjectTermsAndConditions.objects.filter(project_id=pk)
-    org_tnc = TermsHeading.objects.filter(
+    org_tnc = OrganizationTNC.objects.filter(
         organization=request.user.organization)
 
     project_pk = list()
@@ -527,7 +550,7 @@ def edit_project_terms_and_conditions_list(request, pk, project_name):
 
         to_import = list(map(int, request.POST.getlist('select_project_tnc')))
 
-        tnc_to_import = TermsHeading.objects.filter(pk__in=to_import)
+        tnc_to_import = OrganizationTNC.objects.filter(pk__in=to_import)
         project_instance = Project.objects.get(pk=pk)
 
         for item in tnc_to_import:
@@ -543,6 +566,7 @@ def edit_project_terms_and_conditions_list(request, pk, project_name):
     return render(request, template_name, context)
 
 
+@login_required
 def deleteSelectedProjectTnC(request, pk, project_name):
     # delete selected terms and conditions
     if request.method == "POST":

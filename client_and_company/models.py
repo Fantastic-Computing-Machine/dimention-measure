@@ -47,10 +47,6 @@ class Client(models.Model):
         self.town_city = self.town_city.strip()
         return super(Client, self).save()
 
-    # def save_model(self, request, obj, form, change):
-    #     obj.created_by = request.user
-    #     super().save_model(request, obj, form, change)
-
     def address(self):
         full_address = self.address_1
         if self.address_2:

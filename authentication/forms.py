@@ -92,7 +92,7 @@ class OrganizationForm(forms.ModelForm):
     )
 
     phoneNumber = forms.CharField(
-        max_length=200,
+        max_length=10,
         required=True,
         widget=forms.TextInput(
             attrs={
@@ -100,8 +100,6 @@ class OrganizationForm(forms.ModelForm):
                 "aria-label": ".form-control-sm",
                 "type": "tel",
                 "placeholder": "Phone Number (optional)",
-
-                "maxlength": "11",
             }
         )
     )
@@ -162,7 +160,7 @@ class OrganizationForm(forms.ModelForm):
     )
 
     zip_code = forms.CharField(
-        max_length=200,
+        max_length=7,
         required=True,
         widget=forms.TextInput(
             attrs={
@@ -171,7 +169,6 @@ class OrganizationForm(forms.ModelForm):
                 "type": "number",
 
                 "placeholder": "Zip code",
-                "maxlength": "7",
             }
         )
     )

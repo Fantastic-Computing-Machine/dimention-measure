@@ -4,6 +4,7 @@ from django.db import migrations
 
 
 class Migration(migrations.Migration):
+    atomic = False
 
     dependencies = [
         ('authentication', '0002_companyuser_organization'),
@@ -17,6 +18,7 @@ class Migration(migrations.Migration):
         ),
         migrations.AlterModelOptions(
             name='organization',
-            options={'verbose_name': 'Organization', 'verbose_name_plural': 'Organizations'},
+            options={'verbose_name': 'Organization',
+                     'verbose_name_plural': 'Organizations'},
         ),
     ]

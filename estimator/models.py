@@ -1,6 +1,6 @@
 from django.utils.translation import gettext as _
 from ckeditor.fields import RichTextField
-import decimal
+from decimal import Decimal
 from datetime import datetime
 
 from django.contrib.auth import get_user_model as user_model
@@ -8,7 +8,7 @@ from django.urls import reverse
 from django.db import models
 
 from client_and_company.models import Client
-from settings.models import TermsHeading, Unit
+from settings.models import OrganizationTNC, Unit
 
 User = user_model()
 
@@ -101,7 +101,7 @@ class Project(models.Model):
         return self.total_amount() - self.discount_amount()
 
     def gst_amount(self):
-        return decimal.Decimal(format(self.total_after_discount() * decimal.Decimal(0.18), ".2f"))
+        return Decimal(format(self.total_after_discount() * Decimal(0.18), ".2f"))
 
     def total_with_gst(self):
         return self.total_after_discount() + self.gst_amount()
@@ -109,8 +109,6 @@ class Project(models.Model):
     def get_all_rooms(self):
         estimate_room_obj = Estimate.objects.values_list(
             'room__id', 'room__name').filter(project__id=self.id).distinct()
-
-        # print(estimate_room_obj)
 
         return estimate_room_obj
 
@@ -165,8 +163,8 @@ class Estimate(models.Model):
             self.width = None
             self.sqm = None
             self.sqft = None
-            self.amount = decimal.Decimal(
-                self.quantity) * self.rate
+            self.amount = Decimal(
+                self.quantity) * Decimal(self.rate)
             return super(Estimate, self).save()
 
         else:
@@ -175,18 +173,17 @@ class Estimate(models.Model):
                 # SECURITY: CHECK FOR EXCEPTIONS LIKE LETTERS/SYMBOLS/NONE-TYPE/EMPTY
 
                 self.sqm = self.length
-                self.sqft = self.length * decimal.Decimal(3.28084)
-                self.amount = decimal.Decimal(
-                    self.length) * self.rate
+                self.sqft = Decimal(self.length) * Decimal(3.28084)
+                self.amount = Decimal(self.length) * Decimal(self.rate)
 
             elif self.width > 0:
                 # AREA
                 # SECURITY: CHECK FOR EXCEPTIONS LIKE LETTERS/SYMBOLS/NONE-TYPE/EMPTY
 
                 self.sqm = self.length * self.width
-                self.sqft = self.length * self.width * decimal.Decimal(10.7639)
-                self.amount = decimal.Decimal(
-                    self.sqft) * self.rate
+                self.sqft = self.length * self.width * Decimal(10.7639)
+                self.amount = Decimal(
+                    self.sqft) * Decimal(self.rate)
 
             self.quantity = None
 
@@ -194,8 +191,8 @@ class Estimate(models.Model):
 
     def calculate_amount(self):
         if self.quantity is not None:
-            return decimal.Decimal(self.quantity) * self.rate
-        return decimal.Decimal(self.sqft) * self.rate
+            return Decimal(self.quantity) * Decimal(self.rate)
+        return Decimal(self.sqft) * Decimal(self.rate)
 
     def discount_amount(self):
         return (self.calculate_amount() * self.discount)/100
@@ -216,7 +213,7 @@ class Estimate(models.Model):
 class ProjectTermsAndConditions(models.Model):
     # Project TNC
     heading = models.CharField(max_length=255)
-    org_terms = models.ForeignKey(TermsHeading, on_delete=models.CASCADE)
+    org_terms = models.ForeignKey(OrganizationTNC, on_delete=models.CASCADE)
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
     content = RichTextField(null=False)
 
@@ -229,4 +226,4 @@ class ProjectTermsAndConditions(models.Model):
     class Meta:
         unique_together = (('project', 'org_terms'))
         verbose_name = _('Project TNC')
-        verbose_name_plural = _('Project TNC')
+        verbose_name_plural = _('Project TNCs')

@@ -51,7 +51,7 @@ class NewDimensionForm(forms.ModelForm):
                 'class': 'form-control',
                 "aria-label": ".form-control-sm",
                 "type": 'number',
-                "placeholder": "Lenght (in meters)",
+                "placeholder": "Length (in meters)",
                 "step": ".01",
                 "oninput": "areas()",
             }
@@ -122,7 +122,7 @@ class UpdateDimensionForm(forms.ModelForm):
                 'class': 'form-control',
                 "aria-label": ".form-control-sm",
                 "type": 'number',
-                "placeholder": "Lenght (in meters)",
+                "placeholder": "Length (in meters)",
                 "step": ".01",
                 "oninput": "areas()",
             }

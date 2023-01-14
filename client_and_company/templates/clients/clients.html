@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% load static %} {% load humanize %}
+{% load static %} {% load humanize %}{% load utility %}
 
 
 {% block title %} - Clients{% endblock %}
@@ -127,7 +127,7 @@
                     data-bs-target="#collapse_{{item.id}}_accordion" aria-expanded="true"
                     aria-controls="collapse_{{item.id}}_accordion">
                     <span class="fw-bold text-dark">
-                        {{item.name|title}} ({{item.phoneNumber}}) - {{item.town_city}}
+                        {% replaceItem item.name|capfirst %} ({{item.phoneNumber}}) - {{item.town_city}}
                     </span>
                 </button>
             </h2>

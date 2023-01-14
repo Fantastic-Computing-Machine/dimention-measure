@@ -27,7 +27,7 @@ class NewPayeeForm(forms.ModelForm):
             })
     )
     phoneNumber = forms.CharField(
-        max_length=200,
+        max_length=10,
         required=False,
         widget=forms.TextInput(
             attrs={
@@ -68,7 +68,7 @@ class UpdatePayeeForm(forms.ModelForm):
             })
     )
     phoneNumber = forms.CharField(
-        max_length=200,
+        max_length=10,
         required=False,
         widget=forms.TextInput(
             attrs={

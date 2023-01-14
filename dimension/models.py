@@ -10,13 +10,13 @@ User = user_model()
 
 
 class Project(models.Model):
-    name = models.CharField(max_length=255, unique=True)
-    author = models.ForeignKey(User, on_delete=models.CASCADE)
+    name = models.CharField(max_length=255, unique=True, help_text="Name of the project")
+    author = models.ForeignKey(User, on_delete=models.CASCADE, help_text="User who created the project")
     description = models.TextField(
-        max_length=255, blank=True, null=True)
-    created_on = models.DateTimeField(auto_now_add=True)
-    is_deleted = models.BooleanField(default=False)
-    deleted_on = models.DateTimeField(blank=True, null=True)
+        max_length=255, blank=True, null=True, help_text="Description of the project")
+    created_on = models.DateTimeField(auto_now_add=True, help_text="Date and time when the project was created")
+    is_deleted = models.BooleanField(default=False, help_text="Is the project deleted?")
+    deleted_on = models.DateTimeField(blank=True, null=True, help_text="Date and time when the project was deleted")
 
     def __str__(self):
         return str(self.name)
@@ -67,6 +67,12 @@ class Dimension(models.Model):
 
     def save(self):
         self.name = self.name.strip().replace(" ", "-")
+
+        if not self.width or self.width == '0' or self.width == '':
+            self.width = 0
+
+        if not self.rate or self.rate == '0' or self.rate == '':
+            self.rate = 0
 
         if self.width == '' or self.width == 0:
 

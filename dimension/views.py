@@ -1,7 +1,8 @@
+from django.shortcuts import render
 import decimal
-from pymongo import MongoClient
-import CONFIG
-import certifi
+# from pymongo import MongoClient
+# from database import MONGO
+# import certifi
 
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -89,7 +90,7 @@ class UpdateDimensionView(LoginRequiredMixin, UpdateView):
     redirect_field_name = 'redirect_to'
     model = Dimension
     form_class = UpdateDimensionForm
-    template_name = 'update_project.html'
+    template_name = 'update_item.html'
 
     def get_context_data(self, *args, **kwargs):
         dimension = Dimension.objects.filter(pk=self.kwargs['pk'])[0]
@@ -117,10 +118,19 @@ def DeleteProjectView(request, pk, project_name):
 
 @login_required
 def DeleteDimensionView(request, pk, project_id, project_name):
+    template_name = "delete_item.html"
+    context = {}
+    dimension = Dimension.objects.filter(pk=pk)
+    context['dimension'] = dimension[0]
+
+    if dimension[0].is_deleted:
+        return HttpResponseRedirect(reverse('project_detail', args=(project_id, project_name,)))
+
     if request.method == 'POST':
-        dimension = Dimension.objects.filter(pk=pk).update(
-            is_deleted=True, deleted_on=datetime.datetime.now())
-    return HttpResponseRedirect(reverse('project_detail', args=(project_id, project_name,)))
+        dimension.update(is_deleted=True, deleted_on=datetime.datetime.now())
+        return HttpResponseRedirect(reverse('project_detail', args=(project_id, project_name,)))
+
+    return render(request, template_name, context)
 
 
 @login_required
@@ -129,8 +139,13 @@ def download_excel_view(request, project_id, project_name):
     current_date = date_time_obj.strftime('%x')
     current_time = date_time_obj.strftime('%X')
 
-    filename = project_name + '_' + str(current_date).replace('/', "-") + \
-        '_' + str(current_time).replace(":", "-") + ".xlsx"
+    file_name = project_name
+    if len(file_name) > 17:
+        file_name = file_name[:17]
+
+    filename = file_name + '_' + \
+        str(current_date).replace('/', "") + \
+        str(current_time).replace(":", "") + ".xlsx"
 
     file_path = "media/excel/" + filename
 
@@ -142,26 +157,31 @@ def download_excel_view(request, project_id, project_name):
 
     sheet.append(["Project Name", project_name])
     sheet.append([""])
-    sheet.append(["Tag", "Length", "Width", "Area | sqm",
+    sheet.append(["S.No.", "Tag", "Length", "Width", "Area | sqm",
                   "Area | sqft", "Rate", "Amount"])
 
     dimension = Dimension.objects.filter(
         project__id=project_id, is_deleted=False)
 
+    sno = 1
+
     for item in dimension:
 
         sheet.append([
-            item.name, item.length, item.width, item.sqm, item.sqft, item.rate, item.amount
+            str(sno), item.name, str(item.length), str(
+                item.width), str(item.sqm), str(item.sqft), str(item.rate), str(item.amount)
         ])
+        sheet.append(["", item.description])
+        sno += 1
 
     sum_sqft = sum(item.sqft for item in dimension)
     sum_sqm = sum(item.sqm for item in dimension)
     sum_amount = sum(item.amount for item in dimension)
 
     sheet.append([""])
-    sheet.append(['Total sqm', sum_sqm])
-    sheet.append(['Total sqft', sum_sqft])
-    sheet.append(['Total amount*', sum_amount])
+    sheet.append(['Total sqm', float(sum_sqm)])
+    sheet.append(['Total sqft', float(sum_sqft)])
+    sheet.append(['Total amount*', float(sum_amount)])
 
     sheet.append([""])
     sheet.append(['*Calculated using metrics in sqft.'])
@@ -171,89 +191,3 @@ def download_excel_view(request, project_id, project_name):
     file_ecxel = FileResponse(open(file_path, 'rb'))
     delete_file = os.remove(file_path)
     return file_ecxel
-
-
-class MongoDatabase:
-    def __init__(self):
-        self.databaseName = CONFIG.MONGO[0]
-        self.clusterName = CONFIG.MONGO[1]
-        self.connectionId = str(CONFIG.MONGO[2])
-
-    def __connect(self):
-        try:
-            self.client = MongoClient(
-                self.connectionId, tlsCAFile=certifi.where())
-            db = self.client[self.databaseName]
-            collection = db[self.clusterName]
-            return collection
-        except Exception as ex:
-            print("MongoDB: Exception occured while Connecting to the database.")
-            print(ex)
-            return False
-
-    def __disconnect(self):
-        try:
-            self.client = MongoClient(self.connectionId)
-            self.client.close()
-            return True
-        except Exception as ex:
-            print(
-            "MongoDB: Exception occured while disconnecting to the database. \nTrying...")
-            print(ex)
-            return False
-
-    def find(self, query=None, projection=None):
-        # Find Many
-        query_status = None
-        collection = self.__connect()
-        try:
-            result = collection.find(query, projection)
-            return result
-        except Exception as ex:
-            query_status = False
-            return query_status
-        finally:
-            self.__disconnect()
-            if query_status == False:
-                return query_status
-            return result
-
-
-class MigrateData(LoginRequiredMixin, TemplateView):
-    login_url = '/user/login/'
-    redirect_field_name = 'redirect_to'
-    model = Dimension
-
-    def get_context_data(self, **kwargs):
-        mongo_obj = MongoDatabase()
-
-        user_obj = User.objects.get(username="admin")
-        ct = 0
-
-        for item in mongo_obj.find():
-            projectName = item["projectName"]
-
-            project_obj = Project(
-                name=projectName,
-                author=user_obj,
-            ).save()
-
-            project_obj = Project.objects.get(name=projectName)
-            ct += 1
-            cnt = 0
-
-            for dim in range(len(item["dims"])):
-                curr_dim = item["dims"][dim]
-
-                dims_obj = Dimension(
-                    project=project_obj,
-                    name=curr_dim["name"],
-                    length=decimal.Decimal(curr_dim["length"]),
-                    width=decimal.Decimal(curr_dim["width"]),
-                    rate=decimal.Decimal(curr_dim["rate"]),
-                )
-
-                dims_obj.save()
-                cnt = +1
-
-        return super(MigrateData, self).get_context_data(**kwargs)

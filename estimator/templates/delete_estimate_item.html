@@ -1,0 +1,81 @@
+<!-- delete project items -->
+{% extends 'base.html' %}
+{% load utility %}
+
+{% block title %} - Estiamte/Delete: {{estimate.project.name|capfirst }} {% endblock %}
+{% block body %}
+<div class="container-lg container-md container-sm py-4">
+
+    <div class="mx-auto">
+        <div class="row justify-content-center">
+            <div class="col-lg-7 col-md-6 col-xl-6">
+                <div class="card">
+                    {% if not estimate.is_deleted %}
+
+                    <div class="card-header">
+                        <h5 class="card-title">
+                            Delete:
+                            {% replaceItem estimate.project.name|capfirst %} &#8594
+                            {% replaceItem estimate.room.name|capfirst %}
+                            <h5 />
+                    </div>
+                    <div class="card-body">
+
+                        <p>Are you sure you want to delete item ?<br>
+
+                        <div class="fw-bold mb-0 pb-0">{% replaceItem estimate.project.name|capfirst %} <br>
+                        </div>
+                        <div class="text-muted fw-bold fst-italic ">
+                            > {% replaceItem estimate.room.name|capfirst %} <br>
+                            > {% replaceItem estimate.room_item.name|capfirst %} <br>
+                            > {% replaceItem estimate.room_item_description.description|capfirst %}
+                        </div>
+                        </p>
+
+                        <form
+                            action="{% url 'delete_estimate_row' estimate.id estimate.project.id estimate.project.name %}"
+                            method="POST" name="update_dimention" id="update_dimention">
+                            {%csrf_token%}
+                            <button type="submit" name="dimention" id="dimention" value="dimention"
+                                class="btn btn-danger btn-sm">Detete Item</button>
+                            <a class="btn btn-primary btn-sm"
+                                href="{% url 'estimate' estimate.project.id estimate.project.name %}">Take me
+                                back</a>
+                        </form>
+                    </div>
+
+                    {% else %}
+
+                    <div class="card-body">
+                        <h6 class="card-title">
+                            This page does not exist.
+                        </h6>
+
+                        <a class="btn btn-primary btn-sm"
+                            href="{% url 'estimate' estimate.project.id estimate.project.name %}">Take me
+                            back</a>
+
+                    </div>
+
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+
+{% block expense_button %}
+<!-- Expense url for specific project -->
+
+<a aria-label="all-expenses" href="{% url 'all_expenses' %}" type="button" class="btn btn-success btn-lg">
+    <img alt="all-expenses" src="https://img.icons8.com/ios/30/ffffff/money-circulation.png" />
+</a>
+
+<a aria-label="all-expenses" href="{% url 'all_estimates' %}" type="button" class="btn btn-info btn-lg">
+    <img src="https://img.icons8.com/ios/30/000000/estimates.png" />
+</a>
+<!-- Expense url for specific project -->
+{% endblock %}

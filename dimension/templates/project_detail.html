@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 
-{% load static %} {% load humanize %}
+{% load static %} {% load humanize %} {% load utility %}
 
 {% block title %} - Dimension: {{project.name| capfirst }} {% endblock %}
 
@@ -14,19 +14,109 @@
 
 
 {% block body %}
+
+<!-- New Dimentson Modal -->
+<form action="" method="POST" name="new_dimension" id="new_dimension">
+
+    <div class="modal fade" id="newDimension" tabindex="-1" aria-labelledby="newDimentionLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    {% csrf_token %}
+                    <h5 class="modal-title" id="newDimensionLabel">
+                        New Dimension
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>
+                        {{form.name.label}}
+                        {{form.name}}
+                    </p>
+                    <p>
+                        {{form.description.label}}
+                        {{form.description}}
+                    </p>
+                    <p>
+                    <div class="row">
+                        <div class="col">
+                            {{form.length.label}}
+                            {{form.length}}
+                        </div>
+                        <div class="col">
+                            {{form.width.label}}
+                            {{form.width}}
+                        </div>
+                    </div>
+                    </p>
+                    <p>
+                    <div class="row">
+                        <div class="col">
+                            Sqm
+                            <input class="form-control" id="sqm" type="text" placeholder="Sqm"
+                                aria-label=".form-control-sm" disabled readonly>
+                        </div>
+                        <div class="col">
+                            Sqft
+                            <input class="form-control" id="sqft" type="text" placeholder="Sqft"
+                                aria-label=".form-control-sm" disabled readonly>
+                        </div>
+                    </div>
+                    </p>
+                    <p>
+                        {{form.rate.label}}
+                        {{form.rate}}
+                    </p>
+                    <p>Amount<input class="form-control" id="amount" type="number" placeholder="Amount"
+                            aria-label=".form-control-sm" readonly>
+                    </p>
+                    <p>
+                        <span class="fs-6">
+                            <em class="fst-italic">*Amount calculated using Dimensions in </em>
+                            <span class="badge bg-secondary text-wrap font-monospace">Ft. | SqFt.
+                            </span>
+                        </span>
+                    </p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" name="new_dimension" value="new_dimension" class="btn btn-primary m-1">
+                        <img src="https://img.icons8.com/ios-filled/25/000000/save--v1.png" />
+                        Add Item</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+
+
 <div class="container-lg pt-2 px-3 pb-4">
     <div class="d-flex justify-content-between align-middle">
         <div class="h2 text-light pb-2">
             <span class="align-middle">
                 <span class="align-middle">
-                    {{project.name | title}}
+                    {% replaceItem project.name|title %}
                 </span>
 
-                <span class="dropdown">
+                <span class="dropdown hide_items_print">
                     <a type="button" id="dropdownMenuButton2" data-bs-toggle="dropdown" aria-expanded="false">
                         <img src="https://img.icons8.com/ios/27/ffffff/menu-2.png" />
                     </a>
                     <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="dropdownMenuButton2">
+                        <li>
+                            <a class="dropdown-item" href="{% url 'download_excel_file' project.id project.name %}">
+                                Save Excel
+                            </a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item" onClick="window.print()">
+                                Save PDF
+                            </a>
+                        </li>
+                        <li>
+                            <hr class="dropdown-divider">
+                        </li>
                         <li>
                             <a class="dropdown-item" id="delete_button" data-bs-toggle="modal"
                                 data-bs-target="#deleteModal">
@@ -63,7 +153,7 @@
 
 
     <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
+        <div class="modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="deleteModalLabel">
@@ -95,11 +185,36 @@
     <div class="card">
         <div class="card-body">
             <div class="table-responsive">
+
+                {% if dimentions|length == 0 %}
+                <div class="card">
+                    <div class="card-body">
+                        <div class=" text-center my-3">
+                            <img alt="void" class="img-fluid m-2" style="width: 350px;"
+                                src="{% static 'img/void.svg' %}">
+                            <div class="text-center">
+                                <p class="py-1 fw-light my-3 fs-1">Nothing Here
+                                    <br>
+                                    <button type="button" class="btn btn-outline-primary m-1" data-bs-toggle="modal"
+                                        data-bs-target="#newDimension">
+                                        <span class="text-nowrap">
+                                            <img class="px-2" src="https://img.icons8.com/ios/25/000000/add--v2.png" />
+                                            Add Dimension
+                                        </span>
+                                    </button>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+
+                {% if dimentions %}
                 <table class="table table-bordered table-hover table-sm">
                     <thead class="table-primary align-middle row-cols-auto">
                         <th class="text-start mx-2 text-nowrap">Tag</th>
                         <th class="text-center mx-2 text-nowrap">Length (m)</th>
-                        <th class="text-center mx-2 text-nowrap">Width(m)</th>
+                        <th class="text-center mx-2 text-nowrap">Width (m)</th>
                         <th class="text-center mx-2 text-nowrap">Area: Sqm</th>
                         <th class="text-center mx-2 text-nowrap">Area: Sqft</th>
                         <th class="text-end mx-2 text-nowrap">Rate</th>
@@ -109,12 +224,25 @@
 
                     {% for item in dimentions %}
                     <tr class="table align-middle">
-                        <td class="mx-2 font-monospace">{{item.name | capfirst }}
+                        <td class="mx-2 font-monospace">
+                            {% replaceItem item.name|capfirst %}
                             <div class="text-muted">
                                 {% if item.description %}
                                 {{item.description}}
                                 {% endif %}
                             </div>
+                            {% comment %}
+                            <span>
+                                <small>
+                                    <a href="{% url 'update_dimention' item.id project.name %}">
+                                        Update
+                                    </a>
+                                    <a href="{% url 'delete_dimension' item.id item.project.id item.project.name %}">
+                                        Delete
+                                    </a>
+                                </small>
+                            </span>
+                            {% endcomment %}
                         </td>
                         <td class="text-center mx-2 font-monospace text-nowrap">
                             {{item.length}}
@@ -127,132 +255,20 @@
                         <td class="text-center text-end mx-2 font-monospace text-nowrap">{{item.rate|intcomma}}</td>
                         <td class="text-center text-end mx-2 font-monospace text-nowrap">{{item.amount|intcomma}}</td>
                         <td class="text-center mx-2 hide_items_print">
-
-                            <!-- HERE MODAl UPDATE -->
                             <a href="{% url 'update_dimention' item.id project.name %}">
-                                <img class="icon_ud" src="https://img.icons8.com/ios/20/fff/edit-row.png" />
+                                <img class="icon_ud" src="https://img.icons8.com/ios/15/fff/edit-row.png" />
                             </a>
-                            <!-- HERE MODAl UPDATE -->
 
-                            <!-- Delete modal -->
-                            <a class="align-bottom" data-bs-toggle="modal" data-bs-target="#delete{{item.id}}Modal">
-                                <img class="icon_ud" src="https://img.icons8.com/ios/20/000000/delete-sign--v1.png" />
-                            </a>
-                            <div class="modal fade" id="delete{{item.id}}Modal" tabindex="-1"
-                                aria-labelledby="delete{{item.id}}ModalLabel" aria-hidden="true">
-                                <div class="modal-dialog">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h5 class="modal-title" id="delete{{item.id}}ModalLabel">
-                                                Confirm
-                                                delete dimension"{{item.name | capfirst }}"</h5>
-                                            <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                                aria-label="Close"></button>
-                                        </div>
-                                        <div class="modal-body text-start">
-                                            You wish to permanently delete dimension&rarr;
-                                            <b>"{{item.name | capfirst }}"</b>?<br>
-                                            <b class="my-1">Be Careful!</b>
-                                        </div>
-                                        <div class="modal-footer">
-                                            <button type="button" class="btn btn-outline-success"
-                                                data-bs-dismiss="modal">Get
-                                                back to safety</button>
-                                            <form
-                                                action="{% url 'delete_dimention' item.id item.project.id item.project.name %}"
-                                                method="POST">
-                                                {% csrf_token %}
-
-                                                <button class="confirm_delete btn btn-danger align-bottom"
-                                                    type="submit">
-                                                    Chop Chop!
-                                                </button>
-                                            </form>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- Delete modal -->
+                            <a href="{% url 'delete_dimension' item.id item.project.id item.project.name %}">
+                                <img class="icon_ud"
+                                    src="https://img.icons8.com/ios/15/000000/delete-sign--v1.png" /></a>
                         </td>
                     </tr>
                     {% endfor %}
-                    <!-- </form> -->
-
-                    <!-- Modal -->
-                    <form action="" method="POST" name="new_dimension" id="new_dimension">
-
-                        <div class="modal fade" id="newDimension" tabindex="-1" aria-labelledby="newDimentionLabel"
-                            aria-hidden="true">
-                            <div class="modal-dialog">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        {% csrf_token %}
-                                        <h5 class="modal-title" id="newDimensionLabel">
-                                            New Dimension
-                                        </h5>
-                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                            aria-label="Close"></button>
-                                    </div>
-                                    <div class="modal-body">
-                                        <p>
-                                            {{form.name.label}}
-                                            {{form.name}}
-                                        </p>
-                                        <p>
-                                            {{form.description.label}}
-                                            {{form.description}}
-                                        </p>
-                                        <p>
-                                        <div class="row">
-                                            <div class="col">
-                                                {{form.length.label}}
-                                                {{form.length}}
-                                            </div>
-                                            <div class="col">
-                                                {{form.width.label}}
-                                                {{form.width}}
-                                            </div>
-                                        </div>
-                                        </p>
-                                        <p>
-                                        <div class="row">
-                                            <div class="col">
-                                                Sqm
-                                                <input class="form-control" id="sqm" type="text" placeholder="Sqm"
-                                                    aria-label=".form-control-sm" value="{{dimension.sqm}}" disabled
-                                                    readonly>
-                                            </div>
-                                            <div class="col">
-                                                Sqft
-                                                <input class="form-control" id="sqft" type="text" placeholder="Sqft"
-                                                    aria-label=".form-control-sm" value="{{dimension.sqft}}" disabled
-                                                    readonly>
-                                            </div>
-                                        </div>
-                                        </p>
-                                        <p>
-                                            {{form.rate.label}}
-                                            {{form.rate}}
-                                        </p>
-                                        <p>Amount<input class="form-control" id="amount" type="number"
-                                                placeholder="Amount" aria-label=".form-control-sm" readonly>
-                                        </p>
-
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn btn-secondary"
-                                            data-bs-dismiss="modal">Close</button>
-                                        <button type="submit" name="new_dimension" value="new_dimension"
-                                            class="btn btn-primary m-1">
-                                            <img src="https://img.icons8.com/ios-filled/25/000000/save--v1.png" />
-                                            Add Item</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </form>
                 </table>
+                {% endif %}
             </div>
+            {% if dimentions %}
             <div class="my-1 hide_items_print">
                 <button type="button" class="btn btn-outline-primary m-1" data-bs-toggle="modal"
                     data-bs-target="#newDimension">
@@ -261,26 +277,10 @@
                         Add Dimension
                     </span>
                 </button>
-                <!-- Download Excel file -->
-                <a class="btn btn-outline-success m-1" href="{% url 'download_excel_file' project.id project.name %}"
-                    download>
-                    <span class="text-nowrap">
-                        <img class="px-2" src="https://img.icons8.com/ios-glyphs/25/000000/ms-excel.png">
-                        Save Excel</span>
-                </a>
-                <!-- Download Excel file -->
-                <button type="button" class="btn btn-outline-danger m-1" onClick="window.print()">
-                    <span class="text-nowrap">
-                        <!-- <img class="px-2" src="https://img.icons8.com/ios/25/000000/add--v2.png" /> -->
-                        <img class="px-2" src="https://img.icons8.com/material/25/000000/pdf-2--v1.png" />
-                        Save PDF
-                    </span>
-                </button>
             </div>
+            {% endif %}
         </div>
     </div>
-
-    <!-- 5- 10 min bass -->
 
     <div class="row flex-md-row py-3 mb-3">
         <div class="col" style="height: 200px;">
@@ -326,4 +326,8 @@
     <img src="https://img.icons8.com/ios/30/000000/estimates.png" />
 </a>
 <!-- Expense url for specific project -->
+{% endblock %}
+
+{% block scripts %}
+<script src="{% static 'js/calc_areas.js' %}"></script>
 {% endblock %}
