@@ -33,7 +33,7 @@ footer {
 }
 
 ::-webkit-scrollbar-thumb {
-  width: 1em;
+  width: 5px;
   background-color: black;
   outline: 1px solid slategray;
   border-radius: 1rem;
@@ -91,7 +91,6 @@ footer {
 }
 
 .icon_ud {
-  border-radius: 10%;
   border-color: black;
   border: 1px;
 }
@@ -103,13 +102,18 @@ footer {
 }
 
 @media print {
+* {
+    text-shadow: none !important;
+    color: black !important;
+    box-shadow: none !important;
+  }
   .hide_items_print {
     display: none;
   }
 
   @page {
-    size: landscape;
-    text: black;
+    size: portrait;
+      text: black !important;
   }
 
   table,

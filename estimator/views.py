@@ -1,18 +1,16 @@
-from django.shortcuts import render
-from typing import List
-from django.shortcuts import HttpResponseRedirect
 from datetime import datetime
 from openpyxl import Workbook
 from openpyxl.styles import Font, Alignment
-import os
+from typing import List
 import decimal
-import re
 import html
-
+import os
+import re
 
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.http import FileResponse
+from django.http import FileResponse, HttpResponse
+from django.shortcuts import render, HttpResponseRedirect
 from django.urls import reverse, reverse_lazy
 from django.views.generic import (
     CreateView,
@@ -20,7 +18,7 @@ from django.views.generic import (
     UpdateView
 )
 from django.views.generic.edit import FormMixin
-from django.http import HttpResponse
+
 from estimator.models import (
     Room,
     RoomItemDescription,
@@ -92,20 +90,12 @@ class EstimateDetailView(LoginRequiredMixin, CreateView):
 
     def post(self, request, **kwargs):
         active_project = Project.objects.filter(id=kwargs['pk'])[0]
-
-        # print("000000000000000000000000000000000000")
-        # print(request.POST)
-        # print("000000000000000000000000000000000000")
-
         if request.method == 'POST':
             request.POST._mutable = True
             request.POST["project"] = active_project
             request.POST._mutable = False
-            # print(request.POST)
             try:
                 form = NewEstimateItemForm(request.POST)
-                # if not form.is_valid():
-                #     print(form.errors)
             except Exception as e:
                 print(e)
 
@@ -138,7 +128,7 @@ class UpdateEstimateItemView(LoginRequiredMixin, UpdateView):
         else:
             estimate.unit = None
 
-        if('quantity' in req):
+        if ('quantity' in req):
             estimate.quantity = req['quantity']
             estimate.length = None
             estimate.width = None
@@ -357,13 +347,13 @@ def download_estimate_excel_file(request, project_id, project_name):
         index_j = 0
         for item in estimate_room_obj:
             index_j = index_j + 1
-            if(item.unit == None):
+            if (item.unit == None):
                 unit = None
             else:
                 unit = item.unit.unit
             description = str(item.room_item.name).replace(
                 "-", " ") + " - " + str(item.room_item_description.description).replace("-", " ").title()
-            if(item.discount != 0):
+            if (item.discount != 0):
                 description = description + " - " + \
                     str("{:.2f}".format(item.discount) + "%") + "-( Rs. " + \
                     str("{:.2f}".format(item.discount_amount())) + " )"
@@ -501,7 +491,7 @@ def project_terms_and_conditions_view(request, pk: int, project_name: str):
     context = dict()
 
     project_tnc = ProjectTermsAndConditions.objects.filter(project_id=pk)
-    if(project_tnc.count() == 0):
+    if (project_tnc.count() == 0):
         return HttpResponseRedirect(reverse('select_project_terms_and_conditions', kwargs={'pk': pk, 'project_name': project_name}))
     context['project_name'] = project_name
     context['pk'] = pk
@@ -577,6 +567,6 @@ def deleteSelectedProjectTnC(request, pk, project_name):
 
     all_project_tnc_count = ProjectTermsAndConditions.objects.filter(
         project_id=pk).count()
-    if(all_project_tnc_count == 0):
+    if (all_project_tnc_count == 0):
         return HttpResponseRedirect(reverse('select_project_terms_and_conditions', kwargs={'pk': pk, 'project_name': project_name}))
     return HttpResponseRedirect(reverse('project_terms_and_conditions', args=(pk, project_name)))
