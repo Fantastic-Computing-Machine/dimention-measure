@@ -1,0 +1,127 @@
+{% extends 'base.html' %}
+{% load static %} {% load humanize %} {% load utility %}
+
+{% block title %} - Inspection {% endblock %}
+
+{% block head %}
+
+{% endblock %}
+
+{% block header %}
+
+<ul class="nav justify-content-end">
+    <li class="nav-item">
+        <a class="nav-link active text-light" aria-current="page" data-bs-toggle="modal" data-bs-target="#newInspection"
+            data-bs-whatever="@mdo">
+            New Inspection</a>
+    </li>
+</ul>
+{% endblock %}
+
+
+{% block modal %}
+<div class="modal fade" id="newInspection" tabindex="-1" aria-labelledby="newInspectionLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="newInspectionLabel">Inspection Initialization</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form action="{% url 'inspection_home' %}" method="POST">
+                    {% csrf_token %%}
+                    <div class="mb-3">
+                        <p>
+                            {{form.name.label}}
+                            {{form.name}}
+                        </p>
+                        <p>
+                            {{form.description.label}}
+                            {{form.description}}
+                        </p>
+
+                    </div>
+                    <button class="btn align-items-end btn-outline-success" type="submit">Launch</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+
+
+{% block body %}
+
+<div class="container-lg pb-4">
+    <div class="text-light py-2 display-4">Inspection</div>
+
+
+
+    <div class="list-group mt-2 mb-4">
+        {% if inspection_list%}
+        {% for item in inspection_list %}
+        <a href="{% url 'inspection_detail' item.id item.name %}" class="list-group-item list-group-item-action">
+            <div class="d-flex justify-content-between align-items-start">
+                <div class="ms-2 me-auto">
+                    <div class="fw-bold">
+                        <span>
+                            {% replaceItem item.name|capfirst %}
+                            <span class="badge bg-primary rounded-pill">{{item.created_on | naturalday}}</span>
+                        </span>
+                    </div>
+                    {{item.description}}
+                </div>
+                <span class="badge bg-light">
+                    <img class="icon_ud" width="28" height="28"
+                        src="https://img.icons8.com/ios/50/000000/delete-forever--v2.png" />
+                </span>
+            </div>
+        </a>
+        {% endfor %}
+        {% endif %}
+    </div>
+
+    {% if inspection_list%}
+    <nav aria-label="Page navigation mt-2">
+        <ul class="pagination pagination-sm justify-content-center">
+            {% if page_obj.has_previous %}
+            <li class="page-item">
+                <a class="page-link" href="?page=1" aria-label="Previous">
+                    <span aria-hidden="true">&laquo;</span>
+                </a>
+            </li>
+            <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">Prev.</a>
+            </li>
+            {% endif %}
+            <li class="page-item">
+                <span class="page-link">
+                    {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+                </span>
+            </li>
+            {% if page_obj.has_next %}
+            <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a></li>
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}" aria-label="Next">
+                    <span aria-hidden="true">&raquo;</span>
+                </a>
+            </li>
+            {% endif %}
+        </ul>
+    </nav>
+    {% endif %}
+
+
+
+    {% endblock %}
+
+    {% block expense_button %}
+
+    <a aria-label="all-expenses" href="{% url 'all_expenses' %}" type="button" class="btn btn-success btn-lg">
+        <img alt="all-expenses" src="https://img.icons8.com/ios/30/ffffff/money-circulation.png" />
+    </a>
+
+    <a aria-label="all-expenses" href="{% url 'all_estimates' %}" type="button" class="btn btn-info btn-lg">
+        <img src="https://img.icons8.com/ios/30/000000/estimates.png" />
+    </a>
+    {% endblock %}

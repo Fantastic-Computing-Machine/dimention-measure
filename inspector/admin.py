@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.db import models
 from django.forms import Textarea
 
-from .models import Inspection, Defect
+from .models import Inspection, Defect, Tag
 
 
 class InspectionAdmin(admin.ModelAdmin):
@@ -83,5 +83,14 @@ class DefectAdmin(admin.ModelAdmin):
         super().save_model(request, obj, form, change)
 
 
+class TagAdmin(admin.ModelAdmin):
+    list_display = ["name"]
+    # date_hierarchy = "created_on"
+    # ordering = ["-created_on"]
+    show_full_result_count = True
+
+
+
 admin.site.register(Inspection, InspectionAdmin)
 admin.site.register(Defect, DefectAdmin)
+admin.site.register(Tag, TagAdmin)
