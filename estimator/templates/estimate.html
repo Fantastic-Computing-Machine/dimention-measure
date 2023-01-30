@@ -2,7 +2,7 @@
 
 {% load static %} {% load humanize %} {% load unit_conversion %} {% load utility %}
 
-{% block title %} - Dimension: {% replaceItem project.name|capfirst %}{% endblock %}
+{% block title %} - Estimate: {% replaceItem project.name|capfirst %}{% endblock %}
 
 {% block header %}
 <ul class="nav justify-content-end">
@@ -147,54 +147,51 @@
 
 
 {% block body %}
-<div class="container-lg pt-2 px-3">
-    <div class="d-flex justify-content-between align-middle">
-        <div class="text-light pb-1">
-            <span class="align-middle">
-                <span class="align-middle">
-                    <div class="text-muted fw-bold">
-                        {{project.reference_number}}
-                    </div>
-                    <span class="h2">
-                        {% replaceItem project.name|title %}
+<div class="container-lg pt-2 px-3 pb-4">
+    <div class="row pt-2">
+        <div class="col-12 col-sm-8">
+            <div class="text-muted fw-bold">
+                {{project.reference_number}}
+            </div>
+            <div class="h2 text-light pb-2">
+                <span class="float-start">
+                    <span class="float-start text-wrap">{% replaceItem project.name|title %}</span>
+                    <span class="dropdown">
+                        <a type="button" id="dropdownMenuButton2" data-bs-toggle="dropdown" aria-expanded="false">
+                            <img src="https://img.icons8.com/ios/27/ffffff/menu-2.png" />
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="dropdownMenuButton2">
+                            <li>
+                                <a href="{% url 'download_estimate_excel_file' project.id project.name %}" class="dropdown-item">
+                                    Download Excel
+                                </a>
+                                </li>
+                                <li>
+                                    <hr class="dropdown-divider">
+                                </li>
+                                <li><a href="{% url 'update_estimate_project' project.id project.name %}" class="dropdown-item">
+                                        Update Project</a>
+                                </li>
+                                <li><a class="dropdown-item" id="delete_button" data-bs-toggle="modal"
+                                    data-bs-target="#deleteModal">
+                                    Delete Project</a>
+                            </li>
+                            {% if user.is_staff or user.is_admin %}
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+                            <li><a href="{% url 'select_project_terms_and_conditions' project.id project.name %}"
+                                    class="dropdown-item">
+                                    Terms and Conditions</a>
+                            </li>
+                            {% endif %}
+                        </ul>
                     </span>
                 </span>
-
-                <span class="dropdown">
-                    <a type="button" id="dropdownMenuButton2" data-bs-toggle="dropdown" aria-expanded="false">
-                        <img src="https://img.icons8.com/ios/27/ffffff/menu-2.png" />
-                    </a>
-                    <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="dropdownMenuButton2">
-                        <li>
-                            <a href="{% url 'download_estimate_excel_file' project.id project.name %}"
-                                class="dropdown-item">
-                                Download Excel
-                            </a>
-                        </li>
-                        <li>
-                            <hr class="dropdown-divider">
-                        </li>
-                        <li><a href="{% url 'update_estimate_project' project.id project.name %}" class="dropdown-item">
-                                Update Project</a>
-                        </li>
-                        <li><a class="dropdown-item" id="delete_button" data-bs-toggle="modal"
-                                data-bs-target="#deleteModal">Delete Project</a>
-                        </li>
-                        {% if user.is_staff or user.is_admin %}
-                        <li>
-                            <hr class="dropdown-divider">
-                        </li>
-                        <li><a href="{% url 'select_project_terms_and_conditions' project.id project.name %}"
-                                class="dropdown-item" id="">Terms and Conditions</a>
-                        </li>
-                        {% endif %}
-                    </ul>
-                </span>
-            </span>
+            </div>
         </div>
-
-        <div class="pt-1">
-            <span class="align-middle">
+        <div class="col-12 col-sm-4">
+            <span class="py-1 float-sm-end float-start">
                 <span class="badge bg-secondary" data-bs-toggle="tooltip" data-bs-placement="bottom"
                     title="{{project.created_on}}">
                     Created {{project.created_on | naturalday}}
@@ -204,9 +201,9 @@
     </div>
 
     {%if project.description%}
-    <div class="mb-3">
+    <div class="m-2">
         <span class="text-light">
-            {{project.description}}
+            {{project.description | capfirst}}
         </span>
     </div>
     {% endif %}
@@ -216,7 +213,6 @@
     <div class="my-2">
         <div class="card">
             <div class="card-body">
-
                 <div>
                     <p class="h4">
                         {% replaceItem project.client.name|title %}
@@ -225,7 +221,6 @@
                         </span>
                     </p>
                 </div>
-
                 <p><span class="fw-bold">Address: </span>
                     <span>{{project.client.address_1}}</span>
 
@@ -238,10 +233,6 @@
                         , {{project.client.town_city}}, {{project.client.state}}- {{project.client.zip_code}}
                     </span>
                 </p>
-
-                <div>
-                    <!-- address -->
-                </div>
             </div>
         </div>
     </div>

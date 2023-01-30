@@ -113,7 +113,17 @@ def DeleteProjectView(request, pk, project_name):
     if request.method == 'POST':
         project = Project.objects.filter(pk=pk).update(
             is_deleted=True, deleted_on=datetime.datetime.now())
-    return HttpResponseRedirect(reverse('home'))
+        return HttpResponseRedirect(reverse('home'))
+
+    template_name = "delete_project.html"
+    context = {}
+    project = Project.objects.filter(pk=pk)[0]
+    context['project'] = project
+
+    if project.is_deleted:
+        return HttpResponseRedirect(reverse('home'))
+
+    return render(request, template_name, context)
 
 
 @login_required

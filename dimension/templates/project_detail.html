@@ -90,96 +90,62 @@
 </form>
 
 
-
 <div class="container-lg pt-2 px-3 pb-4">
-    <div class="d-flex justify-content-between align-middle">
-        <div class="h2 text-light pb-2">
-            <span class="align-middle">
-                <span class="align-middle">
-                    {% replaceItem project.name|title %}
-                </span>
-
-                <span class="dropdown hide_items_print">
-                    <a type="button" id="dropdownMenuButton2" data-bs-toggle="dropdown" aria-expanded="false">
-                        <img src="https://img.icons8.com/ios/27/ffffff/menu-2.png" />
-                    </a>
-                    <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="dropdownMenuButton2">
-                        <li>
-                            <a class="dropdown-item" href="{% url 'download_excel_file' project.id project.name %}">
-                                Save Excel
-                            </a>
-                        </li>
-                        <li>
-                            <a class="dropdown-item" onClick="window.print()">
-                                Save PDF
-                            </a>
-                        </li>
-                        <li>
-                            <hr class="dropdown-divider">
-                        </li>
-                        <li>
-                            <a class="dropdown-item" id="delete_button" data-bs-toggle="modal"
-                                data-bs-target="#deleteModal">
-                                Delete project
-                            </a>
-                        </li>
-                    </ul>
-                </span>
-            </span>
+    <div class="row pt-2">
+        <div class="col-12 col-sm-8">
+            <div class="h2 text-light pb-2">
+                <span class="float-start">
+                    <span class="float-start text-wrap">{% replaceItem project.name|title %}</span>
+                    <span class="dropdown hide_items_print">
+                        <a type="button" id="dropdownMenuButton2" data-bs-toggle="dropdown" aria-expanded="false">
+                            <img src="https://img.icons8.com/ios/27/ffffff/menu-2.png" />
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="dropdownMenuButton2">
+                            <li>
+                                <a class="dropdown-item" href="{% url 'download_excel_file' project.id project.name %}">
+                                    Save Excel
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" onClick="window.print()">
+                                    Save PDF
+                                </a>
+                            </li>
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+                            <li>
+                                <a href="{% url 'delete_project' project.id project.name %}" class="dropdown-item" id="delete_button">
+                                    Delete project
+                                </a>
+                                </li>
+                                </ul>
+                                </span>
+                                </span>
+                                </div>
         </div>
-
-
-        <div class="pt-1">
-            <span class="align-middle">
+        <div class="col-12 col-sm-4">
+            <span class="pt-1 float-sm-end float-start">
                 <span class="badge bg-secondary" data-bs-toggle="tooltip" data-bs-placement="bottom"
                     title="{{project.created_on}}">
                     Created {{project.created_on | naturalday}}
                 </span>
             </span>
         </div>
-
     </div>
 
-
-    <div class="mb-3">
-
-        {%if project.description%}
-        <span class="text-light">
-            {{project.description}}
-        </span>
-        {% endif %}
-    </div>
-
-
-
-    <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
-        <div class="modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="deleteModalLabel">
-                        Confirm
-                        delete dimension "{{project.name | capfirst }}"</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body text-start">
-                    You wish to permanently delete project&rarr;
-                    <b>"{{project.name | capfirst }}"</b>?<br>
-                    <b class="my-1">Be Careful!</b>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-outline-success" data-bs-dismiss="modal">Get
-                        back to safety</button>
-                    <form action="{% url 'delete_project' project.id project.name %}" method="POST">
-                        {% csrf_token %}
-
-                        <button class="confirm_delete btn btn-danger align-bottom" type="submit">
-                            Chop Chop!
-                        </button>
-                    </form>
-                </div>
-            </div>
+    {%if project.description%}
+    <div class="row my-2">
+        <div class="col">
+            <span class="text-light">
+                {{project.description}}
+            </span>
         </div>
-    </div>
+        </div>
+    {% endif %}
+
+
+
 
     <hr class="text-light">
 
