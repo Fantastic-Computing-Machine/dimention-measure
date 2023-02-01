@@ -11,8 +11,12 @@ class ClientAdmin(admin.ModelAdmin):
         models.TextField: {'widget': Textarea(attrs={'rows': 4, 'cols': 40})},
     }
     list_display = [
-        "id", "name", "phoneNumber",
-        "town_city",  "state", "is_deleted"
+        "id",
+        "name",
+        "phoneNumber",
+        "town_city",
+        "state",
+        "is_deleted",
     ]
     search_fields = [
         "name",
@@ -27,14 +31,18 @@ class ClientAdmin(admin.ModelAdmin):
     ordering = ["-created_on"]
     show_full_result_count = True
     list_display_links = [
-        "id", "name", "phoneNumber",
-        "town_city",  "state", "is_deleted"
+        "id",
+        "name",
+        "phoneNumber",
+        "town_city",
+        "state",
+        "is_deleted",
     ]
-    readonly_fields = ['deleted_on',
-                       'organization',
-                       'created_by',
-                       ]
-
+    readonly_fields = [
+        'deleted_on',
+        'organization',
+        'created_by',
+    ]
     list_filter = [
         'created_on',
         'organization__company_name',

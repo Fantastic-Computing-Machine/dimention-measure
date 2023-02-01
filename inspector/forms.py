@@ -4,32 +4,10 @@ from django.forms import ModelForm
 
 from .models import Inspection, Defect
 
+from dimension.forms import BasicFormsFields
 
-class NewInspectionForm(ModelForm):
-    name = forms.CharField(
-        max_length=30,
-        required=True,
-        widget=forms.TextInput(
-            attrs={
-                "class": "form-control",
-                "aria-label": ".form-control-sm",
-                "type": "text",
-                "placeholder": "Name",
-            }
-        )
-    )
 
-    description = forms.CharField(
-        required=False,
-        widget=forms.Textarea(
-            attrs={
-                "class": "form-control",
-                "rows": 3,
-                "aria-label": ".form-control-sm",
-                "placeholder": "Description (optional)",
-            }
-        )
-    )
+class NewInspectionForm(BasicFormsFields):
 
     class Meta:
         model = Inspection

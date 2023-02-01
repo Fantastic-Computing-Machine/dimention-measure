@@ -18,8 +18,12 @@ class Payee(models.Model):
     name = models.CharField(max_length=255)
     description = models.TextField(blank=True, null=True)
     created_on = models.DateTimeField(auto_now_add=True)
-    phoneNumber = models.CharField(blank=True,
-                                   validators=[settings.PHONE_NUMBER_FORMAT], max_length=11)
+    phoneNumber = models.CharField(
+        blank=True,
+        validators=[settings.PHONE_NUMBER_FORMAT],
+        max_length=11,
+        verbose_name='Phone number'
+    )
 
     def __str__(self):
         return str(self.name) + " | " + str(self.phoneNumber)

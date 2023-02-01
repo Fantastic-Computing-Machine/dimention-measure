@@ -95,6 +95,7 @@ class ProjectAdmin(admin.ModelAdmin):
         "created_on",
         "name",
         "client",
+        "is_deleted",
     ]
     readonly_fields = [
         "reference_number",
@@ -102,7 +103,20 @@ class ProjectAdmin(admin.ModelAdmin):
         "created_on",
         "author",
     ]
-    inlines = [ProjectInline, ]
+    # inlines = [ProjectInline, ]
+    list_display_links = [
+        "reference_number",
+        "created_on",
+        "name",
+        "client",
+    ]
+    show_full_result_count = True
+    search_fields = [
+        "name",
+        "description",
+        "client__name",
+        "client__phoneNumber"
+    ]
 
 
 admin.site.register(ProjectTermsAndConditions)

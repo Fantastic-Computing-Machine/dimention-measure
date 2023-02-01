@@ -2,23 +2,12 @@ from ckeditor.widgets import CKEditorWidget
 from django import forms
 
 from .models import Estimate, Project, Room, RoomItem, RoomItemDescription, ProjectTermsAndConditions
+from dimension.forms import BasicFormsFields
 from client_and_company.models import Client
 from settings.models import Unit
 
 
-class NewProjectForm(forms.ModelForm):
-    name = forms.CharField(
-        max_length=200,
-        required=True,
-        widget=forms.TextInput(
-            attrs={
-                "class": "form-control",
-                "aria-label": ".form-control-sm",
-                "type": "text",
-                "placeholder": "Name",
-            }
-        )
-    )
+class NewProjectForm(BasicFormsFields):
 
     client = forms.ModelChoiceField(
         required=True,
@@ -28,18 +17,6 @@ class NewProjectForm(forms.ModelForm):
                 "class": "form-select",
                 "aria-label": ".form-control-sm",
                 "placeholder": "Client",
-            }
-        )
-    )
-
-    description = forms.CharField(
-        required=False,
-        widget=forms.Textarea(
-            attrs={
-                "class": "form-control",
-                "rows": 3,
-                "aria-label": ".form-control-sm",
-                "placeholder": "Description (optional)",
             }
         )
     )
@@ -54,20 +31,7 @@ class NewProjectForm(forms.ModelForm):
         )
 
 
-class UpdateProjectForm(forms.ModelForm):
-
-    name = forms.CharField(
-        max_length=200,
-        required=True,
-        widget=forms.TextInput(
-            attrs={
-                "class": "form-control",
-                "aria-label": ".form-control-sm",
-                "type": "text",
-                "placeholder": "Name",
-            }
-        )
-    )
+class UpdateProjectForm(BasicFormsFields):
 
     client = forms.ModelChoiceField(
         required=True,
@@ -77,18 +41,6 @@ class UpdateProjectForm(forms.ModelForm):
                 "class": "form-select",
                 "aria-label": ".form-control-sm",
                 "placeholder": "Client",
-            }
-        )
-    )
-
-    description = forms.CharField(
-        required=False,
-        widget=forms.Textarea(
-            attrs={
-                "class": "form-control",
-                "rows": 3,
-                "aria-label": ".form-control-sm",
-                "placeholder": "Description (optional)",
             }
         )
     )

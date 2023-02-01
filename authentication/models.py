@@ -65,8 +65,11 @@ class Organization(models.Model):
     company_name = models.CharField(max_length=255)
     manager_name = models.CharField(max_length=255)
     email = models.EmailField()
-    phoneNumber = models.CharField(blank=True,
-                                   validators=[settings.PHONE_NUMBER_FORMAT], max_length=11)
+    phoneNumber = models.CharField(
+        blank=True,
+        verbose_name='Phone number',
+        validators=[settings.PHONE_NUMBER_FORMAT], max_length=11
+    )
     address_1 = models.CharField(max_length=255, default="abc")
     address_2 = models.CharField(max_length=255, blank=True, null=True)
     landmark = models.CharField(max_length=255, blank=True, null=True)
@@ -104,6 +107,7 @@ class CompanyUser(AbstractBaseUser):
         null=True,
         validators=[settings.PHONE_NUMBER_FORMAT],
         max_length=11,
+        verbose_name='Phone number'
     )
     gender = models.CharField(
         max_length=2,
