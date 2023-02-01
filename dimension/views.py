@@ -38,7 +38,7 @@ class HomeView(LoginRequiredMixin, FormMixin, ListView):
     model = Project
     form_class = NewProjectForm
     context_object_name = 'projects_list'
-    template_name = 'index.html'
+    template_name = 'dimensions_home.html'
     success_url = reverse_lazy("home")
     paginate_by = 15
 

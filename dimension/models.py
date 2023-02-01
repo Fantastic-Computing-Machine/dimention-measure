@@ -10,7 +10,8 @@ User = user_model()
 
 
 class Project(models.Model):
-    name = models.CharField(max_length=255, unique=True, help_text="Name of the project")
+    name = models.CharField(max_length=30, unique=True,
+                            help_text="Name of the project")
     author = models.ForeignKey(User, on_delete=models.CASCADE, help_text="User who created the project")
     description = models.TextField(
         max_length=255, blank=True, null=True, help_text="Description of the project")
@@ -44,7 +45,7 @@ class Project(models.Model):
 class Dimension(models.Model):
     project = models.ForeignKey(
         Project, on_delete=models.CASCADE)
-    name = models.CharField(max_length=255)
+    name = models.CharField(max_length=30)
     description = models.TextField(blank=True, null=True)
     # length & width are in meters
     length = models.DecimalField(max_digits=20, decimal_places=2)

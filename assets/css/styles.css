@@ -102,18 +102,19 @@ footer {
 }
 
 @media print {
-* {
+  * {
     text-shadow: none !important;
     color: black !important;
     box-shadow: none !important;
   }
+
   .hide_items_print {
     display: none;
   }
 
   @page {
     size: portrait;
-      text: black !important;
+    text: black !important;
   }
 
   table,
@@ -134,4 +135,15 @@ footer {
 
 #id_content {
   width: auto !important;
+}
+
+.wrapword {
+  white-space: -moz-pre-wrap !important;
+  white-space: -webkit-pre-wrap;
+  white-space: -pre-wrap;
+  white-space: -o-pre-wrap;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  word-break: break-all;
+  white-space: normal;
 }

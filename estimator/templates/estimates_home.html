@@ -29,7 +29,7 @@
                         Clients
                     </a>
                 </li>
-		{% if user.is_staff or user.is_admin %}
+                {% if user.is_staff or user.is_admin %}
                 <li>
                     <hr class="dropdown-divider">
                 </li>
@@ -38,7 +38,7 @@
                         Admin
                     </a>
                 </li>
-		{% endif %}
+                {% endif %}
             </ul>
         </div>
     </li>
@@ -94,67 +94,64 @@
 
 <div class="container-lg pb-4">
     <div class="text-light py-2 display-4">Estimate</div>
-    <div class="row">
 
-        {% if projects_list|length == 0 %}
-        <div class="card">
-            <div class="card-body">
-                <div class=" text-center my-3">
-                    <img alt="void" class="img-fluid m-2" style="width: 400px;" src="{% static 'img/void.svg' %}">
-                    <div class="text-center">
-                        <p class="py-1 fw-light my-3 fs-1">Nothing Here
-                            <a class="btn btn-outline-success" data-bs-toggle="modal" data-bs-target="#newEstimate"
-                                class="nav-link active text-light" aria-current="page">
-                                <span class="align-bottom">
-                                    New Estimate
-                                </span>
-                            </a>
-                        </p>
-                    </div>
+    {% if projects_list|length == 0 %}
+    <!-- CONDITION IF THERE IS N PROJECTS -->
+    <div class="card">
+        <div class="card-body">
+            <div class=" text-center my-3">
+                <img alt="void" class="img-fluid m-2" style="width: 400px;" src="{% static 'img/void.svg' %}">
+                <div class="text-center">
+                    <p class="py-1 fw-light my-3 fs-1">Nothing Here
+                        <a class="btn btn-outline-success" data-bs-toggle="modal" data-bs-target="#newEstimate"
+                            class="nav-link active text-light" aria-current="page">
+                            <span class="align-bottom">
+                                New Estimate
+                            </span>
+                        </a>
+                    </p>
                 </div>
             </div>
         </div>
-        {% endif %}
+    </div>
+    <!-- CONDITION IF THERE IS N PROJECTS -->
+    {% endif %}
 
 
-        {% if projects_list %}
 
+    {% if projects_list %}
+    <ul class="list-group">
         {% for item in projects_list %}
-        <div class="col-lg-4 col-md-6 sm-10">
-            <a href="{% url 'estimate' item.id item.name %}" class="text-dark" aria-label="project-{{item.name}}">
-                <div class="card my-2 index_project_card">
-                    <div class="card-body">
-                        <div class="d-flex justify-content-between align-items-start">
-                            <div class="ms-2 me-auto">
-                                <div class="fw-bold text-nowrap">
-                                    <span class="text-muted small">
-                                        {{item.reference_number}}
-                                    </span>
-                                    <span class="text-wrap">
-                                    {% replaceItem item.name|capfirst %}                                    
-                                    </span>
-                                </div>
-                                <span class="badge bg-secondary mt-1" data-bs-toggle="tooltip"
-                                    data-bs-placement="bottom" title="{{item.created_on}}">
-                                    <small>
-                                        Created {{item.created_on|naturalday}}
-                                    </small>
+        <li class="list-group-item">
+            <div class="d-flex justify-content-between align-items-start">
+                <a href="{% url 'estimate' item.id item.name %}">
+                    <div class="ms-2 me-auto text-dark">
+                        <div class="">
+                            <span class="fw-bold">
+                                <span class="text-muted">
+                                    {{item.reference_number}}
                                 </span>
-                            </div>
-                            <!-- Delete modal -->
-                            <span>
-                                <a class="delete_button badge bg-light" id="delete_button{{item.id}}"
-                                    data-bs-toggle="modal" data-bs-target="#delete{{item.id}}Modal">
-                                    <img class="icon_ud" width="28" height="28"
-                                        src="https://img.icons8.com/ios/50/000000/delete-forever--v2.png" />
-                                </a>
+                                <span>
+                                    <span>{% replaceItem item.name|capfirst %}</span>
+                                    <span class="badge bg-primary">{{item.created_on|naturalday}}</span>
+                                </span>
                             </span>
-                            <!-- Delete modal -->
                         </div>
+                        <span class="wrapword">
+                            {{item.description|truncatechars:20|capfirst}}
+                        </span>
                     </div>
-                </div>
-            </a>
-        </div>
+                    <span>
+                        <a class="delete_button badge bg-light" id="delete_button{{item.id}}" data-bs-toggle="modal"
+                            data-bs-target="#delete{{item.id}}Modal">
+                            <img class="icon_ud" width="28" height="28"
+                                src="https://img.icons8.com/ios/50/000000/delete-forever--v2.png" />
+                        </a>
+                    </span>
+                </a>
+            </div>
+        </li>
+        <!-- DELETE ESTIMATE PROJECT MODAL -->
         <div class="modal fade" id="delete{{item.id}}Modal" tabindex="-1" aria-labelledby="delete{{item.id}}ModalLabel"
             aria-hidden="true">
             <div class="modal-dialog">
@@ -184,16 +181,15 @@
                 </div>
             </div>
         </div>
-
+        <!-- DELETE ESTIMATE PROJECT MODAL -->
         {% endfor %}
-
-        {% endif %}
-    </div>
-
+    </ul>
+    {% endif %}
 </div>
 
 
-{% if projects_list|length == 0 %}
+{% if projects_list%}
+<!-- PAGINATION -->
 <nav aria-label="Page navigation mt-2">
     <ul class="pagination pagination-sm justify-content-center">
         {% if page_obj.has_previous %}
@@ -220,7 +216,9 @@
         {% endif %}
     </ul>
 </nav>
+<!-- PAGINATION -->
 {% endif %}
+<!-- </div> -->
 
 
 {% endblock %}

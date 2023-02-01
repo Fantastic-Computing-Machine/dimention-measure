@@ -15,7 +15,7 @@ User = user_model()
 
 class Room(models.Model):
     name = models.CharField(
-        max_length=255, unique=True)
+        max_length=30, unique=True)
     created_on = models.DateTimeField(auto_now_add=True)
     is_deleted = models.BooleanField(default=False)
     deleted_on = models.DateTimeField(blank=True, null=True)
@@ -30,7 +30,7 @@ class Room(models.Model):
 
 class RoomItem(models.Model):
     name = models.CharField(
-        max_length=255, unique=True)
+        max_length=30, unique=True)
     created_on = models.DateTimeField(auto_now_add=True)
     is_deleted = models.BooleanField(default=False)
     deleted_on = models.DateTimeField(blank=True, null=True)
@@ -56,9 +56,8 @@ class RoomItemDescription(models.Model):
 
 class Project(models.Model):
     name = models.CharField(
-        max_length=255)
-    description = models.TextField(
-        max_length=255, blank=True, null=True)
+        max_length=20)
+    description = models.TextField(blank=True, null=True)
     author = models.ForeignKey(
         User, on_delete=models.CASCADE, related_name='creator')
     client = models.ForeignKey(
@@ -149,13 +148,13 @@ class Estimate(models.Model):
         return str(self.project.name) + ' | ' + str(self.room.name)
 
     def save(self):
-        if(self.rate == "" or self.rate == None):
+        if (self.rate == "" or self.rate == None):
             self.rate = 0.0
-        if(self.unit == "" or self.unit == None):
+        if (self.unit == "" or self.unit == None):
             self.unit = None
-        if(self.discount == "" or self.discount == None):
+        if (self.discount == "" or self.discount == None):
             self.discount = 0.0
-        if(self.width == "" or self.width == None):
+        if (self.width == "" or self.width == None):
             self.width = 0.0
 
         if self.quantity:
