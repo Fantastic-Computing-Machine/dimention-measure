@@ -40,3 +40,5 @@ function quantity_enable() {
 
     document.getElementById('forQuantity').disabled = false;
 }
+
+area_enable()

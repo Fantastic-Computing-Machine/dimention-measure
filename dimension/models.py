@@ -4,6 +4,7 @@ from django.db import models
 from django.urls import reverse
 
 import decimal
+from datetime import datetime
 
 
 User = user_model()
@@ -12,12 +13,16 @@ User = user_model()
 class Project(models.Model):
     name = models.CharField(max_length=30, unique=True,
                             help_text="Name of the project")
-    author = models.ForeignKey(User, on_delete=models.CASCADE, help_text="User who created the project")
+    author = models.ForeignKey(
+        User, on_delete=models.CASCADE, help_text="User who created the project")
     description = models.TextField(
         max_length=255, blank=True, null=True, help_text="Description of the project")
-    created_on = models.DateTimeField(auto_now_add=True, help_text="Date and time when the project was created")
-    is_deleted = models.BooleanField(default=False, help_text="Is the project deleted?")
-    deleted_on = models.DateTimeField(blank=True, null=True, help_text="Date and time when the project was deleted")
+    created_on = models.DateTimeField(
+        auto_now_add=True, help_text="Date and time when the project was created")
+    is_deleted = models.BooleanField(
+        default=False, help_text="Is the project deleted?")
+    deleted_on = models.DateTimeField(
+        blank=True, null=True, help_text="Date and time when the project was deleted")
 
     def __str__(self):
         return str(self.name)

@@ -1,8 +1,18 @@
 from django.contrib import admin
-from .models import Project, Dimension
-
 from django.db import models
 from django.forms import Textarea
+
+from .models import Project, Dimension
+
+
+@admin.action(description='Soft-delete')
+def soft_delete(modeladmin, equest, queryset):
+    queryset.update(is_deleted=True)
+
+
+@admin.action(description='Soft-undelete')
+def soft_undelete(modeladmin, equest, queryset):
+    queryset.update(is_deleted=False)
 
 
 class ProjectAdmin(admin.ModelAdmin):
@@ -10,14 +20,13 @@ class ProjectAdmin(admin.ModelAdmin):
         models.TextField: {'widget': Textarea(attrs={'rows': 4, 'cols': 40})},
     }
     list_display = [
-        "id",
         "name",
         "author",
         "total_amount",
         "total_sqm",
-        "total_sqft",
         "description",
         "created_on",
+        "is_deleted"
     ]
     search_fields = [
         "author__username",
@@ -36,10 +45,15 @@ class ProjectAdmin(admin.ModelAdmin):
         "created_on",
         "name",
         "total_sqm",
-        "total_sqft",
         "total_amount",
     ]
     readonly_fields = ["deleted_on", "author"]
+    actions = [soft_delete, soft_undelete]
+    list_filter = [
+        "created_on",
+        "is_deleted",
+        "deleted_on",
+    ]
 
     def save_model(self, request, obj, form, change):
         obj.author = request.user
@@ -51,8 +65,13 @@ class DimensionAdmin(admin.ModelAdmin):
     formfield_overrides = {
         models.TextField: {'widget': Textarea(attrs={'rows': 4, 'cols': 40})},
     }
-    list_display = ["name", "project",
-                    "length", "width", "sqm", "sqft", "rate", "amount", "created_on"]
+    actions = [soft_delete, soft_undelete]
+    list_display = [
+        "name",
+        "project",
+        "created_on",
+        "is_deleted"
+    ]
     search_fields = [
         "name",
         "project",
@@ -65,11 +84,24 @@ class DimensionAdmin(admin.ModelAdmin):
     date_hierarchy = "created_on"
     ordering = ["-project", "-is_deleted", "-created_on"]
     show_full_result_count = True
-    list_display_links = ["name", "project",
-                          "length", "width", "sqm", "sqft", "rate", "amount", "created_on"]
-
-    fields = ["name", "project", "description",
-              "length", "width", "sqm", "sqft", "rate", "amount", "created_on"]
+    list_display_links = [
+        "name",
+        "project",
+        "created_on",
+        "is_deleted"
+    ]
+    fields = [
+        "name",
+        "project",
+        "description",
+        "length",
+        "width",
+        "sqm",
+        "sqft",
+        "rate",
+        "amount",
+        "created_on"
+    ]
     readonly_fields = ["sqm", "sqft", "amount", "deleted_on", "created_on"]
     list_filter = [
         "created_on",

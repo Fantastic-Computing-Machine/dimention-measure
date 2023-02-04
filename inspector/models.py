@@ -1,9 +1,11 @@
 from ckeditor.fields import RichTextField
+
 from django.contrib.auth import get_user_model as user_model
 from django.contrib.auth.models import User
 from django.db import models
 from django.urls import reverse
-import datetime
+
+from datetime import datetime
 
 
 User = user_model()
@@ -59,7 +61,7 @@ class Inspection(models.Model):
     def save(self):
         self.name = self.name.strip().replace(" ", "-")
         if self.is_deleted:
-            self.deleted_on = datetime.datetime.now()
+            self.deleted_on = datetime.now()
         if not self.is_deleted:
             self.deleted_on = None
         return super(Inspection, self).save()
@@ -75,7 +77,7 @@ class Defect(models.Model):
     # body = models.TextField(max_length=255, blank=False,
     #                         null=False, help_text="Description of the defect")
     body = RichTextField(blank=True,
-                            null=True, help_text="Description of the defect")
+                         null=True, help_text="Description of the defect")
     status = models.CharField(max_length=1,
                               choices=DEFECT_STATUS,
                               default="P",)
@@ -102,7 +104,9 @@ class Defect(models.Model):
     def save(self):
         self.title = self.title.strip().replace(" ", "-")
         if self.is_deleted:
-            self.deleted_on = datetime.datetime.now()
+            self.deleted_on = datetime.now()
+        if not self.is_deleted:
+            self.deleted_on = None
         return super(Defect, self).save()
 
     def get_absolute_url(self):

@@ -1,11 +1,19 @@
 from django.contrib import admin
 
 from .models import Room, RoomItem, RoomItemDescription, Estimate, Project, ProjectTermsAndConditions
+from dimension.admin import soft_delete, soft_undelete
 
 
 @admin.register(Room)
 class RoomAdmin(admin.ModelAdmin):
-    list_display = ["id", "name", "created_on",  "is_deleted"]
+    list_display = [
+        "id",
+        "name",
+        "created_on",
+        "is_deleted"
+    ]
+    actions = [soft_delete, soft_undelete]
+    readonly_fields = ["deleted_on"]
     search_fields = [
         "name"
     ]
@@ -13,42 +21,73 @@ class RoomAdmin(admin.ModelAdmin):
     date_hierarchy = "created_on"
     ordering = ["-created_on"]
     show_full_result_count = True
-    list_display_links = ["id", "name",
-                          "created_on", "is_deleted"]
+    list_display_links = [
+        "id",
+        "name",
+        "created_on",
+        "is_deleted"
+    ]
 
 
 @admin.register(RoomItem)
 class RoomItemAdmin(admin.ModelAdmin):
-    list_display = ["id", "name", "created_on",  "is_deleted"]
+    list_display = [
+        "id",
+        "name",
+        "created_on",
+        "is_deleted"
+    ]
     search_fields = ["name"]
     search_help_text = "Search by Fields: Name"
     date_hierarchy = "created_on"
     ordering = ["-created_on"]
     show_full_result_count = True
-    list_display_links = ["id", "name",
-                          "created_on", "is_deleted"]
+    actions = [soft_delete, soft_undelete]
+    readonly_fields = ["deleted_on"]
+    list_display_links = [
+        "id",
+        "name",
+        "created_on",
+        "is_deleted"
+    ]
 
 
 @admin.register(RoomItemDescription)
 class RoomItemDescriptionAdmin(admin.ModelAdmin):
-    list_display = ["id", "description", "created_on",  "is_deleted"]
+    list_display = [
+        "id",
+        "description",
+        "created_on",
+        "is_deleted"
+    ]
     search_fields = [
         "description"
     ]
     search_help_text = "Search by Fields: Description"
     date_hierarchy = "created_on"
     ordering = ["-created_on"]
+    readonly_fields = ["deleted_on"]
     show_full_result_count = True
-    list_display_links = ["id", "description",
-                          "created_on", "is_deleted"]
+    actions = [soft_delete, soft_undelete]
+    list_display_links = [
+        "id",
+        "description",
+        "created_on",
+        "is_deleted"
+    ]
 
 
 @admin.register(Estimate)
 class EstimateAdmin(admin.ModelAdmin):
-    list_display = ["id",
-                    "project", "room", "room_item",
-                    "room_item_description", "quantity", "amount"
-                    ]
+    list_display = [
+        "id",
+        "project",
+        "room",
+        "room_item",
+        "room_item_description",
+        "quantity",
+        "amount"
+    ]
     search_fields = [
         "project__name",
         "room__name",
@@ -56,14 +95,20 @@ class EstimateAdmin(admin.ModelAdmin):
         "room_item__name",
         "room_item_description__rate",
     ]
-
+    actions = [soft_delete, soft_undelete]
     date_hierarchy = "created_on"
     ordering = ["-created_on"]
     show_full_result_count = True
-    list_display_links = ["id",
-                          "project", "room", "room_item",
-                          "room_item_description", "quantity", "amount"
-                          ]
+    readonly_fields = ["deleted_on"]
+    list_display_links = [
+        "id",
+        "project",
+        "room",
+        "room_item",
+        "room_item_description",
+        "quantity",
+        "amount"
+    ]
 
 
 class ProjectInline(admin.TabularInline):
@@ -111,6 +156,7 @@ class ProjectAdmin(admin.ModelAdmin):
         "client",
     ]
     show_full_result_count = True
+    actions = [soft_delete, soft_undelete]
     search_fields = [
         "name",
         "description",
