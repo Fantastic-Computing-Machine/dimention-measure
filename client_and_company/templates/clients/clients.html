@@ -6,32 +6,17 @@
 
 {% block header %}
 <ul class="nav justify-content-end">
-
     <li class="nav-item">
         <a data-bs-toggle="modal" data-bs-target="#newClient" class="nav-link active text-light" aria-current="page">
             New Client
         </a>
     </li>
-
     <li class="nav-item">
-        <div class="dropdown">
-            <a class="nav-link active text-light dropdown-toggle" id="dropdownMenuButton2" data-bs-toggle="dropdown"
-                aria-expanded="false">
-                More
-            </a>
-            <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="dropdownMenuButton2">
-                <li>
-                    <a href="{% url 'folio' %}" class="dropdown-item" aria-current="page">Folio</a>
-                </li>
-                <li>
-                    <a href="{% url 'all_estimates' %}" class="dropdown-item" aria-current="page">
-                        Estimates
-                    </a>
-                </li>
-            </ul>
-        </div>
+        <a class="nav-link active text-light" data-bs-toggle="offcanvas" href="#offcanvasMoreOptions"
+            aria-controls="offcanvasMoreOptions">
+            More
+        </a>
     </li>
-
 </ul>
 {% endblock %}
 
@@ -99,6 +84,28 @@
     </div>
 </div>
 <!-- new client modal -->
+
+
+<div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasMoreOptions"
+    aria-labelledby="offcanvasMoreOptionsLabel">
+    <div class="offcanvas-header">
+        <h5 class="offcanvas-title" id="offcanvasMoreOptionsLabel">More Options</h5>
+        <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body">
+        <div class="list-group">
+            <a href="{% url 'folio' %}" class="list-group-item list-group-item-action">Folio</a>
+            <a href="{% url 'clients' %}" class="list-group-item list-group-item-action">Clients</a>
+
+            {% if user.is_staff or user.is_admin %}
+            <a href="{% url 'organization' %}" class="list-group-item list-group-item-action">Admin</a>
+            {% endif %}
+        </div>
+
+    </div>
+</div>
+
+
 {% endblock %}
 
 

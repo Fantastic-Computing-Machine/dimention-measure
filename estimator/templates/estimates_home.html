@@ -7,44 +7,19 @@
 {% block header %}
 
 <ul class="nav justify-content-end">
-
     <li class="nav-item">
+        <!-- new estimate modal trigger -->
         <a data-bs-toggle="modal" data-bs-target="#newEstimate" class="nav-link active text-light" aria-current="page">
             New Estimate
         </a>
     </li>
-
     <li class="nav-item">
-        <div class="dropdown">
-            <a class="nav-link active text-light dropdown-toggle" id="dropdownMenuButton2" data-bs-toggle="dropdown"
-                aria-expanded="false">
-                More
-            </a>
-            <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="dropdownMenuButton2">
-                <li>
-                    <a href="{% url 'folio' %}" class="dropdown-item" aria-current="page">Folio</a>
-                </li>
-                <li>
-                    <a href="{% url 'clients' %}" class="dropdown-item" aria-current="page">
-                        Clients
-                    </a>
-                </li>
-                {% if user.is_staff or user.is_admin %}
-                <li>
-                    <hr class="dropdown-divider">
-                </li>
-                <li>
-                    <a href="{% url 'organization' %}" class="dropdown-item" aria-current="page">
-                        Admin
-                    </a>
-                </li>
-                {% endif %}
-            </ul>
-        </div>
+        <a class="nav-link active text-light" data-bs-toggle="offcanvas" href="#offcanvasMoreOptions"
+            aria-controls="offcanvasMoreOptions">
+            More
+        </a>
     </li>
-
 </ul>
-<!-- new estimate modal trigger -->
 
 {% endblock %}
 
@@ -85,6 +60,26 @@
     </div>
 </div>
 <!-- new estimate modal -->
+
+
+<div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasMoreOptions"
+    aria-labelledby="offcanvasMoreOptionsLabel">
+    <div class="offcanvas-header">
+        <h5 class="offcanvas-title" id="offcanvasMoreOptionsLabel">More Options</h5>
+        <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body">
+        <div class="list-group">
+            <a href="{% url 'folio' %}" class="list-group-item list-group-item-action">Folio</a>
+            <a href="{% url 'clients' %}" class="list-group-item list-group-item-action">Clients</a>
+
+            {% if user.is_staff or user.is_admin %}
+            <a href="{% url 'organization' %}" class="list-group-item list-group-item-action">Admin</a>
+            {% endif %}
+        </div>
+
+    </div>
+</div>
 {% endblock %}
 
 
