@@ -306,9 +306,9 @@
                             <th class="text-center mx-2 text-nowrap hide_items_print">Length</th>
                             <th class="text-center mx-2 text-nowrap hide_items_print">Width</th>
                             <th class="text-center mx-2 text-nowrap">Quantity</th>
+                            <th class="text-center mx-2 text-nowrap">Area</th>
                             <th class="text-center mx-2 text-nowrap">Unit</th>
-                            <th class="text-center mx-2 text-nowrap">Rate</th>
-                            <th class="text-center mx-2 text-nowrap">Amount</th>
+                            <th class="text-center mx-2 text-nowrap">Amount@Rate</th>
                             <th class="text-center mx-2 text-nowrap">Total</th>
                             <th class="text-center mx-2 text-nowrap hide_items_print">Action</th>
                         </thead>
@@ -350,7 +350,16 @@
                                 {% endif %}
                             </td>
                             <td class="text-end font-monospace col-1">
-                                {% if item.sqm %}
+                                <!-- Quantity -->
+                                {% if item.quantity %}
+                                <div class="text-nowrap">{{item.quantity|intcomma}}</div>
+                                {%else%}
+                                -
+                                {% endif %}
+                            </td>
+                            <td class="text-end font-monospace text-nowrap col-1">
+                                <!-- Area -->
+                                {% if item.length %}
                                 {% if item.width %}
                                 <div class="text-nowrap">{{item.sqm|intcomma}} sqm</div>
                                 <div class="text-nowrap">({{item.sqft|intcomma}} sqft)</div>
@@ -359,7 +368,7 @@
                                 <div class="text-nowrap">({{item.sqft|intcomma}} ft)</div>
                                 {% endif %}
                                 {%else%}
-                                <div class="text-nowrap">{{item.quantity|intcomma}}</div>
+                                -
                                 {% endif %}
                             </td>
                             <td class="text-center font-monospace col-1">
@@ -371,10 +380,8 @@
                             </td>
 
                             <td class="text-end font-monospace text-nowrap col-1">
-                                &#8377 {{item.rate|intcomma}}
-                            </td>
-                            <td class="text-end font-monospace text-nowrap col-1">
                                 &#8377 {{item.calculate_amount | floatformat:2|intcomma}}
+                                <div style="color:red;">@ &#8377 {{item.rate|intcomma}}</div>
                             </td>
                             <td class="text-end font-monospace col-1">
                                 <div class="text-nowrap">&#8377 {{item.total_after_discount | floatformat:2|intcomma}}

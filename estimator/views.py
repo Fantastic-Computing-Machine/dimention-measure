@@ -134,7 +134,11 @@ class UpdateEstimateItemView(LoginRequiredMixin, UpdateView):
             estimate.width = None
         else:
             estimate.length = decimal.Decimal(req['length'])
-            estimate.width = decimal.Decimal(req['width'])
+            if req['width']:
+                estimate.width = decimal.Decimal(req['width'])
+            else:
+                estimate.width = decimal.Decimal(0)
+
             estimate.quantity = None
         if 'rate' in req:
             if req['rate'] == None:
