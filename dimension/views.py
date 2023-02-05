@@ -17,7 +17,7 @@ from django.views.generic import (
 )
 from django.urls import reverse_lazy, reverse
 import os
-import datetime
+from datetime import datetime
 from openpyxl import Workbook
 import re
 
@@ -111,8 +111,9 @@ class UpdateDimensionView(LoginRequiredMixin, UpdateView):
 @login_required
 def DeleteProjectView(request, pk, project_name):
     if request.method == 'POST':
-        project = Project.objects.filter(pk=pk).update(
-            is_deleted=True, deleted_on=datetime.datetime.now())
+        project = Project.objects.get(pk=pk)
+        project.is_deleted = True
+        project.save()
         return HttpResponseRedirect(reverse('home'))
 
     template_name = "delete_project.html"
@@ -130,14 +131,15 @@ def DeleteProjectView(request, pk, project_name):
 def DeleteDimensionView(request, pk, project_id, project_name):
     template_name = "delete_item.html"
     context = {}
-    dimension = Dimension.objects.filter(pk=pk)
-    context['dimension'] = dimension[0]
+    dimension = Dimension.objects.get(pk=pk)
+    context['dimension'] = dimension
 
-    if dimension[0].is_deleted:
+    if dimension.is_deleted:
         return HttpResponseRedirect(reverse('project_detail', args=(project_id, project_name,)))
 
     if request.method == 'POST':
-        dimension.update(is_deleted=True, deleted_on=datetime.datetime.now())
+        dimension.is_deleted=True
+        dimension.save()
         return HttpResponseRedirect(reverse('project_detail', args=(project_id, project_name,)))
 
     return render(request, template_name, context)
@@ -145,7 +147,7 @@ def DeleteDimensionView(request, pk, project_id, project_name):
 
 @login_required
 def download_excel_view(request, project_id, project_name):
-    date_time_obj = datetime.datetime.now()
+    date_time_obj = datetime.now()
     current_date = date_time_obj.strftime('%x')
     current_time = date_time_obj.strftime('%X')
 

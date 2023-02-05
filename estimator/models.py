@@ -25,6 +25,10 @@ class Room(models.Model):
 
     def save(self):
         self.name = self.name.replace(" ", "-").strip()
+        if self.is_deleted:
+            self.deleted_on = datetime.now()
+        if not self.is_deleted:
+            self.deleted_on = None
         return super(Room, self).save()
 
 
@@ -40,6 +44,10 @@ class RoomItem(models.Model):
 
     def save(self):
         self.name = self.name.replace(" ", "-").strip()
+        if self.is_deleted:
+            self.deleted_on = datetime.now()
+        if not self.is_deleted:
+            self.deleted_on = None
         return super(RoomItem, self).save()
 
 
@@ -52,6 +60,13 @@ class RoomItemDescription(models.Model):
 
     def __str__(self):
         return str(self.description)
+
+    def save():
+        if self.is_deleted:
+            self.deleted_on = datetime.now()
+        if not self.is_deleted:
+            self.deleted_on = None
+        return super(RoomItemDescription,self).save() 
 
 
 class Project(models.Model):
@@ -74,6 +89,10 @@ class Project(models.Model):
 
     def save(self, **kwargs):
         self.name = self.name.replace(" ", "-").strip()
+        if self.is_deleted:
+            self.deleted_on = datetime.now()
+        if not self.is_deleted:
+            self.deleted_on = None
         key = not self.id
         super(Project, self).save(**kwargs)
         if key:
@@ -156,7 +175,10 @@ class Estimate(models.Model):
             self.discount = 0.0
         if (self.width == "" or self.width == None):
             self.width = 0.0
-
+        if self.is_deleted:
+            self.deleted_on = datetime.now()
+        if not self.is_deleted:
+            self.deleted_on = None
         if self.quantity:
             self.length = None
             self.width = None
@@ -185,7 +207,6 @@ class Estimate(models.Model):
                     self.sqft) * Decimal(self.rate)
 
             self.quantity = None
-
             return super(Estimate, self).save()
 
     def calculate_amount(self):

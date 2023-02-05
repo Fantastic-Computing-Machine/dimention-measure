@@ -33,6 +33,10 @@ class Payee(models.Model):
 
     def save(self):
         self.name = self.name.replace(" ", "-")
+        if self.is_deleted:
+            self.deleted_on = datetime.now()
+        if not self.is_deleted:
+            self.deleted_on = None
         return super(Payee, self).save()
 
     def total_paid(self):

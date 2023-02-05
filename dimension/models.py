@@ -28,7 +28,15 @@ class Project(models.Model):
         return str(self.name)
 
     def save(self):
+        print("in save method")
         self.name = self.name.strip().replace(" ", "-")
+        print(self.is_deleted)
+        if self.is_deleted:
+            self.deleted_on = datetime.now()
+            print("deleted")
+        if not self.is_deleted:
+            self.deleted_on = None
+            print("undeleted")
         return super(Project, self).save()
 
     def total_amount(self):
@@ -73,7 +81,10 @@ class Dimension(models.Model):
 
     def save(self):
         self.name = self.name.strip().replace(" ", "-")
-
+        if self.is_deleted:
+            self.deleted_on = datetime.now()
+        if not self.is_deleted:
+            self.deleted_on = None
         if not self.width or self.width == '0' or self.width == '':
             self.width = 0
 

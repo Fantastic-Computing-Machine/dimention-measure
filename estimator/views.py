@@ -201,8 +201,9 @@ class UpdateRoomItemDescriptionView(LoginRequiredMixin, UpdateView):
 @login_required
 def DeleteEstimate(request, pk, project_name):
     if request.method == 'POST':
-        estimate = Project.objects.filter(pk=pk).update(
-            is_deleted=True, deleted_on=datetime.now())
+        estimate = Project.objects.get(pk=pk)
+        estimate.is_deleted = True
+        estimate.save()
         return HttpResponseRedirect(reverse('all_estimates'))
 
 
@@ -211,9 +212,9 @@ def DeleteRoom(request):
     if request.method == 'POST':
         list_to_delete = request.POST.getlist('roomCheckbox')
         for item in list_to_delete:
-            room = Room.objects.filter(pk=int(item)).update(
-                is_deleted=True, deleted_on=datetime.now())
-
+            room = Room.objects.get(pk=int(item))
+            room.is_deleted = True
+            room.save()
         return HttpResponseRedirect(reverse('folio'))
 
 
@@ -222,9 +223,9 @@ def DeleteRoomComponent(request):
     if request.method == 'POST':
         list_to_delete = request.POST.getlist('roomElementCheckbox')
         for item in list_to_delete:
-            room_item = RoomItem.objects.filter(pk=int(item)).update(
-                is_deleted=True, deleted_on=datetime.now())
-
+            room_item = RoomItem.objects.get(pk=int(item))
+            room_item.is_deleted = True
+            room_item.save()
         return HttpResponseRedirect(reverse('folio'))
 
 
@@ -233,8 +234,10 @@ def DeleteComponentDescription(request):
     if request.method == 'POST':
         list_to_delete = request.POST.getlist('elementDescriptionCheckbox')
         for item in list_to_delete:
-            room_item_description = RoomItemDescription.objects.filter(
-                pk=int(item)).update(is_deleted=True, deleted_on=datetime.now())
+            room_item_description = RoomItemDescription.objects.get(
+                pk=int(item))
+            room_item_description.is_deleted = True
+            room_item_description.save()
         return HttpResponseRedirect(reverse('folio'))
 
 
@@ -440,14 +443,15 @@ def updateDiscount(request, pk, project_name):
 def delete_estimator_item_view(request, pk, project_id, project_name):
     template_name = "delete_estimate_item.html"
     context = {}
-    estimate = Estimate.objects.filter(pk=pk)
-    context['estimate'] = estimate[0]
+    estimate = Estimate.objects.get(pk=pk)
+    context['estimate'] = estimate
 
-    if estimate[0].is_deleted:
+    if estimate.is_deleted:
         return HttpResponseRedirect(reverse('estimate', args=(project_id, project_name,)))
 
     if request.method == 'POST':
-        estimate.update(is_deleted=True, deleted_on=datetime.now())
+        estimate.is_deleted=True
+        estimate.save()
         return HttpResponseRedirect(reverse('estimate', args=(project_id, project_name,)))
 
     return render(request, template_name, context)

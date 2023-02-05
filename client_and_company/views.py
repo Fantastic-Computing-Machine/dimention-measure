@@ -51,6 +51,7 @@ class UpdateClientView(LoginRequiredMixin, UpdateView):
 @login_required
 def DeleteClient(request, pk):
     if request.method == 'POST':
-        client = Client.objects.filter(pk=pk).update(
-            is_deleted=True, deleted_on=datetime.now())
+        client = Client.objects.get(pk=pk)
+        client.is_deleted = True
+        client.save()
         return HttpResponseRedirect(reverse('clients'))

@@ -49,6 +49,10 @@ class Client(models.Model):
         if self.landmark:
             self.landmark = self.landmark.strip()
         self.town_city = self.town_city.strip()
+        if self.is_deleted:
+            self.deleted_on = datetime.now()
+        if not self.is_deleted:
+            self.deleted_on = None
         return super(Client, self).save()
 
     def address(self):

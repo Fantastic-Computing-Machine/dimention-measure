@@ -175,10 +175,10 @@ class UpdateExpenseView(LoginRequiredMixin, UpdateView):
         return super(UpdateExpenseView, self).get_context_data(**kwargs)
 
     def post(self, request, **kwargs):
-        expense = Expense.objects.filter(id=self.kwargs['pk']).update(
-            amount=request.POST['amount'],
-            payment_status=request.POST['payment_status']
-        )
+        expense = Expense.objects.get(id=self.kwargs['pk'])
+        expense.amount = request.POST['amount']
+        expense.payment_status = request.POST['payment_status']
+        expense.save()
         return HttpResponseRedirect(reverse('project_expense', kwargs={
             'project_id': self.kwargs['project_id'], 'project_name': self.kwargs['project_name']}))
 
@@ -186,14 +186,15 @@ class UpdateExpenseView(LoginRequiredMixin, UpdateView):
 @login_required
 def DeletePayeeView(request, payee_id, project_id, project_name):
     if request.method == 'POST':
-        expense = Expense.objects.filter(project__id=project_id, payee__id=payee_id).update(
-            is_deleted=True, deleted_on=datetime.datetime.now())
+        expense = Expense.objects.get(project__id=project_id, payee__id=payee_id)
+        expense.is_deleted = True
+        expense.save()
         return HttpResponseRedirect(reverse('project_expense', kwargs={'project_id': project_id, 'project_name': project_name, }))
-
 
 @login_required
 def DeleteExpenseView(request, expense_id, project_id, project_name):
     if request.method == 'POST':
-        expense = Expense.objects.filter(project__id=project_id, id=expense_id).update(
-            is_deleted=True, deleted_on=datetime.datetime.now())
+        expense = Expense.objects.get(project__id=project_id, id=expense_id)
+        expense.is_deleted=True
+        expense.save()
         return HttpResponseRedirect(reverse('project_expense', kwargs={'project_id': project_id, 'project_name': project_name, }))
