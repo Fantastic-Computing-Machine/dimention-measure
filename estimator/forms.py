@@ -118,7 +118,7 @@ class NewEstimateItemForm(forms.ModelForm):
     )
 
     discount = forms.CharField(
-        max_length=200,
+        max_length=3,
         required=False,
         widget=forms.TextInput(
             attrs={

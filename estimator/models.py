@@ -6,12 +6,11 @@ from datetime import datetime
 from django.contrib.auth import get_user_model as user_model
 from django.urls import reverse
 from django.db import models
-
+from django.core.validators import MaxValueValidator, MinValueValidator
 from client_and_company.models import Client
 from settings.models import OrganizationTNC, Unit
 
 User = user_model()
-
 
 class Room(models.Model):
     name = models.CharField(
@@ -81,7 +80,7 @@ class Project(models.Model):
     is_deleted = models.BooleanField(default=False)
     deleted_on = models.DateTimeField(blank=True, null=True)
     discount = models.DecimalField(
-        max_digits=20, decimal_places=2, default=0)
+        max_digits=20, decimal_places=2, default=0,validators=[MinValueValidator(0), MaxValueValidator(100)])
     reference_number = models.CharField(max_length=225, blank=True, null=True)
 
     def __str__(self):
@@ -153,7 +152,7 @@ class Estimate(models.Model):
     amount = models.DecimalField(
         max_digits=20, decimal_places=2, blank=True, null=True)
     discount = models.DecimalField(
-        max_digits=20, decimal_places=2, default=0)
+        max_digits=20, decimal_places=2, default=0,validators=[MinValueValidator(0), MaxValueValidator(100)])
     rate = models.DecimalField(
         max_digits=20, default=0, decimal_places=2)
     unit = models.ForeignKey(
