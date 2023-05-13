@@ -1,5 +1,73 @@
 console.log("main.js loaded");
 
+$(document).ready(function() {
+    document.getElementById("dimentionCheck").checked = true;
+    
+    $("#estimateCheck").click(function() {
+        document.getElementById("dimentionCheck").checked = false;
+        document.getElementById("estimateCheck").checked = true;
+    });
+
+    $("#dimentionCheck").click(function() {
+        document.getElementById("estimateCheck").checked = false;
+        document.getElementById("dimentionCheck").checked = true;
+    });
+
+    $(document).on('click', '.result-item', function() {
+        var projectUrl = $(this).data('url');
+        var absoluteUrl = window.location.origin + projectUrl; // Append at the domain level
+
+        window.location.href = absoluteUrl;
+    });
+
+    $('#searchForm').submit(function(e) {
+      e.preventDefault();
+      var formData = $(this).serialize();
+
+    //   check if the formData contains the dimentionCheck the add type=dimentions
+      if (document.getElementById("dimentionCheck").checked == true) {
+        formData = formData + "&type=dimension";
+      }
+      else if (document.getElementById("estimateCheck").checked == true) {
+        formData = formData + "&type=estimate";
+      }
+
+      // Send the AJAX request
+      
+    $.ajax({
+        type: 'POST',
+        url: '/search',
+        data: formData,
+        success: function(response) {
+          if (response.success) {
+            if(response.results.length == 0){
+                $('#searchResults').html('No results found.');
+            }
+            else{
+            var resultsHtml = '<div class = "fw-light">Results Found : '+response.results.length +'</div>';
+            for (var i = 0; i < response.results.length; i++) {
+              var result = response.results[i];
+              var resultHtml = '<div class= "result-item card fw-bold mt-1 bg-info text-whitecard bg-light text-dark p-1" data-url="' + result.url + '"><span m-1>' +
+                result.title
+                + '<span class="badge bg-primary rounded-pill float-end">'+result.created_on+'</span></span>' +
+                '</div>';
+              resultsHtml += resultHtml;
+            }
+            $('#searchResults').html(resultsHtml);
+            }
+
+            // Display the search results on the page
+          } else {
+            // Display a message if no results found
+            $('#searchResults').html('<p>No results found.</p>');
+          }
+        },
+        error: function() {
+          console.log('Error occurred');
+        }
+      });
+    });
+  });
 
 function mtr_ft() {
     // Unit conversion meter to feet
@@ -82,6 +150,7 @@ function enableNewitemPage() {
     document.getElementById('id_room').disabled = false;
     document.getElementById('id_room_item').disabled = false;
     document.getElementById('id_room_item_description').disabled = false;
+    document.getElementById('form_submit_button').disabled = false;
 }
 
 $(document).ready(function () {

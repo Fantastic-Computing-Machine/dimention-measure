@@ -96,16 +96,21 @@
                                 {{form.discount.label}}
                                 {{form.discount}}
                             </p>
+                        </div>
+                        <div class="card-footer text-end">
+                                <button type="button" onClick=enableNewitemPage() class="btn btn-primary"
+                                    id="edit_update_estimate">
+                                    Edit
+                                </button>
 
+                                <button id = "form_submit_button" type="submit" class="btn btn-success">
+                                    Save changes
+                                </button>
+                                <form id = "back_button">
+                                    <input type="button" class="btn btn-success" value="Back" onclick="history.back()">
+                                </form>
 
-                            <button type="button" onClick=enableNewitemPage() class="btn btn-primary"
-                                id="edit_update_estimate">
-                                Edit
-                            </button>
-
-                            <button type="submit" class="btn btn-success">
-                                Save changes
-                            </button>
+                            
                         </form>
                     </div>
                 </div>
@@ -127,7 +132,8 @@
         document.getElementById('id_room').disabled = true;
         document.getElementById('id_room_item').disabled = true;
         document.getElementById('id_room_item_description').disabled = true;
-
+        document.getElementById('form_submit_button').disabled = true;
+        
 
     }
     disableNewitemPage();
