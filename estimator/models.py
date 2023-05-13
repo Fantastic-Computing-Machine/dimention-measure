@@ -1,16 +1,19 @@
-from django.utils.translation import gettext as _
 from ckeditor.fields import RichTextField
-from decimal import Decimal
 from datetime import datetime
+from decimal import Decimal
 
 from django.contrib.auth import get_user_model as user_model
-from django.urls import reverse
-from django.db import models
 from django.core.validators import MaxValueValidator, MinValueValidator
+from django.db import models
+from django.urls import reverse
+
 from client_and_company.models import Client
+from django.utils.translation import gettext as _
+from core.utils import formatFloat
 from settings.models import OrganizationTNC, Unit
 
 User = user_model()
+
 
 class Room(models.Model):
     name = models.CharField(
@@ -65,7 +68,7 @@ class RoomItemDescription(models.Model):
             self.deleted_on = datetime.now()
         if not self.is_deleted:
             self.deleted_on = None
-        return super(RoomItemDescription,self).save() 
+        return super(RoomItemDescription, self).save()
 
 
 class Project(models.Model):
@@ -80,7 +83,7 @@ class Project(models.Model):
     is_deleted = models.BooleanField(default=False)
     deleted_on = models.DateTimeField(blank=True, null=True)
     discount = models.DecimalField(
-        max_digits=20, decimal_places=2, default=0,validators=[MinValueValidator(0), MaxValueValidator(100)])
+        max_digits=20, decimal_places=5, default=0, validators=[MinValueValidator(0), MaxValueValidator(100)])
     reference_number = models.CharField(max_length=225, blank=True, null=True)
 
     def __str__(self):
@@ -140,21 +143,21 @@ class Estimate(models.Model):
     room_item_description = models.ForeignKey(
         RoomItemDescription, on_delete=models.CASCADE)
     quantity = models.DecimalField(
-        max_digits=20, decimal_places=2, blank=True, null=True)
+        max_digits=20, decimal_places=5, blank=True, null=True)
     length = models.DecimalField(
-        max_digits=20, decimal_places=2, blank=True, null=True)
+        max_digits=20, decimal_places=5, blank=True, null=True)
     width = models.DecimalField(
-        max_digits=20, decimal_places=2, blank=True, null=True)
+        max_digits=20, decimal_places=5, blank=True, null=True)
     sqm = models.DecimalField(
-        max_digits=20, decimal_places=2, blank=True, null=True)
+        max_digits=20, decimal_places=5, blank=True, null=True)
     sqft = models.DecimalField(
-        max_digits=20, decimal_places=2, blank=True, null=True)
+        max_digits=20, decimal_places=5, blank=True, null=True)
     amount = models.DecimalField(
-        max_digits=20, decimal_places=2, blank=True, null=True)
+        max_digits=20, decimal_places=5, blank=True, null=True)
     discount = models.DecimalField(
-        max_digits=20, decimal_places=2, default=0,validators=[MinValueValidator(0), MaxValueValidator(100)])
+        max_digits=20, decimal_places=5, default=0, validators=[MinValueValidator(0), MaxValueValidator(100)])
     rate = models.DecimalField(
-        max_digits=20, default=0, decimal_places=2)
+        max_digits=20, default=0, decimal_places=5)
     unit = models.ForeignKey(
         Unit, on_delete=models.CASCADE, null=True)
 
@@ -220,7 +223,6 @@ class Estimate(models.Model):
         return self.calculate_amount() - self.discount_amount()
 
     def get_actual_quantity(self):
-        print(self.width)
         if self.length:
             return self.sqft
         return self.quantity

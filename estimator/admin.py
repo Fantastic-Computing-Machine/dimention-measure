@@ -109,27 +109,13 @@ class EstimateAdmin(admin.ModelAdmin):
         "quantity",
         "amount"
     ]
-
-
-class ProjectInline(admin.TabularInline):
-    model = Estimate
-    show_change_link = True
-    view_on_site = False
-    can_delete = False
-    extra = 0
-    readonly_fields = [
+    list_filter = [
+        "created_on",
+        "is_deleted",
+        "project",
         "room",
         "room_item",
         "room_item_description",
-        "quantity",
-        "amount",
-    ]
-    fields = [
-        "room",
-        "room_item",
-        "room_item_description",
-        "quantity",
-        "amount",
     ]
 
 

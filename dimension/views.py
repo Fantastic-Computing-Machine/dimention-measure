@@ -138,7 +138,7 @@ def DeleteDimensionView(request, pk, project_id, project_name):
         return HttpResponseRedirect(reverse('project_detail', args=(project_id, project_name,)))
 
     if request.method == 'POST':
-        dimension.is_deleted=True
+        dimension.is_deleted = True
         dimension.save()
         return HttpResponseRedirect(reverse('project_detail', args=(project_id, project_name,)))
 

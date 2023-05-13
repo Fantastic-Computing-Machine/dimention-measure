@@ -64,77 +64,77 @@
                         {{form.room_item_description.label}}
                         {{form.room_item_description}}
                     </p>
-                    <p>
-                    <p>
-                    <fieldset class="reset">
-                        <legend class="reset">Area</legend>
+                    <ap>
+                        <p>
+                        <fieldset class="reset">
+                            <legend class="reset">Area</legend>
 
-                        <div class="form-check">
-                            <input onclick="area_enable()" class="form-check-input" type="radio" name="flexRadio"
-                                id="flexRadioDefault1" checked>
+                            <div class="form-check">
+                                <input onclick="area_enable()" class="form-check-input" type="radio" name="flexRadio"
+                                    id="flexRadioDefault1" checked>
 
-                            <label class="form-check-label" for="flexRadioDefault1">Area</label>
+                                <label class="form-check-label" for="flexRadioDefault1">Area</label>
 
-                            <label class="form-check-label" for="flexRadioDefault1" id="areaBox">
-                                <div class="row">
-                                    <div class="col">
-                                        {{form.length.label}}
-                                        {{form.length}}
+                                <label class="form-check-label" for="flexRadioDefault1" id="areaBox">
+                                    <div class="row">
+                                        <div class="col">
+                                            {{form.length.label}}
+                                            {{form.length}}
+                                        </div>
+                                        <div class="col">
+                                            {{form.width.label}}
+                                            {{form.width}}
+                                        </div>
                                     </div>
-                                    <div class="col">
-                                        {{form.width.label}}
-                                        {{form.width}}
+                                    <div class="row">
+                                        <div id="sqm_box" class="col">
+                                            Sqm
+                                            <input class="form-control" id="sqm" type="text" placeholder="Sqm"
+                                                aria-label=".form-control-sm" disabled readonly>
+                                        </div>
+                                        <div id="sqft_box" class="col">
+                                            Sqft
+                                            <input class="form-control" id="sqft" type="text" placeholder="Sqft"
+                                                aria-label=".form-control-sm" disabled readonly>
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="row">
-                                    <div id="sqm_box" class="col">
-                                        Sqm
-                                        <input class="form-control" id="sqm" type="text" placeholder="Sqm"
-                                            aria-label=".form-control-sm" disabled readonly>
+                                </label>
+                            </div>
+                        </fieldset>
+                        </p>
+                        <p>
+                        <fieldset class="reset">
+                            <legend class="reset">Quantity</legend>
+
+                            <div class="form-check">
+                                <input onclick="quantity_enable()" class="form-check-input" type="radio"
+                                    name="flexRadio" id="flexRadioDefault2">
+                                <label class="form-check-label" for="flexRadioDefault2" id="quantityBox">
+                                    <div>
+                                        {{form.quantity.label}}
+                                        {{form.quantity}}
                                     </div>
-                                    <div id="sqft_box" class="col">
-                                        Sqft
-                                        <input class="form-control" id="sqft" type="text" placeholder="Sqft"
-                                            aria-label=".form-control-sm" disabled readonly>
-                                    </div>
-                                </div>
-                            </label>
+                                </label>
+                            </div>
+                        </fieldset>
+                        </p>
+
+                        <p>
+                        <div class="input-group">
+                            {{form.rate}}
+                            <span class="input-group-text" id="rate_per_unit">/</span>
+                            {{form.unit}}
                         </div>
-                    </fieldset>
-                    </p>
-                    <p>
-                    <fieldset class="reset">
-                        <legend class="reset">Quantity</legend>
+                        </p>
 
-                        <div class="form-check">
-                            <input onclick="quantity_enable()" class="form-check-input" type="radio" name="flexRadio"
-                                id="flexRadioDefault2">
-                            <label class="form-check-label" for="flexRadioDefault2" id="quantityBox">
-                                <div>
-                                    {{form.quantity.label}}
-                                    {{form.quantity}}
-                                </div>
-                            </label>
+                        <p>
+                            {{form.discount.label}}
+                            {{form.discount}}
+                        </p>
+                        <div class="text-center">
+                            <button class="btn btn-outline-success" type="submit" id="button-addon2">Add to
+                                Estimate</button>
                         </div>
-                    </fieldset>
-                    </p>
-
-                    <p>
-                    <div class="input-group">
-                        {{form.rate}}
-                        <span class="input-group-text" id="rate_per_unit">/</span>
-                        {{form.unit}}
-                    </div>
-                    </p>
-
-                    <p>
-                        {{form.discount.label}}
-                        {{form.discount}}
-                    </p>
-                    <div class="text-center">
-                        <button class="btn btn-outline-success" type="submit" id="button-addon2">Add to
-                            Estimate</button>
-                    </div>
                 </form>
 
                 <div class="text-muted">**Area will be calculated using Sq Meters.</div>
@@ -327,14 +327,14 @@
                                     {% if item.discount != 0.0 %}
                                     <b>Discount: </b>
                                     <span class="font-monospace">
-                                        {{item.discount | floatformat:1|intcomma}} %
+                                        {% formatFloat item.discount %} %
                                     </span>
                                     {% endif %}
                                 </div>
                             </td>
                             <td class="text-end font-monospace col-1 hide_items_print">
                                 {% if item.length %}
-                                <div class="text-nowrap">{{item.length|intcomma}} m</div>
+                                <div class="text-nowrap">{% formatFloat item.length %} m</div>
                                 <div class="text-nowrap">({% meter_to_feet item.length %} ft)</div>
                                 {%else%}
                                 -
@@ -343,7 +343,7 @@
                             </td>
                             <td class="text-end font-monospace col-1 hide_items_print">
                                 {% if item.width %}
-                                <div class="text-nowrap">{{item.width|intcomma}} m</div>
+                                <div class="text-nowrap">{% formatFloat item.width %} m</div>
                                 <div class="text-nowrap">({% meter_to_feet item.width %} ft)</div>
                                 {%else%}
                                 -
@@ -352,7 +352,7 @@
                             <td class="text-end font-monospace col-1">
                                 <!-- Quantity -->
                                 {% if item.quantity %}
-                                <div class="text-nowrap">{{item.quantity|intcomma}}</div>
+                                <div class="text-nowrap">{% formatFloat item.quantity %}</div>
                                 {%else%}
                                 -
                                 {% endif %}
@@ -361,17 +361,18 @@
                                 <!-- Area -->
                                 {% if item.length %}
                                 {% if item.width %}
-                                <div class="text-nowrap">{{item.sqm|intcomma}} sqm</div>
-                                <div class="text-nowrap">({{item.sqft|intcomma}} sqft)</div>
+                                <div class="text-nowrap">{% formatFloat item.sqm %} sqm</div>
+                                <div class="text-nowrap">({% formatFloat item.sqft %} sqft)</div>
                                 {%else%}
-                                <div class="text-nowrap">{{item.sqm|intcomma}} m</div>
-                                <div class="text-nowrap">({{item.sqft|intcomma}} ft)</div>
+                                <div class="text-nowrap">{% formatFloat item.sqm %} m</div>
+                                <div class="text-nowrap">({% formatFloat item.sqft %} ft)</div>
                                 {% endif %}
                                 {%else%}
                                 -
                                 {% endif %}
                             </td>
                             <td class="text-center font-monospace col-1">
+                                <!-- Unit -->
                                 {% if item.unit.unit %}
                                 {{item.unit.unit}}
                                 {% else %}
@@ -380,33 +381,32 @@
                             </td>
 
                             <td class="text-end font-monospace text-nowrap col-1">
-                                &#8377 {{item.calculate_amount | floatformat:2|intcomma}}
-                                <div style="color:red;">@ &#8377 {{item.rate|intcomma}}</div>
+                                <!-- Amount & Rate-->
+                                &#8377 {% formatFloat item.calculate_amount %}
+                                <div style="color:red;">@ &#8377 {% formatFloat item.rate %}</div>
                             </td>
                             <td class="text-end font-monospace col-1">
-                                <div class="text-nowrap">&#8377 {{item.total_after_discount | floatformat:2|intcomma}}
+                                <!-- Total -->
+                                <div class="text-nowrap">&#8377 {% formatFloat item.total_after_discount %}
                                 </div>
                                 {% if item.discount != 0.0 %}
                                 <div class="text-danger text-nowrap">- &#8377
-                                    {{item.discount_amount | floatformat:2|intcomma}}
+                                    {% formatFloat item.discount_amount %}
                                 </div>
                                 {% endif %}
                             </td>
                             <td class="text-center col-1 hide_items_print">
+                                <!-- Action -->
+                                <!-- Edit modal -->
                                 <a href="{% url 'update_estimate_item' item.id project.id project.name %}">
                                     <img class="icon_ud" src="https://img.icons8.com/ios/20/fff/edit-row.png" />
                                 </a>
 
                                 <!-- Delete modal -->
-                                <!--<a onclick="deleteThisItem({{item.id}},{{item.project.id}},'{{item.project.name}}')" class="align-bottom" data-bs-toggle="modal" data-bs-target="#deleteSpecificModal">
-                                    <img class="icon_ud"
-                                        src="https://img.icons8.com/ios/20/000000/delete-sign--v1.png" />
-                                </a> -->
                                 <a href="{% url 'delete_estimate_row' item.id project.id project.name %}">
                                     <img class="icon_ud"
                                         src="https://img.icons8.com/ios/20/000000/delete-sign--v1.png" /></a>
 
-                                <!-- Delete modal -->
                             </td>
                         </tr>
                         {% endfor %}
@@ -450,7 +450,7 @@
                                 Total itemized Discount
                             </div>
                             <span class="badge bg-primary fs-6 font-monospace">
-                                ₹ {{project.total_itemised_discount|floatformat:2|intcomma}}
+                                ₹ {% formatFloat project.total_itemised_discount %}
                             </span>
                         </div>
                     </li>
@@ -469,7 +469,7 @@
                             Grand Total
                         </div>
                         <span class="badge bg-info fs-6 font-monospace">₹
-                            {{project.total_amount|floatformat:2|intcomma}}</span>
+                            {% formatFloat project.total_amount %}</span>
                     </div>
                 </li>
 
@@ -483,10 +483,10 @@
                             </div>
                             <div class="d-flex justify-content-end">
                                 <span class="badge bg-primary fs-6 font-monospace">
-                                    % {{project.discount}}
+                                    % {% formatFloat project.discount %}
                                 </span> @
                                 <span class="badge bg-primary fs-6 font-monospace">
-                                    ₹ {{project.discount_amount|floatformat:2|intcomma}}
+                                    ₹ {% formatFloat project.discount_amount %}
                                 </span>
                             </div>
                         </div>
@@ -499,7 +499,7 @@
                             Total after discount
                         </div>
                         <span class="badge bg-primary fs-6 font-monospace">
-                            ₹ {{project.total_after_discount|floatformat:2|intcomma}}
+                            ₹ {% formatFloat project.total_after_discount %}
                         </span>
                     </div>
                 </li>
@@ -540,7 +540,7 @@
                         GST @ 18%
                     </div>
                     <span class="badge bg-danger fs-6 font-monospace">
-                        ₹ {{project.gst_amount|floatformat:2|intcomma}}
+                        ₹ {% formatFloat project.gst_amount %}
                     </span>
                 </div>
             </li>
@@ -551,7 +551,7 @@
                         Grand Total after GST
                     </div>
                     <span class="badge bg-success fs-6 my-auto font-monospace">
-                        ₹ {{project.total_with_gst|floatformat:2|intcomma}}</span>
+                        ₹ {% formatFloat project.total_with_gst %}</span>
                 </div>
             </li>
 

@@ -131,6 +131,5 @@ admin.site.register(CompanyUser, UserAdmin)
 #         if f in form.base_fields:
 #             form.base_fields[f].disabled = True
 
-# print(form.base_fields['access_level'])
 
 #     return form

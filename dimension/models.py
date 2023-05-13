@@ -28,15 +28,11 @@ class Project(models.Model):
         return str(self.name)
 
     def save(self):
-        print("in save method")
         self.name = self.name.strip().replace(" ", "-")
-        print(self.is_deleted)
         if self.is_deleted:
             self.deleted_on = datetime.now()
-            print("deleted")
         if not self.is_deleted:
             self.deleted_on = None
-            print("undeleted")
         return super(Project, self).save()
 
     def total_amount(self):
