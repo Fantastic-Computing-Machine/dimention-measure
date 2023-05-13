@@ -44,13 +44,11 @@ $(document).ready(function() {
                 $('#searchResults').html('No results found.');
             }
             else{
-            var resultsHtml = '<div class = "fw-light">Results Found : '+response.results.length +'</div>';
+            var resultsHtml = '<div class = "fw-light">Results Found : '+response.results.length +'</div><div class="list-group">';
             for (var i = 0; i < response.results.length; i++) {
               var result = response.results[i];
-              var resultHtml = '<div class= "result-item card fw-bold mt-1 bg-info text-whitecard bg-light text-dark p-1" data-url="' + result.url + '"><span m-1>' +
-                result.title
-                + '<span class="badge bg-primary rounded-pill float-end">'+result.created_on+'</span></span>' +
-                '</div>';
+              var resultHtml = '<a href="'+result.url+'" class="list-group-item list-group-item-action"><span m-1>'+result.title+
+              '<span class="badge bg-primary rounded-pill float-end">'+result.created_on+'</span></span></a>'+'</div>';
               resultsHtml += resultHtml;
             }
             $('#searchResults').html(resultsHtml);
