@@ -33,24 +33,27 @@ $(document).ready(function() {
       }
 
       // Send the AJAX request
-      
+    var startTime = new Date().getTime();
     $.ajax({
         type: 'POST',
         url: '/search',
         data: formData,
         success: function(response) {
           if (response.success) {
+            var endTime = new Date().getTime();
+            var duration = (endTime - startTime) / 1000; 
             if(response.results.length == 0){
                 $('#searchResults').html('No results found.');
             }
             else{
-            var resultsHtml = '<div class = "fw-light">Results Found : '+response.results.length +'</div><div class="list-group">';
+            var resultsHtml = '<div class = "fw-light">About '+response.results.length +' results ('+duration+'seconds)</div><div class="list-group">';
             for (var i = 0; i < response.results.length; i++) {
               var result = response.results[i];
               var resultHtml = '<a href="'+result.url+'" class="list-group-item list-group-item-action"><span m-1>'+result.title+
-              '<span class="badge bg-primary rounded-pill float-end">'+result.created_on+'</span></span></a>'+'</div>';
+              '<span class="badge bg-primary rounded-pill float-end">'+result.created_on+'</span></span></a>';
               resultsHtml += resultHtml;
             }
+            resultsHtml += '</div>';
             $('#searchResults').html(resultsHtml);
             }
 
