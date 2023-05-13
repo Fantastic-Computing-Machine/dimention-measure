@@ -28,7 +28,7 @@
 				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 			</div>
 			<div class="modal-body">
-				<form action="/" method="POST">
+				<form action="{% url 'home' %}" method="POST">
 					{% csrf_token %%}
 					<div class="mb-3">
 						<p>
@@ -53,30 +53,6 @@
 {% block body %}
 <div class="container-lg pb-4">
 	<div class="text-light py-2 display-4">Dimension</div>
-
-
-	{% if projects_list|length == 0 %}
-	<!-- CONDITION IF THERE IS N PROJECTS -->
-	<div class="card">
-		<div class="card-body">
-			<div class=" text-center my-3">
-				<img alt="void" class="img-fluid m-2" style="width: 400px;" src="{% static 'img/void.svg' %}">
-				<div class="text-center">
-					<p class="py-1 fw-light my-3 fs-1">Nothing Here
-						<a class="btn btn-outline-success" data-bs-toggle="modal" data-bs-target="#newEstimate"
-							class="nav-link active text-light" aria-current="page">
-							<span class="align-bottom">
-								New Estimate
-							</span>
-						</a>
-					</p>
-				</div>
-			</div>
-		</div>
-	</div>
-	<!-- CONDITION IF THERE IS N PROJECTS -->
-	{% endif %}
-
 
 	{% if projects_list%}
 	<ul class="list-group">
@@ -143,6 +119,27 @@
 		<!-- DELETE MODAL -->
 		{% endfor %}
 	</ul>
+
+	{% else %}
+
+	<div class="card">
+		<div class="card-body">
+			<div class=" text-center my-3">
+				<img alt="void" class="img-fluid m-2" style="width: 400px;" src="{% static 'img/void.svg' %}">
+				<div class="text-center">
+					<p class="py-1 fw-light my-3 fs-1">Nothing Here
+						<!-- <a class="btn btn-outline-success" data-bs-toggle="modal" data-bs-target="#newEstimate"
+							class="nav-link active text-light" aria-current="page">
+							<span class="align-bottom">
+								New Estimate
+							</span>
+						</a> -->
+					</p>
+				</div>
+			</div>
+		</div>
+	</div>
+
 	{% endif %}
 
 </div>
