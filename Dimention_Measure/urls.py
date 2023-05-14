@@ -28,7 +28,7 @@ urlpatterns = [
     path('estimate/', include('estimator.urls')),
     path('settings/', include('settings.urls')),
     path('client-and-company/', include('client_and_company.urls')),
-    path('inspect/', include('inspector.urls')),
+    # path('inspect/', include('inspector.urls')),
     path('user/', include('django.contrib.auth.urls')),
     path('user/', include('authentication.urls')),
     path('', include('core.urls')),

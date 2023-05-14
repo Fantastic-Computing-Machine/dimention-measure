@@ -15,44 +15,58 @@ from django.views.generic import ListView, TemplateView
 from rest_framework.views import APIView
 from rest_framework.response import Response
 
+
 class DashboardView(LoginRequiredMixin, TemplateView):
+    """
+    Class view for dashboard page
+    """
     login_url = '/user/login/'
     redirect_field_name = 'redirect_to'
     template_name = 'dashboard.html'
 
     def get_context_data(self, **kwargs):
-        kwargs['dimensions'] = DimensionProject.objects.filter(is_deleted=False).order_by('-created_on')[:6]
-        kwargs['estimates'] = EstimateProject.objects.filter(is_deleted=False).order_by('-created_on')[:6]
+        kwargs['dimensions'] = DimensionProject.objects.filter(
+            is_deleted=False).order_by('-created_on')[:6]
+        kwargs['estimates'] = EstimateProject.objects.filter(
+            is_deleted=False).order_by('-created_on')[:6]
         return super().get_context_data(**kwargs)
-    
+
 # search class based view
-class SearchView(LoginRequiredMixin,APIView):
+
+
+class SearchView(LoginRequiredMixin, APIView):
+    """
+    Class view for search page
+    """
     login_url = '/user/login/'
     redirect_field_name = 'redirect_to'
+
     def post(self, request, format=None):
-        print(request.data)
-        if(request.data.get('type') == 'dimension'):
-            dimensions = DimensionProject.objects.filter(is_deleted=False, name__icontains=request.data['textToSearch'])
+        if (request.data.get('type') == 'dimension'):
+            dimensions = DimensionProject.objects.filter(
+                is_deleted=False, name__icontains=request.data['textToSearch'])
             results = []
             for dimension in dimensions:
                 results_item = dict()
-                results_item["title"]= dimension.name.capitalize()
-                results_item["url"]= reverse('project_detail', args=[str(dimension.pk), str(dimension.name)])
-                results_item["created_on"]= dimension.created_on.date()
-                
+                results_item["title"] = dimension.name.capitalize()
+                results_item["url"] = reverse('project_detail', args=[
+                                              str(dimension.pk), str(dimension.name)])
+                results_item["created_on"] = dimension.created_on.date()
+
                 results.append(results_item)
 
             return Response({'success': True, 'results': results})
-        elif(request.data.get('type') == 'estimate'):
-            estimates = EstimateProject.objects.filter(is_deleted=False, name__icontains=request.data['textToSearch'])
+        elif (request.data.get('type') == 'estimate'):
+            estimates = EstimateProject.objects.filter(
+                is_deleted=False, name__icontains=request.data['textToSearch'])
             results = []
             for estimate in estimates:
                 results_item = dict()
-                results_item["title"]= estimate.name.capitalize()
-                results_item["url"]= reverse('estimate', args=[str(estimate.pk), str(estimate.name)])
-                results_item["created_on"]= estimate.created_on.date()
-                
+                results_item["title"] = estimate.name.capitalize()
+                results_item["url"] = reverse(
+                    'estimate', args=[str(estimate.pk), str(estimate.name)])
+                results_item["created_on"] = estimate.created_on.date()
+
                 results.append(results_item)
             return Response({'success': True, 'results': results})
         return Response({'success': False, 'results': []})
-        

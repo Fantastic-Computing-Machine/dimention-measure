@@ -5,7 +5,12 @@
 
 {% block header %}
 
-Hi, {{user.username|capfirst}} 👋
+<ul class="nav justify-content-end">
+
+    <li class="nav-item">
+        Hi, {{user.username|capfirst}} 👋
+    </li>
+</ul>
 
 {% endblock %}
 
@@ -15,7 +20,11 @@ Hi, {{user.username|capfirst}} 👋
     <div class="text-light py-2 display-4">Dashboard</div>
 
     <section class="container-lg pb-4">
-        <div class="text-light py-2 display-6">Dimension</div>
+        <div class="py-2 display-6 swing">
+            <a href="{% url 'home' %}" class="text-light">
+                Dimension &rAarr;
+            </a>
+        </div>
 
         {% if dimensions%}
         <div class="row">
@@ -28,11 +37,13 @@ Hi, {{user.username|capfirst}} 👋
                             <div class="d-flex justify-content-between align-items-start">
                                 <div class="ms-2 me-auto">
                                     <div class="fw-bold">
-                                        {% replaceItem item.name|capfirst %}
+                                        <span>
+                                            <span>{% replaceItem item.name|capfirst %}</span>
+                                            <span class="badge bg-primary">{{item.created_on|naturalday}}</span>
+                                        </span>
                                     </div>
-                                    <span class="badge bg-secondary mt-1" data-bs-toggle="tooltip"
-                                        data-bs-placement="bottom" title="{{item.created_on}}">
-                                        Created {{item.created_on | naturalday}}
+                                    <span class="wrapword">
+                                        {{item.description|truncatechars:20|capfirst}}
                                     </span>
                                 </div>
                             </div>
@@ -59,7 +70,11 @@ Hi, {{user.username|capfirst}} 👋
 
 
     <section class="container-lg pb-4">
-        <div class="text-light py-2 display-6">Estimate</div>
+        <div class="text-light py-2 display-6 swing">
+            <a href="{% url 'all_estimates' %}" class="text-light">
+                Estimate &rAarr;
+            </a>
+        </div>
 
 
         {% if estimates %}

@@ -32,7 +32,14 @@ from django.contrib.auth import get_user_model as user_model
 User = user_model()
 
 
-class HomeView(LoginRequiredMixin, FormMixin, ListView):
+class BaseAuthClass(LoginRequiredMixin):
+    # Class to be inherited by all views that require login
+    login_url = '/user/login/'
+    redirect_field_name = 'redirect_to'
+
+
+class DimensionHomeView(LoginRequiredMixin, FormMixin, ListView):
+    # Class view for dimension home page
     login_url = '/user/login/'
     redirect_field_name = 'redirect_to'
     model = Project
@@ -56,7 +63,7 @@ class HomeView(LoginRequiredMixin, FormMixin, ListView):
         return HttpResponseRedirect(reverse('home'))
 
 
-class ProjectView(LoginRequiredMixin, CreateView):
+class DimensionProjectView(LoginRequiredMixin, CreateView):
     login_url = '/user/login/'
     redirect_field_name = 'redirect_to'
     model = Dimension
@@ -72,7 +79,7 @@ class ProjectView(LoginRequiredMixin, CreateView):
         kwargs['sum_sqm'] = sum(item.sqm for item in dimensions)
         kwargs['sum_sqft'] = sum(item.sqft for item in dimensions)
         kwargs['sum_amount'] = sum(item.amount for item in dimensions)
-        return super(ProjectView, self).get_context_data(*args, **kwargs)
+        return super(DimensionProjectView, self).get_context_data(*args, **kwargs)
 
     def post(self, request, **kwargs):
         request.POST._mutable = True
@@ -82,7 +89,7 @@ class ProjectView(LoginRequiredMixin, CreateView):
             request.POST['rate'] = '0'
         request.POST["project"] = str(kwargs['pk'])
         request.POST._mutable = False
-        return super(ProjectView, self).post(request, **kwargs)
+        return super(DimensionProjectView, self).post(request, **kwargs)
 
 
 class UpdateDimensionView(LoginRequiredMixin, UpdateView):
