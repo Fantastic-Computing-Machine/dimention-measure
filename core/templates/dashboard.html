@@ -22,7 +22,7 @@
     <section class="container-lg pb-4">
         <div class="py-2 display-6 swing">
             <a href="{% url 'home' %}" class="text-light">
-                Dimension &rAarr;
+                Dimension &rarr;
             </a>
         </div>
 
@@ -32,7 +32,7 @@
             <div class="col-lg-4 col-md-6 sm-10">
                 <a href="{% url 'project_detail' item.id item.name %}" class="text-dark"
                     aria-label="project-{{item.name}}">
-                    <div class="card my-2 index_project_card">
+                    <div class="card-dashboard my-2 index_project_card">
                         <div class="card-body">
                             <div class="d-flex justify-content-between align-items-start">
                                 <div class="ms-2 me-auto">
@@ -43,7 +43,9 @@
                                         </span>
                                     </div>
                                     <span class="wrapword">
+                                        {% if item.description %}
                                         {{item.description|truncatechars:20|capfirst}}
+                                        {% endif %}
                                     </span>
                                 </div>
                             </div>
@@ -52,6 +54,25 @@
                 </a>
             </div>
             {% endfor %}
+
+            <div class="col-lg-4 col-md-6 sm-10">
+                <a href="{% url 'home' %}" class="text-dark">
+                    <div class="card-dashboard my-2 index_project_card">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div class="ms-2 me-auto">
+                                    <div class="fw-bold">
+                                        <span>
+                                            <span>More &rarr;</span>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+
         </div>
 
         {% else %}
@@ -72,7 +93,7 @@
     <section class="container-lg pb-4">
         <div class="text-light py-2 display-6 swing">
             <a href="{% url 'all_estimates' %}" class="text-light">
-                Estimate &rAarr;
+                Estimate &rarr;
             </a>
         </div>
 
@@ -84,7 +105,7 @@
             <div class="col-lg-4 col-md-6 sm-10">
                 <a href="{% url 'project_detail' item.id item.name %}" class="text-dark"
                     aria-label="project-{{item.name}}">
-                    <div class="card my-2 index_project_card">
+                    <div class="card-dashboard my-2 index_project_card">
                         <div class="card-body">
                             <div class="d-flex justify-content-between align-items-start">
                                 <div class="ms-2 me-auto">
@@ -98,7 +119,9 @@
                                         </span>
                                     </div>
                                     <span class="wrapword">
+                                        {% if item.description %}
                                         {{item.description|truncatechars:20|capfirst}}
+                                        {% endif %}
                                     </span>
                                 </div>
                             </div>
@@ -107,6 +130,25 @@
                 </a>
             </div>
             {% endfor %}
+
+            <div class="col-lg-4 col-md-6 sm-10">
+                <a href="{% url 'all_estimates' %}" class="text-dark">
+                    <div class="card-dashboard my-2 index_project_card">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div class="ms-2 me-auto">
+                                    <div class="fw-bold">
+                                        <span>
+                                            <span>More &rarr;</span>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+
         </div>
 
         {%else%}

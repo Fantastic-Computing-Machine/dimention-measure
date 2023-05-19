@@ -23,6 +23,11 @@ footer {
   padding: 0;
 }
 
+.card-dashboard {
+  height: 80px;
+  overflow: hidden;
+}
+
 ::-webkit-scrollbar {
   width: 5px;
 }
