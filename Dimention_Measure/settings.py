@@ -25,16 +25,11 @@ ENV = os.getenv("ENV")
 
 if ENV == "prod":
     print("***************************************")
-    print("")
     print("Initializing with Production Settings")
-    print("")
     print("***************************************")
     from .prod_settings import *
 
 elif ENV == "dev":
     print("***************************************")
-    print("")
     print("Initializing with Development Settings")
-    print("")
-    print("***************************************")
     from .dev_settings import *
