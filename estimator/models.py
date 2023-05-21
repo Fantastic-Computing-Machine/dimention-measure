@@ -9,7 +9,6 @@ from django.urls import reverse
 
 from client_and_company.models import Client
 from django.utils.translation import gettext as _
-from core.utils import formatFloat
 from settings.models import OrganizationTNC, Unit
 
 User = user_model()

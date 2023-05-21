@@ -212,12 +212,12 @@
                             </span>
                             {% endcomment %}
                         </td>
-                        <td class="text-end mx-2 text-nowrap">{{item.length}}</td>
-                        <td class="text-end mx-2 text-nowrap">{{item.width}}</td>
-                        <td class="text-end mx-2 text-nowrap">{{item.sqm|intcomma}}</td>
-                        <td class="text-end mx-2 text-nowrap">{{item.sqft|intcomma}}</td>
-                        <td class="text-end mx-2 text-nowrap">{{item.rate|intcomma}}</td>
-                        <td class="text-end mx-2 text-nowrap">{{item.amount|intcomma}}</td>
+                        <td class="text-end mx-2 text-nowrap">{% formatFloat item.length %}</td>
+                        <td class="text-end mx-2 text-nowrap">{% formatFloat item.width %}</td>
+                        <td class="text-end mx-2 text-nowrap">{% formatFloat item.sqm %}</td>
+                        <td class="text-end mx-2 text-nowrap">{% formatFloat item.sqft %}</td>
+                        <td class="text-end mx-2 text-nowrap">{% formatFloat item.rate %}</td>
+                        <td class="text-end mx-2 text-nowrap">{% formatFloat item.amount %}</td>
                         <td class="text-center mx-2 hide_items_print">
                             <a href="{% url 'update_dimention' item.id project.name %}">
                                 <img class="icon_ud" src="https://img.icons8.com/ios/15/fff/edit-row.png" />
@@ -253,18 +253,21 @@
                     <p class="fs-5 fw-bold">
                         <li class="list-group-item d-flex justify-content-between ">
                             Total Area in sqm
-                            <span class="badge bg-primary fs-6 font-monospace">{{sum_sqm|intcomma}} Sqm.</span>
+                            <span class="badge bg-primary fs-6 font-monospace">{% formatFloat project.total_sqm %}
+                                Sqm.</span>
                         </li>
                         <li class="list-group-item d-flex justify-content-between ">
                             Total Area in sqft
-                            <span class="badge bg-primary fs-6 font-monospace">{{sum_sqft|intcomma}} SqFt.</span>
+                            <span class="badge bg-primary fs-6 font-monospace">{% formatFloat project.total_sqft %}
+                                SqFt.</span>
                         </li>
 
                         <li class="list-group-item d-flex justify-content-between align-items-start">
                             <div>
                                 <div>Total Amount*</div>
                             </div>
-                            <span class="badge bg-success fs-6 my-auto font-monospace">₹ {{sum_amount|intcomma}}</span>
+                            <span class="badge bg-success fs-6 my-auto font-monospace">₹
+                                {% formatFloat project.total_amount %}</span>
                         </li>
                     </p>
                     <span class="fs-6 fst-italic">
