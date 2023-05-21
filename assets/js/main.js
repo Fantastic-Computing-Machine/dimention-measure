@@ -1,5 +1,43 @@
 console.log("main.js loaded");
 
+function changeColors() {
+    console.log("changeColors called");
+    var body = document.body;
+    body.classList.toggle("alternate-background");
+    if (icon.getAttribute("src") === "https://img.icons8.com/fluency/48/black-and-white.png") {
+        icon.setAttribute("src", "https://img.icons8.com/fluency/48/rgb-circle-3.png");
+        body.classList.add("alternate-background");
+        localStorage.setItem("iconState", "alternate");
+        localStorage.setItem("backgroundState", "alternate");
+      } else {
+        icon.setAttribute("src", "https://img.icons8.com/fluency/48/black-and-white.png");
+        body.classList.remove("alternate-background");
+        localStorage.setItem("iconState", "original");
+        localStorage.setItem("backgroundState", "original");
+      }
+  }
+
+  document.addEventListener("DOMContentLoaded", function() {
+    var iconState = localStorage.getItem("iconState");
+    var backgroundState = localStorage.getItem("backgroundState");
+    var icon = document.getElementById("icon");
+    var body = document.body;
+
+    if (iconState === "alternate") {
+      icon.setAttribute("src", "https://img.icons8.com/fluency/48/rgb-circle-3.png");
+      body.classList.add("alternate-background");
+    } else {
+      icon.setAttribute("src", "https://img.icons8.com/fluency/48/black-and-white.png");
+      body.classList.remove("alternate-background");
+    }
+
+    if (backgroundState === "alternate") {
+      body.classList.add("alternate-background");
+    } else {
+      body.classList.remove("alternate-background");
+    }
+  });
+
 $(document).ready(function () {
     document.getElementById("dimentionCheck").checked = true;
 
