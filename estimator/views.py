@@ -38,11 +38,10 @@ from estimator.forms import (
     UpdateProjectTermsAndConditionForm,
 )
 from settings.models import Unit, OrganizationTNC
+from core.views import BaseAuthClass
 
 
-class AllEstimates(LoginRequiredMixin, FormMixin, ListView):
-    login_url = '/user/login/'
-    redirect_field_name = 'redirect_to'
+class AllEstimates(BaseAuthClass, FormMixin, ListView):
     model = Project
     form_class = NewProjectForm
     context_object_name = 'projects_list'
@@ -64,17 +63,13 @@ class AllEstimates(LoginRequiredMixin, FormMixin, ListView):
         return HttpResponseRedirect(reverse('all_estimates'))
 
 
-class UpdateEstimateProjectView(LoginRequiredMixin, UpdateView):
-    login_url = '/user/login/'
-    redirect_field_name = 'redirect_to'
+class UpdateEstimateProjectView(BaseAuthClass, UpdateView):
     model = Project
     template_name = 'update_estimate_project.html'
     form_class = UpdateProjectForm
 
 
-class EstimateDetailView(LoginRequiredMixin, CreateView):
-    login_url = '/user/login/'
-    redirect_field_name = 'redirect_to'
+class EstimateDetailView(BaseAuthClass, CreateView):
     model = Estimate
     form_class = NewEstimateItemForm
     template_name = 'estimate.html'
@@ -102,9 +97,7 @@ class EstimateDetailView(LoginRequiredMixin, CreateView):
         return super(EstimateDetailView, self).post(request, **kwargs)
 
 
-class UpdateEstimateItemView(LoginRequiredMixin, UpdateView):
-    login_url = '/user/login/'
-    redirect_field_name = 'redirect_to'
+class UpdateEstimateItemView(BaseAuthClass, UpdateView):
     model = Estimate
     template_name = 'update_estimate_item.html'
     form_class = NewEstimateItemForm
@@ -147,9 +140,7 @@ class UpdateEstimateItemView(LoginRequiredMixin, UpdateView):
         return HttpResponseRedirect(reverse('estimate', kwargs={"pk": self.kwargs['project_id'], "project_name": self.kwargs['project_name']}))
 
 
-class FolioView(LoginRequiredMixin, CreateView):
-    login_url = '/user/login/'
-    redirect_field_name = 'redirect_to'
+class FolioView(BaseAuthClass, CreateView):
     model = Estimate
     form_class = NewEstimateItemForm
     template_name = 'folio/folio.html'
@@ -166,9 +157,7 @@ class FolioView(LoginRequiredMixin, CreateView):
         return super().get_context_data(**kwargs)
 
 
-class UpdateRoomView(LoginRequiredMixin, UpdateView):
-    login_url = '/user/login/'
-    redirect_field_name = 'redirect_to'
+class UpdateRoomView(BaseAuthClass, UpdateView):
     model = Room
     form_class = NewRoomForm
     template_name = 'folio/update_folio_item.html'
@@ -176,17 +165,13 @@ class UpdateRoomView(LoginRequiredMixin, UpdateView):
 
 
 class UpdateRoomItemView(LoginRequiredMixin, UpdateView):
-    login_url = '/user/login/'
-    redirect_field_name = 'redirect_to'
     model = RoomItem
     form_class = NewRoomItemForm
     template_name = 'folio/update_folio_item.html'
     success_url = reverse_lazy('folio')
 
 
-class UpdateRoomItemDescriptionView(LoginRequiredMixin, UpdateView):
-    login_url = '/user/login/'
-    redirect_field_name = 'redirect_to'
+class UpdateRoomItemDescriptionView(BaseAuthClass, UpdateView):
     model = RoomItemDescription
     form_class = NewRoomItemDescriptionForm
     template_name = 'folio/update_folio_item.html'
@@ -486,9 +471,7 @@ def project_terms_and_conditions_view(request, pk: int, project_name: str):
     return render(request, template_name, context)
 
 
-class UpdateProjectTermsAndCondition(LoginRequiredMixin, UpdateView):
-    login_url = '/user/login/'
-    redirect_field_name = 'redirect_to'
+class UpdateProjectTermsAndCondition(BaseAuthClass, UpdateView):
     model = ProjectTermsAndConditions
     template_name = 'tnc/update_project_tnc.html'
     form_class = UpdateProjectTermsAndConditionForm

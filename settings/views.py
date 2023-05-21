@@ -9,13 +9,12 @@ from django.urls import reverse, reverse_lazy
 
 
 from settings.forms import TermsAndConditionForm
+from core.views import BaseAuthClass
 
 User = user_model()
 
 
-class TermsAndConditions(LoginRequiredMixin, CreateView):
-    login_url = '/user/login/'
-    redirect_field_name = 'redirect_to'
+class TermsAndConditions(BaseAuthClass, CreateView):
     model = OrganizationTNC
     form_class = TermsAndConditionForm
     template_name = "org_tnc.html"
@@ -44,9 +43,7 @@ class TermsAndConditions(LoginRequiredMixin, CreateView):
         return context
 
 
-class ProjectTNC(LoginRequiredMixin, CreateView):
-    login_url = '/user/login/'
-    redirect_field_name = 'redirect_to'
+class ProjectTNC(BaseAuthClass, CreateView):
     model = OrganizationTNC
     form_class = TermsAndConditionForm
     template_name = "project_tnc.html"

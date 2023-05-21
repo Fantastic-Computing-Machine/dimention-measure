@@ -5,33 +5,31 @@
 {% block title %} - Estimate: {% replaceItem project.name|capfirst %}{% endblock %}
 
 {% block header %}
-<ul class="nav justify-content-end">
 
-    <li class="nav-item">
-        <a class="nav-link active text-light" data-bs-toggle="modal" data-bs-target="#newItemModal">
-            New Item
+<li class="nav-item">
+    <a class="nav-link active text-light" data-bs-toggle="modal" data-bs-target="#newItemModal">
+        New Item
+    </a>
+</li>
+
+<li class="nav-item">
+    <div class="dropdown">
+        <a class="nav-link active text-light dropdown-toggle" id="dropdownMenuButton2" data-bs-toggle="dropdown"
+            aria-expanded="false">
+            More
         </a>
-    </li>
-
-    <li class="nav-item">
-        <div class="dropdown">
-            <a class="nav-link active text-light dropdown-toggle" id="dropdownMenuButton2" data-bs-toggle="dropdown"
-                aria-expanded="false">
-                More
-            </a>
-            <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="dropdownMenuButton2">
-                <li>
-                    <a href="{% url 'folio' %}" class="dropdown-item" aria-current="page">Folio</a>
-                </li>
-                <li>
-                    <a href="{% url 'clients' %}" class="dropdown-item" aria-current="page">
-                        Clients
-                    </a>
-                </li>
-            </ul>
-        </div>
-    </li>
-</ul>
+        <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="dropdownMenuButton2">
+            <li>
+                <a href="{% url 'folio' %}" class="dropdown-item" aria-current="page">Folio</a>
+            </li>
+            <li>
+                <a href="{% url 'clients' %}" class="dropdown-item" aria-current="page">
+                    Clients
+                </a>
+            </li>
+        </ul>
+    </div>
+</li>
 {% endblock %}
 
 
@@ -150,7 +148,7 @@
 <div class="container-lg pt-2 px-3 pb-4">
     <div class="row pt-2">
         <div class="col-12 col-sm-8">
-            <div class="text-muted fw-bold">
+            <div class="text-dark fw-bold">
                 {{project.reference_number}}
             </div>
             <div class="h2 text-light pb-2">

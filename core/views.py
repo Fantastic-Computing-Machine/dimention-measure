@@ -16,12 +16,16 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 
 
-class DashboardView(LoginRequiredMixin, TemplateView):
+class BaseAuthClass(LoginRequiredMixin):
+    # Class to be inherited by all views that require login
+    login_url = '/user/login/'
+    redirect_field_name = 'redirect_to'
+
+
+class DashboardView(BaseAuthClass, TemplateView):
     """
     Class view for dashboard page
     """
-    login_url = '/user/login/'
-    redirect_field_name = 'redirect_to'
     template_name = 'dashboard.html'
 
     def get_context_data(self, **kwargs):
@@ -34,12 +38,10 @@ class DashboardView(LoginRequiredMixin, TemplateView):
 # search class based view
 
 
-class SearchView(LoginRequiredMixin, APIView):
+class SearchView(BaseAuthClass, APIView):
     """
     Class view for search page
     """
-    login_url = '/user/login/'
-    redirect_field_name = 'redirect_to'
 
     def post(self, request, format=None):
         if (request.data.get('type') == 'dimension'):

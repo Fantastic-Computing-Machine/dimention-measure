@@ -28,6 +28,7 @@ from .models import Project, Dimension
 from django.views.generic.edit import FormMixin
 from django.contrib.auth import get_user_model as user_model
 
+from core.views import BaseAuthClass
 
 User = user_model()
 
