@@ -5,12 +5,11 @@
 
 {% block header %}
 
-<ul class="nav justify-content-end">
-
-    <li class="nav-item">
+<li class="nav-item">
+    <a class="nav-link active text-light" aria-current="page">
         Hi, {{user.username|capfirst}} 👋
-    </li>
-</ul>
+    </a>
+</li>
 
 {% endblock %}
 
@@ -20,7 +19,7 @@
     <div class="text-light py-2 display-4">Dashboard</div>
 
     <section class="container-lg pb-4">
-        <div class="py-2 display-6 swing">
+        <div class="pyw-2 display-6 swing">
             <a href="{% url 'home' %}" class="text-light">
                 Dimension &rarr;
             </a>
@@ -103,8 +102,7 @@
             {% for item in estimates %}
 
             <div class="col-lg-4 col-md-6 sm-10">
-                <a href="{% url 'estimate' item.id item.name %}" class="text-dark"
-                    aria-label="project-{{item.name}}">
+                <a href="{% url 'estimate' item.id item.name %}" class="text-dark" aria-label="project-{{item.name}}">
                     <div class="card-dashboard my-2 index_project_card">
                         <div class="card-body">
                             <div class="d-flex justify-content-between align-items-start">
@@ -170,6 +168,6 @@
 
 {% endblock %}
 
-{% block expense_button %} 
+{% block expense_button %}
 
 {% endblock %}

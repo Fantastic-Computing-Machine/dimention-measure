@@ -9,18 +9,18 @@
 {% endblock %}
 
 {% block header %}
-<ul class="nav justify-content-end">
-    <li class="nav-item">
-        <a class="nav-link text-light active" href="{% url 'all_estimates' %}">
-            Estimates
-        </a>
-    </li>
-    <li class="nav-item">
-        <a href="{% url 'clients' %}" class="nav-link text-light active" aria-current="page">
-            Clients
-        </a>
-    </li>
-</ul>
+
+<li class="nav-item">
+    <a class="nav-link text-light active" href="{% url 'all_estimates' %}">
+        Estimates
+    </a>
+</li>
+<li class="nav-item">
+    <a href="{% url 'clients' %}" class="nav-link text-light active" aria-current="page">
+        Clients
+    </a>
+</li>
+
 {% endblock %}
 
 {% block body %}
