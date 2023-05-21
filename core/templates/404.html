@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% load static %} {% load humanize %} {% load utility %}
+
+{% block title %} - Wrong Page{% endblock %}
+
+{% block header %}
+
+<li class="nav-item">
+    <span class="nav-link active text-light" aria-current="page">
+        404
+        </>
+</li>
+
+{% endblock %}
+
+{% block body %}
+<div class="container-lg pb-4">
+
+    <div class="text-light py-2 display-4">404 Error</div>
+
+</div>
+
+
+
+{% endblock %}
