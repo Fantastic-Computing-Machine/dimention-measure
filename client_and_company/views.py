@@ -11,12 +11,12 @@ from django.views.generic.edit import FormMixin
 from django.shortcuts import HttpResponseRedirect
 
 from client_and_company.models import Client
-from client_and_company.forms import NewClientForm,UpdateClientForm
+from client_and_company.forms import NewClientForm, UpdateClientForm
+
+from core.views import BaseAuthClass
 
 
-class ClientView(LoginRequiredMixin, FormMixin, ListView):
-    login_url = '/user/login/'
-    redirect_field_name = 'redirect_to'
+class ClientView(BaseAuthClass, FormMixin, ListView):
     model = Client
     form_class = NewClientForm
     context_object_name = 'clients_list'
@@ -39,9 +39,7 @@ class ClientView(LoginRequiredMixin, FormMixin, ListView):
         return HttpResponseRedirect(reverse('clients'))
 
 
-class UpdateClientView(LoginRequiredMixin, UpdateView):
-    login_url = '/user/login/'
-    redirect_field_name = 'redirect_to'
+class UpdateClientView(BaseAuthClass, UpdateView):
     model = Client
     template_name = 'clients/update_client.html'
     form_class = UpdateClientForm
