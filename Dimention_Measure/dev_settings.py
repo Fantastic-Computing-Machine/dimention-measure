@@ -223,6 +223,29 @@ WSGI_APPLICATION = 'Dimention_Measure.wsgi.application'
 #     }
 # }
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.mysql',
+#         'NAME': 'insightdb',
+#         'USER': 'insightdbadmin',
+#         'PASSWORD': 'SACmasteradm!n1999',
+#         'HOST': 'insight-db.cb0inzljmwt9.ap-south-1.rds.amazonaws.com',
+#         'PORT': '3306',
+#     }
+# }
+
+
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.mysql',
+#         'NAME': 'insightdb',
+#         'USER': 'insightdbadmin',
+#         'PASSWORD': 'SACmasteradm!n1999',
+#         'HOST': 'insight-db-snapshot-restore-test-21may23.cb0inzljmwt9.ap-south-1.rds.amazonaws.com',
+#         'PORT': '3306',
+#     }
+# }
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',

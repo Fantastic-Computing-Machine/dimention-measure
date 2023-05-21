@@ -36,16 +36,19 @@ class Project(models.Model):
         return super(Project, self).save()
 
     def total_amount(self):
+        # to calculate total amount declared in project
         dims = Dimension.objects.filter(project=self, is_deleted=False)
         sum_amount = sum(item.amount for item in dims)
         return sum_amount
 
     def total_sqm(self):
+        # to calculate total sqm declared in project
         dims = Dimension.objects.filter(project=self, is_deleted=False)
         sum_sqm = sum(item.sqm for item in dims)
         return sum_sqm
 
     def total_sqft(self):
+        # to calculate total sqft declared in project
         dims = Dimension.objects.filter(project=self, is_deleted=False)
         sum_sqft = sum(item.sqft for item in dims)
         return sum_sqft
