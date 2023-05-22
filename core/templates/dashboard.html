@@ -1,13 +1,15 @@
 {% extends 'base.html' %}
 {% load static %} {% load humanize %} {% load utility %}
 
-{% block title %} - Dimensions{% endblock %}
-
 {% block header %}
 
 <li class="nav-item">
-    <a class="nav-link active text-light" aria-current="page">
+    <a href="{% url 'organization' %}" class="nav-link active text-light" aria-current="page">
+        {% if user.first_name %}
+        Hi, {{user.first_name|capfirst}} 👋
+        {% else %}
         Hi, {{user.username|capfirst}} 👋
+        {% endif %}
     </a>
 </li>
 
