@@ -87,12 +87,6 @@ SILENCED_SYSTEM_CHECKS = ["security.W019"]
 SESSION_ENGINE = "django.contrib.sessions.backends.cache"
 SESSION_CACHE_ALIAS = "default"
 
-# EMAIL_USE_TLS = True
-# EMAIL_PORT = 587
-# EMAIL_HOST = 'smtp.gmail.com'
-# EMAIL_HOST_USER = os.getenv("EMAIL_ID")
-# EMAIL_HOST_PASSWORD = os.getenv("EMAIL_PWD")
-
 CACHES = {
     "default": {
         "BACKEND": "django.core.cache.backends.db.DatabaseCache",
@@ -108,13 +102,6 @@ CACHES = {
 #         "OPTIONS": {
 #             "CLIENT_CLASS": "django_redis.client.DefaultClient",
 #         }
-#     }
-# }
-
-
-# CACHES = {
-#     'default': {
-#         'BACKEND': 'django.core.cache.backends.dummy.DummyCache',
 #     }
 # }
 
@@ -183,49 +170,6 @@ WSGI_APPLICATION = 'Dimention_Measure.wsgi.application'
 
 
 # if DEBUG == False:
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.mysql',
-#         'NAME': 'heroku_7d1d235a934ba7b',
-#         'USER': 'b2ad8003626a52',
-#         'PASSWORD': '5c5e94ce',
-#         'HOST': 'eu-cdbr-west-01.cleardb.com',
-#         'PORT': '3306',
-#     }
-# }
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.mysql',
-#         'NAME': 'insightdb',
-#         'USER': 'insightdbadmin',
-#         'PASSWORD': 'SACmasteradm!n1999',
-#         'HOST': 'insight-db.cb0inzljmwt9.ap-south-1.rds.amazonaws.com',
-#         'PORT': '3306',
-#     }
-# }
-
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.mysql',
-#         'NAME': 'insightdb',
-#         'USER': 'insightdbadmin',
-#         'PASSWORD': 'SACmasteradm!n1999',
-#         'HOST': 'insight-db.cb0inzljmwt9.ap-south-1.rds.amazonaws.com',
-#         'PORT': '3306',
-#     }
-# }
-
-
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.mysql',
-#         'NAME': 'insightdb',
-#         'USER': 'insightdbadmin',
-#         'PASSWORD': 'SACmasteradm!n1999',
-#         'HOST': 'insight-db-snapshot-restore-test-21may23.cb0inzljmwt9.ap-south-1.rds.amazonaws.com',
-#         'PORT': '3306',
-#     }
-# }
 
 DATABASES = {
     'default': {

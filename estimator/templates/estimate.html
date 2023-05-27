@@ -146,73 +146,74 @@
 
 {% block body %}
 <div class="container-lg pt-2 px-3 pb-4">
-    <div class="row pt-2">
-        <div class="col-12 col-sm-8">
-            <div class="text-dark fw-bold">
-                {{project.reference_number}}
-            </div>
-            <div class="h2 text-light pb-2">
-                <span class="float-start">
-                    <span class="float-start text-wrap">{% replaceItem project.name|title %}</span>
-                    <span class="dropdown">
-                        <a type="button" id="dropdownMenuButton2" data-bs-toggle="dropdown" aria-expanded="false">
-                            <img src="https://img.icons8.com/ios/27/ffffff/menu-2.png" />
-                        </a>
-                        <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="dropdownMenuButton2">
-                            <li>
-                                <a href="{% url 'download_estimate_excel_file' project.id project.name %}"
-                                    class="dropdown-item">
-                                    Download Excel
+    <div class="card">
+        <div class="card-body">
+            <div class="row pt-2">
+                <div class="col-12 col-sm-8">
+                    <div class="text-dark fw-bold">
+                        {{project.reference_number}}
+                    </div>
+                    <div class="h2 text-dark pb-2">
+                        <span class="float-start">
+                            <span class="float-start text-dark text-wrap">{% replaceItem project.name|title %}</span>
+                            <span class="dropdown">
+                                <a type="button" id="dropdownMenuButton2" data-bs-toggle="dropdown"
+                                    aria-expanded="false">
+                                    <img src="https://img.icons8.com/ios/27/000000/menu-2.png" />
                                 </a>
-                            </li>
-                            <li>
-                                <hr class="dropdown-divider">
-                            </li>
-                            <li><a href="{% url 'update_estimate_project' project.id project.name %}"
-                                    class="dropdown-item">
-                                    Update Project</a>
-                            </li>
-                            <li><a class="dropdown-item" id="delete_button" data-bs-toggle="modal"
-                                    data-bs-target="#deleteModal">
-                                    Delete Project</a>
-                            </li>
-                            {% if user.is_staff or user.is_admin %}
-                            <li>
-                                <hr class="dropdown-divider">
-                            </li>
-                            <li><a href="{% url 'select_project_terms_and_conditions' project.id project.name %}"
-                                    class="dropdown-item">
-                                    Terms and Conditions</a>
-                            </li>
-                            {% endif %}
-                        </ul>
+                                <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="dropdownMenuButton2">
+                                    <li>
+                                        <a href="{% url 'download_estimate_excel_file' project.id project.name %}"
+                                            class="dropdown-item">
+                                            Download Excel
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <hr class="dropdown-divider">
+                                    </li>
+                                    <li><a href="{% url 'update_estimate_project' project.id project.name %}"
+                                            class="dropdown-item">
+                                            Update Project</a>
+                                    </li>
+                                    <li><a class="dropdown-item" id="delete_button" data-bs-toggle="modal"
+                                            data-bs-target="#deleteModal">
+                                            Delete Project</a>
+                                    </li>
+                                    {% if user.is_staff or user.is_admin %}
+                                    <li>
+                                        <hr class="dropdown-divider">
+                                    </li>
+                                    <li><a href="{% url 'select_project_terms_and_conditions' project.id project.name %}"
+                                            class="dropdown-item">
+                                            Terms and Conditions</a>
+                                    </li>
+                                    {% endif %}
+                                </ul>
+                            </span>
+                        </span>
+                    </div>
+                </div>
+                <div class="col-12 col-sm-4">
+                    <span class="py-1 float-sm-end float-start">
+                        <span class="badge bg-secondary" data-bs-toggle="tooltip" data-bs-placement="bottom"
+                            title="{{project.created_on}}">
+                            Created {{project.created_on | naturalday}}
+                        </span>
                     </span>
+                </div>
+            </div>
+
+            {%if project.description%}
+            <div class="my-2">
+                <span class="text-dark wrapword">
+                    {{project.description | capfirst}}
                 </span>
             </div>
-        </div>
-        <div class="col-12 col-sm-4">
-            <span class="py-1 float-sm-end float-start">
-                <span class="badge bg-secondary" data-bs-toggle="tooltip" data-bs-placement="bottom"
-                    title="{{project.created_on}}">
-                    Created {{project.created_on | naturalday}}
-                </span>
-            </span>
-        </div>
-    </div>
+            {% endif %}
 
-    {%if project.description%}
-    <div class="my-2">
-        <span class="text-light wrapword">
-            {{project.description | capfirst}}
-        </span>
-    </div>
-    {% endif %}
+            <hr class="text-dark">
 
-    <hr class="text-light">
-
-    <div class="my-2">
-        <div class="card">
-            <div class="card-body">
+            <div class="my-2">
                 <div>
                     <p class="h4">
                         {% replaceItem project.client.name|title %}
