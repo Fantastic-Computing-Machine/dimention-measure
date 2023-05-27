@@ -3,8 +3,7 @@
 
 {% block title %} - Estimate/Update{% endblock %}
 
-{% block head %}
-{% endblock %}
+
 {% block body %}
 
 
@@ -96,16 +95,21 @@
                                 {{form.discount.label}}
                                 {{form.discount}}
                             </p>
+                        </div>
+                        <div class="card-footer text-end">
+                                <button type="button" onClick=enableNewitemPage() class="btn btn-primary"
+                                    id="edit_update_estimate">
+                                    Edit
+                                </button>
+
+                                <button id = "form_submit_button" type="submit" class="btn btn-success">
+                                    Save changes
+                                </button>
+                                <form id = "back_button">
+                                    <input type="button" class="btn btn-success" value="Back" onclick="history.back()">
+                                </form>
 
 
-                            <button type="button" onClick=enableNewitemPage() class="btn btn-primary"
-                                id="edit_update_estimate">
-                                Edit
-                            </button>
-
-                            <button type="submit" class="btn btn-success">
-                                Save changes
-                            </button>
                         </form>
                     </div>
                 </div>
@@ -127,6 +131,7 @@
         document.getElementById('id_room').disabled = true;
         document.getElementById('id_room_item').disabled = true;
         document.getElementById('id_room_item_description').disabled = true;
+        document.getElementById('form_submit_button').disabled = true;
 
 
     }
@@ -141,12 +146,6 @@
 
 {% endblock %}
 {% block expense_button %}
-<a aria-label="all-expenses" href="{% url 'all_expenses' %}" type="button" class="btn btn-success btn-lg">
-    <img alt="all-expenses" src="https://img.icons8.com/ios/30/ffffff/money-circulation.png" />
-</a>
 
-<a aria-label="all-estimates" href="{% url 'all_estimates' %}" type="button" class="btn btn-info btn-lg">
-    <img src="https://img.icons8.com/ios/30/000000/estimates.png" />
-</a>
 
 {% endblock %}

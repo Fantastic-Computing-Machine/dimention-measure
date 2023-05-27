@@ -1,0 +1,26 @@
+version: "3"
+
+services:
+
+  Insight_Application:
+    ports:
+      - "8000:8000"
+    volumes:
+      - . : /app
+    environment:
+      SECRET_KEY: hfefhlafhalbgaglabfywiagrt74tyq37oyflwuihb47r73yoqrou202un2c8c0y8n9yY&(&&^&)#&^N& T*&(#)
+      DEBUG: 'True'
+      ALLOWED_HOSTS: 'localhost'
+    depends_on:
+      - redis
+
+  redis:
+    image: redis
+    volumes:
+      - ./redis-data:/data
+    ports:
+      - "6379:6379"
+    expose:
+      - "6379"
+    environment:
+      - 'API_PORT=6379'

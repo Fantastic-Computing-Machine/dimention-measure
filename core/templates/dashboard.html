@@ -1,0 +1,175 @@
+{% extends 'base.html' %}
+{% load static %} {% load humanize %} {% load utility %}
+
+{% block header %}
+
+<li class="nav-item">
+    <a href="{% url 'organization' %}" class="nav-link active text-light" aria-current="page">
+        {% if user.first_name %}
+        Hi, {{user.first_name|capfirst}} 👋
+        {% else %}
+        Hi, {{user.username|capfirst}} 👋
+        {% endif %}
+    </a>
+</li>
+
+{% endblock %}
+
+{% block body %}
+<div class="container-lg pb-4">
+
+    <div class="text-light py-2 display-4">Dashboard</div>
+
+    <section class="container-lg pb-4">
+        <div class="pyw-2 display-6 swing">
+            <a href="{% url 'home' %}" class="text-light">
+                Dimension &rarr;
+            </a>
+        </div>
+
+        {% if dimensions%}
+        <div class="row">
+            {% for item in dimensions %}
+            <div class="col-lg-4 col-md-6 sm-10">
+                <a href="{% url 'project_detail' item.id item.name %}" class="text-dark"
+                    aria-label="project-{{item.name}}">
+                    <div class="card-dashboard my-2 index_project_card">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div class="ms-2 me-auto">
+                                    <div class="fw-bold">
+                                        <span>
+                                            <span>{% replaceItem item.name|capfirst %}</span>
+                                            <span class="badge bg-primary">{{item.created_on|naturalday}}</span>
+                                        </span>
+                                    </div>
+                                    <span class="wrapword">
+                                        {% if item.description %}
+                                        {{item.description|truncatechars:20|capfirst}}
+                                        {% endif %}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            {% endfor %}
+
+            <div class="col-lg-4 col-md-6 sm-10">
+                <a href="{% url 'home' %}" class="text-dark">
+                    <div class="card-dashboard my-2 index_project_card">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div class="ms-2 me-auto">
+                                    <div class="fw-bold">
+                                        <span>
+                                            <span>More &rarr;</span>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+
+        </div>
+
+        {% else %}
+
+        <ul class="list-group">
+            <li class="list-group-item">
+                <div class="ms-2 me-auto text-dark text-center">
+                    <span class="fw-bold">Nothing Here</span>
+                </div>
+            </li>
+        </ul>
+
+        {% endif %}
+
+    </section>
+
+
+    <section class="container-lg pb-4">
+        <div class="text-light py-2 display-6 swing">
+            <a href="{% url 'all_estimates' %}" class="text-light">
+                Estimate &rarr;
+            </a>
+        </div>
+
+
+        {% if estimates %}
+        <div class="row">
+            {% for item in estimates %}
+
+            <div class="col-lg-4 col-md-6 sm-10">
+                <a href="{% url 'estimate' item.id item.name %}" class="text-dark" aria-label="project-{{item.name}}">
+                    <div class="card-dashboard my-2 index_project_card">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div class="ms-2 me-auto">
+                                    <div class="fw-bold">
+                                        <span class="text-muted">
+                                            {{item.reference_number}}
+                                        </span>
+                                        <span>
+                                            <span>{% replaceItem item.name|capfirst %}</span>
+                                            <span class="badge bg-primary">{{item.created_on|naturalday}}</span>
+                                        </span>
+                                    </div>
+                                    <span class="wrapword">
+                                        {% if item.description %}
+                                        {{item.description|truncatechars:20|capfirst}}
+                                        {% endif %}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            {% endfor %}
+
+            <div class="col-lg-4 col-md-6 sm-10">
+                <a href="{% url 'all_estimates' %}" class="text-dark">
+                    <div class="card-dashboard my-2 index_project_card">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div class="ms-2 me-auto">
+                                    <div class="fw-bold">
+                                        <span>
+                                            <span>More &rarr;</span>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+
+        </div>
+
+        {%else%}
+
+        <ul class="list-group">
+            <li class="list-group-item">
+                <div class="ms-2 me-auto text-dark text-center">
+                    <span class="fw-bold">Nothing Here</span>
+                </div>
+            </li>
+        </ul>
+
+        {% endif %}
+    </section>
+</div>
+
+
+
+
+{% endblock %}
+
+{% block expense_button %}
+
+{% endblock %}

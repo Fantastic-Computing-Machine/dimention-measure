@@ -17,7 +17,7 @@ from django.views.generic import (
 )
 from django.urls import reverse_lazy, reverse
 import os
-import datetime
+from datetime import datetime
 from openpyxl import Workbook
 import re
 
@@ -28,17 +28,23 @@ from .models import Project, Dimension
 from django.views.generic.edit import FormMixin
 from django.contrib.auth import get_user_model as user_model
 
+from core.views import BaseAuthClass
 
 User = user_model()
 
 
-class HomeView(LoginRequiredMixin, FormMixin, ListView):
+class BaseAuthClass(LoginRequiredMixin):
+    # Class to be inherited by all views that require login
     login_url = '/user/login/'
     redirect_field_name = 'redirect_to'
+
+
+class DimensionHomeView(BaseAuthClass, FormMixin, ListView):
+    # Class view for dimension home page
     model = Project
     form_class = NewProjectForm
     context_object_name = 'projects_list'
-    template_name = 'index.html'
+    template_name = 'dimensions_home.html'
     success_url = reverse_lazy("home")
     paginate_by = 15
 
@@ -56,9 +62,8 @@ class HomeView(LoginRequiredMixin, FormMixin, ListView):
         return HttpResponseRedirect(reverse('home'))
 
 
-class ProjectView(LoginRequiredMixin, CreateView):
-    login_url = '/user/login/'
-    redirect_field_name = 'redirect_to'
+class DimensionProjectView(BaseAuthClass, CreateView):
+    # Class view for dimension project page
     model = Dimension
     form_class = NewDimensionForm
     template_name = 'project_detail.html'
@@ -69,10 +74,7 @@ class ProjectView(LoginRequiredMixin, CreateView):
             project=project).filter(is_deleted=False)
         kwargs['dimentions'] = dimensions
         kwargs['project'] = project
-        kwargs['sum_sqm'] = sum(item.sqm for item in dimensions)
-        kwargs['sum_sqft'] = sum(item.sqft for item in dimensions)
-        kwargs['sum_amount'] = sum(item.amount for item in dimensions)
-        return super(ProjectView, self).get_context_data(*args, **kwargs)
+        return super(DimensionProjectView, self).get_context_data(*args, **kwargs)
 
     def post(self, request, **kwargs):
         request.POST._mutable = True
@@ -82,12 +84,11 @@ class ProjectView(LoginRequiredMixin, CreateView):
             request.POST['rate'] = '0'
         request.POST["project"] = str(kwargs['pk'])
         request.POST._mutable = False
-        return super(ProjectView, self).post(request, **kwargs)
+        return super(DimensionProjectView, self).post(request, **kwargs)
 
 
-class UpdateDimensionView(LoginRequiredMixin, UpdateView):
-    login_url = '/user/login/'
-    redirect_field_name = 'redirect_to'
+class UpdateDimensionView(BaseAuthClass, UpdateView):
+    # Class view for updating dimension
     model = Dimension
     form_class = UpdateDimensionForm
     template_name = 'update_item.html'
@@ -110,24 +111,38 @@ class UpdateDimensionView(LoginRequiredMixin, UpdateView):
 
 @login_required
 def DeleteProjectView(request, pk, project_name):
+    # Function view for soft deleting Entire project
     if request.method == 'POST':
-        project = Project.objects.filter(pk=pk).update(
-            is_deleted=True, deleted_on=datetime.datetime.now())
-    return HttpResponseRedirect(reverse('home'))
+        project = Project.objects.get(pk=pk)
+        project.is_deleted = True
+        project.save()
+        return HttpResponseRedirect(reverse('home'))
+
+    template_name = "delete_project.html"
+    context = {}
+    project = Project.objects.filter(pk=pk)[0]
+    context['project'] = project
+
+    if project.is_deleted:
+        return HttpResponseRedirect(reverse('home'))
+
+    return render(request, template_name, context)
 
 
 @login_required
 def DeleteDimensionView(request, pk, project_id, project_name):
+    # Function view for soft deleting dimension
     template_name = "delete_item.html"
     context = {}
-    dimension = Dimension.objects.filter(pk=pk)
-    context['dimension'] = dimension[0]
+    dimension = Dimension.objects.get(pk=pk)
+    context['dimension'] = dimension
 
-    if dimension[0].is_deleted:
+    if dimension.is_deleted:
         return HttpResponseRedirect(reverse('project_detail', args=(project_id, project_name,)))
 
     if request.method == 'POST':
-        dimension.update(is_deleted=True, deleted_on=datetime.datetime.now())
+        dimension.is_deleted = True
+        dimension.save()
         return HttpResponseRedirect(reverse('project_detail', args=(project_id, project_name,)))
 
     return render(request, template_name, context)
@@ -135,7 +150,9 @@ def DeleteDimensionView(request, pk, project_id, project_name):
 
 @login_required
 def download_excel_view(request, project_id, project_name):
-    date_time_obj = datetime.datetime.now()
+    # Function view for downloading excel file
+
+    date_time_obj = datetime.now()
     current_date = date_time_obj.strftime('%x')
     current_time = date_time_obj.strftime('%X')
 

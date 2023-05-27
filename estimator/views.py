@@ -1,18 +1,16 @@
-from django.shortcuts import render
-from typing import List
-from django.shortcuts import HttpResponseRedirect
 from datetime import datetime
 from openpyxl import Workbook
 from openpyxl.styles import Font, Alignment
-import os
+from typing import List
 import decimal
-import re
 import html
-
+import os
+import re
 
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.http import FileResponse
+from django.http import FileResponse, HttpResponse
+from django.shortcuts import render, HttpResponseRedirect
 from django.urls import reverse, reverse_lazy
 from django.views.generic import (
     CreateView,
@@ -20,7 +18,7 @@ from django.views.generic import (
     UpdateView
 )
 from django.views.generic.edit import FormMixin
-from django.http import HttpResponse
+
 from estimator.models import (
     Room,
     RoomItemDescription,
@@ -40,11 +38,10 @@ from estimator.forms import (
     UpdateProjectTermsAndConditionForm,
 )
 from settings.models import Unit, OrganizationTNC
+from core.views import BaseAuthClass
 
 
-class AllEstimates(LoginRequiredMixin, FormMixin, ListView):
-    login_url = '/user/login/'
-    redirect_field_name = 'redirect_to'
+class AllEstimates(BaseAuthClass, FormMixin, ListView):
     model = Project
     form_class = NewProjectForm
     context_object_name = 'projects_list'
@@ -66,17 +63,13 @@ class AllEstimates(LoginRequiredMixin, FormMixin, ListView):
         return HttpResponseRedirect(reverse('all_estimates'))
 
 
-class UpdateEstimateProjectView(LoginRequiredMixin, UpdateView):
-    login_url = '/user/login/'
-    redirect_field_name = 'redirect_to'
+class UpdateEstimateProjectView(BaseAuthClass, UpdateView):
     model = Project
     template_name = 'update_estimate_project.html'
     form_class = UpdateProjectForm
 
 
-class EstimateDetailView(LoginRequiredMixin, CreateView):
-    login_url = '/user/login/'
-    redirect_field_name = 'redirect_to'
+class EstimateDetailView(BaseAuthClass, CreateView):
     model = Estimate
     form_class = NewEstimateItemForm
     template_name = 'estimate.html'
@@ -92,59 +85,48 @@ class EstimateDetailView(LoginRequiredMixin, CreateView):
 
     def post(self, request, **kwargs):
         active_project = Project.objects.filter(id=kwargs['pk'])[0]
-
-        # print("000000000000000000000000000000000000")
-        # print(request.POST)
-        # print("000000000000000000000000000000000000")
-
         if request.method == 'POST':
             request.POST._mutable = True
             request.POST["project"] = active_project
             request.POST._mutable = False
-            # print(request.POST)
             try:
                 form = NewEstimateItemForm(request.POST)
-                # if not form.is_valid():
-                #     print(form.errors)
             except Exception as e:
                 print(e)
 
         return super(EstimateDetailView, self).post(request, **kwargs)
 
 
-class UpdateEstimateItemView(LoginRequiredMixin, UpdateView):
-    login_url = '/user/login/'
-    redirect_field_name = 'redirect_to'
+class UpdateEstimateItemView(BaseAuthClass, UpdateView):
     model = Estimate
     template_name = 'update_estimate_item.html'
     form_class = NewEstimateItemForm
 
     def post(self, request, **kwargs):
-
-        # print(request.POST)
-
         req = request.POST
         super(UpdateEstimateItemView, self).post(request, **kwargs)
         estimate = Estimate.objects.get(pk=self.kwargs['pk'])
-        # print("---\n", estimate)
 
         estimate.room_id = req['room']
         estimate.room_item_id = req['room_item']
         estimate.room_item_description_id = req['room_item_description']
 
         if req['unit'] != '':
-            # print(Unit.objects.get(id=int(req['unit'])))
             estimate.unit = Unit.objects.get(id=int(req['unit']))
         else:
             estimate.unit = None
 
-        if('quantity' in req):
+        if ('quantity' in req):
             estimate.quantity = req['quantity']
             estimate.length = None
             estimate.width = None
         else:
             estimate.length = decimal.Decimal(req['length'])
-            estimate.width = decimal.Decimal(req['width'])
+            if req['width']:
+                estimate.width = decimal.Decimal(req['width'])
+            else:
+                estimate.width = decimal.Decimal(0)
+
             estimate.quantity = None
         if 'rate' in req:
             if req['rate'] == None:
@@ -158,9 +140,7 @@ class UpdateEstimateItemView(LoginRequiredMixin, UpdateView):
         return HttpResponseRedirect(reverse('estimate', kwargs={"pk": self.kwargs['project_id'], "project_name": self.kwargs['project_name']}))
 
 
-class FolioView(LoginRequiredMixin, CreateView):
-    login_url = '/user/login/'
-    redirect_field_name = 'redirect_to'
+class FolioView(BaseAuthClass, CreateView):
     model = Estimate
     form_class = NewEstimateItemForm
     template_name = 'folio/folio.html'
@@ -177,9 +157,7 @@ class FolioView(LoginRequiredMixin, CreateView):
         return super().get_context_data(**kwargs)
 
 
-class UpdateRoomView(LoginRequiredMixin, UpdateView):
-    login_url = '/user/login/'
-    redirect_field_name = 'redirect_to'
+class UpdateRoomView(BaseAuthClass, UpdateView):
     model = Room
     form_class = NewRoomForm
     template_name = 'folio/update_folio_item.html'
@@ -187,17 +165,13 @@ class UpdateRoomView(LoginRequiredMixin, UpdateView):
 
 
 class UpdateRoomItemView(LoginRequiredMixin, UpdateView):
-    login_url = '/user/login/'
-    redirect_field_name = 'redirect_to'
     model = RoomItem
     form_class = NewRoomItemForm
     template_name = 'folio/update_folio_item.html'
     success_url = reverse_lazy('folio')
 
 
-class UpdateRoomItemDescriptionView(LoginRequiredMixin, UpdateView):
-    login_url = '/user/login/'
-    redirect_field_name = 'redirect_to'
+class UpdateRoomItemDescriptionView(BaseAuthClass, UpdateView):
     model = RoomItemDescription
     form_class = NewRoomItemDescriptionForm
     template_name = 'folio/update_folio_item.html'
@@ -207,8 +181,9 @@ class UpdateRoomItemDescriptionView(LoginRequiredMixin, UpdateView):
 @login_required
 def DeleteEstimate(request, pk, project_name):
     if request.method == 'POST':
-        estimate = Project.objects.filter(pk=pk).update(
-            is_deleted=True, deleted_on=datetime.now())
+        estimate = Project.objects.get(pk=pk)
+        estimate.is_deleted = True
+        estimate.save()
         return HttpResponseRedirect(reverse('all_estimates'))
 
 
@@ -217,9 +192,9 @@ def DeleteRoom(request):
     if request.method == 'POST':
         list_to_delete = request.POST.getlist('roomCheckbox')
         for item in list_to_delete:
-            room = Room.objects.filter(pk=int(item)).update(
-                is_deleted=True, deleted_on=datetime.now())
-
+            room = Room.objects.get(pk=int(item))
+            room.is_deleted = True
+            room.save()
         return HttpResponseRedirect(reverse('folio'))
 
 
@@ -228,9 +203,9 @@ def DeleteRoomComponent(request):
     if request.method == 'POST':
         list_to_delete = request.POST.getlist('roomElementCheckbox')
         for item in list_to_delete:
-            room_item = RoomItem.objects.filter(pk=int(item)).update(
-                is_deleted=True, deleted_on=datetime.now())
-
+            room_item = RoomItem.objects.get(pk=int(item))
+            room_item.is_deleted = True
+            room_item.save()
         return HttpResponseRedirect(reverse('folio'))
 
 
@@ -239,14 +214,15 @@ def DeleteComponentDescription(request):
     if request.method == 'POST':
         list_to_delete = request.POST.getlist('elementDescriptionCheckbox')
         for item in list_to_delete:
-            room_item_description = RoomItemDescription.objects.filter(
-                pk=int(item)).update(is_deleted=True, deleted_on=datetime.now())
+            room_item_description = RoomItemDescription.objects.get(
+                pk=int(item))
+            room_item_description.is_deleted = True
+            room_item_description.save()
         return HttpResponseRedirect(reverse('folio'))
 
 
 @login_required
 def AddRoom(request):
-    # print(request.POST)
     if request.method == 'POST':
         form = NewRoomForm(request.POST)
         if form.is_valid():
@@ -276,7 +252,6 @@ def AddRoomItemDescription(request):
 def download_estimate_excel_file(request, project_id, project_name):
     project_tnc_obj = ProjectTermsAndConditions.objects.filter(
         project=project_id)
-    # print(project_tnc_obj)
     if project_tnc_obj.count() == 0:
         return HttpResponseRedirect(reverse('select_project_terms_and_conditions', kwargs={'pk': project_id, 'project_name': project_name}))
 
@@ -298,7 +273,6 @@ def download_estimate_excel_file(request, project_id, project_name):
         pk=project_id, is_deleted=False)[0]
 
     company = request.user.organization
-    # print("company: ",company)
 
     # create a workbook object
     workbook = Workbook()
@@ -346,9 +320,6 @@ def download_estimate_excel_file(request, project_id, project_name):
     estimate = Estimate.objects.filter(
         project__id=project_id, is_deleted=False).order_by('room')
 
-    # print(estimate)
-    # print(project.get_all_rooms())
-
     for room_item in project.get_all_rooms():
 
         sheet.append([index, room_item[1]])
@@ -357,13 +328,13 @@ def download_estimate_excel_file(request, project_id, project_name):
         index_j = 0
         for item in estimate_room_obj:
             index_j = index_j + 1
-            if(item.unit == None):
+            if (item.unit == None):
                 unit = None
             else:
                 unit = item.unit.unit
             description = str(item.room_item.name).replace(
                 "-", " ") + " - " + str(item.room_item_description.description).replace("-", " ").title()
-            if(item.discount != 0):
+            if (item.discount != 0):
                 description = description + " - " + \
                     str("{:.2f}".format(item.discount) + "%") + "-( Rs. " + \
                     str("{:.2f}".format(item.discount_amount())) + " )"
@@ -392,20 +363,15 @@ def download_estimate_excel_file(request, project_id, project_name):
 
     for item in project_tnc_obj:
         sheet.append(["", item.heading.upper()])
-        # print(type(item.content))
-        # print("content",item.content)
 
         ree = re.compile('<.*?>')
         cleantext = re.sub(ree, '', item.content)
 
         repr_string = repr(cleantext)
-        # print(repr_string)
         new_string = re.sub(r'\\r|\\n', '!&', repr_string)
-        # print(new_string)
         new_string = new_string.strip("'")
         c = new_string.split('!&!&!&!&')
 
-        # print(c)
         for i in c:
             sheet.append(["", html.unescape(i)])
         sheet.append([""])
@@ -416,8 +382,6 @@ def download_estimate_excel_file(request, project_id, project_name):
     with open(file_path, "rb") as excel:
         data = excel.read()
 
-    # print("WB--- CLOSE", flush=True)
-    # print("file_path: ",file_path,flush=True)
     # file_ecxel = FileResponse(open(file_path, 'rb'))
     delete_file = os.remove(file_path)
     return HttpResponse(data, headers={
@@ -431,7 +395,6 @@ def download_estimate_excel_file(request, project_id, project_name):
 @login_required
 def updateDiscount(request, pk, project_name):
     if request.method == 'POST':
-        # print("Inside Update Discount", request.POST)
         form = DiscountForm(request.POST)
         if form.is_valid():
             project = Project.objects.filter(
@@ -446,14 +409,15 @@ def updateDiscount(request, pk, project_name):
 def delete_estimator_item_view(request, pk, project_id, project_name):
     template_name = "delete_estimate_item.html"
     context = {}
-    estimate = Estimate.objects.filter(pk=pk)
-    context['estimate'] = estimate[0]
+    estimate = Estimate.objects.get(pk=pk)
+    context['estimate'] = estimate
 
-    if estimate[0].is_deleted:
+    if estimate.is_deleted:
         return HttpResponseRedirect(reverse('estimate', args=(project_id, project_name,)))
 
     if request.method == 'POST':
-        estimate.update(is_deleted=True, deleted_on=datetime.now())
+        estimate.is_deleted = True
+        estimate.save()
         return HttpResponseRedirect(reverse('estimate', args=(project_id, project_name,)))
 
     return render(request, template_name, context)
@@ -463,8 +427,6 @@ def delete_estimator_item_view(request, pk, project_id, project_name):
 def select_project_terms_and_conditions_view(request, pk: int, project_name: str):
     project_tnc = ProjectTermsAndConditions.objects.filter(
         project_id=pk).count()
-
-    # print(project_tnc)
 
     if int(project_tnc) != 0:
         return HttpResponseRedirect(reverse('project_terms_and_conditions', args=(pk, project_name)))
@@ -489,7 +451,6 @@ def select_project_terms_and_conditions_view(request, pk: int, project_name: str
                 project=project_instance,
                 content=item.content,
             )
-            # print(item.name, " : ", item.content)
 
         return HttpResponseRedirect(reverse('project_terms_and_conditions', args=(pk, project_name)))
     return render(request, template_name, context)
@@ -501,7 +462,7 @@ def project_terms_and_conditions_view(request, pk: int, project_name: str):
     context = dict()
 
     project_tnc = ProjectTermsAndConditions.objects.filter(project_id=pk)
-    if(project_tnc.count() == 0):
+    if (project_tnc.count() == 0):
         return HttpResponseRedirect(reverse('select_project_terms_and_conditions', kwargs={'pk': pk, 'project_name': project_name}))
     context['project_name'] = project_name
     context['pk'] = pk
@@ -510,9 +471,7 @@ def project_terms_and_conditions_view(request, pk: int, project_name: str):
     return render(request, template_name, context)
 
 
-class UpdateProjectTermsAndCondition(LoginRequiredMixin, UpdateView):
-    login_url = '/user/login/'
-    redirect_field_name = 'redirect_to'
+class UpdateProjectTermsAndCondition(BaseAuthClass, UpdateView):
     model = ProjectTermsAndConditions
     template_name = 'tnc/update_project_tnc.html'
     form_class = UpdateProjectTermsAndConditionForm
@@ -577,6 +536,6 @@ def deleteSelectedProjectTnC(request, pk, project_name):
 
     all_project_tnc_count = ProjectTermsAndConditions.objects.filter(
         project_id=pk).count()
-    if(all_project_tnc_count == 0):
+    if (all_project_tnc_count == 0):
         return HttpResponseRedirect(reverse('select_project_terms_and_conditions', kwargs={'pk': pk, 'project_name': project_name}))
     return HttpResponseRedirect(reverse('project_terms_and_conditions', args=(pk, project_name)))

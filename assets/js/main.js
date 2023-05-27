@@ -1,5 +1,113 @@
 console.log("main.js loaded");
 
+function changeColors() {
+    console.log("changeColors called");
+    var body = document.body;
+    body.classList.toggle("alternate-background");
+    if (icon.getAttribute("src") === "https://img.icons8.com/fluency/48/black-and-white.png") {
+        icon.setAttribute("src", "https://img.icons8.com/fluency/48/rgb-circle-3.png");
+        body.classList.add("alternate-background");
+        localStorage.setItem("iconState", "alternate");
+        localStorage.setItem("backgroundState", "alternate");
+      } else {
+        icon.setAttribute("src", "https://img.icons8.com/fluency/48/black-and-white.png");
+        body.classList.remove("alternate-background");
+        localStorage.setItem("iconState", "original");
+        localStorage.setItem("backgroundState", "original");
+      }
+  }
+
+  document.addEventListener("DOMContentLoaded", function() {
+    var iconState = localStorage.getItem("iconState");
+    var backgroundState = localStorage.getItem("backgroundState");
+    var icon = document.getElementById("icon");
+    var body = document.body;
+
+    if (iconState === "alternate") {
+      icon.setAttribute("src", "https://img.icons8.com/fluency/48/rgb-circle-3.png");
+      body.classList.add("alternate-background");
+    } else {
+      icon.setAttribute("src", "https://img.icons8.com/fluency/48/black-and-white.png");
+      body.classList.remove("alternate-background");
+    }
+
+    if (backgroundState === "alternate") {
+      body.classList.add("alternate-background");
+    } else {
+      body.classList.remove("alternate-background");
+    }
+  });
+
+$(document).ready(function () {
+    document.getElementById("dimentionCheck").checked = true;
+
+    $("#estimateCheck").click(function () {
+        document.getElementById("dimentionCheck").checked = false;
+        document.getElementById("estimateCheck").checked = true;
+    });
+
+    $("#dimentionCheck").click(function () {
+        document.getElementById("estimateCheck").checked = false;
+        document.getElementById("dimentionCheck").checked = true;
+    });
+
+    $(document).on('click', '.result-item', function () {
+        var projectUrl = $(this).data('url');
+        var absoluteUrl = window.location.origin + projectUrl; // Append at the domain level
+
+        window.location.href = absoluteUrl;
+    });
+
+    $('#searchForm').submit(function (e) {
+        e.preventDefault();
+        var formData = $(this).serialize();
+
+        //   check if the formData contains the dimentionCheck the add type=dimentions
+        if (document.getElementById("dimentionCheck").checked == true) {
+            formData = formData + "&type=dimension";
+        }
+        else if (document.getElementById("estimateCheck").checked == true) {
+            formData = formData + "&type=estimate";
+        }
+
+        // Send the AJAX request
+        var startTime = new Date().getTime();
+        $.ajax({
+            type: 'POST',
+            url: '/search',
+            data: formData,
+            success: function (response) {
+                if (response.success) {
+                    var endTime = new Date().getTime();
+                    var duration = (endTime - startTime) / 1000;
+                    if (response.results.length == 0) {
+                        $('#searchResults').html('<div class="wrapword">No results match your search<div>');
+                    }
+                    else {
+                        var resultsHtml = '<div class = "fw-light">' + response.results.length + ' results in ' + duration + ' seconds</div><div class="list-group">';
+                        for (var i = 0; i < response.results.length; i++) {
+                            var result = response.results[i];
+                            var resultHtml = '<a href="' + result.url + '" class="list-group-item list-group-item-action"><span m-1>' + result.title +
+                                '<span class="badge bg-primary rounded-pill float-end">' + result.created_on + '</span></span></a>';
+                            resultsHtml += resultHtml;
+
+                        }
+                        resultsHtml += '</div>';
+                        $('#searchResults').html(resultsHtml);
+                    }
+
+                    // Display the search results on the page
+                } else {
+                    // Display a message if no results found
+                    $('#searchResults').html('No results found.');
+                }
+            },
+            error: function () {
+                console.log('Error occurred');
+            }
+        });
+    });
+});
 
 function mtr_ft() {
     // Unit conversion meter to feet
@@ -82,6 +190,7 @@ function enableNewitemPage() {
     document.getElementById('id_room').disabled = false;
     document.getElementById('id_room_item').disabled = false;
     document.getElementById('id_room_item_description').disabled = false;
+    document.getElementById('form_submit_button').disabled = false;
 }
 
 $(document).ready(function () {
@@ -122,17 +231,17 @@ $(document).ready(function () {
 
 
 
-document.onkeydown = function (e) {
-    if (event.keyCode == 123) {
-        return false;
-    }
-    if (e.ctrlKey && e.shiftKey && e.keyCode == 'I'.charCodeAt(0)) {
-        return false;
-    }
-    if (e.ctrlKey && e.shiftKey && e.keyCode == 'J'.charCodeAt(0)) {
-        return false;
-    }
-    if (e.ctrlKey && e.keyCode == 'U'.charCodeAt(0)) {
-        return false;
-    }
-}
+// document.onkeydown = function (e) {
+//     if (event.keyCode == 123) {
+//         return false;
+//     }
+//     if (e.ctrlKey && e.shiftKey && e.keyCode == 'I'.charCodeAt(0)) {
+//         return false;
+//     }
+//     if (e.ctrlKey && e.shiftKey && e.keyCode == 'J'.charCodeAt(0)) {
+//         return false;
+//     }
+//     if (e.ctrlKey && e.keyCode == 'U'.charCodeAt(0)) {
+//         return false;
+//     }
+// }

@@ -269,5 +269,4 @@ class UpdateClientForm(forms.ModelForm):
             'town_city',
             'zip_code',
             'state',
-            
         }

@@ -4,38 +4,51 @@ from django.db import models
 from django.urls import reverse
 
 import decimal
+from datetime import datetime
 
 
 User = user_model()
 
 
 class Project(models.Model):
-    name = models.CharField(max_length=255, unique=True, help_text="Name of the project")
-    author = models.ForeignKey(User, on_delete=models.CASCADE, help_text="User who created the project")
+    name = models.CharField(max_length=30, unique=True,
+                            help_text="Name of the project")
+    author = models.ForeignKey(
+        User, on_delete=models.CASCADE, help_text="User who created the project")
     description = models.TextField(
         max_length=255, blank=True, null=True, help_text="Description of the project")
-    created_on = models.DateTimeField(auto_now_add=True, help_text="Date and time when the project was created")
-    is_deleted = models.BooleanField(default=False, help_text="Is the project deleted?")
-    deleted_on = models.DateTimeField(blank=True, null=True, help_text="Date and time when the project was deleted")
+    created_on = models.DateTimeField(
+        auto_now_add=True, help_text="Date and time when the project was created")
+    is_deleted = models.BooleanField(
+        default=False, help_text="Is the project deleted?")
+    deleted_on = models.DateTimeField(
+        blank=True, null=True, help_text="Date and time when the project was deleted")
 
     def __str__(self):
         return str(self.name)
 
     def save(self):
         self.name = self.name.strip().replace(" ", "-")
+        if self.is_deleted:
+            self.deleted_on = datetime.now()
+        if not self.is_deleted:
+            self.deleted_on = None
         return super(Project, self).save()
 
     def total_amount(self):
+        # to calculate total amount declared in project
         dims = Dimension.objects.filter(project=self, is_deleted=False)
         sum_amount = sum(item.amount for item in dims)
         return sum_amount
 
     def total_sqm(self):
+        # to calculate total sqm declared in project
         dims = Dimension.objects.filter(project=self, is_deleted=False)
         sum_sqm = sum(item.sqm for item in dims)
         return sum_sqm
 
     def total_sqft(self):
+        # to calculate total sqft declared in project
         dims = Dimension.objects.filter(project=self, is_deleted=False)
         sum_sqft = sum(item.sqft for item in dims)
         return sum_sqft
@@ -44,7 +57,7 @@ class Project(models.Model):
 class Dimension(models.Model):
     project = models.ForeignKey(
         Project, on_delete=models.CASCADE)
-    name = models.CharField(max_length=255)
+    name = models.CharField(max_length=30)
     description = models.TextField(blank=True, null=True)
     # length & width are in meters
     length = models.DecimalField(max_digits=20, decimal_places=2)
@@ -67,7 +80,10 @@ class Dimension(models.Model):
 
     def save(self):
         self.name = self.name.strip().replace(" ", "-")
-
+        if self.is_deleted:
+            self.deleted_on = datetime.now()
+        if not self.is_deleted:
+            self.deleted_on = None
         if not self.width or self.width == '0' or self.width == '':
             self.width = 0
 

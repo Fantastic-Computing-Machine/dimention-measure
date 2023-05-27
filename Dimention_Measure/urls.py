@@ -21,14 +21,14 @@ from django.urls import include
 
 
 urlpatterns = [
-    path('', include('dimension.urls')),
+    path('dimension/', include('dimension.urls')),
     path('admin/doc/', include('django.contrib.admindocs.urls')),
     path('admin/', admin.site.urls),
-    path('expense/', include('expense.urls')),
+    # path('expense/', include('expense.urls')),
     path('estimate/', include('estimator.urls')),
     path('settings/', include('settings.urls')),
-    path('client_and_company/', include('client_and_company.urls')),
-    path('inspector/', include('inspector.urls')),
+    path('client-and-company/', include('client_and_company.urls')),
     path('user/', include('django.contrib.auth.urls')),
     path('user/', include('authentication.urls')),
+    path('', include('core.urls')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

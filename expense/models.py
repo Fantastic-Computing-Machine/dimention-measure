@@ -18,8 +18,12 @@ class Payee(models.Model):
     name = models.CharField(max_length=255)
     description = models.TextField(blank=True, null=True)
     created_on = models.DateTimeField(auto_now_add=True)
-    phoneNumber = models.CharField(blank=True,
-                                   validators=[settings.PHONE_NUMBER_FORMAT], max_length=11)
+    phoneNumber = models.CharField(
+        blank=True,
+        validators=[settings.PHONE_NUMBER_FORMAT],
+        max_length=11,
+        verbose_name='Phone number'
+    )
 
     def __str__(self):
         return str(self.name) + " | " + str(self.phoneNumber)
@@ -29,6 +33,10 @@ class Payee(models.Model):
 
     def save(self):
         self.name = self.name.replace(" ", "-")
+        if self.is_deleted:
+            self.deleted_on = datetime.now()
+        if not self.is_deleted:
+            self.deleted_on = None
         return super(Payee, self).save()
 
     def total_paid(self):

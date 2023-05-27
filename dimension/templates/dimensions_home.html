@@ -1,0 +1,181 @@
+{% extends 'base.html' %}
+{% load static %} {% load humanize %} {% load utility %}
+
+{% block title %} - Dimensions{% endblock %}
+
+{% block head %}
+
+{% endblock %}
+
+{% block header %}
+
+<li class="nav-item">
+	<a class="nav-link active text-light" aria-current="page" data-bs-toggle="modal" data-bs-target="#newProject"
+		data-bs-whatever="@mdo">
+		New Project</a>
+</li>
+
+{% endblock %}
+
+
+{% block modal %}
+<div class="modal fade" id="newProject" tabindex="-1" aria-labelledby="newProjectLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="newProjectLabel">Project Initialization</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+				<form action="{% url 'home' %}" method="POST">
+					{% csrf_token %}
+					<div class="mb-3">
+						<p>
+							{{form.name.label}}
+							{{form.name}}
+						</p>
+						<p>
+							{{form.description.label}}
+							{{form.description}}
+						</p>
+					</div>
+					<button class="btn align-items-end btn-outline-success" type="submit">Launch</button>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
+{% endblock %}
+
+
+
+{% block body %}
+<div class="container-lg pb-4">
+	<div class="text-light py-2 display-4">Dimension</div>
+
+	{% if projects_list%}
+	<ul class="list-group">
+		{% for item in projects_list %}
+		<li class="list-group-item">
+			<div class="d-flex justify-content-between align-items-start">
+				<a href="{% url 'project_detail' item.id item.name %}">
+					<div class="ms-2 text-dark">
+						<div class="fw-bold">
+							<span>
+								<span>
+									{% replaceItem item.name|capfirst %}
+								</span>
+								<span class="badge bg-primary rounded-pill">{{item.created_on | naturalday}}</span>
+							</span>
+						</div>
+						{% if item.description %}
+						<div>
+							{{item.description|truncatechars:20|capfirst}}
+						</div>
+						{% endif %}
+					</div>
+					<span>
+						<a class="delete_button badge bg-light" id="delete_button{{item.id}}" data-bs-toggle="modal"
+							data-bs-target="#delete{{item.id}}Modal">
+							<img class="icon_ud" width="28" height="28"
+								src="https://img.icons8.com/ios/50/000000/delete-forever--v2.png" />
+						</a>
+					</span>
+				</a>
+			</div>
+		</li>
+
+		<!-- DELETE MODAL -->
+		<div class="modal fade" id="delete{{item.id}}Modal" tabindex="-1" aria-labelledby="delete{{item.id}}ModalLabel"
+			aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title" id="delete{{item.id}}ModalLabel">
+							Confirm
+							delete "{{item.name | capfirst }}"</h5>
+						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+					</div>
+					<div class="modal-body text-start">
+						You wish to permanently delete project&rarr;
+						<b>"{{item.name | capfirst }}"</b>?<br>
+						<b class="my-1">Be Careful!</b>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-outline-success" data-bs-dismiss="modal">Get
+							back to safety</button>
+						<form action="{% url 'delete_project' item.id item.name %}" method="POST">
+							{% csrf_token %}
+
+							<button class="confirm_delete btn btn-danger align-bottom" type="submit">
+								Chop Chop!
+							</button>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- DELETE MODAL -->
+		{% endfor %}
+	</ul>
+
+	{% else %}
+
+	<div class="card">
+		<div class="card-body">
+			<div class=" text-center my-3">
+				<img alt="void" class="img-fluid m-2" style="width: 400px;" src="{% static 'img/void.svg' %}">
+				<div class="text-center">
+					<p class="py-1 fw-light my-3 fs-1">Nothing Here
+						<!-- <a class="btn btn-outline-success" data-bs-toggle="modal" data-bs-target="#newEstimate"
+							class="nav-link active text-light" aria-current="page">
+							<span class="align-bottom">
+								New Estimate
+							</span>
+						</a> -->
+					</p>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	{% endif %}
+
+</div>
+
+
+{% if projects_list%}
+<nav aria-label="Page navigation mt-2">
+	<ul class="pagination pagination-sm justify-content-center">
+		{% if page_obj.has_previous %}
+		<li class="page-item">
+			<a class="page-link" href="?page=1" aria-label="Previous">
+				<span aria-hidden="true">&laquo;</span>
+			</a>
+		</li>
+		<li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">Prev.</a>
+		</li>
+		{% endif %}
+		<li class="page-item">
+			<span class="page-link">
+				{{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+			</span>
+		</li>
+		{% if page_obj.has_next %}
+		<li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a></li>
+		<li class="page-item">
+			<a class="page-link" href="?page={{ page_obj.paginator.num_pages }}" aria-label="Next">
+				<span aria-hidden="true">&raquo;</span>
+			</a>
+		</li>
+		{% endif %}
+	</ul>
+</nav>
+{% endif %}
+
+
+
+{% endblock %}
+
+{% block expense_button %}
+{% endblock %}

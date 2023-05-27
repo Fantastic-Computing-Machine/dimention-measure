@@ -15,8 +15,12 @@ class Client(models.Model):
     description = models.TextField(
         max_length=255, blank=True, null=True)
 
-    phoneNumber = models.CharField(blank=True,
-                                   validators=[settings.PHONE_NUMBER_FORMAT], max_length=11)
+    phoneNumber = models.CharField(
+        blank=True,
+        validators=[settings.PHONE_NUMBER_FORMAT],
+        max_length=11,
+        verbose_name='Phone number'
+    )
     created_on = models.DateTimeField(auto_now_add=True)
     is_deleted = models.BooleanField(default=False)
     deleted_on = models.DateTimeField(blank=True, null=True)
@@ -45,6 +49,10 @@ class Client(models.Model):
         if self.landmark:
             self.landmark = self.landmark.strip()
         self.town_city = self.town_city.strip()
+        if self.is_deleted:
+            self.deleted_on = datetime.now()
+        if not self.is_deleted:
+            self.deleted_on = None
         return super(Client, self).save()
 
     def address(self):
