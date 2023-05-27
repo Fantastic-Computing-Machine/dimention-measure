@@ -81,11 +81,11 @@ INSTALLED_APPS = [
 X_FRAME_OPTIONS = "SAMEORIGIN"
 SILENCED_SYSTEM_CHECKS = ["security.W019"]
 
-EMAIL_USE_TLS = True
-EMAIL_PORT = 587
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_HOST_USER = os.getenv("EMAIL_ID")
-EMAIL_HOST_PASSWORD = os.getenv("EMAIL_PWD")
+# EMAIL_USE_TLS = True
+# EMAIL_PORT = 587
+# EMAIL_HOST = 'smtp.gmail.com'
+# EMAIL_HOST_USER = os.getenv("EMAIL_ID")
+# EMAIL_HOST_PASSWORD = os.getenv("EMAIL_PWD")
 
 CACHES = {
     "default": {
