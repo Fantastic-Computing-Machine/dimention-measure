@@ -1,0 +1,1 @@
+This is sample file for log folder. Helps to create log folder.
