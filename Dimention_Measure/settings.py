@@ -168,6 +168,10 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.0/howto/static-files/
+STATIC_PATH = os.path.join(BASE_DIR, 'static')
+if not os.path.exists(STATIC_PATH):
+    os.mkdir(STATIC_PATH)
+       
 STATIC_URL = "/assets/"
 STATIC_ROOT = "static"
 STATICFILES_DIRS = (os.path.join(BASE_DIR, "assets/"),)
@@ -228,6 +232,5 @@ STATE_CHOICES = (
     ("National Capital Territory of Delhi", "National Capital Territory of Delhi"),
     ("Puducherry", "Puducherry")
 )
-
 
 print("***************************************")
