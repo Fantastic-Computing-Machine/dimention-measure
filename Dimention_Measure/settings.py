@@ -36,7 +36,8 @@ elif ENV == "dev":
     from .dev_settings import *
 
 
-if os.getenv("LOGGING") == "True":
+if os.getenv("LOGGING").lower() == "true":
+    print("Logging Enabled...")
 
     # LOGGING
     TZ = pytz.timezone('Asia/Kolkata')
@@ -87,6 +88,8 @@ if os.getenv("LOGGING") == "True":
     }
 
     print("Logging Started...")
+else :
+    print("Logging Disabled...")
 
 
 MIDDLEWARE = [
