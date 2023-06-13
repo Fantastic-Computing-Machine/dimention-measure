@@ -13,6 +13,8 @@ from django.shortcuts import HttpResponseRedirect
 from client_and_company.models import Client
 from client_and_company.forms import NewClientForm, UpdateClientForm
 
+
+
 from core.views import BaseAuthClass
 
 
