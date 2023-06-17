@@ -88,7 +88,7 @@ if os.getenv("LOGGING").lower() == "true":
     }
 
     print("Logging Started...")
-else :
+else:
     print("Logging Disabled...")
 
 
@@ -174,7 +174,7 @@ USE_TZ = True
 STATIC_PATH = os.path.join(BASE_DIR, 'static')
 if not os.path.exists(STATIC_PATH):
     os.mkdir(STATIC_PATH)
-       
+
 STATIC_URL = "/assets/"
 STATIC_ROOT = "static"
 STATICFILES_DIRS = (os.path.join(BASE_DIR, "assets/"),)
