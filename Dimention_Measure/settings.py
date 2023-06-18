@@ -27,16 +27,17 @@ ENV = os.getenv("ENV")
 if ENV == "prod":
     print("***************************************")
     print("Initializing with Production Settings")
-    print("***************************************")
+    
     from .prod_settings import *
 
 elif ENV == "dev":
     print("***************************************")
     print("Initializing with Development Settings")
+    
     from .dev_settings import *
 
 
-if os.getenv("LOGGING").lower() == "true":
+if os.getenv("LOGGING","false").lower() == "true":
     print("Logging Enabled...")
 
     # LOGGING

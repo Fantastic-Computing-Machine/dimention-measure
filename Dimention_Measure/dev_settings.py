@@ -128,3 +128,5 @@ SECURE_HSTS_INCLUDE_SUBDOMAINS = True
 SESSION_COOKIE_SECURE = False
 SECURE_HSTS_PRELOAD = True
 SECURE_CROSS_ORIGIN_OPENER_POLICY = None
+
+print("***************************************")
