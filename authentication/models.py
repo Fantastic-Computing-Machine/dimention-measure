@@ -77,6 +77,8 @@ class Organization(models.Model):
     zip_code = models.CharField(max_length=6)
     state = models.CharField(choices=settings.STATE_CHOICES,
                              max_length=255, default='abc')
+    registered_on = models.DateTimeField(auto_now_add=True)
+    website = models.URLField(max_length=255, blank=True, null=True)
 
     def __str__(self):
         return str(self.company_name)

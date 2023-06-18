@@ -25,7 +25,7 @@ class Client(models.Model):
     is_deleted = models.BooleanField(default=False)
     deleted_on = models.DateTimeField(blank=True, null=True)
 
-    address_1 = models.CharField(max_length=255, default="abc")
+    address_1 = models.CharField(max_length=255, blank=True, null=True)
     address_2 = models.CharField(max_length=255, blank=True, null=True)
     landmark = models.CharField(max_length=255, blank=True, null=True)
     town_city = models.CharField(max_length=255)

@@ -99,7 +99,8 @@ class EstimateAdmin(admin.ModelAdmin):
     date_hierarchy = "created_on"
     ordering = ["-created_on"]
     show_full_result_count = True
-    readonly_fields = ["deleted_on"]
+    readonly_fields = ["deleted_on", "created_on",
+                       "sqm", "sqft", "amount"]
     list_display_links = [
         "id",
         "project",
@@ -117,6 +118,27 @@ class EstimateAdmin(admin.ModelAdmin):
         "room_item",
         "room_item_description",
     ]
+    fieldsets = (
+        ('Project Details', {
+            'fields': ('project', 'room', 'room_item', 'room_item_description')
+        }),
+        ('Measurements', {
+            'fields': ('quantity', 'length', 'width', 'sqm', 'sqft', 'unit')
+        }),
+        ('Financial Details', {
+            'fields': ('amount', 'discount', 'rate',)
+        }),
+        ('Additional Information', {
+            'fields': ('created_on', 'is_deleted', 'deleted_on'),
+        }),
+    )
+
+    add_fieldsets = (
+        (None, {
+            'classes': ('wide',),
+            'fields': ('project', 'room', 'room_item', 'room_item_description', 'quantity', 'length', 'width', 'sqm', 'sqft', 'amount', 'discount', 'rate', 'unit'),
+        }),
+    )
 
 
 @admin.register(Project)
@@ -149,6 +171,20 @@ class ProjectAdmin(admin.ModelAdmin):
         "client__name",
         "client__phoneNumber"
     ]
+    fieldsets = (
+        (None, {
+            'fields': ('name', 'description', 'author', 'client', 'created_on')
+        }),
+        ('Advanced Details', {
+            'fields': ('is_deleted', 'deleted_on', 'discount', 'reference_number')
+        }),
+    )
+    add_fieldsets = (
+        (None, {
+            'classes': ('wide',),
+            'fields': ('name', 'description', 'author', 'client', 'discount', 'reference_number'),
+        }),
+    )
 
 
 admin.site.register(ProjectTermsAndConditions)

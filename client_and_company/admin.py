@@ -14,7 +14,7 @@ class ClientAdmin(admin.ModelAdmin):
         "id",
         "name",
         "phoneNumber",
-        "town_city",
+        "organization",
         "state",
         "is_deleted",
     ]
@@ -34,7 +34,7 @@ class ClientAdmin(admin.ModelAdmin):
         "id",
         "name",
         "phoneNumber",
-        "town_city",
+        "organization",
         "state",
         "is_deleted",
     ]
@@ -47,6 +47,8 @@ class ClientAdmin(admin.ModelAdmin):
         'created_on',
         'organization__company_name',
         'state',
+        'is_deleted',
+
     ]
 
     def save_model(self, request, obj, form, change):

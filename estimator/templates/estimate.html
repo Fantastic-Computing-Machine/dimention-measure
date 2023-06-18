@@ -139,9 +139,36 @@
         <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
     </div>
     <div class="offcanvas-body">
-        <div class="list-group">
+
+        <div class="list-group my-2">
+
+            <a class="list-group-item active fw-bold">Project</a>
+
+            <a href="{% url 'download_estimate_excel_file' project.id project.name %}"
+                class="list-group-item list-group-item-action">
+                Download Excel
+            </a>
+            <a href="{% url 'update_estimate_project' project.id project.name %}"
+                class="list-group-item list-group-item-action">
+                Update Project</a>
+            <a class="list-group-item list-group-item-action" id="delete_button" data-bs-toggle="modal"
+                data-bs-target="#deleteModal">
+                Delete Project</a>
+
+            {% if user.is_staff or user.is_admin %}
+            <a href="{% url 'select_project_terms_and_conditions' project.id project.name %}"
+                class="list-group-item list-group-item-action">
+                Terms and Conditions</a>
+            {% endif %}
+
+        </div>
+
+
+        <div class="list-group my-2">
+            <a class="list-group-item active fw-bold">Management</a>
             <a href="{% url 'folio' %}" class="list-group-item list-group-item-action">Folio</a>
             <a href="{% url 'clients' %}" class="list-group-item list-group-item-action">Clients</a>
+            <a href="{% url 'organization' %}" class="list-group-item list-group-item-action">Admin</a>
         </div>
 
     </div>
@@ -162,40 +189,7 @@
                     <div class="h2 text-dark pb-2">
                         <span class="float-start">
                             <span class="float-start text-dark text-wrap">{% replaceItem project.name|title %}</span>
-                            <span class="dropdown">
-                                <a type="button" id="dropdownMenuButton2" data-bs-toggle="dropdown"
-                                    aria-expanded="false">
-                                    <img src="https://img.icons8.com/ios/27/000000/menu-2.png" />
-                                </a>
-                                <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="dropdownMenuButton2">
-                                    <li>
-                                        <a href="{% url 'download_estimate_excel_file' project.id project.name %}"
-                                            class="dropdown-item">
-                                            Download Excel
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <hr class="dropdown-divider">
-                                    </li>
-                                    <li><a href="{% url 'update_estimate_project' project.id project.name %}"
-                                            class="dropdown-item">
-                                            Update Project</a>
-                                    </li>
-                                    <li><a class="dropdown-item" id="delete_button" data-bs-toggle="modal"
-                                            data-bs-target="#deleteModal">
-                                            Delete Project</a>
-                                    </li>
-                                    {% if user.is_staff or user.is_admin %}
-                                    <li>
-                                        <hr class="dropdown-divider">
-                                    </li>
-                                    <li><a href="{% url 'select_project_terms_and_conditions' project.id project.name %}"
-                                            class="dropdown-item">
-                                            Terms and Conditions</a>
-                                    </li>
-                                    {% endif %}
-                                </ul>
-                            </span>
+
                         </span>
                     </div>
                 </div>
@@ -216,18 +210,25 @@
                 </span>
             </div>
             {% endif %}
+        </div>
+    </div>
 
-            <hr class="text-dark">
+
+    <div class="card my-3">
+        <div class="card-body">
 
             <div class="my-2">
                 <div>
                     <p class="h4">
                         {% replaceItem project.client.name|title %}
                         <span class="h5">
+                            {% if project.client.phoneNumber %}
                             (+91-{{project.client.phoneNumber}})
+                            {% endif %}
                         </span>
                     </p>
                 </div>
+                {% if project.client.address_1 %}
                 <p><span class="fw-bold">Address: </span>
                     <span>{{project.client.address_1}}</span>
 
@@ -240,6 +241,7 @@
                         , {{project.client.town_city}}, {{project.client.state}}- {{project.client.zip_code}}
                     </span>
                 </p>
+                {% endif %}
             </div>
         </div>
     </div>

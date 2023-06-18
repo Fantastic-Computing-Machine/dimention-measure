@@ -20,7 +20,7 @@ class Project(models.Model):
     created_on = models.DateTimeField(
         auto_now_add=True, help_text="Date and time when the project was created")
     is_deleted = models.BooleanField(
-        default=False, help_text="Is the project deleted?")
+        default=False, help_text="Check to soft Delete the project")
     deleted_on = models.DateTimeField(
         blank=True, null=True, help_text="Date and time when the project was deleted")
 

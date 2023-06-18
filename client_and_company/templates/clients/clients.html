@@ -134,7 +134,8 @@
                     data-bs-target="#collapse_{{item.id}}_accordion" aria-expanded="true"
                     aria-controls="collapse_{{item.id}}_accordion">
                     <span class="fw-bold text-dark">
-                        {% replaceItem item.name|capfirst %} ({{item.phoneNumber}}) - {{item.town_city}}
+                        {% replaceItem item.name|capfirst %} {% if item.phoneNumber %} ({{item.phoneNumber}})
+                        {% endif %}
                     </span>
                 </button>
             </h2>
