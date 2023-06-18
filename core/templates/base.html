@@ -82,32 +82,18 @@
                             <form id="searchForm">
                                 {% csrf_token %}
                                 <div class="mb-3">
-                                    <label for="projectInput" class="form-label">Project Name</label>
                                     <input type="text" placeholder="Discover the Missing Piece: Search for Projects "
                                         name="textToSearch" class="form-control" id="projectInput" required>
                                 </div>
-                                <!-- Optional Parameters -->
-                                <div class="mb-3">
-                                    <label class="form-label">Search into</label>
-                                    <div class="form-check" style="display: inline-block;">
-                                        <input class="form-check-input" type="radio" name="dimentionCheck"
-                                            id="dimentionCheck">
-                                        <label class="form-check-label" for="flexRadioDefault1">
-                                            Dimentions
-                                        </label>
-                                    </div>
-                                    <div class="form-check" style="display: inline-block;">
-                                        <input class="form-check-input" type="radio" name="estimateCheck"
-                                            id="estimateCheck">
-                                        <label class="form-check-label" for="flexRadioDefault2">
-                                            Estimate
-                                        </label>
-                                    </div>
+                                <div class="input-group">
+                                    <select class="form-select" id="select-dropdown" aria-label="Select project or dimewent">
+                                      <option selected value = 1>Dimention</option>
+                                      <option value= 2>Estimate</option>
+                                    </select>
 
-                                </div>
-                                <button type="submit" class="btn btn-primary">Search</button>
+                                    <button class="btn btn-primary" type="submit">Search</button>
+                                  </div>
                             </form>
-                            <hr>
                             <div id="searchResults" style="max-height: 300px;
                         overflow-y: scroll;"></div>
                         </div>

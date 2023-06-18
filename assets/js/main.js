@@ -39,17 +39,6 @@ function changeColors() {
   });
 
 $(document).ready(function () {
-    document.getElementById("dimentionCheck").checked = true;
-
-    $("#estimateCheck").click(function () {
-        document.getElementById("dimentionCheck").checked = false;
-        document.getElementById("estimateCheck").checked = true;
-    });
-
-    $("#dimentionCheck").click(function () {
-        document.getElementById("estimateCheck").checked = false;
-        document.getElementById("dimentionCheck").checked = true;
-    });
 
     $(document).on('click', '.result-item', function () {
         var projectUrl = $(this).data('url');
@@ -63,10 +52,10 @@ $(document).ready(function () {
         var formData = $(this).serialize();
 
         //   check if the formData contains the dimentionCheck the add type=dimentions
-        if (document.getElementById("dimentionCheck").checked == true) {
+        if (document.getElementById("select-dropdown").value == 1) {
             formData = formData + "&type=dimension";
         }
-        else if (document.getElementById("estimateCheck").checked == true) {
+        else if (document.getElementById("select-dropdown").value == 2) {
             formData = formData + "&type=estimate";
         }
 
@@ -81,10 +70,10 @@ $(document).ready(function () {
                     var endTime = new Date().getTime();
                     var duration = (endTime - startTime) / 1000;
                     if (response.results.length == 0) {
-                        $('#searchResults').html('<div class="wrapword">No results match your search<div>');
+                        $('#searchResults').html('<hr><div class="wrapword">No results match your search<div>');
                     }
                     else {
-                        var resultsHtml = '<div class = "fw-light">' + response.results.length + ' results in ' + duration + ' seconds</div><div class="list-group">';
+                        var resultsHtml = '<hr><div class = "fw-light">' + response.results.length + ' results in ' + duration + ' seconds</div><div class="list-group">';
                         for (var i = 0; i < response.results.length; i++) {
                             var result = response.results[i];
                             var resultHtml = '<a href="' + result.url + '" class="list-group-item list-group-item-action"><span m-1>' + result.title +
