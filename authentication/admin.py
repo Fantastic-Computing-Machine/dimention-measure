@@ -50,8 +50,6 @@ class LogEntryAdmin(admin.ModelAdmin):
     ]
 
 
-admin.site.register(Organization)
-
 admin.site.unregister(DjangoGroup)
 # admin.site.unregister(Group)
 
@@ -71,7 +69,13 @@ class UserAdmin(BaseUserAdmin):
     # that reference specific fields on auth.User.
     list_display = ('username', 'email', 'first_name', 'last_name', 'organization',
                     'phoneNumber', 'is_admin', 'is_staff', 'is_active', 'last_login')
-    list_filter = ('is_admin',)
+    list_filter = (
+        'is_admin',
+        'is_staff',
+        'is_active',
+        'organization',
+        'last_login'
+    )
     fieldsets = (
         ('Authentication', {'fields': ('username', 'password')}),
         ('Personal info', {'fields': ('profile_image', 'first_name', 'last_name',
@@ -99,37 +103,27 @@ class UserAdmin(BaseUserAdmin):
 admin.site.register(CompanyUser, UserAdmin)
 
 
-# @admin.register(CompanyUser)
-# class CompanyUser(admin.ModelAdmin):
-# readonly_fields = ['organization',
-#                    'last_login', 'date_joined', ]
+class OrganizationAdmin(admin.ModelAdmin):
+    list_display = ('company_name', 'manager_name',
+                    'email', 'registered_on')
 
-#     exclude = ['is_superuser', 'is_staff']
-
-# def get_form(self, request, obj=None, **kwargs):
-#     form = super().get_form(request, obj, **kwargs)
-#     user_access_level = request.user.access_level
-#     is_superuser = request.user.is_superuser
-
-#     disabled_fields = [
-#         'user_permissions',
-#     ]
-
-#     if user_access_level == 'SITE_USR':
-#         disabled_fields = disabled_fields + ['is_active']
-
-#     if user_access_level == 'ORG_ADM':
-#         disabled_fields = disabled_fields + ['organization']
-
-#     if user_access_level == 'ORG_USR':
-#         disabled_fields |= disabled_fields + \
-#             ['access_level', 'organization', 'is_active']
-
-# Prevent non-superusers from editing their own permissions
-
-#     for f in disabled_fields:
-#         if f in form.base_fields:
-#             form.base_fields[f].disabled = True
+    list_filter = ('state', 'registered_on')
+    readonly_fields = ['registered_on']
+    search_fields = ('company_name', 'manager_name', 'email', 'town_city')
+    ordering = ('-registered_on',)
+    fieldsets = (
+        ('Basic Information', {
+            'fields': ('company_name', 'manager_name', 'email', 'website', )
+        }),
+        ('Contact Information', {
+            'fields': ('phoneNumber', 'address_1', 'address_2', 'landmark', 'town_city', 'zip_code', 'state')
+        }),
+        ('Registration Details', {
+            'fields': ('registered_on',),
+            # Optional: Add collapse class to hide the section by default
+            'classes': ('collapse',)
+        }),
+    )
 
 
-#     return form
+admin.site.register(Organization, OrganizationAdmin)
