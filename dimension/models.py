@@ -53,6 +53,9 @@ class Project(models.Model):
         sum_sqft = sum(item.sqft for item in dims)
         return sum_sqft
 
+    def get_absolute_url(self):
+        return reverse("project_detail", args=[str(self.pk), str(self.name)])
+
 
 class Dimension(models.Model):
     project = models.ForeignKey(

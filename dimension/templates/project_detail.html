@@ -5,6 +5,63 @@
 {% block title %} - Dimension: {{project.name| capfirst }} {% endblock %}
 
 
+{% block header %}
+
+<li class="nav-item">
+    <a class="nav-link active text-light" data-bs-toggle="offcanvas" href="#offcanvasMoreOptions"
+        aria-controls="offcanvasMoreOptions">
+        More
+    </a>
+</li>
+
+{% endblock %}
+
+{% block modal %}
+
+<div class="offcanvas offcanvas-start d-print-none" tabindex="-1" id="offcanvasMoreOptions"
+    aria-labelledby="offcanvasMoreOptionsLabel">
+    <div class="offcanvas-header hide_items_print">
+        <h5 class="offcanvas-title" id="offcanvasMoreOptionsLabel">More Options</h5>
+        <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body hide_items_print">
+
+        <div class="list-group my-2">
+
+            <a class="list-group-item active fw-bold">Project</a>
+
+            <a href="{% url 'download_excel_file' project.id project.name %}"
+                class="list-group-item list-group-item-action">
+                Download Excel
+            </a>
+
+            <a onClick="window.print()" class="list-group-item list-group-item-action" data-bs-dismiss="offcanvas">
+                Save PDF
+            </a>
+
+            <a href="{% url 'update_project' project.id project.name %}" class="list-group-item list-group-item-action">
+                Update Project</a>
+
+
+            <a href="{% url 'delete_project' project.id project.name %}" class="list-group-item list-group-item-action">
+                Delete Project</a>
+
+        </div>
+
+        <div class="list-group my-2">
+            <a class="list-group-item active fw-bold">Management</a>
+            <a href="{% url 'clients' %}" class="list-group-item list-group-item-action">Clients</a>
+            {% if user.is_staff or user.is_admin %}
+            <a href="{% url 'organization' %}" class="list-group-item list-group-item-action">Admin</a>
+            {% endif %}
+        </div>
+
+    </div>
+</div>
+
+{% endblock %}
+
+
 {% block body %}
 
 <!-- New Dimentson Modal -->
@@ -87,33 +144,7 @@
         <div class="col-12 col-sm-8">
             <div class="h2 text-light pb-2">
                 <span class="float-start">
-                    <span class="float-start text-wrap">{% replaceItem project.name|title %}</span>
-                    <span class="dropdown hide_items_print">
-                        <a type="button" id="dropdownMenuButton2" data-bs-toggle="dropdown" aria-expanded="false">
-                            <img src="https://img.icons8.com/ios/27/ffffff/menu-2.png" />
-                        </a>
-                        <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="dropdownMenuButton2">
-                            <li>
-                                <a class="dropdown-item" href="{% url 'download_excel_file' project.id project.name %}">
-                                    Save Excel
-                                </a>
-                            </li>
-                            <li>
-                                <a class="dropdown-item" onClick="window.print()">
-                                    Save PDF
-                                </a>
-                            </li>
-                            <li>
-                                <hr class="dropdown-divider">
-                            </li>
-                            <li>
-                                <a href="{% url 'delete_project' project.id project.name %}" class="dropdown-item"
-                                    id="delete_button">
-                                    Delete project
-                                </a>
-                            </li>
-                        </ul>
-                    </span>
+                    <span class="float-start text-wrap text-light">{% replaceItem project.name|title %}</span>
                 </span>
             </div>
         </div>

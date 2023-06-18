@@ -1,46 +1,45 @@
-from django.shortcuts import render
-import decimal
-# from pymongo import MongoClient
-# from database import MONGO
-# import certifi
-
+from django.contrib.auth import get_user_model as user_model
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
 from django.http import FileResponse
-from django.shortcuts import HttpResponseRedirect
+from django.shortcuts import HttpResponseRedirect, render
 from django.views.generic import (
     CreateView,
     UpdateView,
     TemplateView,
     ListView,
 )
+from django.views.generic.edit import FormMixin
 from django.urls import reverse_lazy, reverse
+
+import decimal
 import os
 from datetime import datetime
 from openpyxl import Workbook
 import re
 
-from .forms import NewProjectForm, NewDimensionForm
-from .forms import UpdateDimensionForm
+from .forms import (
+    NewProjectForm,
+    UpdateProjectForm,
+    NewDimensionForm,
+    UpdateDimensionForm,
+)
+# from .forms import
 from .models import Project, Dimension
-
-from django.views.generic.edit import FormMixin
-from django.contrib.auth import get_user_model as user_model
-
 from core.views import BaseAuthClass
 
 User = user_model()
 
 
 class BaseAuthClass(LoginRequiredMixin):
-    # Class to be inherited by all views that require login
+    """Class to be inherited by all views that require login"""
     login_url = '/user/login/'
     redirect_field_name = 'redirect_to'
 
 
 class DimensionHomeView(BaseAuthClass, FormMixin, ListView):
-    # Class view for dimension home page
+    """Class view for dimension home page"""
     model = Project
     form_class = NewProjectForm
     context_object_name = 'projects_list'
@@ -63,7 +62,7 @@ class DimensionHomeView(BaseAuthClass, FormMixin, ListView):
 
 
 class DimensionProjectView(BaseAuthClass, CreateView):
-    # Class view for dimension project page
+    """Class view for dimension project page"""
     model = Dimension
     form_class = NewDimensionForm
     template_name = 'project_detail.html'
@@ -87,8 +86,15 @@ class DimensionProjectView(BaseAuthClass, CreateView):
         return super(DimensionProjectView, self).post(request, **kwargs)
 
 
+class UpdateProjectView(BaseAuthClass, UpdateView):
+    """Class view for updating project"""
+    model = Project
+    form_class = UpdateProjectForm
+    template_name = 'update_dimension_project.html'
+
+
 class UpdateDimensionView(BaseAuthClass, UpdateView):
-    # Class view for updating dimension
+    """Class view for updating dimension"""
     model = Dimension
     form_class = UpdateDimensionForm
     template_name = 'update_item.html'
@@ -111,7 +117,7 @@ class UpdateDimensionView(BaseAuthClass, UpdateView):
 
 @login_required
 def DeleteProjectView(request, pk, project_name):
-    # Function view for soft deleting Entire project
+    """Function view for soft deleting Entire project"""
     if request.method == 'POST':
         project = Project.objects.get(pk=pk)
         project.is_deleted = True

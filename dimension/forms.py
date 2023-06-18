@@ -36,6 +36,12 @@ class NewProjectForm(BasicFormsFields):
         fields = ('name', 'description', 'author')
 
 
+class UpdateProjectForm(BasicFormsFields):
+    class Meta:
+        model = Project
+        fields = ('name', 'description')
+
+
 class NewDimensionForm(BasicFormsFields):
     length = forms.CharField(
         max_length=200,
