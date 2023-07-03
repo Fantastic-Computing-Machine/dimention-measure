@@ -16,3 +16,11 @@ def formatFloat(value, n=2):
     # format the number to international format
     value = "{:,}".format(float(value))
     return value
+
+
+@register.simple_tag()
+def meter2feet(meters):
+    # Convert meters to feet
+    feet = float(meters) * 3.28084
+    inches = round((feet - int(feet)) * 12, 2)
+    return f"{int(feet)}' {inches}\""

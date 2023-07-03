@@ -206,8 +206,8 @@
                         <th class="text-start mx-2 text-nowrap">Tag</th>
                         <th class="text-end mx-2 text-nowrap">Length (m)</th>
                         <th class="text-end mx-2 text-nowrap">Width (m)</th>
-                        <th class="text-end mx-2 text-nowrap">Area: Sqm</th>
-                        <th class="text-end mx-2 text-nowrap">Area: Sqft</th>
+                        <th class="text-end mx-2 text-nowrap">Area (Sqm)</th>
+                        <!-- <th class="text-end mx-2 text-nowrap">Area: Sqft</th> -->
                         <th class="text-end mx-2 text-nowrap">Rate</th>
                         <th class="text-end mx-2 text-nowrap">Amount (₹)</th>
                         <th class="text-center mx-2 text-nowrap hide_items_print">Action</th>
@@ -235,10 +235,15 @@
                             </span>
                             {% endcomment %}
                         </td>
-                        <td class="text-end mx-2 text-nowrap">{% formatFloat item.length %}</td>
-                        <td class="text-end mx-2 text-nowrap">{% formatFloat item.width %}</td>
-                        <td class="text-end mx-2 text-nowrap">{% formatFloat item.sqm %}</td>
-                        <td class="text-end mx-2 text-nowrap">{% formatFloat item.sqft %}</td>
+                        <td class="text-end mx-2 text-nowrap">{% formatFloat item.length %}
+                            <div>({% meter2feet item.length %})</div>
+                        </td>
+                        <td class="text-end mx-2 text-nowrap">{% formatFloat item.width %}
+                            <div>({% meter2feet item.width %})</div>
+                        </td>
+                        <td class="text-end mx-2 text-nowrap">{% formatFloat item.sqm %}
+                            <div>({% formatFloat item.sqft %} sqft)</div>
+                        </td>
                         <td class="text-end mx-2 text-nowrap">{% formatFloat item.rate %}</td>
                         <td class="text-end mx-2 text-nowrap">{% formatFloat item.amount %}</td>
                         <td class="text-center mx-2 hide_items_print">
