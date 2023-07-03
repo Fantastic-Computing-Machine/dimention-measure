@@ -8,13 +8,9 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 """
 
 from dotenv import load_dotenv
-import logging
 import os
 import pymysql
 from pathlib import Path
-import re
-
-from django.core.validators import RegexValidator
 
 pymysql.install_as_MySQLdb()
 
@@ -27,16 +23,8 @@ load_dotenv(dotenv_path=dotenv_path)
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.getenv("SECRET_KEY")
-
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
-
-ADMINS = [
-    ("Aditya Agarwal", "aditya.ag1234@gmail.com"),
-    ("Nilesh Kumar Mandal", "s.nileshkm@gmail.com"),
-]
 
 ALLOWED_HOSTS = [
     "0.tcp.in.ngrok.io",
@@ -51,8 +39,6 @@ ALLOWED_HOSTS = [
 CSRF_TRUSTED_ORIGINS = [
     "http://3.6.80.190"
 ]
-
-AUTH_USER_MODEL = "authentication.CompanyUser"
 
 # Application definition
 INSTALLED_APPS = [
@@ -78,10 +64,6 @@ INSTALLED_APPS = [
     'core',
 ]
 
-# For django-admin-interface installed app
-X_FRAME_OPTIONS = "SAMEORIGIN"
-SILENCED_SYSTEM_CHECKS = ["security.W019"]
-
 # EMAIL_USE_TLS = True
 # EMAIL_PORT = 587
 # EMAIL_HOST = 'smtp.gmail.com'
@@ -94,10 +76,11 @@ CACHES = {
         "LOCATION": "db_cache_table",
     },
 }
+print("Cache Enabled...")
+print("\tCache Backend: ", CACHES["default"]["BACKEND"])
 
 
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
-
 
 WSGI_APPLICATION = 'Dimention_Measure.wsgi.application'
 
@@ -114,17 +97,4 @@ DATABASES = {
         'PORT': os.getenv('RDS_PORT'),
     }
 }
-
 print("Database Connected...")
-
-
-CSRF_COOKIE_SECURE = False
-SECURE_HSTS_SECONDS = 3600
-SECURE_HSTS_INCLUDE_SUBDOMAINS = True
-
-# for supplying site over Https ONLY = True
-# SECURE_SSL_REDIRECT = False
-
-SESSION_COOKIE_SECURE = False
-SECURE_HSTS_PRELOAD = True
-SECURE_CROSS_ORIGIN_OPENER_POLICY = None

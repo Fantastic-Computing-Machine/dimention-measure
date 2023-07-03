@@ -24,20 +24,29 @@ load_dotenv(dotenv_path=dotenv_path)
 
 ENV = os.getenv("ENV")
 
+# SECURITY WARNING: keep the secret key used in production secret!
+SECRET_KEY = os.getenv("SECRET_KEY")
+
+ADMINS = [
+    ("Aditya Agarwal", "aditya.ag1234@gmail.com"),
+    ("Nilesh Kumar Mandal", "s.nileshkm@gmail.com"),
+]
+
 if ENV == "prod":
-    print("***************************************")
+    print("\n***************************************")
     print("Initializing with Production Settings")
-    
     from .prod_settings import *
 
 elif ENV == "dev":
-    print("***************************************")
+    print("\n***************************************")
     print("Initializing with Development Settings")
-    
     from .dev_settings import *
 
+AUTH_USER_MODEL = "authentication.CompanyUser"
 
-if os.getenv("LOGGING","false").lower() == "true":
+print("Watchman Enabled...")
+
+if os.getenv("LOGGING", "false").lower() == "true":
     print("Logging Enabled...")
 
     # LOGGING
@@ -192,8 +201,8 @@ ADMIN_MEDIA_PREFIX = '/static/admin/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-LOGIN_REDIRECT_URL = "dashboard"
-LOGOUT_REDIRECT_URL = "dashboard"
+LOGIN_REDIRECT_URL = "index"
+LOGOUT_REDIRECT_URL = "index"
 LOGIN_URL = "login"
 
 
@@ -236,5 +245,23 @@ STATE_CHOICES = (
     ("National Capital Territory of Delhi", "National Capital Territory of Delhi"),
     ("Puducherry", "Puducherry")
 )
+
+CSRF_COOKIE_SECURE = False
+SECURE_HSTS_SECONDS = 3600
+SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+
+# for supplying site over Https ONLY = True
+# SECURE_SSL_REDIRECT = False
+
+SESSION_COOKIE_SECURE = False
+SECURE_HSTS_PRELOAD = True
+SECURE_CROSS_ORIGIN_OPENER_POLICY = None
+
+# For django-admin-interface installed app
+X_FRAME_OPTIONS = "SAMEORIGIN"
+SILENCED_SYSTEM_CHECKS = ["security.W019"]
+
+SESSION_ENGINE = "django.contrib.sessions.backends.cache"
+SESSION_CACHE_ALIAS = "default"
 
 print("***************************************")

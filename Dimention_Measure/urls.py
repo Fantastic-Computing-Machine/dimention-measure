@@ -31,4 +31,5 @@ urlpatterns = [
     path('user/', include('django.contrib.auth.urls')),
     path('user/', include('authentication.urls')),
     path('', include('core.urls')),
+    path('watchman/', include('watchman.urls')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

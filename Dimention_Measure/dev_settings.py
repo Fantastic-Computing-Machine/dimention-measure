@@ -8,13 +8,9 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 """
 
 from dotenv import load_dotenv
-import logging
 import os
 import pymysql
 from pathlib import Path
-import re
-
-from django.core.validators import RegexValidator
 
 pymysql.install_as_MySQLdb()
 
@@ -27,17 +23,8 @@ load_dotenv(dotenv_path=dotenv_path)
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.getenv("SECRET_KEY")
-
 # SECURITY WARNING: don't run with debug turned on in production!
-# DEBUG = False
 DEBUG = True
-
-ADMINS = [
-    ("Aditya Agarwal", "aditya.ag1234@gmail.com"),
-    ("Nilesh Kumar Mandal", "s.nileshkm@gmail.com"),
-]
 
 ALLOWED_HOSTS = [
     "0.tcp.in.ngrok.io",
@@ -55,8 +42,6 @@ CSRF_TRUSTED_ORIGINS = [
     "https://adiagarwalrock-literate-computing-54wvrp9r7v634xpj-8000.preview.app.github.dev"
 ]
 
-AUTH_USER_MODEL = "authentication.CompanyUser"
-
 # Application definition
 INSTALLED_APPS = [
     'admin_interface',
@@ -72,6 +57,7 @@ INSTALLED_APPS = [
     'django_quill',
     'ckeditor',
     'django_countries',
+    'watchman',
     'dimension',
     'client_and_company',
     'authentication',
@@ -81,19 +67,14 @@ INSTALLED_APPS = [
     'core',
 ]
 
-# For django-admin-interface installed app
-X_FRAME_OPTIONS = "SAMEORIGIN"
-SILENCED_SYSTEM_CHECKS = ["security.W019"]
-
-SESSION_ENGINE = "django.contrib.sessions.backends.cache"
-SESSION_CACHE_ALIAS = "default"
-
 CACHES = {
     "default": {
         "BACKEND": "django.core.cache.backends.db.DatabaseCache",
         "LOCATION": "db_cache_table",
     },
 }
+print("Cache Enabled...")
+print("\tCache Backend:", CACHES["default"]["BACKEND"].split(".")[-1])
 
 
 STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.ManifestStaticFilesStorage'
@@ -104,29 +85,10 @@ WSGI_APPLICATION = 'Dimention_Measure.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
-
-
-# if DEBUG == False:
-
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
-
 print("Database Connected...")
-
-
-CSRF_COOKIE_SECURE = False
-SECURE_HSTS_SECONDS = 3600
-SECURE_HSTS_INCLUDE_SUBDOMAINS = True
-
-# for supplying site over Https ONLY = True
-# SECURE_SSL_REDIRECT = False
-
-SESSION_COOKIE_SECURE = False
-SECURE_HSTS_PRELOAD = True
-SECURE_CROSS_ORIGIN_OPENER_POLICY = None
-
-print("***************************************")
