@@ -3,7 +3,7 @@ from django.contrib.auth import get_user_model as user_model
 from django.db import models
 from django.urls import reverse
 
-import decimal
+from decimal import Decimal
 from datetime import datetime
 
 
@@ -85,49 +85,34 @@ class Dimension(models.Model):
         self.name = self.name.strip().replace(" ", "-")
         if self.is_deleted:
             self.deleted_on = datetime.now()
-        if not self.is_deleted:
+        else:
             self.deleted_on = None
-        if not self.width or self.width == '0' or self.width == '':
-            self.width = 0
 
-        if not self.rate or self.rate == '0' or self.rate == '':
-            self.rate = 0
+        self.width = float(self.width) if self.width and self.width != '0' else 0
+
+        self.rate = float(self.rate) if self.rate and self.rate != '0' else 0
+
+        self.description = self.description.strip()
 
         if self.width == '' or self.width == 0:
-
-            if self.description != None and self.description != '':
-                if '**NOTE: THIS IS RUNNING LENGTH.**' not in self.description:
-                    self.description = "**NOTE: THIS IS RUNNING LENGTH.** \n" + \
-                        str(self.description)
+            if self.description and '**NOTE: THIS IS RUNNING LENGTH.**' not in self.description:
+                self.description = "**NOTE: THIS IS RUNNING LENGTH.** \n" + str(self.description)
             else:
                 self.description = '**NOTE: THIS IS RUNNING LENGTH.**'
 
             self.sqm = self.length
-            self.sqft = self.length * decimal.Decimal(3.28084)
-            if self.rate == '' or self.rate == 0:
-                self.amount = decimal.Decimal(0)
+            self.sqft = self.length * Decimal(3.28084)
+            self.amount = Decimal(0) if self.rate == 0 else self.sqft * Decimal(self.rate)
 
-            elif self.rate > 0:
-                self.amount = self.length * self.rate
-
-            return super(Dimension, self).save()
-
-        elif self.width > 0:
-            if self.description != None and self.description != '':
-                if '**NOTE: THIS IS RUNNING LENGTH.**' in self.description:
-                    self.description = self.description.replace(
-                        '**NOTE: THIS IS RUNNING LENGTH.**', '')
+        else:
+            if self.description and '**NOTE: THIS IS RUNNING LENGTH.**' in self.description:
+                self.description = self.description.replace('**NOTE: THIS IS RUNNING LENGTH.**', '')
 
             self.sqm = self.length * self.width
-            self.sqft = self.length * self.width * decimal.Decimal(10.7639)
+            self.sqft = self.length * self.width * Decimal(10.7639)
+            self.amount = Decimal(0) if self.rate == 0 else self.sqft * self.rate
 
-            if self.rate == '' or self.rate == 0:
-                self.amount = decimal.Decimal(0)
-
-            elif self.rate > 0:
-                self.amount = self.sqft * self.rate
-
-            return super(Dimension, self).save()
+        return super(Dimension, self).save()
 
     def get_absolute_url(self):
         return reverse("project_detail", args=[str(self.project.pk), str(self.project.name)])
