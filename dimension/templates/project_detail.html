@@ -73,7 +73,7 @@
                 <div class="modal-header">
                     {% csrf_token %}
                     <h5 class="modal-title" id="newDimensionLabel">
-                        New Dimension
+                        Add Dimension
                     </h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
@@ -89,12 +89,24 @@
                     <p>
                     <div class="row">
                         <div class="col">
-                            {{form.length.label}}
-                            {{form.length}}
+                            {{form.length_feet.label}}
+                            {{form.length_feet}}
                         </div>
                         <div class="col">
-                            {{form.width.label}}
-                            {{form.width}}
+                            {{form.length_inches.label}}
+                            {{form.length_inches}}
+                        </div>
+                    </div>
+                    </p>
+                    <p>
+                    <div class="row">
+                        <div class="col">
+                            {{form.width_feet.label}}
+                            {{form.width_feet}}
+                        </div>
+                        <div class="col">
+                            {{form.width_inches.label}}
+                            {{form.width_inches}}
                         </div>
                     </div>
                     </p>
@@ -113,11 +125,17 @@
                     </div>
                     </p>
                     <p>
-                        {{form.rate.label}}
-                        {{form.rate}}
-                    </p>
-                    <p>Amount<input class="form-control" id="amount" type="number" placeholder="Amount"
-                            aria-label=".form-control-sm" readonly>
+                    <div class="row">
+                        <div class="col">
+                            {{form.rate.label}}
+                            {{form.rate}}
+                        </div>
+                        <div class="col">
+                            Amount
+                            <input class="form-control" id="amount" type="number" placeholder="Amount"
+                                aria-label=".form-control-sm" readonly>
+                        </div>
+                    </div>
                     </p>
                     <p>
                         <span class="fs-6">
@@ -204,9 +222,9 @@
                 <table class="table table-bordered table-hover table-sm">
                     <thead class="table-primary align-middle row-cols-auto">
                         <th class="text-start mx-2 text-nowrap">Tag</th>
-                        <th class="text-end mx-2 text-nowrap">Length (m)</th>
-                        <th class="text-end mx-2 text-nowrap">Width (m)</th>
-                        <th class="text-end mx-2 text-nowrap">Area (Sqm)</th>
+                        <th class="text-end mx-2 text-nowrap">Length</th>
+                        <th class="text-end mx-2 text-nowrap">Width</th>
+                        <th class="text-end mx-2 text-nowrap">Area</th>
                         <!-- <th class="text-end mx-2 text-nowrap">Area: Sqft</th> -->
                         <th class="text-end mx-2 text-nowrap">Rate</th>
                         <th class="text-end mx-2 text-nowrap">Amount (₹)</th>
@@ -235,11 +253,11 @@
                             </span>
                             {% endcomment %}
                         </td>
-                        <td class="text-end mx-2 text-nowrap">{% formatFloat item.length %}
-                            <div>({% meter2feet item.length %})</div>
+                        <td class="text-end mx-2 text-nowrap">
+                            {{item.length_feet}}' {{item.length_inches}}"
                         </td>
-                        <td class="text-end mx-2 text-nowrap">{% formatFloat item.width %}
-                            <div>({% meter2feet item.width %})</div>
+                        <td class="text-end mx-2 text-nowrap">
+                            {{item.width_feet}}' {{item.width_inches}}"
                         </td>
                         <td class="text-end mx-2 text-nowrap">{% formatFloat item.sqm %}
                             <div>({% formatFloat item.sqft %} sqft)</div>
@@ -250,10 +268,9 @@
                             <a href="{% url 'update_dimention' item.id project.name %}">
                                 <img class="icon_ud" src="https://img.icons8.com/ios/15/fff/edit-row.png" />
                             </a>
-
                             <a href="{% url 'delete_dimension' item.id item.project.id item.project.name %}">
-                                <img class="icon_ud"
-                                    src="https://img.icons8.com/ios/15/000000/delete-sign--v1.png" /></a>
+                                <img class="icon_ud" src="https://img.icons8.com/ios/15/000000/delete-sign--v1.png" />
+                            </a>
                         </td>
                     </tr>
                     {% endfor %}

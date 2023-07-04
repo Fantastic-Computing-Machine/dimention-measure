@@ -9,90 +9,132 @@ class BasicFormsFields(forms.ModelForm):
         required=True,
         widget=forms.TextInput(
             attrs={
-                'class': 'form-control',
+                "class": "form-control",
                 "aria-label": ".form-control-sm",
-                "type": 'text',
+                "type": "text",
                 "placeholder": "Name",
             }
-        )
+        ),
     )
 
     description = forms.CharField(
         required=False,
         widget=forms.Textarea(
             attrs={
-                'class': 'form-control',
-                "rows": 3,
+                "class": "form-control",
+                "rows": 2,
                 "aria-label": ".form-control-sm",
                 "placeholder": "Description (optional)",
             }
-        )
+        ),
     )
 
 
 class NewProjectForm(BasicFormsFields):
     class Meta:
         model = Project
-        fields = ('name', 'description', 'author')
+        fields = ("name", "description", "author")
 
 
 class UpdateProjectForm(BasicFormsFields):
     class Meta:
         model = Project
-        fields = ('name', 'description')
+        fields = ("name", "description")
 
 
 class NewDimensionForm(BasicFormsFields):
-    length = forms.CharField(
-        max_length=200,
-        required=True,
-        widget=forms.TextInput(
-            attrs={
-                'class': 'form-control',
-                "aria-label": ".form-control-sm",
-                "type": 'number',
-                "placeholder": "Length (in meters)",
-                "step": ".01",
-                "oninput": "areas()",
-            }
-        )
-    )
-    width = forms.CharField(
+
+    length_feet = forms.CharField(
         max_length=200,
         required=False,
         widget=forms.TextInput(
             attrs={
-                'class': 'form-control',
+                "class": "form-control",
                 "aria-label": ".form-control-sm",
-                "type": 'number',
-                "placeholder": "Width (in meters)",
+                "type": "number",
+                "placeholder": "Length (in feet)",
                 "step": ".01",
                 "oninput": "areas()",
             }
-        )
+        ),
     )
+
+    length_inches = forms.CharField(
+        max_length=200,
+        required=False,
+        widget=forms.TextInput(
+            attrs={
+                "class": "form-control",
+                "aria-label": ".form-control-sm",
+                "type": "number",
+                "placeholder": "Length (in inches)",
+                "step": ".01",
+                "oninput": "areas()",
+            }
+        ),
+    )
+
+    width_feet = forms.CharField(
+        max_length=200,
+        required=False,
+        widget=forms.TextInput(
+            attrs={
+                "class": "form-control",
+                "aria-label": ".form-control-sm",
+                "type": "number",
+                "placeholder": "Width (in feet)",
+                "step": ".01",
+                "oninput": "areas()",
+            }
+        ),
+    )
+
+    width_inches = forms.CharField(
+        max_length=200,
+        required=False,
+        widget=forms.TextInput(
+            attrs={
+                "class": "form-control",
+                "aria-label": ".form-control-sm",
+                "type": "number",
+                "placeholder": "Width (in inches)",
+                "step": ".01",
+                "oninput": "areas()",
+            }
+        ),
+    )
+
+
     rate = forms.CharField(
         max_length=200,
         required=False,
         widget=forms.TextInput(
             attrs={
-                'class': 'form-control',
+                "class": "form-control",
                 "aria-label": ".form-control-sm",
-                "type": 'number',
+                "type": "number",
                 "placeholder": "Rate",
                 "step": ".01",
                 "oninput": "areas()",
             }
-        )
+        ),
     )
 
     class Meta:
         model = Dimension
-        fields = ('project', 'name', 'description', 'length', 'width', 'rate')
+        fields = (
+            "project",
+            "name",
+            "description",
+            "length_feet",
+            "length_inches",
+            "width_feet",
+            "width_inches",
+            "rate",
+        )
 
 
 class UpdateDimensionForm(NewDimensionForm):
-
     class Meta:
         model = Dimension
-        fields = ('name', 'description', 'length', 'width', 'rate')
+        fields = ("name", "description", "length", "width", "rate")
