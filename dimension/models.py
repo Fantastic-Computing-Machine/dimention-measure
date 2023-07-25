@@ -71,11 +71,11 @@ class Dimension(models.Model):
     name = models.CharField(max_length=30)
     description = models.TextField(blank=True, null=True)
 
-    length = models.DecimalField(verbose_name="Length (m)", max_digits=20, decimal_places=2, default=0, blank=True, null=True)
+    # length = models.DecimalField(verbose_name="Length (m)", max_digits=20, decimal_places=2, default=0, blank=True, null=True)
     length_feet = models.DecimalField(max_digits=20, decimal_places=2, default=0)
     length_inches = models.DecimalField(max_digits=20, decimal_places=2, default=0)
 
-    width = models.DecimalField(verbose_name="Width (m)", max_digits=20, decimal_places=2, blank=True, null=True)
+    # width = models.DecimalField(verbose_name="Width (m)", max_digits=20, decimal_places=2, blank=True, null=True)
     width_feet = models.DecimalField(max_digits=20, decimal_places=2, blank=True, null=True,default=0)
     width_inches = models.DecimalField(max_digits=20, decimal_places=2, blank=True, null=True, default=0)
 
