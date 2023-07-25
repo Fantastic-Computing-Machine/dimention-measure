@@ -268,12 +268,14 @@
                         </td>
                         <td class="text-end mx-2 text-nowrap">
                             {{item.length_feet}}' {{item.length_inches}}"
+                            <div>({{item.length_meter}} m)</div>
                         </td>
                         <td class="text-end mx-2 text-nowrap">
                             {{item.width_feet}}' {{item.width_inches}}"
+                            <div>({{item.width_meter}} m)</div>
                         </td>
-                        <td class="text-end mx-2 text-nowrap">{% formatFloat item.sqm %} mtr
-                            <div>({% formatFloat item.sqft %} sqft)</div>
+                        <td class="text-end mx-2 text-nowrap">{% formatFloat item.sqft %} sqft
+                            <div>({% formatFloat item.sqm %} sqm)</div>
                         </td>
                         <td class="text-end mx-2 text-nowrap">{% formatFloat item.rate %}</td>
                         <td class="text-end mx-2 text-nowrap">{% formatFloat item.amount %}</td>

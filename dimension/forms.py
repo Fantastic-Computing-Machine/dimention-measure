@@ -138,7 +138,6 @@ class UpdateDimensionForm(NewDimensionForm):
     class Meta:
         model = Dimension
         fields = (
-            "project",
             "name",
             "description",
             "length_feet",

@@ -6,6 +6,7 @@ from django.urls import reverse
 from decimal import Decimal
 from datetime import datetime
 
+from core.templatetags.utility import formatFloat
 
 User = user_model()
 
@@ -132,6 +133,14 @@ class Dimension(models.Model):
         self.amount = Decimal(0) if self.rate == 0 else self.sqft * Decimal(self.rate)
 
         return super(Dimension, self).save()
+
+    def length_meter(self):
+        result = Decimal(float(self.length_feet) * 0.3048) + Decimal(float(self.length_inches) * 0.0254)
+        return formatFloat(result)
+
+    def width_meter(self):
+        result = Decimal(float(self.width_feet) * 0.3048) + Decimal(float(self.width_inches) * 0.0254)
+        return formatFloat(result)
 
 
     def get_absolute_url(self):
