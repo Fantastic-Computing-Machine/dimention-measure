@@ -5,7 +5,16 @@ body {
 }
 
 body.alternate-background {
-  background-image: linear-gradient(180.4deg, rgba(188, 120, 236, 1) -2.2%, rgba(29, 133, 163, 1) 83.5%);
+  background: #808080;
+  /* fallback for old browsers */
+  background: -webkit-linear-gradient(to right, #3fada8, #808080);
+  /* Chrome 10-25, Safari 5.1-6 */
+  background: linear-gradient(to right, #3fada8, #808080);
+  /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+
+  /* background-image: linear-gradient(109.6deg, rgba(121, 203, 202, 1) 11.2%, rgba(119, 161, 211, 1) 91.1%); */
+  /* background-image: radial-gradient(circle farthest-corner at 10% 20%, rgba(176, 229, 208, 1) 42%, rgba(92, 202, 238, 0.41) 93.6%); */
+  /* background-image: linear-gradient(180.4deg, rgba(188, 120, 236, 1) -2.2%, rgba(29, 133, 163, 1) 83.5%); */
 }
 
 #colorchangeButton {
@@ -40,16 +49,16 @@ footer {
 }
 
 ::-webkit-scrollbar {
-  width: 5px;
+  width: 3px;
 }
 
 ::-webkit-scrollbar-track {
-  width: 5px;
+  width: 3px;
   background: #f5f5f5;
 }
 
 ::-webkit-scrollbar-thumb {
-  width: 5px;
+  width: 3px;
   background-color: black;
   outline: 1px solid slategray;
   border-radius: 1rem;

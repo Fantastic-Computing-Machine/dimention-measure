@@ -137,4 +137,12 @@ class NewDimensionForm(BasicFormsFields):
 class UpdateDimensionForm(NewDimensionForm):
     class Meta:
         model = Dimension
-        fields = ("name", "description", "length", "width", "rate")
+        fields = (
+            "name",
+            "description",
+            "length_feet",
+            "length_inches",
+            "width_feet",
+            "width_inches",
+            "rate",
+        )

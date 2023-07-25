@@ -108,7 +108,7 @@ class DimensionAdmin(admin.ModelAdmin):
         "created_on",
         "is_deleted"
     ]
-    readonly_fields = ["sqm", "sqft", "amount", "deleted_on", "created_on", "length", "width"]
+    readonly_fields = ["sqm", "sqft", "amount", "deleted_on", "created_on"]
     list_filter = [
         "created_on",
         "is_deleted",
@@ -121,8 +121,8 @@ class DimensionAdmin(admin.ModelAdmin):
             'Dimension Details', {
                 'fields': (
                     'description',
-                    ('length_feet', 'length_inches', 'length'),
-                    ('width_feet', 'width_inches', 'width'),
+                    ('length_feet', 'length_inches'),
+                    ('width_feet', 'width_inches'),
                     ('sqm', 'sqft'),
                     ('rate', 'amount')
                 )
@@ -137,7 +137,7 @@ class DimensionAdmin(admin.ModelAdmin):
     add_fieldsets = (
         (None, {
             'classes': ('wide',),
-            'fields': ('project', 'name', 'description', 'length', 'width', 'rate')
+            'fields': ('project', 'name', 'description', 'rate')
         }),
     )
 

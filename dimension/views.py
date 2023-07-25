@@ -77,10 +77,10 @@ class DimensionProjectView(BaseAuthClass, CreateView):
 
     def post(self, request, **kwargs):
         request.POST._mutable = True
-        if request.POST['width'] == '':
-            request.POST['width'] = '0'
-        if request.POST['rate'] == '':
-            request.POST['rate'] = '0'
+        request.POST['width_feet'] = request.POST.get('width_feet', '0') or '0'
+        request.POST['width_inches'] = request.POST.get('width_inches', '0') or '0'
+        request.POST['rate'] = request.POST.get('rate', '0') or '0'
+
         request.POST["project"] = str(kwargs['pk'])
         request.POST._mutable = False
         return super(DimensionProjectView, self).post(request, **kwargs)
@@ -106,10 +106,9 @@ class UpdateDimensionView(BaseAuthClass, UpdateView):
 
     def post(self, request, **kwargs):
         request.POST._mutable = True
-        if request.POST['width'] == '':
-            request.POST['width'] = '0'
-        if request.POST['rate'] == '':
-            request.POST['rate'] = '0'
+        request.POST['width_feet'] = request.POST.get('width_feet', '0') or '0'
+        request.POST['width_inches'] = request.POST.get('width_inches', '0') or '0'
+        request.POST['rate'] = request.POST.get('rate', '0') or '0'
         request.POST["project"] = str(kwargs['pk'])
         request.POST._mutable = False
         return super(UpdateDimensionView, self).post(request, **kwargs)
