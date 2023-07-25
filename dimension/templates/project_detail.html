@@ -78,76 +78,89 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <p>
+                    <div class="my-2">
                         {{form.name.label}}
                         {{form.name}}
-                    </p>
-                    <p>
+                    </div>
+                    <div class="my-2">
                         {{form.description.label}}
                         {{form.description}}
-                    </p>
-                    <p>
-                    <div class="row">
-                        <div class="col">
-                            {{form.length_feet.label}}
-                            {{form.length_feet}}
-                        </div>
-                        <div class="col">
-                            {{form.length_inches.label}}
-                            {{form.length_inches}}
+                    </div>
+                    <div class="my-2">
+                        <div class="row">
+                            <div>
+                                Length
+                            </div>
+                            <div class="col">
+                                <div class="input-group">
+                                    {{form.length_feet}}
+                                    <span class="input-group-text">ft</span>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="input-group">
+                                    {{form.length_inches}}
+                                    <span class="input-group-text">in</span>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                    </p>
-                    <p>
-                    <div class="row">
-                        <div class="col">
-                            {{form.width_feet.label}}
-                            {{form.width_feet}}
-                        </div>
-                        <div class="col">
-                            {{form.width_inches.label}}
-                            {{form.width_inches}}
-                        </div>
-                    </div>
-                    </p>
-                    <p>
-                    <div class="row">
-                        <div class="col">
-                            Sqm
-                            <input class="form-control" id="sqm" type="text" placeholder="Sqm"
-                                aria-label=".form-control-sm" disabled readonly>
-                        </div>
-                        <div class="col">
-                            Sqft
-                            <input class="form-control" id="sqft" type="text" placeholder="Sqft"
-                                aria-label=".form-control-sm" disabled readonly>
+                    <div class="my-2">
+                        <div class="row">
+                            <div>Width</div>
+                            <div class="col">
+                                <div class="input-group">
+                                    {{form.width_feet}}
+                                    <span class="input-group-text">ft</span>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="input-group">
+                                    {{form.width_inches}}
+                                    <span class="input-group-text">in</span>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                    </p>
-                    <p>
-                    <div class="row">
-                        <div class="col">
-                            {{form.rate.label}}
-                            {{form.rate}}
-                        </div>
-                        <div class="col">
-                            Amount
-                            <input class="form-control" id="amount" type="number" placeholder="Amount"
-                                aria-label=".form-control-sm" readonly>
+                    <div class="my-2">
+                        <div class="row">
+                            <div class="col">
+                                Sqm
+                                <input class="form-control" id="sqm" type="text" placeholder="Sqm"
+                                    aria-label=".form-control-sm" disabled readonly>
+                            </div>
+                            <div class="col">
+                                Sqft
+                                <input class="form-control" id="sqft" type="text" placeholder="Sqft"
+                                    aria-label=".form-control-sm" disabled readonly>
+                            </div>
                         </div>
                     </div>
-                    </p>
-                    <p>
+                    <div class="my-2">
+                        <div class="row">
+                            <div class="col">
+                                {{form.rate.label}}
+                                {{form.rate}}
+                            </div>
+                            <div class="col">
+                                Amount
+                                <input class="form-control" id="amount" type="number" placeholder="Amount"
+                                    aria-label=".form-control-sm" readonly>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="my-2">
                         <span class="fs-6">
                             <em class="fst-italic">*Amount calculated using Dimensions in </em>
                             <span class="badge bg-secondary text-wrap font-monospace">Ft. | SqFt.
                             </span>
                         </span>
-                    </p>
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="submit" name="new_dimension" value="new_dimension" id = "add_new_dimension" class="btn btn-primary m-1" disabled>
+                    <button type="submit" name="new_dimension" value="new_dimension" id="add_new_dimension"
+                        class="btn btn-primary m-1" disabled>
                         <img src="https://img.icons8.com/ios-filled/25/000000/save--v1.png" />
                         Add Item</button>
                 </div>
@@ -191,7 +204,7 @@
 
     <hr class="text-light">
 
-    <div class="card">
+    <div class="card hide_items_print">
         <div class="card-body">
             <div class="table-responsive">
 
@@ -259,7 +272,7 @@
                         <td class="text-end mx-2 text-nowrap">
                             {{item.width_feet}}' {{item.width_inches}}"
                         </td>
-                        <td class="text-end mx-2 text-nowrap">{% formatFloat item.sqm %}
+                        <td class="text-end mx-2 text-nowrap">{% formatFloat item.sqm %} mtr
                             <div>({% formatFloat item.sqft %} sqft)</div>
                         </td>
                         <td class="text-end mx-2 text-nowrap">{% formatFloat item.rate %}</td>
@@ -279,13 +292,14 @@
             </div>
             {% if dimentions %}
             <div class="my-1 hide_items_print">
-                <button type="button" class="btn btn-outline-primary m-1" data-bs-toggle="modal"
-                    data-bs-target="#newDimension">
-                    <span class="text-nowrap">
-                        <img class="px-2" src="https://img.icons8.com/ios/25/000000/add--v2.png" />
-                        Add Dimension
-                    </span>
-                </button>
+                <div class="d-grid gap-2">
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#newDimension">
+                        <span class="text-nowrap">
+                            <img class="px-2" src="https://img.icons8.com/ios/25/ffffff/add--v2.png" />
+                            Add Dimension
+                        </span>
+                    </button>
+                </div>
             </div>
             {% endif %}
         </div>
