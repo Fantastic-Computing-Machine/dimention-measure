@@ -45,7 +45,7 @@ class DimensionHomeView(BaseAuthClass, FormMixin, ListView):
     context_object_name = 'projects_list'
     template_name = 'dimensions_home.html'
     success_url = reverse_lazy("home")
-    paginate_by = 15
+    paginate_by = 14
 
     def get_queryset(self):
         queryset = super().get_queryset()
