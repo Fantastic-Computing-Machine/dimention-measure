@@ -1,6 +1,8 @@
+from .invoiceGenerator import *
 from datetime import datetime
 from openpyxl import Workbook
-from openpyxl.styles import Font, Alignment
+from openpyxl.styles import Font, Alignment, PatternFill,Border,Side
+from openpyxl.drawing.image import Image
 from typing import List
 import decimal
 import html
@@ -287,136 +289,104 @@ def download_estimate_excel_file(request, project_id, project_name):
     company = request.user.organization
 
     # create a workbook object
-    workbook = Workbook()
-    # create a worksheet
+    workbook = generate_Invoice()
     sheet = workbook.active
-    sheet.title = project_name + " Estimate"
+    
+    
+    # sheet.append(
+    #     ["Sl.No", "Description", "Quantity", "Unit", "Rate", "Amount", "Total"]
+    # )
+    # sheet["A14"].font = Font(bold=True)
+    # sheet["B14"].font = Font(bold=True)
+    # sheet["C14"].font = Font(bold=True)
+    # sheet["D14"].font = Font(bold=True)
+    # sheet["E14"].font = Font(bold=True)
+    # sheet["F14"].font = Font(bold=True)
+    # sheet["G14"].font = Font(bold=True)
 
-    sheet.column_dimensions["B"].width = 70
-    sheet.column_dimensions["B"].alignment = Alignment(wrapText=True)
-    sheet.append(
-        [
-            "",
-            "Reference No.: " + str(project.reference_number),
-            "",
-            "",
-            "Date",
-            current_date,
-        ]
-    )
-    sheet["B1"].font = Font(size=9)
-    sheet["E1"].font = Font(size=9)
-    sheet["F1"].font = Font(size=9)
-    sheet.append([""])
-    sheet.append(["", company.company_name.replace("-", " ").title()])
-    sheet["B3"].font = Font(size=12, bold=True)
-    sheet.append(["", company.address()])
-    sheet.append(["", "Email: " + str(company.email)])
-    sheet.append(["", "Mobile: " + str(company.phoneNumber)])
-    sheet.append([""])
-    sheet.append(["", "To"])
-    sheet.append(["", project.client.name.replace("-", " ").title()])
-    sheet["B9"].font = Font(size=12, bold=True)
-    sheet.append(["", project.client.address()])
-    sheet.append([""])
-    sheet.append(["", "Estimate"])
-    sheet["B12"].font = Font(bold=True)
-    # sheet.append(["", project.client.address])
-    sheet.append([""])
-    sheet.append(
-        ["Sl.No", "Description", "Quantity", "Unit", "Rate", "Amount", "Total"]
-    )
-    sheet["A14"].font = Font(bold=True)
-    sheet["B14"].font = Font(bold=True)
-    sheet["C14"].font = Font(bold=True)
-    sheet["D14"].font = Font(bold=True)
-    sheet["E14"].font = Font(bold=True)
-    sheet["F14"].font = Font(bold=True)
-    sheet["G14"].font = Font(bold=True)
+    # # sheet["B14"].alignment = Alignment(wrapText=True)
+    # index = 1
+    # # room_obj = Room.objects.all()
+    # estimate = Estimate.objects.filter(
+    #     project__id=project_id, is_deleted=False
+    # ).order_by("room")
 
-    # sheet["B14"].alignment = Alignment(wrapText=True)
-    index = 1
-    # room_obj = Room.objects.all()
-    estimate = Estimate.objects.filter(
-        project__id=project_id, is_deleted=False
-    ).order_by("room")
+    # for room_item in project.get_all_rooms():
+    #     sheet.append([index, room_item[1]])
 
-    for room_item in project.get_all_rooms():
-        sheet.append([index, room_item[1]])
+    #     estimate_room_obj = estimate.filter(
+    #         room__id=room_item[0],
+    #     )
+    #     index_j = 0
+    #     for item in estimate_room_obj:
+    #         index_j = index_j + 1
+    #         if item.unit == None:
+    #             unit = None
+    #         else:
+    #             unit = item.unit.unit
+    #         description = (
+    #             str(item.room_item.name).replace("-", " ")
+    #             + " - "
+    #             + str(item.room_item_description.description).replace("-", " ").title()
+    #         )
+    #         if item.discount != 0:
+    #             description = (
+    #                 description
+    #                 + " - "
+    #                 + str("{:.2f}".format(item.discount) + "%")
+    #                 + "-( Rs. "
+    #                 + str("{:.2f}".format(item.discount_amount()))
+    #                 + " )"
+    #             )
+    #         sheet.append(
+    #             [
+    #                 str(index) + "." + str(index_j),
+    #                 description,
+    #                 str(item.get_actual_quantity()),
+    #                 str(unit),
+    #                 str(item.rate),
+    #                 str("{:.2f}".format(item.calculate_amount())),
+    #                 str("{:.2f}".format(item.total_after_discount())),
+    #             ]
+    #         )
+    #     index += 1
 
-        estimate_room_obj = estimate.filter(
-            room__id=room_item[0],
-        )
-        index_j = 0
-        for item in estimate_room_obj:
-            index_j = index_j + 1
-            if item.unit == None:
-                unit = None
-            else:
-                unit = item.unit.unit
-            description = (
-                str(item.room_item.name).replace("-", " ")
-                + " - "
-                + str(item.room_item_description.description).replace("-", " ").title()
-            )
-            if item.discount != 0:
-                description = (
-                    description
-                    + " - "
-                    + str("{:.2f}".format(item.discount) + "%")
-                    + "-( Rs. "
-                    + str("{:.2f}".format(item.discount_amount()))
-                    + " )"
-                )
-            sheet.append(
-                [
-                    str(index) + "." + str(index_j),
-                    description,
-                    str(item.get_actual_quantity()),
-                    str(unit),
-                    str(item.rate),
-                    str("{:.2f}".format(item.calculate_amount())),
-                    str("{:.2f}".format(item.total_after_discount())),
-                ]
-            )
-        index += 1
+    # sheet.append(
+    #     ["", "Total itemized Discount", "", "", "", project.total_itemised_discount()]
+    # )
+    # sheet.append(["", "Grand Total", "", "", "", project.total_amount()])
+    # sheet.append(
+    #     [
+    #         "",
+    #         "Discount ( " + str(project.discount) + "% )",
+    #         "",
+    #         "",
+    #         "",
+    #         project.discount_amount(),
+    #     ]
+    # )
+    # sheet.append(
+    #     ["", "Total After discount", "", "", "", project.total_after_discount()]
+    # )
+    # sheet.append(["", "GST @ 18%", "", "", "", project.gst_amount()])
+    # sheet.append(["", "Total including GST", "", "", "", project.total_with_gst()])
+    # sheet.append([""])
 
-    sheet.append(
-        ["", "Total itemized Discount", "", "", "", project.total_itemised_discount()]
-    )
-    sheet.append(["", "Grand Total", "", "", "", project.total_amount()])
-    sheet.append(
-        [
-            "",
-            "Discount ( " + str(project.discount) + "% )",
-            "",
-            "",
-            "",
-            project.discount_amount(),
-        ]
-    )
-    sheet.append(
-        ["", "Total After discount", "", "", "", project.total_after_discount()]
-    )
-    sheet.append(["", "GST @ 18%", "", "", "", project.gst_amount()])
-    sheet.append(["", "Total including GST", "", "", "", project.total_with_gst()])
-    sheet.append([""])
+    # for item in project_tnc_obj:
+    #     sheet.append(["", item.heading.upper()])
 
-    for item in project_tnc_obj:
-        sheet.append(["", item.heading.upper()])
+    #     ree = re.compile("<.*?>")
+    #     cleantext = re.sub(ree, "", item.content)
 
-        ree = re.compile("<.*?>")
-        cleantext = re.sub(ree, "", item.content)
+    #     repr_string = repr(cleantext)
+    #     new_string = re.sub(r"\\r|\\n", "!&", repr_string)
+    #     new_string = new_string.strip("'")
+    #     c = new_string.split("!&!&!&!&")
 
-        repr_string = repr(cleantext)
-        new_string = re.sub(r"\\r|\\n", "!&", repr_string)
-        new_string = new_string.strip("'")
-        c = new_string.split("!&!&!&!&")
-
-        for i in c:
-            sheet.append(["", html.unescape(i)])
-        sheet.append([""])
-    sheet.append([""])
+    #     for i in c:
+    #         sheet.append(["", html.unescape(i)])
+    #     sheet.append([""])
+    # sheet.append([""])
 
     workbook.save(filename=str(file_path))
     workbook.close()
@@ -619,3 +589,6 @@ def deleteSelectedProjectTnC(request, pk, project_name):
     return HttpResponseRedirect(
         reverse("project_terms_and_conditions", args=(pk, project_name))
     )
+
+
+
