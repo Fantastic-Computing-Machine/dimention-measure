@@ -8,7 +8,7 @@ from client_and_company.models import Client
 @admin.register(Client)
 class ClientAdmin(admin.ModelAdmin):
     formfield_overrides = {
-        models.TextField: {'widget': Textarea(attrs={'rows': 4, 'cols': 40})},
+        models.TextField: {"widget": Textarea(attrs={"rows": 4, "cols": 40})},
     }
     list_display = [
         "id",
@@ -39,17 +39,67 @@ class ClientAdmin(admin.ModelAdmin):
         "is_deleted",
     ]
     readonly_fields = [
-        'deleted_on',
-        'organization',
-        'created_by',
+        "deleted_on",
+        "organization",
+        "created_by",
+        "created_on",
     ]
     list_filter = [
-        'created_on',
-        'organization__company_name',
-        'state',
-        'is_deleted',
-
+        "created_on",
+        "organization__company_name",
+        "state",
+        "is_deleted",
     ]
+
+    fieldsets = (
+        (
+            "General Information",
+            {
+                "fields": ("name", "description", "gstn"),
+            },
+        ),
+        (
+            "Contact Information",
+            {
+                "fields": (
+                    "phoneNumber",
+                    "address_1",
+                    "address_2",
+                    "landmark",
+                    "town_city",
+                    "zip_code",
+                    "state",
+                ),
+            },
+        ),
+        (
+            "Project Information",
+            {
+                "fields": (
+                    "project_address_1",
+                    "project_address_2",
+                    "project_landmark",
+                    "project_town_city",
+                    "project_zip_code",
+                    "project_state",
+                ),
+                "classes": ("collapse",),
+            },
+        ),
+        (
+            "Other Details",
+            {
+                "fields": (
+                    "organization",
+                    "created_by",
+                    "created_on",
+                    "is_deleted",
+                    "deleted_on",
+                ),
+                "classes": ("collapse",),
+            },
+        ),
+    )
 
     def save_model(self, request, obj, form, change):
         obj.organization = request.user.organization

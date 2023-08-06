@@ -110,17 +110,11 @@ class Organization(models.Model):
     def address(self):
         full_address = self.address_1
         if self.address_2:
-            full_address = full_address + ", " + self.address_2
+            full_address = f"{full_address}, {self.address_2}"
         if self.landmark:
-            full_address = full_address + ", " + self.landmark
+            full_address = f"{full_address}, {self.landmark}"
         full_address = (
-            full_address
-            + ", "
-            + self.town_city
-            + ", "
-            + self.state
-            + " - "
-            + self.zip_code
+            f"{full_address}, {self.town_city}, {self.state} - {self.zip_code}"
         )
         return full_address
 
