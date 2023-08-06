@@ -402,7 +402,6 @@ def download_estimate_excel_file(request, project_id, project_name):
             "Content-Disposition": 'attachment; filename= "{}"'.format(filename),
         },
     )
-    # return file_ecxel
 
 
 @login_required
