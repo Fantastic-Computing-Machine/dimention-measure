@@ -139,7 +139,7 @@ class OrganizationAdmin(admin.ModelAdmin):
     ordering = ("-registered_on",)
     fieldsets = (
         (
-            "Basic Information",
+            "General Information",
             {"fields": ("company_name", "manager_name", "email", "website", "gstn")},
         ),
         (

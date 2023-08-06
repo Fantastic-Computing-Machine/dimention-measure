@@ -18,7 +18,7 @@ import os
 from datetime import datetime
 from openpyxl import Workbook
 import re
-
+from decimal import Decimal
 from .forms import (
     NewProjectForm,
     UpdateProjectForm,
@@ -190,8 +190,8 @@ def download_excel_view(request, project_id, project_name):
     for item in dimension:
 
         sheet.append([
-            str(sno), item.name, str(item.length), str(
-                item.width), str(item.sqm), str(item.sqft), str(item.rate), str(item.amount)
+            str(sno), item.name, f"{str(float(item.length_feet))}' {str(float(item.length_inches))}\"",
+                f"{str(float(item.width_feet))}'{str(float(item.width_inches))}\"", str(item.sqm), str(item.sqft), str(item.rate), str(item.amount)
         ])
         sheet.append(["", item.description])
         sno += 1

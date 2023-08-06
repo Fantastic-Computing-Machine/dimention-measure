@@ -50,13 +50,13 @@ if os.getenv("LOGGING", "false").lower() == "true":
     print("Logging Enabled...")
 
     # LOGGING
-    TZ = pytz.timezone('Asia/Kolkata')
+    TZ = pytz.timezone("Asia/Kolkata")
 
     # Format the current time as per the desired format
     current_time = datetime.now(TZ).strftime("%d-%m-%y %H:%M:%S")
 
-    LOG_DIR = os.path.join(BASE_DIR, 'log')
-    LOG_FILE = '/' + str(current_time) + ' django-insight.log'
+    LOG_DIR = os.path.join(BASE_DIR, "log")
+    LOG_FILE = os.path.join(str(current_time), "django-insight.log")
     LOG_PATH = LOG_DIR + LOG_FILE
 
     if not os.path.exists(LOG_DIR):
@@ -80,16 +80,12 @@ if os.getenv("LOGGING", "false").lower() == "true":
             },
         },
         "loggers": {
-            "django": {
-                "handlers": ["file"],
-                "level": "INFO",
-                "propagate": True
-            },
+            "django": {"handlers": ["file"], "level": "INFO", "propagate": True},
         },
         "formatters": {
             "app": {
                 "format": (
-                    u"%(asctime)s [%(levelname)-8s] "
+                    "%(asctime)s [%(levelname)-8s] "
                     "(%(module)s.%(funcName)s) %(message)s"
                 ),
                 "datefmt": "%Y-%m-%d %H:%M:%S",
@@ -103,74 +99,74 @@ else:
 
 
 MIDDLEWARE = [
-    'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',
-    'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.common.BrokenLinkEmailsMiddleware',
-    'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
-    'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'django.contrib.admindocs.middleware.XViewMiddleware',
+    "django.middleware.security.SecurityMiddleware",
+    "whitenoise.middleware.WhiteNoiseMiddleware",
+    "django.contrib.sessions.middleware.SessionMiddleware",
+    "django.middleware.common.BrokenLinkEmailsMiddleware",
+    "django.middleware.common.CommonMiddleware",
+    "django.middleware.csrf.CsrfViewMiddleware",
+    "django.contrib.auth.middleware.AuthenticationMiddleware",
+    "django.contrib.messages.middleware.MessageMiddleware",
+    "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "django.contrib.admindocs.middleware.XViewMiddleware",
     "django.middleware.locale.LocaleMiddleware",
 ]
 
 IGNORABLE_404_URLS = [
-    re.compile(r'^/apple-touch-icon.*\.png$'),
-    re.compile(r'^/favicon\.ico$'),
-    re.compile(r'^/robots\.txt$'),
-    re.compile(r'^/robots\.ttf$'),
+    re.compile(r"^/apple-touch-icon.*\.png$"),
+    re.compile(r"^/favicon\.ico$"),
+    re.compile(r"^/robots\.txt$"),
+    re.compile(r"^/robots\.ttf$"),
 ]
 
 CKEDITOR_CONFIGS = {
-    'default': {
-        'toolbar': 'Custom',
-        'width': 'auto',
-        'toolbar_Custom': [
-            ['Bold', 'Italic', 'Underline'],
-        ]
+    "default": {
+        "toolbar": "Custom",
+        "width": "auto",
+        "toolbar_Custom": [
+            ["Bold", "Italic", "Underline"],
+        ],
     }
 }
 
-ROOT_URLCONF = 'Dimention_Measure.urls'
+ROOT_URLCONF = "Dimention_Measure.urls"
 
 TEMPLATES = [
     {
-        'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
-        'APP_DIRS': True,
-        'OPTIONS': {
-            'context_processors': [
-                'django.template.context_processors.debug',
-                'django.template.context_processors.request',
-                'django.contrib.auth.context_processors.auth',
-                'django.contrib.messages.context_processors.messages',
+        "BACKEND": "django.template.backends.django.DjangoTemplates",
+        "DIRS": [],
+        "APP_DIRS": True,
+        "OPTIONS": {
+            "context_processors": [
+                "django.template.context_processors.debug",
+                "django.template.context_processors.request",
+                "django.contrib.auth.context_processors.auth",
+                "django.contrib.messages.context_processors.messages",
             ],
-            'string_if_invalid': "CONTACT ADMIN WITH A SCREENSHOT."
+            "string_if_invalid": "CONTACT ADMIN WITH A SCREENSHOT.",
         },
     },
 ]
 
 AUTH_PASSWORD_VALIDATORS = [
     {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+        "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+        "NAME": "django.contrib.auth.password_validation.MinimumLengthValidator",
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
+        "NAME": "django.contrib.auth.password_validation.CommonPasswordValidator",
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
+        "NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",
     },
 ]
 
 # Internationalization
 # https://docs.djangoproject.com/en/4.0/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = "en-us"
 
 TIME_ZONE = "Asia/Kolkata"
 
@@ -181,7 +177,7 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.0/howto/static-files/
-STATIC_PATH = os.path.join(BASE_DIR, 'static')
+STATIC_PATH = os.path.join(BASE_DIR, "static")
 if not os.path.exists(STATIC_PATH):
     os.mkdir(STATIC_PATH)
 
@@ -194,12 +190,12 @@ MEDIA_URL = "/media/"
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 
 
-ADMIN_MEDIA_PREFIX = '/static/admin/'
+ADMIN_MEDIA_PREFIX = "/static/admin/"
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
 
-DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 LOGIN_REDIRECT_URL = "index"
 LOGOUT_REDIRECT_URL = "index"
@@ -220,7 +216,8 @@ STATE_CHOICES = (
     ("Himachal Pradesh", "Himachal Pradesh"),
     ("Jammu and Kashmir ", "Jammu and Kashmir "),
     ("Jharkhand", "Jharkhand"),
-    ("Karnataka", "Karnataka"), ("Kerala", "Kerala"),
+    ("Karnataka", "Karnataka"),
+    ("Kerala", "Kerala"),
     ("Madhya Pradesh", "Madhya Pradesh"),
     ("Maharashtra", "Maharashtra"),
     ("Manipur", "Manipur"),
@@ -243,7 +240,7 @@ STATE_CHOICES = (
     ("Daman and Diu", "Daman and Diu"),
     ("Lakshadweep", "Lakshadweep"),
     ("National Capital Territory of Delhi", "National Capital Territory of Delhi"),
-    ("Puducherry", "Puducherry")
+    ("Puducherry", "Puducherry"),
 )
 
 CSRF_COOKIE_SECURE = False
