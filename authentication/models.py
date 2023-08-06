@@ -10,8 +10,10 @@ from django.conf import settings
 
 from django.db import models
 from django.contrib.auth.models import (
-    BaseUserManager, AbstractBaseUser,
+    BaseUserManager,
+    AbstractBaseUser,
 )
+
 # Gender and Access levels details
 GENDER = [
     ("MA", "Male"),
@@ -34,7 +36,7 @@ class MyUserManager(BaseUserManager):
         Creates and saves a User with the given username and password.
         """
         if not username:
-            raise ValueError('Users must have an username')
+            raise ValueError("Users must have an username")
 
         user = self.model(
             username=username,
@@ -67,18 +69,31 @@ class Organization(models.Model):
     email = models.EmailField()
     phoneNumber = models.CharField(
         blank=True,
-        verbose_name='Phone number',
-        validators=[settings.PHONE_NUMBER_FORMAT], max_length=11
+        verbose_name="Phone number",
+        validators=[settings.PHONE_NUMBER_FORMAT],
+        max_length=11,
     )
     address_1 = models.CharField(max_length=255, default="abc")
     address_2 = models.CharField(max_length=255, blank=True, null=True)
     landmark = models.CharField(max_length=255, blank=True, null=True)
     town_city = models.CharField(max_length=255)
     zip_code = models.CharField(max_length=6)
-    state = models.CharField(choices=settings.STATE_CHOICES,
-                             max_length=255, default='abc')
+    state = models.CharField(
+        choices=settings.STATE_CHOICES, max_length=255, default="abc"
+    )
     registered_on = models.DateTimeField(auto_now_add=True)
     website = models.URLField(max_length=255, blank=True, null=True)
+    gstn = models.CharField(max_length=255, default="")
+
+    bank_account_holder_name = models.CharField(max_length=255, default="")
+    bank_name = models.CharField(max_length=255, default="")
+    bank_account_number = models.CharField(max_length=255, default="")
+    bank_branch = models.CharField(max_length=255, default="")
+    bank_ifsc_code = models.CharField(max_length=255, default="")
+
+    is_active = models.BooleanField(default=True)
+    is_deleted = models.BooleanField(default=False)
+    deleted_on = models.DateTimeField(blank=True, null=True)
 
     def __str__(self):
         return str(self.company_name)
@@ -98,8 +113,15 @@ class Organization(models.Model):
             full_address = full_address + ", " + self.address_2
         if self.landmark:
             full_address = full_address + ", " + self.landmark
-        full_address = full_address + ", " + self.town_city + \
-            ", " + self.state + " - " + self.zip_code
+        full_address = (
+            full_address
+            + ", "
+            + self.town_city
+            + ", "
+            + self.state
+            + " - "
+            + self.zip_code
+        )
         return full_address
 
 
@@ -109,7 +131,7 @@ class CompanyUser(AbstractBaseUser):
         null=True,
         validators=[settings.PHONE_NUMBER_FORMAT],
         max_length=11,
-        verbose_name='Phone number'
+        verbose_name="Phone number",
     )
     gender = models.CharField(
         max_length=2,
@@ -133,8 +155,7 @@ class CompanyUser(AbstractBaseUser):
         default="SITE_USR",
         null=True,
     )
-    email = models.EmailField(
-        unique=True, max_length=255, null=True, blank=False)
+    email = models.EmailField(unique=True, max_length=255, null=True, blank=False)
     first_name = models.CharField(max_length=35, blank=True, null=True)
     last_name = models.CharField(max_length=35, blank=True, null=True)
     username = models.CharField(max_length=70, unique=True)
@@ -144,7 +165,7 @@ class CompanyUser(AbstractBaseUser):
     is_staff = models.BooleanField(default=False)
     objects = MyUserManager()
 
-    USERNAME_FIELD = 'username'
+    USERNAME_FIELD = "username"
 
     def __str__(self):
         return self.username
@@ -171,7 +192,8 @@ class Group(DjangoGroup):
     banner, create a proxy group model under our Accounts app label.
     Refer to: https://github.com/tmm/django-username-email/blob/master/cuser/admin.py
     """
+
     class Meta:
-        verbose_name = _('group')
-        verbose_name_plural = _('groups')
+        verbose_name = _("group")
+        verbose_name_plural = _("groups")
         proxy = True
