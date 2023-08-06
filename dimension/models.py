@@ -92,7 +92,7 @@ class Dimension(models.Model):
     deleted_on = models.DateTimeField(blank=True, null=True)
 
     def __str__(self):
-        return str(self.name) + " | " + str(self.project.name)
+        return f"{self.name} | {self.project.name}"
 
     def save(self):
         self.name = self.name.strip().replace(" ", "-")

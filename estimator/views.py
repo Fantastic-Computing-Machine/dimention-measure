@@ -291,7 +291,37 @@ def download_estimate_excel_file(request, project_id, project_name):
     # create a workbook object
     workbook = generate_Invoice()
     sheet = workbook.active
+
+    # Company Name
+    sheet["A3"].value = company.company_name.replace("-", " ").title()
+    sheet["A4"].value = f"{company.address_1}, {company.address_2}, {company.town_city}, {company.state}, {company.zip_code}"
     
+    sheet["A7"].value += company.email
+    sheet["A8"].value += company.phoneNumber
+
+    # logo
+    img = Image("estimator/Picture2.png")
+    img.height = 100
+    img.width = 100
+    img.anchor = 'c3'
+
+    # Add the image to the sheet
+    sheet.add_image(img)
+
+    sheet["G4"].value = current_date
+    sheet["G5"].value = company.gstn
+    sheet["G7"].value = project.reference_number
+
+    sheet["A10"].value = project.client.name.replace("-", " ").title()
+    sheet["A11"].value = f"{project.client.address_1}, {project.client.address_2}, {project.client.town_city}, {project.client.state}, {project.client.zip_code}"
+    sheet["A45"].value += company.bank_account_holder_name
+    sheet["A46"].value += company.bank_account_number
+    sheet["A47"].value += company.bank_name
+    
+    sheet["A48"].value += company.bank_branch
+    sheet["A49"].value += company.bank_ifsc_code
+
+    sheet["E44"].value = company.company_name.replace("-", " ").title()
     
     # sheet.append(
     #     ["Sl.No", "Description", "Quantity", "Unit", "Rate", "Amount", "Total"]
@@ -402,7 +432,6 @@ def download_estimate_excel_file(request, project_id, project_name):
             "Content-Disposition": 'attachment; filename= "{}"'.format(filename),
         },
     )
-    # return file_ecxel
 
 
 @login_required
