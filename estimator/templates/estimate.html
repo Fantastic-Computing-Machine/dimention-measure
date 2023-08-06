@@ -219,28 +219,35 @@
 
             <div class="my-2">
                 <div>
-                    <p class="h4">
-                        {% replaceItem project.client.name|title %}
+                    <div>
+                        <div>
+                            <div class="h4">
+                                {% replaceItem project.client.name|title %}
+                            </div>
+                            <div class="h5">
+                                {% if project.client.gstn %}
+                                {% replaceItem project.client.gstn|upper %}
+                                {% endif %}
+                            </div>
+                        </div>
                         <span class="h5">
                             {% if project.client.phoneNumber %}
                             (+91-{{project.client.phoneNumber}})
                             {% endif %}
                         </span>
-                    </p>
+                    </div>
                 </div>
                 {% if project.client.address_1 %}
-                <p><span class="fw-bold">Address: </span>
-                    <span>{{project.client.address_1}}</span>
-
-                    <span>{% if project.client.address_2 %},
-                        {{project.client.address_2}}{%endif%}</span>
-
-                    <span> {% if project.client.landmark %},
-                        {{project.client.landmark}}{%endif%}</span>
-                    <span>
-                        , {{project.client.town_city}}, {{project.client.state}}- {{project.client.zip_code}}
-                    </span>
-                </p>
+                <div>
+                    <span class="fw-bold">Address: </span>
+                    <span>{{project.client.address}}</span>
+                </div>
+                {% endif %}
+                {% if project.client.project_address_1 %}
+                <div>
+                    <span class="fw-bold">Project Address: </span>
+                    <span>{{project.client.project_address}}</span>
+                </div>
                 {% endif %}
             </div>
         </div>
