@@ -16,6 +16,7 @@ colorama==0.4.3
 cryptography==40.0.2
 Django==4.0.10
 django-admin-interface==0.23.0
+django-autoslug==1.9.9
 django-ckeditor==6.3.2
 django-colorfield==0.7.3
 django-countries==7.5
@@ -23,6 +24,7 @@ django-flat-responsive==2.0
 django-flat-theme==1.1.4
 django-js-asset==2.0.0
 django-localflavor==3.1
+django-organizations==2.1.0
 django-quill==0.1.0
 django-quill-editor==0.1.40
 django-redis==5.2.0
@@ -44,6 +46,7 @@ packaging==21.3
 paramiko==3.2.0
 pathspec==0.10.1
 Pillow==9.5.0
+psycopg2==2.9.7
 pycodestyle==2.10.0
 pycparser==2.21
 pylibmc==1.6.3

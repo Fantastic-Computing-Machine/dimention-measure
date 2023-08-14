@@ -87,7 +87,7 @@ class Organization(models.Model):
 
     bank_account_holder_name = models.CharField(max_length=255, default="")
     bank_name = models.CharField(max_length=255, default="")
-    bank_account_number = models.CharField(max_length=255, default="")
+    bank_account_number = models.CharField(max_length=18, default="")
     bank_branch = models.CharField(max_length=255, default="")
     bank_ifsc_code = models.CharField(max_length=255, default="")
 

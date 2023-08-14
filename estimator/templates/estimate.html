@@ -222,19 +222,23 @@
                     <div>
                         <div>
                             <div class="h4">
-                                {% replaceItem project.client.name|title %}
+                                <span>
+                                    {% replaceItem project.client.name|title %}
+                                </span>
+                                <span class="h5">
+                                    {% if project.client.phoneNumber %}
+                                    (+91-{{project.client.phoneNumber}})
+                                    {% endif %}
+                                </span>
                             </div>
                             <div class="h5">
-                                {% if project.client.gstn %}
-                                {% replaceItem project.client.gstn|upper %}
-                                {% endif %}
+                                <span>
+                                    {% if project.client.pan_number %}
+                                    {% replaceItem project.client.pan_number|upper %}
+                                    {% endif %}
+                                </span>
                             </div>
                         </div>
-                        <span class="h5">
-                            {% if project.client.phoneNumber %}
-                            (+91-{{project.client.phoneNumber}})
-                            {% endif %}
-                        </span>
                     </div>
                 </div>
                 {% if project.client.address_1 %}

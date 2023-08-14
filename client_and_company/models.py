@@ -33,7 +33,7 @@ class Client(models.Model):
     created_by = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
     organization = models.ForeignKey(Organization, on_delete=models.CASCADE)
 
-    gstn = models.CharField(max_length=255, blank=True, null=True)
+    tax_id = models.CharField(max_length=255, blank=True, null=True)
 
     project_address_1 = models.CharField(max_length=255, blank=True, null=True)
     project_address_2 = models.CharField(max_length=255, blank=True, null=True)
@@ -67,7 +67,7 @@ class Client(models.Model):
             self.deleted_on = datetime.now()
         if not self.is_deleted:
             self.deleted_on = None
-        self.gstn = self.gstn.upper() if self.gstn else None
+        self.tax_id = self.tax_id.upper() if self.tax_id else None
         return super(Client, self).save()
 
     def address(self):

@@ -55,7 +55,7 @@ class ClientAdmin(admin.ModelAdmin):
         (
             "General Information",
             {
-                "fields": ("name", "description", "gstn"),
+                "fields": ("name", "description", "tax_id"),
             },
         ),
         (
