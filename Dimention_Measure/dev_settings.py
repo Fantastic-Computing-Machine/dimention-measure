@@ -67,14 +67,14 @@ INSTALLED_APPS = [
     'core',
 ]
 
-CACHES = {
-    "default": {
-        "BACKEND": "django.core.cache.backends.db.DatabaseCache",
-        "LOCATION": "db_cache_table",
-    },
-}
-print("Cache Enabled...")
-print(f"\tCache Backend: {CACHES['default']['BACKEND'].split('.')[-1]}")
+# CACHES = {
+#     "default": {
+#         "BACKEND": "django.core.cache.backends.db.DatabaseCache",
+#         "LOCATION": "db_cache_table",
+#     },
+# }
+# print("Cache Enabled...")
+# print(f"\tCache Backend: {CACHES['default']['BACKEND'].split('.')[-1]}")
 
 
 STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.ManifestStaticFilesStorage'
