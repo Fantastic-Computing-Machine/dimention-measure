@@ -24,8 +24,6 @@ urlpatterns = [
     path('dimension/', include('dimension.urls')),
     path('admin/doc/', include('django.contrib.admindocs.urls')),
     path('admin/console/', admin.site.urls),
-    # path('expense/', include('expense.urls')),
-    path('estimate/', include('estimator.urls')),
     path('settings/', include('settings.urls')),
     path('client-and-company/', include('client_and_company.urls')),
     path('user/', include('django.contrib.auth.urls')),
@@ -33,3 +31,9 @@ urlpatterns = [
     path('', include('core.urls')),
     path('watchman/', include('watchman.urls')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+if (settings.INSTALLED_APPS.__contains__("expense")):
+    urlpatterns.append(path('expense/', include('expense.urls')))
+
+if (settings.INSTALLED_APPS.__contains__("estimator")):
+    urlpatterns.append(path('estimate/', include('estimator.urls')))
