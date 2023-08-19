@@ -17,6 +17,7 @@ import pymysql
 import re
 from datetime import datetime, timezone
 
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 dotenv_path = BASE_DIR / ".env"
@@ -98,6 +99,7 @@ else:
     print("Logging Disabled...")
 
 
+
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "whitenoise.middleware.WhiteNoiseMiddleware",
@@ -142,11 +144,42 @@ TEMPLATES = [
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
+                "core.context_processors.global_settings",
             ],
             "string_if_invalid": "CONTACT ADMIN WITH A SCREENSHOT.",
         },
     },
 ]
+
+# Application definition
+INSTALLED_APPS = [
+    'admin_interface',
+    'colorfield',
+    'django.contrib.admin',
+    'django.contrib.admindocs',
+    'django.contrib.auth',
+    'django.contrib.contenttypes',
+    'django.contrib.sessions',
+    'django.contrib.messages',
+    'django.contrib.staticfiles',
+    'django.contrib.humanize',
+    'django_quill',
+    'ckeditor',
+    'django_countries',
+    'dimension',
+    'client_and_company',
+    'authentication',
+    'settings',
+    'core',
+]
+
+if ( os.getenv("EXPENSE_ENABLED")):
+    print("Expense Enabled")
+    INSTALLED_APPS.append('expense')
+
+if ( os.getenv("ESTIMATE_ENABLED")):
+    print("Estimate Enabled")
+    INSTALLED_APPS.append('estimator')
 
 AUTH_PASSWORD_VALIDATORS = [
     {

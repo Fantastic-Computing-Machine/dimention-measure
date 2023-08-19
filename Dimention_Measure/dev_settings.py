@@ -42,30 +42,7 @@ CSRF_TRUSTED_ORIGINS = [
     "https://adiagarwalrock-literate-computing-54wvrp9r7v634xpj-8000.preview.app.github.dev"
 ]
 
-# Application definition
-INSTALLED_APPS = [
-    'admin_interface',
-    'colorfield',
-    'django.contrib.admin',
-    'django.contrib.admindocs',
-    'django.contrib.auth',
-    'django.contrib.contenttypes',
-    'django.contrib.sessions',
-    'django.contrib.messages',
-    'django.contrib.staticfiles',
-    'django.contrib.humanize',
-    'django_quill',
-    'ckeditor',
-    'django_countries',
-    'watchman',
-    'dimension',
-    'client_and_company',
-    'authentication',
-    # 'expense',
-    'estimator',
-    'settings',
-    'core',
-]
+#
 
 # CACHES = {
 #     "default": {
@@ -85,23 +62,23 @@ WSGI_APPLICATION = 'Dimention_Measure.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': BASE_DIR / 'db.sqlite3',
-#     }
-# }
-
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'insight_db',
-        'USER': 'postgres',
-        'PASSWORD': 'aditya',
-        'HOST': 'localhost',
-        'PORT': '5432',
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
+
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql_psycopg2',
+#         'NAME': 'insight_db',
+#         'USER': 'postgres',
+#         'PASSWORD': 'aditya',
+#         'HOST': 'localhost',
+#         'PORT': '5432',
+#     }
+# }
 
 # from django.db import connection
 # # x =
