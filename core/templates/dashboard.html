@@ -89,15 +89,13 @@
         {% endif %}
 
     </section>
-
-
     <section class="container-lg pb-4">
+        {% if estimator_enabled %}
         <div class="text-light py-2 display-6 swing">
             <a href="{% url 'all_estimates' %}" class="text-light">
                 Estimate &rarr;
             </a>
         </div>
-
 
         {% if estimates %}
         <div class="row">
@@ -161,7 +159,23 @@
         </ul>
 
         {% endif %}
+        {%else%}
+        <div class="text-light py-2 display-6 swing">
+            <a href="" class="text-light">
+                Estimate &rarr;
+            </a>
+        </div>
+
+        <ul class="list-group">
+            <li class="list-group-item">
+                <div class="ms-2 me-auto text-dark text-center">
+                    <span class="fw-bold">Comming Soon...</span>
+                </div>
+            </li>
+        </ul>
+        
     </section>
+    {% endif %}
 </div>
 
 
