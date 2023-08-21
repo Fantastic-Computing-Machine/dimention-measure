@@ -36,10 +36,7 @@ ALLOWED_HOSTS = [
     os.getenv("HOST_IP"),
 ]
 
-CSRF_TRUSTED_ORIGINS = [
-    "http://3.6.80.190"
-]
-
+CSRF_TRUSTED_ORIGINS = ["http://3.6.80.190"]
 
 
 # EMAIL_USE_TLS = True
@@ -66,13 +63,13 @@ WSGI_APPLICATION = 'Dimention_Measure.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 DATABASES = {
-    'default': {
-        'ENGINE': os.getenv('DB_ENGINE'),
-        'NAME': os.getenv('DB_NAME'),
-        'USER': os.getenv('DB_USERNAME'),
-        'PASSWORD': os.getenv('DB_PASSWORD'),
-        'HOST': os.getenv('DB_HOSTNAME'),
-        'PORT': os.getenv('DB_PORT'),
+    "default": {
+        "ENGINE": os.getenv("DB_ENGINE"),
+        "NAME": os.getenv("DB_NAME"),
+        "USER": os.getenv("DB_USERNAME"),
+        "PASSWORD": os.getenv("DB_PASSWORD"),
+        "HOST": os.getenv("DB_HOSTNAME"),
+        "PORT": os.getenv("DB_PORT"),
     }
 }
 print("Database Connected...")

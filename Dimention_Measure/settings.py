@@ -57,8 +57,8 @@ if os.getenv("LOGGING", "false").lower() == "true":
     current_time = datetime.now(TZ).strftime("%d-%m-%y %H:%M:%S")
 
     LOG_DIR = os.path.join(BASE_DIR, "log")
-    LOG_FILE = os.path.join(str(current_time), "django-insight.log")
-    LOG_PATH = LOG_DIR + LOG_FILE
+    LOG_FILE = f"{current_time}_django-insight.log"
+    LOG_PATH = os.path.join(LOG_DIR, LOG_FILE)
 
     if not os.path.exists(LOG_DIR):
         os.mkdir(LOG_DIR)
@@ -71,25 +71,30 @@ if os.getenv("LOGGING", "false").lower() == "true":
     LOGGING = {
         "version": 1,
         "disable_existing_loggers": False,
-        "root": {"level": "INFO", "handlers": ["file"]},
+        "formatters": {
+            "verbose": {
+                "format": "[%(asctime)s] %(levelname)s [%(name)s:%(lineno)s] %(message)s",
+                "datefmt": "%d/%b/%Y %H:%M:%S",
+            },
+            "simple": {"format": "%(levelname)s %(message)s"},
+        },
         "handlers": {
             "file": {
-                "level": "INFO",
+                "level": "DEBUG",
                 "class": "logging.FileHandler",
                 "filename": LOG_PATH,
-                "formatter": "app",
+                "formatter": "verbose",
             },
         },
         "loggers": {
-            "django": {"handlers": ["file"], "level": "INFO", "propagate": True},
-        },
-        "formatters": {
-            "app": {
-                "format": (
-                    "%(asctime)s [%(levelname)-8s] "
-                    "(%(module)s.%(funcName)s) %(message)s"
-                ),
-                "datefmt": "%Y-%m-%d %H:%M:%S",
+            "django": {
+                "handlers": ["file"],
+                "propagate": True,
+                "level": "DEBUG",
+            },
+            "MYAPP": {
+                "handlers": ["file"],
+                "level": "DEBUG",
             },
         },
     }
@@ -99,10 +104,8 @@ else:
     print("Logging Disabled...")
 
 
-
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
-    "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.BrokenLinkEmailsMiddleware",
     "django.middleware.common.CommonMiddleware",
@@ -113,6 +116,9 @@ MIDDLEWARE = [
     "django.contrib.admindocs.middleware.XViewMiddleware",
     "django.middleware.locale.LocaleMiddleware",
 ]
+
+if ENV == "prod":
+    MIDDLEWARE.insert(1, "whitenoise.middleware.WhiteNoiseMiddleware")
 
 IGNORABLE_404_URLS = [
     re.compile(r"^/apple-touch-icon.*\.png$"),
@@ -153,33 +159,33 @@ TEMPLATES = [
 
 # Application definition
 INSTALLED_APPS = [
-    'admin_interface',
-    'colorfield',
-    'django.contrib.admin',
-    'django.contrib.admindocs',
-    'django.contrib.auth',
-    'django.contrib.contenttypes',
-    'django.contrib.sessions',
-    'django.contrib.messages',
-    'django.contrib.staticfiles',
-    'django.contrib.humanize',
-    'django_quill',
-    'ckeditor',
-    'django_countries',
-    'dimension',
-    'client_and_company',
-    'authentication',
-    'settings',
-    'core',
+    "admin_interface",
+    "colorfield",
+    "django.contrib.admin",
+    "django.contrib.admindocs",
+    "django.contrib.auth",
+    "django.contrib.contenttypes",
+    "django.contrib.sessions",
+    "django.contrib.messages",
+    "django.contrib.staticfiles",
+    "django.contrib.humanize",
+    "django_quill",
+    "ckeditor",
+    "django_countries",
+    "dimension",
+    "client_and_company",
+    "authentication",
+    "settings",
+    "core",
 ]
 
-if ( os.getenv("EXPENSE_ENABLED")):
+if os.getenv("EXPENSE_ENABLED"):
     print("Expense Enabled")
-    INSTALLED_APPS.append('expense')
+    INSTALLED_APPS.append("expense")
 
-if ( os.getenv("ESTIMATE_ENABLED")):
+if os.getenv("ESTIMATE_ENABLED"):
     print("Estimate Enabled")
-    INSTALLED_APPS.append('estimator')
+    INSTALLED_APPS.append("estimator")
 
 AUTH_PASSWORD_VALIDATORS = [
     {

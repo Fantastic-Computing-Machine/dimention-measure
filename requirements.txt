@@ -1,9 +1,10 @@
-asgiref==3.4.1
+asgiref==3.7.2
 async-timeout==4.0.2
 attrs==23.1.0
 autopep8==2.0.1
 awsebcli==3.20.6
 bcrypt==4.0.1
+black==23.7.0
 blessed==1.20.0
 botocore==1.29.99
 cached-property==1.5.2
@@ -14,7 +15,7 @@ charset-normalizer==2.0.12
 click==8.0.4
 colorama==0.4.3
 cryptography==40.0.2
-Django==4.0.10
+Django==4.2.4
 django-admin-interface==0.23.0
 django-autoslug==1.9.9
 django-ckeditor==6.3.2
@@ -42,10 +43,11 @@ jmespath==1.0.1
 jsonschema==3.2.0
 mypy-extensions==0.4.3
 openpyxl==3.0.10
-packaging==21.3
+packaging==23.1
 paramiko==3.2.0
 pathspec==0.10.1
 Pillow==9.5.0
+platformdirs==3.10.0
 psycopg2==2.9.7
 pycodestyle==2.10.0
 pycparser==2.21
