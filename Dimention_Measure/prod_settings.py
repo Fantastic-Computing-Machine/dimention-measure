@@ -27,12 +27,13 @@ load_dotenv(dotenv_path=dotenv_path)
 DEBUG = False
 
 ALLOWED_HOSTS = [
+    "*",
     "0.tcp.in.ngrok.io",
-    "127.0.0.1",
+    # "127.0.0.1",
     "localhost",
-    "0.0.0.0",
-    "13.234.231.51",
-    "3.6.80.190",
+    # "0.0.0.0",
+    # "13.234.231.51",
+    # "3.6.80.190",
     os.getenv("HOST_IP"),
 ]
 
@@ -55,10 +56,9 @@ print("Cache Enabled...")
 print("\tCache Backend: ", CACHES["default"]["BACKEND"])
 
 
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
-
-WSGI_APPLICATION = 'Dimention_Measure.wsgi.application'
-
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+print("Static Files Storage: ", STATICFILES_STORAGE)
+WSGI_APPLICATION = "Dimention_Measure.wsgi.application"
 
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases

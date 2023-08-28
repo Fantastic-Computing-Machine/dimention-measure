@@ -26,13 +26,8 @@ django-flat-theme==1.1.4
 django-js-asset==2.0.0
 django-localflavor==3.1
 django-organizations==2.1.0
-django-quill==0.1.0
-django-quill-editor==0.1.40
 django-redis==5.2.0
 django-watchman==1.3.0
-djangorestframework==3.14.0
-docker==4.4.4
-docker-compose==1.25.5
 dockerpty==0.4.1
 docopt==0.6.2
 docutils==0.18.1
