@@ -29,12 +29,15 @@ DEBUG = False
 ALLOWED_HOSTS = [
     "*",
     "0.tcp.in.ngrok.io",
-    # "127.0.0.1",
+    "127.0.0.1",
     "localhost",
     # "0.0.0.0",
     # "13.234.231.51",
     # "3.6.80.190",
     os.getenv("HOST_IP"),
+    "https://insights-git-main-fcmus.vercel.app/",
+    "https://insights-fcmus.vercel.app/",
+    "https://insights-lac.vercel.app/",
 ]
 
 CSRF_TRUSTED_ORIGINS = ["http://3.6.80.190"]
