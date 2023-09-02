@@ -17,7 +17,9 @@ import pymysql
 import re
 from datetime import datetime, timezone
 
+pymysql.install_as_MySQLdb()
 
+# Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 dotenv_path = BASE_DIR / ".env"
@@ -224,6 +226,8 @@ STATIC_URL = "/assets/"
 STATIC_ROOT = "static"
 STATICFILES_DIRS = (os.path.join(BASE_DIR, "assets/"),)
 
+
+WSGI_APPLICATION = 'Dimention_Measure.wsgi.application'
 
 MEDIA_URL = "/media/"
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
