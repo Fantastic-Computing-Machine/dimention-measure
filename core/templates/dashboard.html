@@ -18,7 +18,7 @@
 {% block body %}
 <div class="container-lg pb-4">
 
-    <div class="text-light py-2 display-4">Dashboard</div>
+    <div class="text-light py-2 display-4">{{user.organization.company_name}}'s Dashboard</div>
 
     <section class="container-lg pb-4">
         <div class="pyw-2 display-6 swing">
@@ -39,8 +39,8 @@
                                 <div class="ms-2 me-auto">
                                     <div class="fw-bold">
                                         <span>
-                                            <span>{% replaceItem item.name|capfirst %}</span>
-                                            <span class="badge bg-primary">{{item.created_on|naturalday}}</span>
+                                            <div>{% replaceItem item.name|capfirst %}</div>
+                                            <div class="badge bg-primary">{{item.created_on|naturalday}}</div>
                                         </span>
                                     </div>
                                     <span class="wrapword">
@@ -89,20 +89,17 @@
         {% endif %}
 
     </section>
-
-
     <section class="container-lg pb-4">
+        {% if estimator_enabled %}
         <div class="text-light py-2 display-6 swing">
             <a href="{% url 'all_estimates' %}" class="text-light">
                 Estimate &rarr;
             </a>
         </div>
 
-
         {% if estimates %}
         <div class="row">
             {% for item in estimates %}
-
             <div class="col-lg-4 col-md-6 sm-10">
                 <a href="{% url 'estimate' item.id item.name %}" class="text-dark" aria-label="project-{{item.name}}">
                     <div class="card-dashboard my-2 index_project_card">
@@ -110,13 +107,13 @@
                             <div class="d-flex justify-content-between align-items-start">
                                 <div class="ms-2 me-auto">
                                     <div class="fw-bold">
-                                        <span class="text-muted">
-                                            {{item.reference_number}}
-                                        </span>
-                                        <span>
+                                        <div class="text-muted">
+                                            {{item.reference_number}} <span
+                                                class="badge bg-primary">{{item.created_on|naturalday}}</span>
+                                        </div>
+                                        <div>
                                             <span>{% replaceItem item.name|capfirst %}</span>
-                                            <span class="badge bg-primary">{{item.created_on|naturalday}}</span>
-                                        </span>
+                                        </div>
                                     </div>
                                     <span class="wrapword">
                                         {% if item.description %}
@@ -162,7 +159,23 @@
         </ul>
 
         {% endif %}
+        {%else%}
+        <div class="text-light py-2 display-6 swing">
+            <a href="" class="text-light">
+                Estimate &rarr;
+            </a>
+        </div>
+
+        <ul class="list-group">
+            <li class="list-group-item">
+                <div class="ms-2 me-auto text-dark text-center">
+                    <span class="fw-bold">Comming Soon...</span>
+                </div>
+            </li>
+        </ul>
+        
     </section>
+    {% endif %}
 </div>
 
 

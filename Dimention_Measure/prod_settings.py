@@ -8,13 +8,9 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 """
 
 from dotenv import load_dotenv
-import logging
 import os
 import pymysql
 from pathlib import Path
-import re
-
-from django.core.validators import RegexValidator
 
 pymysql.install_as_MySQLdb()
 
@@ -27,65 +23,28 @@ load_dotenv(dotenv_path=dotenv_path)
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.getenv("SECRET_KEY")
-
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ADMINS = [
-    ("Aditya Agarwal", "aditya.ag1234@gmail.com"),
-    ("Nilesh Kumar Mandal", "s.nileshkm@gmail.com"),
-]
-
 ALLOWED_HOSTS = [
+    "*",
     "0.tcp.in.ngrok.io",
-    "127.0.0.1",
+    # "127.0.0.1",
     "localhost",
-    "0.0.0.0",
-    "13.234.231.51",
-    "3.6.80.190",
+    # "0.0.0.0",
+    # "13.234.231.51",
+    # "3.6.80.190",
     os.getenv("HOST_IP"),
 ]
 
-# CSRF_TRUSTED_ORIGINS = [
-#     "http://3.6.80.190"
-# ]
-AUTH_USER_MODEL = "authentication.CompanyUser"
+CSRF_TRUSTED_ORIGINS = ["http://3.6.80.190"]
 
-# Application definition
-INSTALLED_APPS = [
-    'admin_interface',
-    'colorfield',
-    'django.contrib.admin',
-    'django.contrib.admindocs',
-    'django.contrib.auth',
-    'django.contrib.contenttypes',
-    'django.contrib.sessions',
-    'django.contrib.messages',
-    'django.contrib.staticfiles',
-    'django.contrib.humanize',
-    'django_quill',
-    'ckeditor',
-    'django_countries',
-    'dimension',
-    'client_and_company',
-    'authentication',
-    # 'expense',
-    'estimator',
-    'settings',
-    'core',
-]
 
-# For django-admin-interface installed app
-X_FRAME_OPTIONS = "SAMEORIGIN"
-SILENCED_SYSTEM_CHECKS = ["security.W019"]
-
-EMAIL_USE_TLS = True
-EMAIL_PORT = 587
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_HOST_USER = os.getenv("EMAIL_ID")
-EMAIL_HOST_PASSWORD = os.getenv("EMAIL_PWD")
+# EMAIL_USE_TLS = True
+# EMAIL_PORT = 587
+# EMAIL_HOST = 'smtp.gmail.com'
+# EMAIL_HOST_USER = os.getenv("EMAIL_ID")
+# EMAIL_HOST_PASSWORD = os.getenv("EMAIL_PWD")
 
 CACHES = {
     "default": {
@@ -93,230 +52,24 @@ CACHES = {
         "LOCATION": "db_cache_table",
     },
 }
+print("Cache Enabled...")
+print("\tCache Backend: ", CACHES["default"]["BACKEND"])
 
-MIDDLEWARE = [
-    'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',
-    'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.common.BrokenLinkEmailsMiddleware',
-    'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
-    'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'django.contrib.admindocs.middleware.XViewMiddleware',
-    "django.middleware.locale.LocaleMiddleware",
-]
 
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
-
-IGNORABLE_404_URLS = [
-    re.compile(r'^/apple-touch-icon.*\.png$'),
-    re.compile(r'^/favicon\.ico$'),
-    re.compile(r'^/robots\.txt$'),
-    re.compile(r'^/robots\.ttf$'),
-]
-
-CKEDITOR_CONFIGS = {
-    'default': {
-        'toolbar': 'Custom',
-        'width': 'auto',
-        'toolbar_Custom': [
-            ['Bold', 'Italic', 'Underline'],
-        ]
-    }
-}
-
-ROOT_URLCONF = 'Dimention_Measure.urls'
-
-TEMPLATES = [
-    {
-        'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
-        'APP_DIRS': True,
-        'OPTIONS': {
-            'context_processors': [
-                'django.template.context_processors.debug',
-                'django.template.context_processors.request',
-                'django.contrib.auth.context_processors.auth',
-                'django.contrib.messages.context_processors.messages',
-            ],
-            'string_if_invalid': "CONTACT ADMIN WITH A SCREENSHOT."
-        },
-    },
-]
-
-WSGI_APPLICATION = 'Dimention_Measure.wsgi.application'
-
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+print("Static Files Storage: ", STATICFILES_STORAGE)
+WSGI_APPLICATION = "Dimention_Measure.wsgi.application"
 
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': os.getenv['RDS_DB_NAME'],
-        'USER': os.getenv['RDS_USERNAME'],
-        'PASSWORD': os.getenv['RDS_PASSWORD'],
-        'HOST': os.getenv['RDS_HOSTNAME'],
-        'PORT': os.getenv['RDS_PORT'],
+    "default": {
+        "ENGINE": os.getenv("DB_ENGINE"),
+        "NAME": os.getenv("DB_NAME"),
+        "USER": os.getenv("DB_USERNAME"),
+        "PASSWORD": os.getenv("DB_PASSWORD"),
+        "HOST": os.getenv("DB_HOSTNAME"),
+        "PORT": os.getenv("DB_PORT"),
     }
 }
-
 print("Database Connected...")
-
-
-# Password validation
-# https://docs.djangoproject.com/en/4.0/ref/settings/#auth-password-validators
-
-AUTH_PASSWORD_VALIDATORS = [
-    {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
-    },
-]
-
-
-# Internationalization
-# https://docs.djangoproject.com/en/4.0/topics/i18n/
-
-LANGUAGE_CODE = 'en-us'
-
-TIME_ZONE = "Asia/Kolkata"
-
-USE_I18N = True
-
-USE_TZ = True
-
-
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/4.0/howto/static-files/
-STATIC_URL = "/assets/"
-STATIC_ROOT = "static"
-STATICFILES_DIRS = (os.path.join(BASE_DIR, "assets/"),)
-
-
-MEDIA_URL = "/media/"
-MEDIA_ROOT = os.path.join(BASE_DIR, "media")
-
-
-ADMIN_MEDIA_PREFIX = '/static/admin/'
-
-# Default primary key field type
-# https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
-
-DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
-LOGIN_REDIRECT_URL = "dashboard"
-LOGOUT_REDIRECT_URL = "dashboard"
-LOGIN_URL = "login"
-
-CSRF_COOKIE_SECURE = False
-SECURE_HSTS_SECONDS = 3600
-SECURE_HSTS_INCLUDE_SUBDOMAINS = True
-
-# for supplying site over Https ONLY = True
-# SECURE_SSL_REDIRECT = False
-
-SESSION_COOKIE_SECURE = False
-SECURE_HSTS_PRELOAD = True
-SECURE_CROSS_ORIGIN_OPENER_POLICY = None
-
-
-PHONE_NUMBER_FORMAT = RegexValidator(regex=r"^\+?1?\d{8,15}$")
-
-STATE_CHOICES = (
-    ("Andhra Pradesh", "Andhra Pradesh"),
-    ("Arunachal Pradesh ", "Arunachal Pradesh "),
-    ("Assam", "Assam"),
-    ("Bihar", "Bihar"),
-    ("Chhattisgarh", "Chhattisgarh"),
-    ("Goa", "Goa"),
-    ("Gujarat", "Gujarat"),
-    ("Haryana", "Haryana"),
-    ("Himachal Pradesh", "Himachal Pradesh"),
-    ("Jammu and Kashmir ", "Jammu and Kashmir "),
-    ("Jharkhand", "Jharkhand"),
-    ("Karnataka", "Karnataka"), ("Kerala", "Kerala"),
-    ("Madhya Pradesh", "Madhya Pradesh"),
-    ("Maharashtra", "Maharashtra"),
-    ("Manipur", "Manipur"),
-    ("Meghalaya", "Meghalaya"),
-    ("Mizoram", "Mizoram"),
-    ("Nagaland", "Nagaland"),
-    ("Odisha", "Odisha"),
-    ("Punjab", "Punjab"),
-    ("Rajasthan", "Rajasthan"),
-    ("Sikkim", "Sikkim"),
-    ("Tamil Nadu", "Tamil Nadu"),
-    ("Telangana", "Telangana"),
-    ("Tripura", "Tripura"),
-    ("Uttar Pradesh", "Uttar Pradesh"),
-    ("Uttarakhand", "Uttarakhand"),
-    ("West Bengal", "West Bengal"),
-    ("Andaman and Nicobar Islands", "Andaman and Nicobar Islands"),
-    ("Chandigarh", "Chandigarh"),
-    ("Dadra and Nagar Haveli", "Dadra and Nagar Haveli"),
-    ("Daman and Diu", "Daman and Diu"),
-    ("Lakshadweep", "Lakshadweep"),
-    ("National Capital Territory of Delhi", "National Capital Territory of Delhi"),
-    ("Puducherry", "Puducherry")
-)
-
-# LOGGING
-LOG_DIR = os.path.join(BASE_DIR, 'log')
-LOG_FILE = '/django-insight.log'
-LOG_PATH = LOG_DIR + LOG_FILE
-
-if not os.path.exists(LOG_DIR):
-    os.mkdir(LOG_DIR)
-
-if not os.path.exists(LOG_PATH):
-    # create empty log file
-    f = open(LOG_PATH, 'a').close()
-else:
-    # clear log file
-    f = open(LOG_PATH, "w").close()
-
-LOGGING = {
-    "version": 1,
-    "disable_existing_loggers": False,
-    "root": {"level": "INFO", "handlers": ["file"]},
-    "handlers": {
-        "file": {
-            "level": "INFO",
-            "class": "logging.FileHandler",
-            "filename": LOG_PATH,
-            "formatter": "app",
-        },
-    },
-    "loggers": {
-        "django": {
-            "handlers": ["file"],
-            "level": "INFO",
-            "propagate": True
-        },
-    },
-    "formatters": {
-        "app": {
-            "format": (
-                u"%(asctime)s [%(levelname)-8s] "
-                "(%(module)s.%(funcName)s) %(message)s"
-            ),
-            "datefmt": "%Y-%m-%d %H:%M:%S",
-        },
-    },
-}
-
-print("Logging Started...")
-
-print("***************************************")
-
-# PUSH kar ra hu

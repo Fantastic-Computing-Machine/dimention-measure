@@ -3,11 +3,19 @@ from django.contrib.auth import get_user_model as user_model
 from django.db import models
 from django.urls import reverse
 
-import decimal
+from decimal import Decimal
 from datetime import datetime
 
+from core.templatetags.utility import formatFloat
 
 User = user_model()
+
+
+def meter2feet(meters):
+    # Convert meters to feet
+    feet = float(meters) * 3.28084
+    inches = round((feet - int(feet)) * 12, 2)
+    return feet, inches
 
 
 class Project(models.Model):
@@ -20,7 +28,7 @@ class Project(models.Model):
     created_on = models.DateTimeField(
         auto_now_add=True, help_text="Date and time when the project was created")
     is_deleted = models.BooleanField(
-        default=False, help_text="Is the project deleted?")
+        default=False, help_text="Check to soft Delete the project")
     deleted_on = models.DateTimeField(
         blank=True, null=True, help_text="Date and time when the project was deleted")
 
@@ -53,16 +61,24 @@ class Project(models.Model):
         sum_sqft = sum(item.sqft for item in dims)
         return sum_sqft
 
+    def get_absolute_url(self):
+        return reverse("project_detail", args=[str(self.pk), str(self.name)])
+
 
 class Dimension(models.Model):
     project = models.ForeignKey(
         Project, on_delete=models.CASCADE)
     name = models.CharField(max_length=30)
     description = models.TextField(blank=True, null=True)
-    # length & width are in meters
-    length = models.DecimalField(max_digits=20, decimal_places=2)
-    width = models.DecimalField(
-        max_digits=20, decimal_places=2, blank=True, null=True)
+
+    # length = models.DecimalField(verbose_name="Length (m)", max_digits=20, decimal_places=2, default=0, blank=True, null=True)
+    length_feet = models.DecimalField(max_digits=20, decimal_places=2, default=0)
+    length_inches = models.DecimalField(max_digits=20, decimal_places=2, default=0)
+
+    # width = models.DecimalField(verbose_name="Width (m)", max_digits=20, decimal_places=2, blank=True, null=True)
+    width_feet = models.DecimalField(max_digits=20, decimal_places=2, blank=True, null=True,default=0)
+    width_inches = models.DecimalField(max_digits=20, decimal_places=2, blank=True, null=True, default=0)
+
     sqm = models.DecimalField(
         max_digits=20, decimal_places=2, blank=True, null=True)
     sqft = models.DecimalField(
@@ -76,55 +92,56 @@ class Dimension(models.Model):
     deleted_on = models.DateTimeField(blank=True, null=True)
 
     def __str__(self):
-        return str(self.name) + " | " + str(self.project.name)
+        return f"{self.name} | {self.project.name}"
 
     def save(self):
         self.name = self.name.strip().replace(" ", "-")
-        if self.is_deleted:
-            self.deleted_on = datetime.now()
-        if not self.is_deleted:
-            self.deleted_on = None
-        if not self.width or self.width == '0' or self.width == '':
-            self.width = 0
+        self.description = self.description.strip()
 
-        if not self.rate or self.rate == '0' or self.rate == '':
-            self.rate = 0
+        self.delete = datetime.now() if self.is_deleted else None
 
-        if self.width == '' or self.width == 0:
+        self.length_feet = self.length_feet or 0
+        self.length_inches = self.length_inches or 0
 
-            if self.description != None and self.description != '':
-                if '**NOTE: THIS IS RUNNING LENGTH.**' not in self.description:
-                    self.description = "**NOTE: THIS IS RUNNING LENGTH.** \n" + \
-                        str(self.description)
+        self.width_feet = self.width_feet or 0
+        self.width_inches = self.width_inches or 0
+
+        self.rate = self.rate or 0
+
+        # Convert length and width to meters
+        length_meters = Decimal(float(self.length_feet) * 0.3048) + Decimal(float(self.length_inches) * 0.0254)
+        width_meters = Decimal(float(self.width_feet) * 0.3048) + Decimal(float(self.width_inches) * 0.0254)
+
+        note = '**NOTE: THIS IS RUNNING LENGTH.**'
+
+        # Add a note to the description if width information is missing
+        if not self.width_feet or not self.width_inches:
+            if note not in self.description:
+                self.description = f"{note} \n" + str(self.description)
             else:
-                self.description = '**NOTE: THIS IS RUNNING LENGTH.**'
+                self.description = note
 
-            self.sqm = self.length
-            self.sqft = self.length * decimal.Decimal(3.28084)
-            if self.rate == '' or self.rate == 0:
-                self.amount = decimal.Decimal(0)
+            self.sqm = length_meters
+            self.sqft = length_meters * Decimal(3.28084)
+        else:
+            # Remove the note from the description if width information is present
+            self.description = self.description.replace(note, '')
 
-            elif self.rate > 0:
-                self.amount = self.length * self.rate
+            self.sqm = length_meters * width_meters
+            self.sqft = self.sqm * Decimal(10.7639)
 
-            return super(Dimension, self).save()
+        self.amount = Decimal(0) if self.rate == 0 else self.sqft * Decimal(self.rate)
 
-        elif self.width > 0:
-            if self.description != None and self.description != '':
-                if '**NOTE: THIS IS RUNNING LENGTH.**' in self.description:
-                    self.description = self.description.replace(
-                        '**NOTE: THIS IS RUNNING LENGTH.**', '')
+        return super(Dimension, self).save()
 
-            self.sqm = self.length * self.width
-            self.sqft = self.length * self.width * decimal.Decimal(10.7639)
+    def length_meter(self):
+        result = Decimal(float(self.length_feet) * 0.3048) + Decimal(float(self.length_inches) * 0.0254)
+        return formatFloat(result)
 
-            if self.rate == '' or self.rate == 0:
-                self.amount = decimal.Decimal(0)
+    def width_meter(self):
+        result = Decimal(float(self.width_feet) * 0.3048) + Decimal(float(self.width_inches) * 0.0254)
+        return formatFloat(result)
 
-            elif self.rate > 0:
-                self.amount = self.sqft * self.rate
-
-            return super(Dimension, self).save()
 
     def get_absolute_url(self):
         return reverse("project_detail", args=[str(self.project.pk), str(self.project.name)])

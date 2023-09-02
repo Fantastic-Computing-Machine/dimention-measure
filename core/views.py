@@ -32,7 +32,7 @@ class DashboardView(BaseAuthClass, TemplateView):
         kwargs['dimensions'] = DimensionProject.objects.filter(
             is_deleted=False).order_by('-created_on')[:5]
         kwargs['estimates'] = EstimateProject.objects.filter(
-            is_deleted=False).order_by('-created_on')[:5]
+            is_deleted=False, client__is_deleted = False).order_by('-created_on')[:5]
         return super().get_context_data(**kwargs)
 
 # search class based view

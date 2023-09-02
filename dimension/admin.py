@@ -47,13 +47,31 @@ class ProjectAdmin(admin.ModelAdmin):
         "total_sqm",
         "total_amount",
     ]
-    readonly_fields = ["deleted_on", "author"]
+    readonly_fields = ["deleted_on", "author",
+                       'created_on', "total_sqm", "total_amount", "total_sqft"]
     actions = [soft_delete, soft_undelete]
     list_filter = [
         "created_on",
         "is_deleted",
         "deleted_on",
     ]
+    fieldsets = (
+        (None, {
+            'fields': ('name', 'author', 'created_on')
+        }),
+        ('Project Details', {
+            'fields': ('description', 'is_deleted', 'deleted_on')
+        }),
+        ('Statistics', {
+            'fields': ('total_sqm', 'total_sqft', 'total_amount'),
+        }),
+    )
+    add_fieldsets = (
+        (None, {
+            'classes': ('wide',),
+            'fields': ('name', 'author', 'description'),
+        }),
+    )
 
     def save_model(self, request, obj, form, change):
         obj.author = request.user
@@ -90,18 +108,6 @@ class DimensionAdmin(admin.ModelAdmin):
         "created_on",
         "is_deleted"
     ]
-    fields = [
-        "name",
-        "project",
-        "description",
-        "length",
-        "width",
-        "sqm",
-        "sqft",
-        "rate",
-        "amount",
-        "created_on"
-    ]
     readonly_fields = ["sqm", "sqft", "amount", "deleted_on", "created_on"]
     list_filter = [
         "created_on",
@@ -109,10 +115,40 @@ class DimensionAdmin(admin.ModelAdmin):
         "deleted_on",
         "project"
     ]
+    fieldsets = (
+        (None, {'fields': ('project', 'name', 'created_on')}),
+        (
+            'Dimension Details', {
+                'fields': (
+                    'description',
+                    ('length_feet', 'length_inches'),
+                    ('width_feet', 'width_inches'),
+                    ('sqm', 'sqft'),
+                    ('rate', 'amount')
+                )
+            }
+        ),
+        (
+            'Deletion Details', {
+                'fields': ('is_deleted', 'deleted_on'),
+            }
+        ),
+    )
+    add_fieldsets = (
+        (None, {
+            'classes': ('wide',),
+            'fields': ('project', 'name', 'description', 'rate')
+        }),
+    )
 
     def get_queryset(self, request):
         qs = super(DimensionAdmin, self).get_queryset(request)
         return qs.filter(project__author__organization=request.user.organization)
+
+    def formfield_for_foreignkey(self, db_field, request, **kwargs):
+        if db_field.name == "project":
+            kwargs["queryset"] = Project.objects.filter(is_deleted=False)
+        return super().formfield_for_foreignkey(db_field, request, **kwargs)
 
 
 admin.site.register(Project, ProjectAdmin)

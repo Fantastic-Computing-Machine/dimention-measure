@@ -115,26 +115,23 @@
 {% block body %}
 
 <div class="container-lg pb-4">
-
-
     <div class="row justify-content-between py-2">
         <div class="col-4">
             <div class="text-light display-4">Clients</div>
         </div>
     </div>
 
-
     <div class="accordion" id="accordionExample">
 
         {% for item in clients_list %}
-
         <div class="accordion-item">
             <h2 class="accordion-header" id="heading_{{item.id}}">
                 <button class="accordion-button" type="button" data-bs-toggle="collapse"
                     data-bs-target="#collapse_{{item.id}}_accordion" aria-expanded="true"
                     aria-controls="collapse_{{item.id}}_accordion">
                     <span class="fw-bold text-dark">
-                        {% replaceItem item.name|capfirst %} ({{item.phoneNumber}}) - {{item.town_city}}
+                        {% replaceItem item.name|capfirst %} {% if item.phoneNumber %} ({{item.phoneNumber}})
+                        {% endif %}
                     </span>
                 </button>
             </h2>
@@ -146,23 +143,16 @@
                     {%endif%}
 
                     <p><span class="fw-bold">Address: </span>
-                        <span>{{item.address_1}}</span>
-
-                        <span>{% if item.address_2 %},
-                            {{item.address_2}}{%endif%}</span>
-
-                        <span> {% if item.landmark %},
-                            {{item.landmark}}{%endif%}</span>
-                        <span>
-                            , {{item.town_city}}, {{item.state}}- {{item.zip_code}}
-                        </span>
+                        <span>{{item.address}}</span>
                     </p>
                     <p>
                         <a href="{% url 'update_client' item.id item.name %}" class="btn btn-outline-primary">Update</a>
+                        {% if user.is_staff or user.is_admin %}
                         <a class="delete_button btn btn-outline-danger" id="delete_button{{item.id}}"
                             data-bs-toggle="modal" data-bs-target="#delete{{item.id}}Modal">
                             Delete
                         </a>
+                        {% endif %}
                     </p>
 
                 </div>

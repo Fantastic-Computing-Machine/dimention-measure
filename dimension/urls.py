@@ -1,9 +1,14 @@
 from django.urls import path
 
-from .views import DimensionHomeView, DimensionProjectView, UpdateDimensionView
-from .views import DeleteDimensionView, DeleteProjectView
-from .views import download_excel_view
-# from .views import MigrateData
+from .views import (
+    DimensionHomeView,
+    DimensionProjectView,
+    UpdateProjectView,
+    UpdateDimensionView,
+    DeleteDimensionView,
+    DeleteProjectView,
+    download_excel_view
+)
 
 
 urlpatterns = [
@@ -16,6 +21,10 @@ urlpatterns = [
     # project_id, project_name
     path("project/<int:pk>/<str:project_name>/delete_project/",
          DeleteProjectView, name="delete_project"),
+
+    # project_id, project_name
+    path("project/<int:pk>/<str:project_name>/update_project/",
+         UpdateProjectView.as_view(), name="update_project"),
 
     # dimension_id, project_name
     path("project/<int:pk>/<str:project_name>/update_dimension/",

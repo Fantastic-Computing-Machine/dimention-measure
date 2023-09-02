@@ -68,6 +68,7 @@
     </div>
     <div class="offcanvas-body">
         <div class="list-group">
+            <a class="list-group-item active fw-bold">Management</a>
             <a href="{% url 'folio' %}" class="list-group-item list-group-item-action">Folio</a>
             <a href="{% url 'clients' %}" class="list-group-item list-group-item-action">Clients</a>
 
@@ -83,68 +84,53 @@
 
 
 {% block body %}
-
-
 <div class="container-lg pb-4">
-    <div class="text-light py-2 display-4">Estimate</div>
+    <div class="text-light py-2">
+        <div class="display-4">Estimate</div>
+        <div class="fs-4">
+            <span class="">&#128994</span>
+            {{projects_list | length}} active projects
+        </div>
+    </div>
 
-    {% if projects_list|length == 0 %}
-    <!-- CONDITION IF THERE IS N PROJECTS -->
-    <div class="card">
-        <div class="card-body">
-            <div class=" text-center my-3">
-                <img alt="void" class="img-fluid m-2" style="width: 400px;" src="{% static 'img/void.svg' %}">
-                <div class="text-center">
-                    <p class="py-1 fw-light my-3 fs-1">Nothing Here
-                        <a class="btn btn-outline-success" data-bs-toggle="modal" data-bs-target="#newEstimate"
-                            class="nav-link active text-light" aria-current="page">
-                            <span class="align-bottom">
-                                New Estimate
+    {% if projects_list%}
+    <div class="row">
+        {% for item in projects_list %}
+        <div class="col-md-6 col-sm-12">
+            <div class="m-1 index_project_card" style="height:80px;">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-start">
+                        <a href="{% url 'estimate' item.id item.name %}">
+                            <div class="ms-2 text-dark">
+                                <div class="">
+                                    <span class="fw-bold">
+                                        <span class="text-muted">
+                                            {{item.reference_number}}
+                                        </span>
+                                        <span>
+                                            <span>{% replaceItem item.name|capfirst %}</span>
+                                            <span class="badge bg-primary">{{item.created_on|naturalday}}</span>
+                                        </span>
+                                    </span>
+                                </div>
+                                <span class="wrapword">
+                                    {{item.description|truncatechars:20|capfirst}}
+                                </span>
+                            </div>
+                            <span>
+                                <a class="delete_button badge bg-light" id="delete_button{{item.id}}"
+                                    data-bs-toggle="modal" data-bs-target="#delete{{item.id}}Modal">
+                                    <img class="icon_ud" width="28" height="28"
+                                        src="https://img.icons8.com/ios/50/000000/delete-forever--v2.png" />
+                                </a>
                             </span>
                         </a>
-                    </p>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-    <!-- CONDITION IF THERE IS N PROJECTS -->
-    {% endif %}
 
-
-
-    {% if projects_list %}
-    <ul class="list-group">
-        {% for item in projects_list %}
-        <li class="list-group-item">
-            <div class="d-flex justify-content-between align-items-start">
-                <a href="{% url 'estimate' item.id item.name %}">
-                    <div class="ms-2 me-auto text-dark">
-                        <div class="">
-                            <span class="fw-bold">
-                                <span class="text-muted">
-                                    {{item.reference_number}}
-                                </span>
-                                <span>
-                                    <span>{% replaceItem item.name|capfirst %}</span>
-                                    <span class="badge bg-primary">{{item.created_on|naturalday}}</span>
-                                </span>
-                            </span>
-                        </div>
-                        <span class="wrapword">
-                            {{item.description|truncatechars:20|capfirst}}
-                        </span>
-                    </div>
-                    <span>
-                        <a class="delete_button badge bg-light" id="delete_button{{item.id}}" data-bs-toggle="modal"
-                            data-bs-target="#delete{{item.id}}Modal">
-                            <img class="icon_ud" width="28" height="28"
-                                src="https://img.icons8.com/ios/50/000000/delete-forever--v2.png" />
-                        </a>
-                    </span>
-                </a>
-            </div>
-        </li>
-        <!-- DELETE ESTIMATE PROJECT MODAL -->
+        <!-- DELETE MODAL -->
         <div class="modal fade" id="delete{{item.id}}Modal" tabindex="-1" aria-labelledby="delete{{item.id}}ModalLabel"
             aria-hidden="true">
             <div class="modal-dialog">
@@ -152,12 +138,12 @@
                     <div class="modal-header">
                         <h5 class="modal-title" id="delete{{item.id}}ModalLabel">
                             Confirm
-                            delete "{% replaceItem item.name|capfirst %}"</h5>
+                            delete "{{item.name | capfirst }}"</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body text-start">
-                        You wish to permanently delete estimate ::&rarr;
-                        <b>"{% replaceItem item.name|capfirst %}"</b>?<br>
+                        You wish to permanently delete project&rarr;
+                        <b>"{{item.name | capfirst }}"</b>?<br>
                         <b class="my-1">Be Careful!</b>
                     </div>
                     <div class="modal-footer">
@@ -174,10 +160,26 @@
                 </div>
             </div>
         </div>
-        <!-- DELETE ESTIMATE PROJECT MODAL -->
+        <!-- DELETE MODAL -->
         {% endfor %}
-    </ul>
+    </div>
+
+    {% else %}
+
+    <div class="card">
+        <div class="card-body">
+            <div class=" text-center my-3">
+                <img alt="void" class="img-fluid m-2" style="width: 400px;" src="{% static 'img/void.svg' %}">
+                <div class="text-center">
+                    <p class="py-1 fw-light my-3 fs-1">Nothing Here
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
     {% endif %}
+
 </div>
 
 

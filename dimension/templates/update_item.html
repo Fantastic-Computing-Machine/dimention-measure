@@ -36,32 +36,67 @@
                                 {{form.description}}
                             </div>
                             <div class="my-2">
-                                {{form.length.label}}
-                                {{form.length}}
+                                <div class="row">
+                                    <div>
+                                        Length
+                                    </div>
+                                    <div class="col">
+                                        <div class="input-group">
+                                            {{form.length_feet}}
+                                            <span class="input-group-text">ft</span>
+                                        </div>
+                                    </div>
+                                    <div class="col">
+                                        <div class="input-group">
+                                            {{form.length_inches}}
+                                            <span class="input-group-text">in</span>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                             <div class="my-2">
-                                {{form.width.label}}
-                                {{form.width}}
+                                <div class="row">
+                                    <div>Width</div>
+                                    <div class="col">
+                                        <div class="input-group">
+                                            {{form.width_feet}}
+                                            <span class="input-group-text">ft</span>
+                                        </div>
+                                    </div>
+                                    <div class="col">
+                                        <div class="input-group">
+                                            {{form.width_inches}}
+                                            <span class="input-group-text">in</span>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                             <div class="my-2">
-                                Sqm
-                                <input class="form-control" id="sqm" type="text" placeholder="Sqm"
-                                    aria-label=".form-control-sm" value="{{dimension.sqm}}" readonly>
+                                <div class="row">
+                                    <div class="col">
+                                        Sqm
+                                        <input class="form-control" id="sqm" type="text" placeholder="Sqm"
+                                            aria-label=".form-control-sm" disabled readonly>
+                                    </div>
+                                    <div class="col">
+                                        Sqft
+                                        <input class="form-control" id="sqft" type="text" placeholder="Sqft"
+                                            aria-label=".form-control-sm" disabled readonly>
+                                    </div>
+                                </div>
                             </div>
-
                             <div class="my-2">
-                                Sqft
-                                <input class="form-control" id="sqft" type="text" placeholder="Sqft"
-                                    aria-label=".form-control-sm" value="{{dimension.sqft}}" disabled readonly>
-                            </div>
-                            <div class="my-2">
-                                {{form.rate.label}}
-                                {{form.rate}}
-                            </div>
-                            <div class="my-2">
-                                Amount
-                                <input class="form-control" id="amount" type="number" placeholder="Amount"
-                                    aria-label=".form-control-sm" value="{{dimension.amount}}" readonly>
+                                <div class="row">
+                                    <div class="col">
+                                        {{form.rate.label}}
+                                        {{form.rate}}
+                                    </div>
+                                    <div class="col">
+                                        Amount
+                                        <input class="form-control" id="amount" type="number" placeholder="Amount"
+                                            aria-label=".form-control-sm" readonly>
+                                    </div>
+                                </div>
                             </div>
 
                         </div>

@@ -7,6 +7,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.0/ref/settings/
 """
 
+import pytz
 from dotenv import load_dotenv
 from django.core.validators import RegexValidator
 import logging
@@ -14,6 +15,7 @@ import os
 from pathlib import Path
 import pymysql
 import re
+from datetime import datetime, timezone
 
 
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -23,13 +25,279 @@ load_dotenv(dotenv_path=dotenv_path)
 
 ENV = os.getenv("ENV")
 
+# SECURITY WARNING: keep the secret key used in production secret!
+SECRET_KEY = os.getenv("SECRET_KEY")
+
+ADMINS = [
+    ("Aditya Agarwal", "aditya.ag1234@gmail.com"),
+    ("Nilesh Kumar Mandal", "s.nileshkm@gmail.com"),
+]
+
 if ENV == "prod":
-    print("***************************************")
+    print("\n***************************************")
     print("Initializing with Production Settings")
-    print("***************************************")
     from .prod_settings import *
 
 elif ENV == "dev":
-    print("***************************************")
+    print("\n***************************************")
     print("Initializing with Development Settings")
     from .dev_settings import *
+
+AUTH_USER_MODEL = "authentication.CompanyUser"
+
+print("Watchman Enabled...")
+
+if os.getenv("LOGGING", "false").lower() == "true":
+    print("Logging Enabled...")
+
+    # LOGGING
+    TZ = pytz.timezone("Asia/Kolkata")
+
+    # Format the current time as per the desired format
+    current_time = datetime.now(TZ).strftime("%d-%m-%y %H:%M:%S")
+
+    LOG_DIR = os.path.join(BASE_DIR, "log")
+    LOG_FILE = f"{current_time}_django-insight.log"
+    LOG_PATH = os.path.join(LOG_DIR, LOG_FILE)
+
+    if not os.path.exists(LOG_DIR):
+        os.mkdir(LOG_DIR)
+
+    if not os.path.exists(LOG_PATH):
+        f = open(LOG_PATH, "a").close()  # create empty log file
+    else:
+        f = open(LOG_PATH, "w").close()  # clear log file
+
+    LOGGING = {
+        "version": 1,
+        "disable_existing_loggers": False,
+        "formatters": {
+            "verbose": {
+                "format": "[%(asctime)s] %(levelname)s [%(name)s:%(lineno)s] %(message)s",
+                "datefmt": "%d/%b/%Y %H:%M:%S",
+            },
+            "simple": {"format": "%(levelname)s %(message)s"},
+        },
+        "handlers": {
+            "file": {
+                "level": "DEBUG",
+                "class": "logging.FileHandler",
+                "filename": LOG_PATH,
+                "formatter": "verbose",
+            },
+        },
+        "loggers": {
+            "django": {
+                "handlers": ["file"],
+                "propagate": True,
+                "level": "DEBUG",
+            },
+            "MYAPP": {
+                "handlers": ["file"],
+                "level": "DEBUG",
+            },
+        },
+    }
+
+    print("Logging Started...")
+else:
+    print("Logging Disabled...")
+
+
+MIDDLEWARE = [
+    "django.middleware.security.SecurityMiddleware",
+    "django.contrib.sessions.middleware.SessionMiddleware",
+    "django.middleware.common.BrokenLinkEmailsMiddleware",
+    "django.middleware.common.CommonMiddleware",
+    "django.middleware.csrf.CsrfViewMiddleware",
+    "django.contrib.auth.middleware.AuthenticationMiddleware",
+    "django.contrib.messages.middleware.MessageMiddleware",
+    "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "django.contrib.admindocs.middleware.XViewMiddleware",
+    "django.middleware.locale.LocaleMiddleware",
+]
+
+if ENV == "prod":
+    MIDDLEWARE.insert(1, "whitenoise.middleware.WhiteNoiseMiddleware")
+
+IGNORABLE_404_URLS = [
+    re.compile(r"^/apple-touch-icon.*\.png$"),
+    re.compile(r"^/favicon\.ico$"),
+    re.compile(r"^/robots\.txt$"),
+    re.compile(r"^/robots\.ttf$"),
+]
+
+CKEDITOR_CONFIGS = {
+    "default": {
+        "toolbar": "Custom",
+        "width": "auto",
+        "toolbar_Custom": [
+            ["Bold", "Italic", "Underline"],
+        ],
+    }
+}
+
+ROOT_URLCONF = "Dimention_Measure.urls"
+
+TEMPLATES = [
+    {
+        "BACKEND": "django.template.backends.django.DjangoTemplates",
+        "DIRS": [],
+        "APP_DIRS": True,
+        "OPTIONS": {
+            "context_processors": [
+                "django.template.context_processors.debug",
+                "django.template.context_processors.request",
+                "django.contrib.auth.context_processors.auth",
+                "django.contrib.messages.context_processors.messages",
+                "core.context_processors.global_settings",
+            ],
+            "string_if_invalid": "CONTACT ADMIN WITH A SCREENSHOT.",
+        },
+    },
+]
+
+# Application definition
+INSTALLED_APPS = [
+    "admin_interface",
+    "colorfield",
+    "django.contrib.admin",
+    "django.contrib.admindocs",
+    "django.contrib.auth",
+    "django.contrib.contenttypes",
+    "django.contrib.sessions",
+    "django.contrib.messages",
+    "django.contrib.staticfiles",
+    "django.contrib.humanize",
+    "django_quill",
+    "ckeditor",
+    "django_countries",
+    "dimension",
+    "client_and_company",
+    "authentication",
+    "settings",
+    "core",
+]
+
+if os.getenv("EXPENSE_ENABLED"):
+    print("Expense Enabled")
+    INSTALLED_APPS.append("expense")
+
+if os.getenv("ESTIMATE_ENABLED"):
+    print("Estimate Enabled")
+    INSTALLED_APPS.append("estimator")
+
+AUTH_PASSWORD_VALIDATORS = [
+    {
+        "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",
+    },
+    {
+        "NAME": "django.contrib.auth.password_validation.MinimumLengthValidator",
+    },
+    {
+        "NAME": "django.contrib.auth.password_validation.CommonPasswordValidator",
+    },
+    {
+        "NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",
+    },
+]
+
+# Internationalization
+# https://docs.djangoproject.com/en/4.0/topics/i18n/
+
+LANGUAGE_CODE = "en-us"
+
+TIME_ZONE = "Asia/Kolkata"
+
+USE_I18N = True
+
+USE_TZ = True
+
+
+# Static files (CSS, JavaScript, Images)
+# https://docs.djangoproject.com/en/4.0/howto/static-files/
+STATIC_PATH = os.path.join(BASE_DIR, "static")
+if not os.path.exists(STATIC_PATH):
+    os.mkdir(STATIC_PATH)
+
+STATIC_URL = "/assets/"
+STATIC_ROOT = "static"
+STATICFILES_DIRS = (os.path.join(BASE_DIR, "assets/"),)
+
+
+MEDIA_URL = "/media/"
+MEDIA_ROOT = os.path.join(BASE_DIR, "media")
+
+
+ADMIN_MEDIA_PREFIX = "/static/admin/"
+
+# Default primary key field type
+# https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
+
+DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+LOGIN_REDIRECT_URL = "index"
+LOGOUT_REDIRECT_URL = "index"
+LOGIN_URL = "login"
+
+
+PHONE_NUMBER_FORMAT = RegexValidator(regex=r"^\+?1?\d{8,15}$")
+
+STATE_CHOICES = (
+    ("Andhra Pradesh", "Andhra Pradesh"),
+    ("Arunachal Pradesh ", "Arunachal Pradesh "),
+    ("Assam", "Assam"),
+    ("Bihar", "Bihar"),
+    ("Chhattisgarh", "Chhattisgarh"),
+    ("Goa", "Goa"),
+    ("Gujarat", "Gujarat"),
+    ("Haryana", "Haryana"),
+    ("Himachal Pradesh", "Himachal Pradesh"),
+    ("Jammu and Kashmir ", "Jammu and Kashmir "),
+    ("Jharkhand", "Jharkhand"),
+    ("Karnataka", "Karnataka"),
+    ("Kerala", "Kerala"),
+    ("Madhya Pradesh", "Madhya Pradesh"),
+    ("Maharashtra", "Maharashtra"),
+    ("Manipur", "Manipur"),
+    ("Meghalaya", "Meghalaya"),
+    ("Mizoram", "Mizoram"),
+    ("Nagaland", "Nagaland"),
+    ("Odisha", "Odisha"),
+    ("Punjab", "Punjab"),
+    ("Rajasthan", "Rajasthan"),
+    ("Sikkim", "Sikkim"),
+    ("Tamil Nadu", "Tamil Nadu"),
+    ("Telangana", "Telangana"),
+    ("Tripura", "Tripura"),
+    ("Uttar Pradesh", "Uttar Pradesh"),
+    ("Uttarakhand", "Uttarakhand"),
+    ("West Bengal", "West Bengal"),
+    ("Andaman and Nicobar Islands", "Andaman and Nicobar Islands"),
+    ("Chandigarh", "Chandigarh"),
+    ("Dadra and Nagar Haveli", "Dadra and Nagar Haveli"),
+    ("Daman and Diu", "Daman and Diu"),
+    ("Lakshadweep", "Lakshadweep"),
+    ("National Capital Territory of Delhi", "National Capital Territory of Delhi"),
+    ("Puducherry", "Puducherry"),
+)
+
+CSRF_COOKIE_SECURE = False
+SECURE_HSTS_SECONDS = 3600
+SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+
+# for supplying site over Https ONLY = True
+# SECURE_SSL_REDIRECT = False
+
+SESSION_COOKIE_SECURE = False
+SECURE_HSTS_PRELOAD = True
+SECURE_CROSS_ORIGIN_OPENER_POLICY = None
+
+# For django-admin-interface installed app
+X_FRAME_OPTIONS = "SAMEORIGIN"
+SILENCED_SYSTEM_CHECKS = ["security.W019"]
+
+SESSION_ENGINE = "django.contrib.sessions.backends.cache"
+SESSION_CACHE_ALIAS = "default"
+
+print("***************************************")

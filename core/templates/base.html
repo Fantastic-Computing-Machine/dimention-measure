@@ -31,8 +31,7 @@
                 <nav class="navbar navbar-expand-lg navbar-light nav_bg_translucent m-2">
                     <div class="container-fluid">
                         <strong>
-                            <a class="navbar-brand justify-content-center h2 text-white fs-4"
-                                href="{% url 'dashboard' %}">
+                            <a class="navbar-brand justify-content-center h2 text-white fs-4" href="{% url 'index' %}">
                                 <span class="branding">
                                     <img class="px-1" width="50" src="{% static 'img/iconGrey.svg' %}" />Insight
                                 </span>
@@ -45,7 +44,8 @@
                                     {% block header %} {% endblock %}
                                 </ul>
                             </div>
-                            <button type="button" class="btn me-2" data-bs-toggle="modal" data-bs-target="#searchModal">
+                            <button type="button" class="btn me-2 shadow-none" data-bs-toggle="modal"
+                                data-bs-target="#searchModal">
                                 <img alt="search" src="https://img.icons8.com/ios/30/ffffff/search--v1.png" />
                             </button>
                         </div>
@@ -82,32 +82,19 @@
                             <form id="searchForm">
                                 {% csrf_token %}
                                 <div class="mb-3">
-                                    <label for="projectInput" class="form-label">Project Name</label>
                                     <input type="text" placeholder="Discover the Missing Piece: Search for Projects "
                                         name="textToSearch" class="form-control" id="projectInput" required>
                                 </div>
-                                <!-- Optional Parameters -->
-                                <div class="mb-3">
-                                    <label class="form-label">Search into</label>
-                                    <div class="form-check" style="display: inline-block;">
-                                        <input class="form-check-input" type="radio" name="dimentionCheck"
-                                            id="dimentionCheck">
-                                        <label class="form-check-label" for="flexRadioDefault1">
-                                            Dimentions
-                                        </label>
-                                    </div>
-                                    <div class="form-check" style="display: inline-block;">
-                                        <input class="form-check-input" type="radio" name="estimateCheck"
-                                            id="estimateCheck">
-                                        <label class="form-check-label" for="flexRadioDefault2">
-                                            Estimate
-                                        </label>
-                                    </div>
+                                <div class="input-group">
+                                    <select class="form-select" id="select-dropdown"
+                                        aria-label="Select project or dimewent">
+                                        <option selected value=1>Dimention</option>
+                                        <option value=2>Estimate</option>
+                                    </select>
 
+                                    <button class="btn btn-primary" type="submit">Search</button>
                                 </div>
-                                <button type="submit" class="btn btn-primary">Search</button>
                             </form>
-                            <hr>
                             <div id="searchResults" style="max-height: 300px;
                         overflow-y: scroll;"></div>
                         </div>
@@ -133,13 +120,20 @@
             </a>
             <!-- dimension button -->
 
+            {% if estimator_enabled %}
             <!-- estimate button -->
             <a aria-label="all-expenses" href="{% url 'all_estimates' %}" type="button" class="btn btn-info btn-lg">
                 <img src="https://img.icons8.com/ios/30/000000/estimates.png" />
             </a>
             <!-- estimate button -->
+            {% endif %}
 
-            {% comment %} <a href="{% url 'project_expense' dimension.project.id dimension.project.name %}"
+
+            {% if expense_enabled %}
+            <!-- expense button -->
+
+            
+            <a href="{% url 'project_expense' dimension.project.id dimension.project.name %}"
                 type="button" class="btn btn-success btn-lg">
                 <img src="https://img.icons8.com/ios/30/ffffff/money-circulation.png" />
             </a>
@@ -147,6 +141,11 @@
             <a href="{% url 'project_expense' project.id project.name %}" type="button" class="btn btn-success btn-lg">
                 <img src="https://img.icons8.com/ios/30/ffffff/money-circulation.png" />
             </a>
+
+            <!-- expense button -->
+            {% endif %}
+
+            {% comment %} 
 
             <a href="{%url 'project_detail' project_id project_name %}" type="button" class="btn btn-warning btn-lg">
                 <img alt="project-btn" src="https://img.icons8.com/ios/30/000000/safety-hat.png" />

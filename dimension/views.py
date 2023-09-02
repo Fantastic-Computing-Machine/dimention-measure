@@ -1,52 +1,51 @@
-from django.shortcuts import render
-import decimal
-# from pymongo import MongoClient
-# from database import MONGO
-# import certifi
-
+from django.contrib.auth import get_user_model as user_model
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
 from django.http import FileResponse
-from django.shortcuts import HttpResponseRedirect
+from django.shortcuts import HttpResponseRedirect, render
 from django.views.generic import (
     CreateView,
     UpdateView,
     TemplateView,
     ListView,
 )
+from django.views.generic.edit import FormMixin
 from django.urls import reverse_lazy, reverse
+
+import decimal
 import os
 from datetime import datetime
 from openpyxl import Workbook
 import re
-
-from .forms import NewProjectForm, NewDimensionForm
-from .forms import UpdateDimensionForm
+from decimal import Decimal
+from .forms import (
+    NewProjectForm,
+    UpdateProjectForm,
+    NewDimensionForm,
+    UpdateDimensionForm,
+)
+# from .forms import
 from .models import Project, Dimension
-
-from django.views.generic.edit import FormMixin
-from django.contrib.auth import get_user_model as user_model
-
 from core.views import BaseAuthClass
 
 User = user_model()
 
 
 class BaseAuthClass(LoginRequiredMixin):
-    # Class to be inherited by all views that require login
+    """Class to be inherited by all views that require login"""
     login_url = '/user/login/'
     redirect_field_name = 'redirect_to'
 
 
 class DimensionHomeView(BaseAuthClass, FormMixin, ListView):
-    # Class view for dimension home page
+    """Class view for dimension home page"""
     model = Project
     form_class = NewProjectForm
     context_object_name = 'projects_list'
     template_name = 'dimensions_home.html'
     success_url = reverse_lazy("home")
-    paginate_by = 15
+    paginate_by = 14
 
     def get_queryset(self):
         queryset = super().get_queryset()
@@ -63,7 +62,7 @@ class DimensionHomeView(BaseAuthClass, FormMixin, ListView):
 
 
 class DimensionProjectView(BaseAuthClass, CreateView):
-    # Class view for dimension project page
+    """Class view for dimension project page"""
     model = Dimension
     form_class = NewDimensionForm
     template_name = 'project_detail.html'
@@ -78,17 +77,24 @@ class DimensionProjectView(BaseAuthClass, CreateView):
 
     def post(self, request, **kwargs):
         request.POST._mutable = True
-        if request.POST['width'] == '':
-            request.POST['width'] = '0'
-        if request.POST['rate'] == '':
-            request.POST['rate'] = '0'
+        request.POST['width_feet'] = request.POST.get('width_feet', '0') or '0'
+        request.POST['width_inches'] = request.POST.get('width_inches', '0') or '0'
+        request.POST['rate'] = request.POST.get('rate', '0') or '0'
+
         request.POST["project"] = str(kwargs['pk'])
         request.POST._mutable = False
         return super(DimensionProjectView, self).post(request, **kwargs)
 
 
+class UpdateProjectView(BaseAuthClass, UpdateView):
+    """Class view for updating project"""
+    model = Project
+    form_class = UpdateProjectForm
+    template_name = 'update_dimension_project.html'
+
+
 class UpdateDimensionView(BaseAuthClass, UpdateView):
-    # Class view for updating dimension
+    """Class view for updating dimension"""
     model = Dimension
     form_class = UpdateDimensionForm
     template_name = 'update_item.html'
@@ -100,10 +106,9 @@ class UpdateDimensionView(BaseAuthClass, UpdateView):
 
     def post(self, request, **kwargs):
         request.POST._mutable = True
-        if request.POST['width'] == '':
-            request.POST['width'] = '0'
-        if request.POST['rate'] == '':
-            request.POST['rate'] = '0'
+        request.POST['width_feet'] = request.POST.get('width_feet', '0') or '0'
+        request.POST['width_inches'] = request.POST.get('width_inches', '0') or '0'
+        request.POST['rate'] = request.POST.get('rate', '0') or '0'
         request.POST["project"] = str(kwargs['pk'])
         request.POST._mutable = False
         return super(UpdateDimensionView, self).post(request, **kwargs)
@@ -111,7 +116,7 @@ class UpdateDimensionView(BaseAuthClass, UpdateView):
 
 @login_required
 def DeleteProjectView(request, pk, project_name):
-    # Function view for soft deleting Entire project
+    """Function view for soft deleting Entire project"""
     if request.method == 'POST':
         project = Project.objects.get(pk=pk)
         project.is_deleted = True
@@ -185,8 +190,8 @@ def download_excel_view(request, project_id, project_name):
     for item in dimension:
 
         sheet.append([
-            str(sno), item.name, str(item.length), str(
-                item.width), str(item.sqm), str(item.sqft), str(item.rate), str(item.amount)
+            str(sno), item.name, f"{str(float(item.length_feet))}' {str(float(item.length_inches))}\"",
+                f"{str(float(item.width_feet))}'{str(float(item.width_inches))}\"", str(item.sqm), str(item.sqft), str(item.rate), str(item.amount)
         ])
         sheet.append(["", item.description])
         sno += 1
