@@ -1,0 +1,14 @@
+{
+    "builds": [
+        {
+            "src": "Dimention_Measure/wsgi.py",
+            "use": "@vercel/python"
+        }
+    ],
+    "routes": [
+        {
+            "src": "/(.*)",
+            "dest": "Dimention_Measure/wsgi.py"
+        }
+    ]
+}
