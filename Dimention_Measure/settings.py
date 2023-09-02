@@ -225,6 +225,8 @@ STATIC_ROOT = "static"
 STATICFILES_DIRS = (os.path.join(BASE_DIR, "assets/"),)
 
 
+WSGI_APPLICATION = 'Dimention_Measure.wsgi.application'
+
 MEDIA_URL = "/media/"
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 

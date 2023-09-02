@@ -35,12 +35,11 @@ ALLOWED_HOSTS = [
     # "13.234.231.51",
     # "3.6.80.190",
     os.getenv("HOST_IP"),
-    "https://insights-git-main-fcmus.vercel.app/",
-    "https://insights-fcmus.vercel.app/",
-    "https://insights-lac.vercel.app/",
+    "*.vercel.app",
+    ".vercel.app",
 ]
 
-CSRF_TRUSTED_ORIGINS = ["http://3.6.80.190"]
+# CSRF_TRUSTED_ORIGINS = ["http://3.6.80.190"]
 
 
 # EMAIL_USE_TLS = True
@@ -59,9 +58,15 @@ print("Cache Enabled...")
 print("\tCache Backend: ", CACHES["default"]["BACKEND"])
 
 
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
-print("Static Files Storage: ", STATICFILES_STORAGE)
-WSGI_APPLICATION = "Dimention_Measure.wsgi.application"
+# STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+STORAGES = {
+    # ...
+    "staticfiles": {
+        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+    },
+}
+print("Static Files Storage: ", STORAGES["staticfiles"]["BACKEND"])
+
 
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
