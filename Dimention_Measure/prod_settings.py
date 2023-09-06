@@ -9,14 +9,10 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 
 from dotenv import load_dotenv
 import os
-import pymysql
 from pathlib import Path
 
-pymysql.install_as_MySQLdb()
 
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-
 dotenv_path = BASE_DIR / ".env"
 load_dotenv(dotenv_path=dotenv_path)
 
@@ -26,18 +22,20 @@ load_dotenv(dotenv_path=dotenv_path)
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = [
-    "*",
-    "0.tcp.in.ngrok.io",
-    "127.0.0.1",
-    "localhost",
-    # "0.0.0.0",
-    # "13.234.231.51",
-    # "3.6.80.190",
-    os.getenv("HOST_IP"),
-    "*.vercel.app",
-    ".vercel.app",
-]
+# ALLOWED_HOSTS = [
+#     "*",
+#     "0.tcp.in.ngrok.io",
+#     "127.0.0.1",
+#     "localhost",
+#     # "0.0.0.0",
+#     # "13.234.231.51",
+#     # "3.6.80.190",
+#     os.getenv("HOST_IP"),
+#     "*.vercel.app",
+#     ".vercel.app",
+# ]
+
+ALLOWED_HOSTS = ['*']
 
 # CSRF_TRUSTED_ORIGINS = ["http://3.6.80.190"]
 
@@ -58,14 +56,17 @@ print("Cache Enabled...")
 print("\tCache Backend: ", CACHES["default"]["BACKEND"])
 
 
-# STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
-STORAGES = {
-    # ...
-    "staticfiles": {
-        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
-    },
-}
-print("Static Files Storage: ", STORAGES["staticfiles"]["BACKEND"])
+STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.StaticFilesStorage'
+
+# STORAGES = {
+#     # ...
+#     "staticfiles": {
+#         "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+#     },
+# }
+# print("Static Files Storage: ", STORAGES["staticfiles"]["BACKEND"])
+
+print("Static Files Storage: ", STATICFILES_STORAGE)
 
 
 # Database
@@ -81,3 +82,7 @@ DATABASES = {
     }
 }
 print("Database Connected...")
+
+CORS_ORIGIN_ALLOW_ALL = True
+
+CORS_ALLOW_CREDENTIALS = True
