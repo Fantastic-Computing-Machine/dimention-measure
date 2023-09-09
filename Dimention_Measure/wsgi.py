@@ -18,11 +18,11 @@ try:
     os.environ.setdefault('DJANGO_SETTINGS_MODULE',
                           'Dimention_Measure.settings')
 
-    application = get_wsgi_application()
+    app = get_wsgi_application()
 
     # application = DjangoWhiteNoise(application)
 
-    app = application
+    # app = get_wsgi_application()
 
 except Exception as e:
     print("Error in wsgi.py : ", e)
