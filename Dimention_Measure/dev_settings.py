@@ -16,7 +16,6 @@ pymysql.install_as_MySQLdb()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-
 dotenv_path = BASE_DIR / ".env"
 load_dotenv(dotenv_path=dotenv_path)
 
@@ -26,23 +25,8 @@ load_dotenv(dotenv_path=dotenv_path)
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = [
-    "0.tcp.in.ngrok.io",
-    "127.0.0.1",
-    "0.tcp.ngrok.io",
-    "localhost",
-    "0.0.0.0",
-    "13.234.231.51",
-    "3.6.80.190",
-    os.getenv("HOST_IP"),
-    "*"
-]
+ALLOWED_HOSTS = ['*']
 
-CSRF_TRUSTED_ORIGINS = [
-    "https://adiagarwalrock-literate-computing-54wvrp9r7v634xpj-8000.preview.app.github.dev"
-]
-
-#
 
 # CACHES = {
 #     "default": {
@@ -57,8 +41,6 @@ CSRF_TRUSTED_ORIGINS = [
 STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.ManifestStaticFilesStorage'
 # STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
 # STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStoage'
-
-WSGI_APPLICATION = 'Dimention_Measure.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
