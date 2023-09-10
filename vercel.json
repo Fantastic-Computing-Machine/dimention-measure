@@ -1,14 +1,16 @@
 {
+    "version": 2,
     "builds": [
-        {
-            "src": "Dimention_Measure/wsgi.py",
-            "use": "@vercel/python"
-        }
+      { "src": "manage.py", "use": "@vercel/python" },
+      { "src": "requirements.txt", "use": "@vercel/python" },
+      { "src": "static/**", "use": "@vercel/static" },
+      { "src": "templates/**", "use": "@vercel/python" }
     ],
     "routes": [
-        {
-            "src": "/(.*)",
-            "dest": "Dimention_Measure/wsgi.py"
-        }
+      {
+        "src": "/(.*)",
+        "dest": "/manage.py"
+      }
     ]
-}
+  }
+  
