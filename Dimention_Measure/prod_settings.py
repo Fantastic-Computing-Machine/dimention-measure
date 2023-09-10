@@ -11,7 +11,6 @@ from dotenv import load_dotenv
 import os
 from pathlib import Path
 
-
 BASE_DIR = Path(__file__).resolve().parent.parent
 dotenv_path = BASE_DIR / ".env"
 load_dotenv(dotenv_path=dotenv_path)
@@ -68,6 +67,8 @@ STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.StaticFilesStorage'
 
 print("Static Files Storage: ", STATICFILES_STORAGE)
 
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+print("Static Files Storage: ", STATICFILES_STORAGE)
 
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
