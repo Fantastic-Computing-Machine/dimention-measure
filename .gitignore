@@ -136,3 +136,4 @@ dmypy.json
 !.elasticbeanstalk/*.global.yml
 .ebextensions/01_django.config
 static/
+
