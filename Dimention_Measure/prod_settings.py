@@ -39,24 +39,9 @@ print("Cache Enabled...")
 print("\tCache Backend: ", CACHES["default"]["BACKEND"])
 
 
-# STORAGES = {
-#     "default": {
-#         "BACKEND": "django.core.files.storage.FileSystemStorage",
-#     },
-#     "staticfiles": {
-#         "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
-#     },
-# }
-
-# STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.StaticFilesStorage'
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
-
-print("Static Files Storage: ", STATICFILES_STORAGE)
-# print(f"Static Files Storage:  {STORAGES['staticfiles']['BACKEND']}")
-
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 print("Static Files Storage: ", STATICFILES_STORAGE)
-WSGI_APPLICATION = "Dimention_Measure.wsgi.application"
+
 
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
