@@ -103,6 +103,33 @@ class OrganizationForm(forms.ModelForm):
             }
         )
     )
+
+    website = forms.CharField(
+        max_length=200,
+        required=False,
+        widget=forms.TextInput(
+            attrs={
+                "class": "form-control",
+                "aria-label": ".form-control-sm",
+                "type": "url",
+                "placeholder": "Website (optional)",
+            }
+        )
+    )
+
+    gstn = forms.CharField(
+        max_length=15,
+        required=False,
+        widget=forms.TextInput(
+            attrs={
+                "class": "form-control",
+                "aria-label": ".form-control-sm",
+                "type": "text",
+                "placeholder": "GSTN",
+            }
+        )
+    )
+
     address_1 = forms.CharField(
         max_length=200,
         required=True,
@@ -110,7 +137,6 @@ class OrganizationForm(forms.ModelForm):
             attrs={
                 "class": "form-control",
                 "aria-label": ".form-control-sm",
-
                 "type": "text",
                 "placeholder": "Address 1",
             }
@@ -187,17 +213,87 @@ class OrganizationForm(forms.ModelForm):
         )
     )
 
+    bank_account_holder_name = forms.CharField(
+        max_length=200,
+        required=True,
+        widget=forms.TextInput(
+            attrs={
+                "class": "form-control",
+                "aria-label": ".form-control-sm",
+                "placeholder": "Bank Account Holder Name",
+            }
+        )
+    )
+
+    bank_name = forms.CharField(
+        max_length=200,
+        required=True,
+        widget=forms.TextInput(
+            attrs={
+                "class": "form-control",
+                "aria-label": ".form-control-sm",
+                "placeholder": "Bank Name",
+            }
+        )
+    )
+
+    bank_account_number = forms.CharField(
+        max_length=18,
+        required=True,
+        widget=forms.TextInput(
+            attrs={
+                "class": "form-control",
+                "aria-label": ".form-control-sm",
+                "placeholder": "Bank Account Number",
+            }
+        )
+    )
+
+    bank_branch = forms.CharField(
+        max_length=200,
+        required=True,
+        widget=forms.TextInput(
+            attrs={
+                "class": "form-control",
+                "aria-label": ".form-control-sm",
+                "placeholder": "Bank Branch",
+            }
+        )
+    )
+
+    bank_ifsc_code = forms.CharField(
+        max_length=11,
+        required=True,
+        widget=forms.TextInput(
+            attrs={
+                "class": "form-control",
+                "aria-label": ".form-control-sm",
+                "placeholder": "Bank IFSC Code",
+            }
+        )
+    )
+
     class Meta:
         model = Organization
         fields = [
+            # PII
             "company_name",
             "manager_name",
             "phoneNumber",
             "email",
+            "website",
+            "gstn",
+            # Reach
             "address_1",
             "address_2",
             "landmark",
             "town_city",
             "zip_code",
             "state",
+            # Banking
+            "bank_account_holder_name",
+            "bank_name",
+            "bank_account_number",
+            "bank_branch",
+            "bank_ifsc_code",
         ]
