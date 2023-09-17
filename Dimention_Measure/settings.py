@@ -110,6 +110,7 @@ else:
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
+    "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.BrokenLinkEmailsMiddleware",
     "django.middleware.common.CommonMiddleware",
@@ -229,7 +230,7 @@ STATIC_ROOT = "static"
 STATICFILES_DIRS = (os.path.join(BASE_DIR, "assets/"),)
 
 
-WSGI_APPLICATION = "Dimention_Measure.wsgi.application"
+WSGI_APPLICATION = 'Dimention_Measure.wsgi.application'
 
 MEDIA_URL = "/media/"
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
@@ -307,10 +308,5 @@ SESSION_ENGINE = "django.contrib.sessions.backends.cache"
 SESSION_CACHE_ALIAS = "default"
 
 django_heroku.settings(locals())
-
-# if ENV == "prod":
-#     config = locals()
-#     config["STORAGES"]["staticfiles"] = config["STATICFILES_STORAGE"]
-#     del config["STATICFILES_STORAGE"]
 
 print("***************************************")

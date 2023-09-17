@@ -1,8 +1,7 @@
 from django import forms
 from django.contrib.auth.forms import ReadOnlyPasswordHashField
 from django.core.exceptions import ValidationError
-
-
+from django.core.validators import RegexValidator
 from authentication.models import CompanyUser, Organization
 from django.conf import settings
 
@@ -85,7 +84,6 @@ class OrganizationForm(forms.ModelForm):
                 "class": "form-control",
                 "aria-label": ".form-control-sm",
                 "type": "email",
-
                 "placeholder": "Email",
             }
         )
@@ -94,6 +92,7 @@ class OrganizationForm(forms.ModelForm):
     phoneNumber = forms.CharField(
         max_length=10,
         required=True,
+        validators=[RegexValidator(r"\d{10}$")],
         widget=forms.TextInput(
             attrs={
                 "class": "form-control",
@@ -104,7 +103,7 @@ class OrganizationForm(forms.ModelForm):
         )
     )
 
-    website = forms.CharField(
+    website = forms.URLField(
         max_length=200,
         required=False,
         widget=forms.TextInput(
@@ -151,7 +150,6 @@ class OrganizationForm(forms.ModelForm):
                 "class": "form-control",
                 "aria-label": ".form-control-sm",
                 "type": "text",
-
                 "placeholder": "Address 2 (optional)",
             }
         )
@@ -165,7 +163,6 @@ class OrganizationForm(forms.ModelForm):
                 "class": "form-control",
                 "aria-label": ".form-control-sm",
                 "type": "text",
-
                 "placeholder": "Landmark (optional)",
             }
         )
@@ -179,7 +176,6 @@ class OrganizationForm(forms.ModelForm):
                 "class": "form-control",
                 "aria-label": ".form-control-sm",
                 "type": "text",
-
                 "placeholder": "Town/City",
             }
         )
@@ -193,7 +189,6 @@ class OrganizationForm(forms.ModelForm):
                 "class": "form-control",
                 "aria-label": ".form-control-sm",
                 "type": "number",
-
                 "placeholder": "Zip code",
             }
         )
@@ -206,7 +201,6 @@ class OrganizationForm(forms.ModelForm):
             choices=settings.STATE_CHOICES,
             attrs={
                 "class": "form-select",
-
                 "aria-label": ".form-control-sm",
                 "placeholder": "State"
             }
