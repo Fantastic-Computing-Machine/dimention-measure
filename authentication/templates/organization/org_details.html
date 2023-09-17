@@ -10,11 +10,14 @@
 
 {% block header %}
 
+{% if estimator_enabled %}
 <li class="nav-item">
     <a class="nav-link text-light active" href="{% url 'all_estimates' %}">
         Estimates
     </a>
 </li>
+{% endif %}
+
 <li class="nav-item">
     <a href="{% url 'clients' %}" class="nav-link text-light active" aria-current="page">
         Clients

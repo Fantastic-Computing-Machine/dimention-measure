@@ -18,8 +18,12 @@
 {% block body %}
 <div class="container-lg pb-4">
 
-    <div class="text-light py-2 display-4">{{user.organization.company_name}}'s Dashboard</div>
-
+    <div class="text-light py-2 display-4">
+        {% if user.organizzation %}
+        {{user.organization.company_name}}'s
+        {% endif %}
+        Dashboard
+    </div>
     <section class="container-lg pb-4">
         <div class="pyw-2 display-6 swing">
             <a href="{% url 'home' %}" class="text-light">
@@ -173,7 +177,7 @@
                 </div>
             </li>
         </ul>
-        
+
     </section>
     {% endif %}
 </div>
