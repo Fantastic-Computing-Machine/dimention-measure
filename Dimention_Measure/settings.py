@@ -308,9 +308,9 @@ SESSION_CACHE_ALIAS = "default"
 
 django_heroku.settings(locals())
 
-if ENV == "prod":
-    config = locals()
-    config["STORAGES"]["staticfiles"] = config["STATICFILES_STORAGE"]
-    del config["STATICFILES_STORAGE"]
+# if ENV == "prod":
+#     config = locals()
+#     config["STORAGES"]["staticfiles"] = config["STATICFILES_STORAGE"]
+#     del config["STATICFILES_STORAGE"]
 
 print("***************************************")
