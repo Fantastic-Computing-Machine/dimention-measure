@@ -34,7 +34,7 @@
             <div class="py-2 display-6">Profile</div>
 
             <div class="">
-                <form method="POST">
+                <form method="POST" name = "org_details_form">
                     {% csrf_token %}
                     <div class="row">
                         <div class="col">
@@ -106,7 +106,7 @@
                             </p>
                         </div>
                     </div>
-                    <a type="button" onClick="edit_organization_form()" class="btn btn-success">
+                    <a type="button" onClick="edit_organization_form()" class="btn btn-success" name = "edit_details">
                         Edit Details</a>
                     <button id="save_organization_details" type="submit" class="btn btn-primary">
                         Save changes</button>

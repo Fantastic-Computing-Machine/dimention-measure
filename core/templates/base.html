@@ -89,7 +89,9 @@
                                     <select class="form-select" id="select-dropdown"
                                         aria-label="Select project or dimewent">
                                         <option selected value=1>Dimention</option>
-                                        <option value=2>Estimate</option>
+                                        {% if estimator_enabled %}
+                                            <option value=2>Estimate</option>
+                                        {% endif %}
                                     </select>
 
                                     <button class="btn btn-primary" type="submit">Search</button>
