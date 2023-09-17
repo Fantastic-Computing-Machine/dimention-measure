@@ -1,1 +1,1 @@
-web: gunicorn Dimention_Measure.wsgi --log-file -
+web gunicorn Dimention_Measure.wsgi --log-file -

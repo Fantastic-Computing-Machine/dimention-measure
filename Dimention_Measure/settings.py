@@ -8,6 +8,7 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 """
 
 import pytz
+import django_heroku
 from dotenv import load_dotenv
 from django.core.validators import RegexValidator
 import logging
@@ -16,6 +17,7 @@ from pathlib import Path
 import pymysql
 import re
 from datetime import datetime, timezone
+import dj_database_url
 
 pymysql.install_as_MySQLdb()
 
@@ -304,5 +306,7 @@ SILENCED_SYSTEM_CHECKS = ["security.W019"]
 
 SESSION_ENGINE = "django.contrib.sessions.backends.cache"
 SESSION_CACHE_ALIAS = "default"
+
+django_heroku.settings(locals())
 
 print("***************************************")
