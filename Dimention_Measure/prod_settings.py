@@ -34,7 +34,7 @@ DEBUG = False
 #     ".vercel.app",
 # ]
 
-ALLOWED_HOSTS = ['127.0.0.1', '.vercel.app']
+ALLOWED_HOSTS = ['127.0.0.1', '.vercel.app' , '.heroku.com']
 
 # CSRF_TRUSTED_ORIGINS = ["http://3.6.80.190"]
 
