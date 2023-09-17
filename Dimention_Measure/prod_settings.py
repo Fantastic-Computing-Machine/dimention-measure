@@ -10,6 +10,7 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 from dotenv import load_dotenv
 import os
 from pathlib import Path
+import django_heroku
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 dotenv_path = BASE_DIR / ".env"
@@ -34,7 +35,7 @@ DEBUG = False
 #     ".vercel.app",
 # ]
 
-ALLOWED_HOSTS = ['127.0.0.1', '.vercel.app' , '.heroku.com']
+ALLOWED_HOSTS = ["127.0.0.1", ".vercel.app", ".heroku.com"]
 
 # CSRF_TRUSTED_ORIGINS = ["http://3.6.80.190"]
 
@@ -71,7 +72,6 @@ print(f"Static Files Storage:  {STORAGES['staticfiles']['BACKEND']}")
 # STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 # print("Static Files Storage: ", STATICFILES_STORAGE)
 
-# print("Static Files Storage: ", STATICFILES_STORAGE)
 
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
@@ -86,8 +86,15 @@ DATABASES = {
     }
 }
 print("Database Connected...")
-print(DATABASES['default'])
+print(DATABASES["default"])
 
 CORS_ORIGIN_ALLOW_ALL = True
 
 CORS_ALLOW_CREDENTIALS = True
+
+
+django_heroku.settings(locals())
+
+config = locals()
+config["STORAGES"]["staticfiles"] = config["STATICFILES_STORAGE"]
+del config["STATICFILES_STORAGE"]

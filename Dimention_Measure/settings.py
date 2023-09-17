@@ -8,7 +8,6 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 """
 
 import pytz
-import django_heroku
 from dotenv import load_dotenv
 from django.core.validators import RegexValidator
 import logging
@@ -110,7 +109,6 @@ else:
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
-    "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.BrokenLinkEmailsMiddleware",
     "django.middleware.common.CommonMiddleware",
@@ -230,7 +228,7 @@ STATIC_ROOT = "static"
 STATICFILES_DIRS = (os.path.join(BASE_DIR, "assets/"),)
 
 
-WSGI_APPLICATION = 'Dimention_Measure.wsgi.application'
+WSGI_APPLICATION = "Dimention_Measure.wsgi.application"
 
 MEDIA_URL = "/media/"
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
@@ -307,6 +305,6 @@ SILENCED_SYSTEM_CHECKS = ["security.W019"]
 SESSION_ENGINE = "django.contrib.sessions.backends.cache"
 SESSION_CACHE_ALIAS = "default"
 
-django_heroku.settings(locals())
+# django_heroku.settings(locals())
 
 print("***************************************")
