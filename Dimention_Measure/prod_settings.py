@@ -83,6 +83,7 @@ DATABASES = {
     }
 }
 print("Database Connected...")
+print(DATABASES['default'])
 
 CORS_ORIGIN_ALLOW_ALL = True
 
