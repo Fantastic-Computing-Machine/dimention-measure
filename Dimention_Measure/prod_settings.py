@@ -65,10 +65,10 @@ STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.StaticFilesStorage'
 # }
 # print("Static Files Storage: ", STORAGES["staticfiles"]["BACKEND"])
 
+# STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 print("Static Files Storage: ", STATICFILES_STORAGE)
 
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
-print("Static Files Storage: ", STATICFILES_STORAGE)
+# print("Static Files Storage: ", STATICFILES_STORAGE)
 
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
