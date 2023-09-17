@@ -21,23 +21,7 @@ load_dotenv(dotenv_path=dotenv_path)
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-# ALLOWED_HOSTS = [
-#     "*",
-#     "0.tcp.in.ngrok.io",
-#     "127.0.0.1",
-#     "localhost",
-#     # "0.0.0.0",
-#     # "13.234.231.51",
-#     # "3.6.80.190",
-#     os.getenv("HOST_IP"),
-#     "*.vercel.app",
-#     ".vercel.app",
-# ]
-
-ALLOWED_HOSTS = ['127.0.0.1', '.vercel.app']
-
-# CSRF_TRUSTED_ORIGINS = ["http://3.6.80.190"]
-
+ALLOWED_HOSTS = ["127.0.0.1", ".vercel.app", ".heroku.com", ".herokuapp.com"]
 
 # EMAIL_USE_TLS = True
 # EMAIL_PORT = 587
@@ -55,17 +39,20 @@ print("Cache Enabled...")
 print("\tCache Backend: ", CACHES["default"]["BACKEND"])
 
 
-STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.StaticFilesStorage'
-
 # STORAGES = {
-#     # ...
+#     "default": {
+#         "BACKEND": "django.core.files.storage.FileSystemStorage",
+#     },
 #     "staticfiles": {
 #         "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
 #     },
 # }
-# print("Static Files Storage: ", STORAGES["staticfiles"]["BACKEND"])
+
+# STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.StaticFilesStorage'
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 print("Static Files Storage: ", STATICFILES_STORAGE)
+# print(f"Static Files Storage:  {STORAGES['staticfiles']['BACKEND']}")
 
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 print("Static Files Storage: ", STATICFILES_STORAGE)
@@ -84,7 +71,7 @@ DATABASES = {
     }
 }
 print("Database Connected...")
+print(DATABASES["default"])
 
 CORS_ORIGIN_ALLOW_ALL = True
-
 CORS_ALLOW_CREDENTIALS = True
