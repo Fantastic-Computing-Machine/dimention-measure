@@ -55,18 +55,21 @@ print("Cache Enabled...")
 print("\tCache Backend: ", CACHES["default"]["BACKEND"])
 
 
-STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.StaticFilesStorage'
+# STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.StaticFilesStorage'
 
-# STORAGES = {
-#     # ...
-#     "staticfiles": {
-#         "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
-#     },
-# }
-# print("Static Files Storage: ", STORAGES["staticfiles"]["BACKEND"])
+STORAGES = {
+    "default": {
+        "BACKEND": "django.core.files.storage.FileSystemStorage",
+    },
+    "staticfiles": {
+        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+    },
+}
+
+print(f"Static Files Storage:  {STORAGES['staticfiles']['BACKEND']}")
 
 # STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
-print("Static Files Storage: ", STATICFILES_STORAGE)
+# print("Static Files Storage: ", STATICFILES_STORAGE)
 
 # print("Static Files Storage: ", STATICFILES_STORAGE)
 
