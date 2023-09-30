@@ -35,16 +35,6 @@ CSRF_TRUSTED_ORIGINS = [
 # EMAIL_HOST_USER = os.getenv("EMAIL_ID")
 # EMAIL_HOST_PASSWORD = os.getenv("EMAIL_PWD")
 
-CACHES = {
-    "default": {
-        "BACKEND": "django.core.cache.backends.db.DatabaseCache",
-        "LOCATION": "db_cache_table",
-    },
-}
-print("Cache Enabled...")
-print("\tCache Backend: ", CACHES["default"]["BACKEND"])
-
-
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 print("Static Files Storage: ", STATICFILES_STORAGE)
 

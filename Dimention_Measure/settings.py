@@ -51,6 +51,28 @@ AUTH_USER_MODEL = "authentication.CompanyUser"
 
 print("Watchman Enabled...")
 
+if os.getenv("CACHE_ENABLED", "false").lower() == "true":
+
+    CACHES = {
+            "default": {
+            "BACKEND": "django.core.cache.backends.redis.RedisCache",
+            "LOCATION": os.getenv("REDISCLOUD_URL"),
+        }
+    }
+
+    print("Cache Enabled...")
+    print("\tCache Backend: ", CACHES["default"]["BACKEND"])
+else:
+    CACHES = {
+            "default": {
+            "BACKEND": "django.core.cache.backends.db.DatabaseCache",
+            "LOCATION": "db_cache_table",
+        }
+    }
+
+    print("Default Cache Enabled...")
+    print("\tCache Backend: ", CACHES["default"]["BACKEND"])
+
 if os.getenv("LOGGING", "false").lower() == "true":
     print("Logging Enabled...")
 
