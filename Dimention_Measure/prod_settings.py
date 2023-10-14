@@ -21,13 +21,19 @@ load_dotenv(dotenv_path=dotenv_path)
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ["127.0.0.1", ".vercel.app",
-                 ".heroku.com", ".herokuapp.com", ".theuniquestory.xyz"]
+ALLOWED_HOSTS = ["127.0.0.1",".heroku.com", ".herokuapp.com", ".theuniquestory.xyz"]
+
 
 CSRF_TRUSTED_ORIGINS = [
     "https://insight.theuniquestory.xyz",
 
 ]
+
+if os.getenv("ALLOWED_HOSTS") != None:
+    ALLOWED_HOSTS.extend(os.getenv("ALLOWED_HOSTS").split(","))
+
+if os.getenv("CSRF_TRUSTED_ORIGINS") != None:
+    CSRF_TRUSTED_ORIGINS.extend(os.getenv("CSRF_TRUSTED_ORIGINS").split(","))
 
 # EMAIL_USE_TLS = True
 # EMAIL_PORT = 587
