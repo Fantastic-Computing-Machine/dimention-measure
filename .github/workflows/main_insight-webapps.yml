@@ -60,4 +60,4 @@ jobs:
         with:
           app-name: 'insight-webapps'
           slot-name: 'Production'
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_EFEF06A651CF49F3B71F3544F19973EE }}
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_8DF35E13C6634A0DA7103800C6C8E852 }}
