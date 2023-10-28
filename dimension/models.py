@@ -19,18 +19,22 @@ def meter2feet(meters):
 
 
 class Project(models.Model):
-    name = models.CharField(max_length=30, unique=True,
-                            help_text="Name of the project")
+    name = models.CharField(max_length=30, unique=True, help_text="Name of the project")
     author = models.ForeignKey(
-        User, on_delete=models.CASCADE, help_text="User who created the project")
+        User, on_delete=models.CASCADE, help_text="User who created the project"
+    )
     description = models.TextField(
-        max_length=255, blank=True, null=True, help_text="Description of the project")
+        max_length=255, blank=True, null=True, help_text="Description of the project"
+    )
     created_on = models.DateTimeField(
-        auto_now_add=True, help_text="Date and time when the project was created")
+        auto_now_add=True, help_text="Date and time when the project was created"
+    )
     is_deleted = models.BooleanField(
-        default=False, help_text="Check to soft Delete the project")
+        default=False, help_text="Check to soft Delete the project"
+    )
     deleted_on = models.DateTimeField(
-        blank=True, null=True, help_text="Date and time when the project was deleted")
+        blank=True, null=True, help_text="Date and time when the project was deleted"
+    )
 
     def __str__(self):
         return str(self.name)
@@ -66,31 +70,27 @@ class Project(models.Model):
 
 
 class Dimension(models.Model):
-    project = models.ForeignKey(
-        Project, on_delete=models.CASCADE)
+    project = models.ForeignKey(Project, on_delete=models.CASCADE)
     name = models.CharField(max_length=30)
     description = models.TextField(blank=True, null=True)
 
     # length = models.DecimalField(verbose_name="Length (m)", max_digits=20, decimal_places=2, default=0, blank=True, null=True)
-    length_feet = models.DecimalField(
-        max_digits=20, decimal_places=2, default=0)
-    length_inches = models.DecimalField(
-        max_digits=20, decimal_places=2, default=0)
+    length_feet = models.DecimalField(max_digits=20, decimal_places=2, default=0)
+    length_inches = models.DecimalField(max_digits=20, decimal_places=2, default=0)
 
     # width = models.DecimalField(verbose_name="Width (m)", max_digits=20, decimal_places=2, blank=True, null=True)
     width_feet = models.DecimalField(
-        max_digits=20, decimal_places=2, blank=True, null=True, default=0)
+        max_digits=20, decimal_places=2, blank=True, null=True, default=0
+    )
     width_inches = models.DecimalField(
-        max_digits=20, decimal_places=2, blank=True, null=True, default=0)
+        max_digits=20, decimal_places=2, blank=True, null=True, default=0
+    )
 
-    sqm = models.DecimalField(
-        max_digits=20, decimal_places=2, blank=True, null=True)
-    sqft = models.DecimalField(
-        max_digits=20, decimal_places=2, blank=True, null=True)
+    sqm = models.DecimalField(max_digits=20, decimal_places=2, blank=True, null=True)
+    sqft = models.DecimalField(max_digits=20, decimal_places=2, blank=True, null=True)
     # rate will be in rs/sqft
     rate = models.DecimalField(max_digits=20, decimal_places=2)
-    amount = models.DecimalField(
-        max_digits=20, decimal_places=2, blank=True, null=True)
+    amount = models.DecimalField(max_digits=20, decimal_places=2, blank=True, null=True)
     created_on = models.DateTimeField(auto_now_add=True)
     is_deleted = models.BooleanField(default=False)
     deleted_on = models.DateTimeField(blank=True, null=True)
@@ -113,12 +113,14 @@ class Dimension(models.Model):
         self.rate = self.rate or 0
 
         # Convert length and width to meters
-        length_meters = Decimal(
-            float(self.length_feet) * 0.3048) + Decimal(float(self.length_inches) * 0.0254)
-        width_meters = Decimal(float(self.width_feet) * 0.3048) + \
-            Decimal(float(self.width_inches) * 0.0254)
+        length_meters = Decimal(float(self.length_feet) * 0.3048) + Decimal(
+            float(self.length_inches) * 0.0254
+        )
+        width_meters = Decimal(float(self.width_feet) * 0.3048) + Decimal(
+            float(self.width_inches) * 0.0254
+        )
 
-        note = '**NOTE: THIS IS RUNNING LENGTH.**'
+        note = "**NOTE: THIS IS RUNNING LENGTH.**"
 
         # Add a note to the description if width information is missing
         if not self.width_feet and not self.width_inches:
@@ -131,25 +133,28 @@ class Dimension(models.Model):
             self.sqft = length_meters * Decimal(3.28084)
         else:
             # Remove the note from the description if width information is present
-            self.description = self.description.replace(note, '')
+            self.description = self.description.replace(note, "")
 
             self.sqm = length_meters * width_meters
             self.sqft = self.sqm * Decimal(10.7639)
 
-        self.amount = Decimal(
-            0) if self.rate == 0 else self.sqft * Decimal(self.rate)
+        self.amount = Decimal(0) if self.rate == 0 else self.sqft * Decimal(self.rate)
 
         return super(Dimension, self).save()
 
     def length_meter(self):
-        result = Decimal(float(self.length_feet) * 0.3048) + \
-            Decimal(float(self.length_inches) * 0.0254)
+        result = Decimal(float(self.length_feet) * 0.3048) + Decimal(
+            float(self.length_inches) * 0.0254
+        )
         return formatFloat(result)
 
     def width_meter(self):
-        result = Decimal(float(self.width_feet) * 0.3048) + \
-            Decimal(float(self.width_inches) * 0.0254)
+        result = Decimal(float(self.width_feet) * 0.3048) + Decimal(
+            float(self.width_inches) * 0.0254
+        )
         return formatFloat(result)
 
     def get_absolute_url(self):
-        return reverse("project_detail", args=[str(self.project.pk), str(self.project.name)])
+        return reverse(
+            "project_detail", args=[str(self.project.pk), str(self.project.name)]
+        )
