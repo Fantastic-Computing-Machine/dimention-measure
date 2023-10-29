@@ -91,6 +91,16 @@ class UpdateProjectView(BaseAuthClass, UpdateView):
     model = Project
     form_class = UpdateProjectForm
     template_name = 'update_dimension_project.html'
+    
+    def form_valid(self, form):
+        # Check if project name exists
+        project_name = form.cleaned_data['name']
+        if Project.objects.filter(name=project_name).exists():
+            form.add_error('name', 'A project with this name already exists.')
+            return self.form_invalid(form)
+        
+        response = super().form_valid(form)
+        return response
 
 
 class UpdateDimensionView(BaseAuthClass, UpdateView):
