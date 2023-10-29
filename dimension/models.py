@@ -75,8 +75,10 @@ class Dimension(models.Model):
     description = models.TextField(blank=True, null=True)
 
     # length = models.DecimalField(verbose_name="Length (m)", max_digits=20, decimal_places=2, default=0, blank=True, null=True)
-    length_feet = models.DecimalField(max_digits=20, decimal_places=2, default=0)
-    length_inches = models.DecimalField(max_digits=20, decimal_places=2, default=0)
+    length_feet = models.DecimalField(
+        max_digits=20, decimal_places=2, default=0)
+    length_inches = models.DecimalField(
+        max_digits=20, decimal_places=2, default=0)
 
     # width = models.DecimalField(verbose_name="Width (m)", max_digits=20, decimal_places=2, blank=True, null=True)
     width_feet = models.DecimalField(
@@ -138,7 +140,8 @@ class Dimension(models.Model):
             self.sqm = length_meters * width_meters
             self.sqft = self.sqm * Decimal(10.7639)
 
-        self.amount = Decimal(0) if self.rate == 0 else self.sqft * Decimal(self.rate)
+        self.amount = Decimal(
+            0) if self.rate == 0 else self.sqft * Decimal(self.rate)
 
         return super(Dimension, self).save()
 
