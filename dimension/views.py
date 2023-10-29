@@ -95,7 +95,7 @@ class UpdateProjectView(BaseAuthClass, UpdateView):
     def form_valid(self, form):
         # Check if project name exists
         project_name = form.cleaned_data['name']
-        if Project.objects.filter(name=project_name).exists():
+        if Project.objects.filter(name=project_name).exists() and project_name != self.object.name:
             form.add_error('name', 'A project with this name already exists.')
             return self.form_invalid(form)
         
