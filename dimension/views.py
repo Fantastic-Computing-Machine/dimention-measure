@@ -49,13 +49,14 @@ class DimensionHomeView(BaseAuthClass, FormMixin, ListView):
 
     def get_queryset(self):
         queryset = super().get_queryset()
-        return queryset.filter(is_deleted=False).order_by('-created_on')
-
+        return queryset.filter(is_deleted=False,author__organization=self.request.user.organization).order_by('-created_on')
+    
     def post(self, request, **kwargs):
         request.POST._mutable = True
         request.POST["author"] = request.session["_auth_user_id"]
         request.POST._mutable = False
         form = NewProjectForm(request.POST)
+        # TODO: Check if project name exists and return error
         if form.is_valid():
             form.save()
         return HttpResponseRedirect(reverse('home'))

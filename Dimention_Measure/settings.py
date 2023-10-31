@@ -200,7 +200,6 @@ INSTALLED_APPS = [
     "ckeditor",
     "django_countries",
     "dimension",
-    "client_and_company",
     "authentication",
     "settings",
     "core",
@@ -213,6 +212,8 @@ if os.getenv("EXPENSE_ENABLED"):
 if os.getenv("ESTIMATE_ENABLED"):
     print("Estimate Enabled")
     INSTALLED_APPS.append("estimator")
+    INSTALLED_APPS.append("client_and_company")
+
 
 AUTH_PASSWORD_VALIDATORS = [
     {
