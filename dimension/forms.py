@@ -31,12 +31,36 @@ class BasicFormsFields(forms.ModelForm):
 
 
 class NewProjectForm(BasicFormsFields):
+    name = forms.CharField(
+        max_length=30,
+        required=True,
+        widget=forms.TextInput(
+            attrs={
+                "class": "form-control",
+                "aria-label": ".form-control-sm",
+                "type": "text",
+                "placeholder": "Project name should be unique",
+            }
+        ),
+    )
     class Meta:
         model = Project
         fields = ("name", "description", "author")
 
 
 class UpdateProjectForm(BasicFormsFields):
+    name = forms.CharField(
+        max_length=30,
+        required=True,
+        widget=forms.TextInput(
+            attrs={
+                "class": "form-control",
+                "aria-label": ".form-control-sm",
+                "type": "text",
+                "placeholder": "Name (unique)",
+            }
+        ),
+    )
     class Meta:
         model = Project
         fields = ("name", "description")
