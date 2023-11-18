@@ -6,17 +6,15 @@ from django.views.generic import UpdateView
 
 from authentication.models import Organization
 from authentication.forms import OrganizationForm
-
+from core.views import BaseAuthClass
 
 User = user_model()
 
 
-class OrganizationDetails(LoginRequiredMixin, UpdateView):
-    login_url = '/user/login/'
-    redirect_field_name = 'redirect_to'
+class OrganizationDetails(BaseAuthClass, LoginRequiredMixin, UpdateView):
     model = Organization
     form_class = OrganizationForm
-    template_name = 'organization/org_details.html'
+    template_name = "organization/org_details.html"
     success_url = reverse_lazy("organization")
 
     def get_object(self):

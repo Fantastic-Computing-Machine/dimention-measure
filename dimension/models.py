@@ -50,19 +50,19 @@ class Project(models.Model):
     def total_amount(self):
         # to calculate total amount declared in project
         dims = Dimension.objects.filter(project=self, is_deleted=False)
-        sum_amount = sum(item.amount for item in dims)
+        sum_amount = sum(item.amount for item in dims if item.amount is not None)
         return sum_amount
 
     def total_sqm(self):
         # to calculate total sqm declared in project
         dims = Dimension.objects.filter(project=self, is_deleted=False)
-        sum_sqm = sum(item.sqm for item in dims)
+        sum_sqm = sum(item.sqm for item in dims if item.sqm is not None)
         return sum_sqm
 
     def total_sqft(self):
         # to calculate total sqft declared in project
         dims = Dimension.objects.filter(project=self, is_deleted=False)
-        sum_sqft = sum(item.sqft for item in dims)
+        sum_sqft = sum(item.sqft for item in dims if item.sqft is not None)
         return sum_sqft
 
     def get_absolute_url(self):
@@ -74,18 +74,14 @@ class Dimension(models.Model):
     name = models.CharField(max_length=30)
     description = models.TextField(blank=True, null=True)
 
-    # length = models.DecimalField(verbose_name="Length (m)", max_digits=20, decimal_places=2, default=0, blank=True, null=True)
-    length_feet = models.DecimalField(
-        max_digits=20, decimal_places=2, default=0)
-    length_inches = models.DecimalField(
-        max_digits=20, decimal_places=2, default=0)
+    length_feet = models.DecimalField(max_digits=20, decimal_places=2)
+    length_inches = models.DecimalField(max_digits=20, decimal_places=2)
 
-    # width = models.DecimalField(verbose_name="Width (m)", max_digits=20, decimal_places=2, blank=True, null=True)
     width_feet = models.DecimalField(
-        max_digits=20, decimal_places=2, blank=True, null=True, default=0
+        max_digits=20, decimal_places=2, blank=True, null=True
     )
     width_inches = models.DecimalField(
-        max_digits=20, decimal_places=2, blank=True, null=True, default=0
+        max_digits=20, decimal_places=2, blank=True, null=True, default=Decimal("0")
     )
 
     sqm = models.DecimalField(max_digits=20, decimal_places=2, blank=True, null=True)
@@ -102,9 +98,10 @@ class Dimension(models.Model):
 
     def save(self):
         self.name = self.name.strip().replace(" ", "-")
-        self.description = self.description.strip()
+        if self.description:
+            self.description = self.description.strip()
 
-        self.delete = datetime.now() if self.is_deleted else None
+        self.deleted_on = datetime.now() if self.is_deleted else None
 
         self.length_feet = self.length_feet or 0
         self.length_inches = self.length_inches or 0
@@ -126,7 +123,7 @@ class Dimension(models.Model):
 
         # Add a note to the description if width information is missing
         if not self.width_feet and not self.width_inches:
-            if note not in self.description:
+            if self.description and note not in self.description:
                 self.description = f"{note} \n" + str(self.description)
             else:
                 self.description = note
@@ -135,13 +132,14 @@ class Dimension(models.Model):
             self.sqft = length_meters * Decimal(3.28084)
         else:
             # Remove the note from the description if width information is present
-            self.description = self.description.replace(note, "")
+            self.description = (
+                self.description.replace(note, "") if self.description else None
+            )
 
             self.sqm = length_meters * width_meters
             self.sqft = self.sqm * Decimal(10.7639)
 
-        self.amount = Decimal(
-            0) if self.rate == 0 else self.sqft * Decimal(self.rate)
+        self.amount = Decimal(0) if self.rate == 0 else self.sqft * Decimal(self.rate)
 
         return super(Dimension, self).save()
 
@@ -152,8 +150,8 @@ class Dimension(models.Model):
         return formatFloat(result)
 
     def width_meter(self):
-        result = Decimal(float(self.width_feet) * 0.3048) + Decimal(
-            float(self.width_inches) * 0.0254
+        result = Decimal(float(self.width_feet or 0.0) * 0.3048) + Decimal(
+            float(self.width_inches or 0) * 0.0254
         )
         return formatFloat(result)
 

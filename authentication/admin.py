@@ -10,8 +10,6 @@ from authentication.forms import UserChangeForm, UserCreationForm
 # new imports
 from django import forms
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
-from django.contrib.auth.forms import ReadOnlyPasswordHashField
-from django.core.exceptions import ValidationError
 
 
 @admin.register(LogEntry)
@@ -92,7 +90,15 @@ class UserAdmin(BaseUserAdmin):
         ),
         (
             "Permissions",
-            {"fields": ("organization", "is_admin", "is_staff", "is_active")},
+            {
+                "fields": (
+                    "organization",
+                    "is_admin",
+                    "is_staff",
+                    "is_active",
+                    "access_level",
+                )
+            },
         ),
         ("Activity", {"fields": ("last_login",)}),
     )
@@ -134,7 +140,7 @@ class OrganizationAdmin(admin.ModelAdmin):
     list_display = ("company_name", "manager_name", "email", "registered_on")
 
     list_filter = ("state", "registered_on")
-    readonly_fields = ["registered_on"]
+    readonly_fields = ["registered_on", "deleted_on"]
     search_fields = ("company_name", "manager_name", "email", "town_city")
     ordering = ("-registered_on",)
     fieldsets = (

@@ -43,6 +43,7 @@ class NewProjectForm(BasicFormsFields):
             }
         ),
     )
+
     class Meta:
         model = Project
         fields = ("name", "description", "author")
@@ -61,13 +62,13 @@ class UpdateProjectForm(BasicFormsFields):
             }
         ),
     )
+
     class Meta:
         model = Project
         fields = ("name", "description")
 
 
 class NewDimensionForm(BasicFormsFields):
-
     length_feet = forms.CharField(
         max_length=200,
         required=False,
@@ -127,7 +128,6 @@ class NewDimensionForm(BasicFormsFields):
             }
         ),
     )
-
 
     rate = forms.CharField(
         max_length=200,
