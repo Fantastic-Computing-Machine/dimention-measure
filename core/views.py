@@ -9,7 +9,8 @@ from rest_framework.response import Response
 
 
 class BaseAuthClass(LoginRequiredMixin):
-    # Class to be inherited by all views that require login
+    """Class to be inherited by all views that require login"""
+
     login_url = "/user/login/"
     redirect_field_name = "next_to"
 
@@ -35,6 +36,12 @@ class DashboardView(BaseAuthClass, TemplateView):
             author__organization=self.request.user.organization,
         ).order_by("-created_on")[:5]
         return super().get_context_data(**kwargs)
+
+
+# TODO: Search for Project name and Tags within the project.
+# For this create a new page and render results on that with toggles b/w
+# 1. Dimension and Estimate
+# 2. Project and Tags
 
 
 class SearchView(BaseAuthClass, APIView):

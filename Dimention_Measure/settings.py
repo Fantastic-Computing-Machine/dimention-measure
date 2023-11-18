@@ -24,8 +24,8 @@ pymysql.install_as_MySQLdb()
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-dotenv_path = BASE_DIR / ".env"
-load_dotenv(dotenv_path=dotenv_path)
+env_path = BASE_DIR / ".env"
+load_dotenv(dotenv_path=env_path)
 
 ENV = os.getenv("ENV")
 
@@ -52,9 +52,8 @@ AUTH_USER_MODEL = "authentication.CompanyUser"
 print("Watchman Enabled...")
 
 if os.getenv("CACHE_ENABLED", "false").lower() == "true":
-
     CACHES = {
-            "default": {
+        "default": {
             "BACKEND": "django.core.cache.backends.redis.RedisCache",
             "LOCATION": os.getenv("REDISCLOUD_URL"),
         }
@@ -64,7 +63,7 @@ if os.getenv("CACHE_ENABLED", "false").lower() == "true":
     print("\tCache Backend: ", CACHES["default"]["BACKEND"])
 else:
     CACHES = {
-            "default": {
+        "default": {
             "BACKEND": "django.core.cache.backends.db.DatabaseCache",
             "LOCATION": "db_cache_table",
         }
@@ -253,7 +252,7 @@ STATIC_ROOT = "static"
 STATICFILES_DIRS = (os.path.join(BASE_DIR, "assets/"),)
 
 
-WSGI_APPLICATION = 'Dimention_Measure.wsgi.application'
+WSGI_APPLICATION = "Dimention_Measure.wsgi.application"
 
 MEDIA_URL = "/media/"
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
