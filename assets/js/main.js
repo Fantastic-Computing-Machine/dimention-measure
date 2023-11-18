@@ -98,6 +98,28 @@ $(document).ready(function () {
     });
 });
 
+$(document).ready(function(){
+    $('#projectForm').submit(function(e){
+        e.preventDefault();
+        var projectName = $('#id_name').val();
+        $.ajax({
+            url: 'check_project_name',
+            data: {
+                'name': projectName
+            },
+            dataType: 'json',
+            success: function(data){
+                if(data.is_taken){
+                    $('#nameError').html(`A project with this name <u>${projectName}</u> already exists.`);
+                } else {
+                    $('#nameError').html('');
+                    $('#projectForm').unbind('submit').submit();
+                }
+            }
+        });
+    });
+});
+
 function mtr_ft() {
     // Unit conversion meter to feet
     var len = parseFloat(document.getElementById("mt").value);

@@ -2,7 +2,8 @@ from django.contrib.auth import get_user_model as user_model
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
-from django.http import FileResponse
+from django.http import FileResponse, JsonResponse
+from rest_framework.views import APIView
 from django.shortcuts import HttpResponseRedirect, render
 from django.views.generic import (
     CreateView,
@@ -224,3 +225,13 @@ def download_excel_view(request, project_id, project_name):
     file_ecxel = FileResponse(open(file_path, 'rb'))
     delete_file = os.remove(file_path)
     return file_ecxel
+
+class CheckProjectNameView(BaseAuthClass, APIView):
+    """Class view for checking if project name exists"""
+    def get(self, request, *args, **kwargs):
+        #check project name if already exists
+        project_name = request.GET.get('name', None)
+        data = {
+            'is_taken': Project.objects.filter(name__iexact=project_name).exists()
+        }
+        return JsonResponse(data)

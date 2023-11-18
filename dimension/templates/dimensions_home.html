@@ -30,12 +30,13 @@
 				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 			</div>
 			<div class="modal-body">
-				<form action="{% url 'home' %}" method="POST">
+				<form id ="projectForm" action="{% url 'home' %}" method="POST">
 					{% csrf_token %}
 					<div class="mb-3">
 						<p>
 							{{form.name.label}}
 							{{form.name}}
+						<span id="nameError" style="color: red;"></span>
 						</p>
 						<p>
 							{{form.description.label}}

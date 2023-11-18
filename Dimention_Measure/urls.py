@@ -19,6 +19,8 @@ from django.conf.urls.static import static
 from django.urls import path
 from django.urls import include
 
+from dimension.views import CheckProjectNameView
+
 
 urlpatterns = [
     path('dimension/', include('dimension.urls')),
