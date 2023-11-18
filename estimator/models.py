@@ -13,10 +13,11 @@ from settings.models import OrganizationTNC, Unit
 
 User = user_model()
 
+zero2hundred = [MinValueValidator(0), MaxValueValidator(100)]
+
 
 class Room(models.Model):
-    name = models.CharField(
-        max_length=30, unique=True)
+    name = models.CharField(max_length=30, unique=True)
     created_on = models.DateTimeField(auto_now_add=True)
     is_deleted = models.BooleanField(default=False)
     deleted_on = models.DateTimeField(blank=True, null=True)
@@ -34,8 +35,7 @@ class Room(models.Model):
 
 
 class RoomItem(models.Model):
-    name = models.CharField(
-        max_length=30, unique=True)
+    name = models.CharField(max_length=30, unique=True)
     created_on = models.DateTimeField(auto_now_add=True)
     is_deleted = models.BooleanField(default=False)
     deleted_on = models.DateTimeField(blank=True, null=True)
@@ -71,18 +71,19 @@ class RoomItemDescription(models.Model):
 
 
 class Project(models.Model):
-    name = models.CharField(
-        max_length=20)
+    name = models.CharField(max_length=20)
     description = models.TextField(blank=True, null=True)
-    author = models.ForeignKey(
-        User, on_delete=models.CASCADE, related_name='creator')
-    client = models.ForeignKey(
-        Client, on_delete=models.CASCADE)
+    author = models.ForeignKey(User, on_delete=models.CASCADE, related_name="creator")
+    client = models.ForeignKey(Client, on_delete=models.CASCADE)
     created_on = models.DateTimeField(auto_now_add=True)
     is_deleted = models.BooleanField(default=False)
     deleted_on = models.DateTimeField(blank=True, null=True)
     discount = models.DecimalField(
-        max_digits=20, decimal_places=5, default=0, validators=[MinValueValidator(0), MaxValueValidator(100)])
+        max_digits=20,
+        decimal_places=5,
+        default=0,
+        validators=[MinValueValidator(0), MaxValueValidator(100)],
+    )
     reference_number = models.CharField(max_length=225, blank=True, null=True)
 
     def __str__(self):
@@ -97,9 +98,8 @@ class Project(models.Model):
         key = not self.id
         super(Project, self).save(**kwargs)
         if key:
-            self.reference_number = str(
-                datetime.now().year) + '/' + str(self.pk)
-            kwargs['force_insert'] = False
+            self.reference_number = str(datetime.now().year) + "/" + str(self.pk)
+            kwargs["force_insert"] = False
             super(Project, self).save(**kwargs)
         return
 
@@ -108,13 +108,13 @@ class Project(models.Model):
         sum_amount = sum(item.total_after_discount() for item in estimates)
         return sum_amount
 
-    def total_itemised_discount(self):
+    def total_itemized_discount(self):
         estimates = Estimate.objects.filter(project=self, is_deleted=False)
         sum_discount = sum(item.discount_amount() for item in estimates)
         return sum_discount
 
     def discount_amount(self):
-        return (self.total_amount() * self.discount)/100
+        return (self.total_amount() * self.discount) / 100
 
     def total_after_discount(self):
         return self.total_amount() - self.discount_amount()
@@ -126,8 +126,11 @@ class Project(models.Model):
         return self.total_after_discount() + self.gst_amount()
 
     def get_all_rooms(self):
-        estimate_room_obj = Estimate.objects.values_list(
-            'room__id', 'room__name').filter(project__id=self.id).distinct()
+        estimate_room_obj = (
+            Estimate.objects.values_list("room__id", "room__name")
+            .filter(project__id=self.id)
+            .distinct()
+        )
 
         return estimate_room_obj
 
@@ -140,41 +143,40 @@ class Estimate(models.Model):
     room = models.ForeignKey(Room, on_delete=models.CASCADE)
     room_item = models.ForeignKey(RoomItem, on_delete=models.CASCADE)
     room_item_description = models.ForeignKey(
-        RoomItemDescription, on_delete=models.CASCADE)
+        RoomItemDescription, on_delete=models.CASCADE
+    )
     quantity = models.DecimalField(
-        max_digits=20, decimal_places=5, blank=True, null=True)
-    length = models.DecimalField(
-        max_digits=20, decimal_places=5, blank=True, null=True)
-    width = models.DecimalField(
-        max_digits=20, decimal_places=5, blank=True, null=True)
-    sqm = models.DecimalField(
-        max_digits=20, decimal_places=5, blank=True, null=True)
-    sqft = models.DecimalField(
-        max_digits=20, decimal_places=5, blank=True, null=True)
-    amount = models.DecimalField(
-        max_digits=20, decimal_places=5, blank=True, null=True)
+        max_digits=20, decimal_places=5, blank=True, null=True
+    )
+    length = models.DecimalField(max_digits=20, decimal_places=5, blank=True, null=True)
+    width = models.DecimalField(max_digits=20, decimal_places=5, blank=True, null=True)
+    sqm = models.DecimalField(max_digits=20, decimal_places=5, blank=True, null=True)
+    sqft = models.DecimalField(max_digits=20, decimal_places=5, blank=True, null=True)
+    amount = models.DecimalField(max_digits=20, decimal_places=5, blank=True, null=True)
     discount = models.DecimalField(
-        max_digits=20, decimal_places=5, default=0, validators=[MinValueValidator(0), MaxValueValidator(100)])
-    rate = models.DecimalField(
-        max_digits=20, default=0, decimal_places=5)
-    unit = models.ForeignKey(
-        Unit, on_delete=models.CASCADE, null=True)
+        max_digits=20,
+        decimal_places=5,
+        default=0,
+        validators=zero2hundred,
+    )
+    rate = models.DecimalField(max_digits=20, default=0, decimal_places=5)
+    unit = models.ForeignKey(Unit, on_delete=models.CASCADE, null=True)
 
     created_on = models.DateTimeField(auto_now_add=True)
     is_deleted = models.BooleanField(default=False)
     deleted_on = models.DateTimeField(blank=True, null=True)
 
     def __str__(self):
-        return str(self.project.name) + ' | ' + str(self.room.name)
+        return str(self.project.name) + " | " + str(self.room.name)
 
     def save(self):
-        if (self.rate == "" or self.rate == None):
+        if self.rate == "" or self.rate == None:
             self.rate = 0.0
-        if (self.unit == "" or self.unit == None):
+        if self.unit == "" or self.unit == None:
             self.unit = None
-        if (self.discount == "" or self.discount == None):
+        if self.discount == "" or self.discount == None:
             self.discount = 0.0
-        if (self.width == "" or self.width == None):
+        if self.width == "" or self.width == None:
             self.width = 0.0
         if self.is_deleted:
             self.deleted_on = datetime.now()
@@ -185,12 +187,11 @@ class Estimate(models.Model):
             self.width = None
             self.sqm = None
             self.sqft = None
-            self.amount = Decimal(
-                self.quantity) * Decimal(self.rate)
+            self.amount = Decimal(self.quantity) * Decimal(self.rate)
             return super(Estimate, self).save()
 
         else:
-            if self.width == '' or self.width == 0 or self.width == 0.0:
+            if self.width == "" or self.width == 0 or self.width == 0.0:
                 # when there is no width (RUNNING LENGTH)
                 # SECURITY: CHECK FOR EXCEPTIONS LIKE LETTERS/SYMBOLS/NONE-TYPE/EMPTY
 
@@ -204,8 +205,7 @@ class Estimate(models.Model):
 
                 self.sqm = self.length * self.width
                 self.sqft = self.length * self.width * Decimal(10.7639)
-                self.amount = Decimal(
-                    self.sqft) * Decimal(self.rate)
+                self.amount = Decimal(self.sqft) * Decimal(self.rate)
 
             self.quantity = None
             return super(Estimate, self).save()
@@ -216,7 +216,7 @@ class Estimate(models.Model):
         return Decimal(self.sqft) * Decimal(self.rate)
 
     def discount_amount(self):
-        return (self.calculate_amount() * self.discount)/100
+        return (self.calculate_amount() * self.discount) / 100
 
     def total_after_discount(self):
         return self.calculate_amount() - self.discount_amount()
@@ -241,9 +241,12 @@ class ProjectTermsAndConditions(models.Model):
         return str(self.heading)
 
     def get_absolute_url(self):
-        return reverse("project_terms_and_conditions", args=[str(self.project.pk), str(self.project.name)])
+        return reverse(
+            "project_terms_and_conditions",
+            args=[str(self.project.pk), str(self.project.name)],
+        )
 
     class Meta:
-        unique_together = (('project', 'org_terms'))
-        verbose_name = _('Project TNC')
-        verbose_name_plural = _('Project TNCs')
+        unique_together = ("project", "org_terms")
+        verbose_name = _("Project TNC")
+        verbose_name_plural = _("Project TNCs")
