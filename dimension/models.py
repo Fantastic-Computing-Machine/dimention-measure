@@ -19,7 +19,9 @@ def meter2feet(meters):
 
 
 class Project(models.Model):
-    name = models.CharField(max_length=30, unique=False, help_text="Name of the project")
+    name = models.CharField(
+        max_length=30, unique=False, help_text="Name of the project"
+    )
     author = models.ForeignKey(
         User, on_delete=models.CASCADE, help_text="User who created the project"
     )
@@ -74,8 +76,12 @@ class Dimension(models.Model):
     name = models.CharField(max_length=30)
     description = models.TextField(blank=True, null=True)
 
-    length_feet = models.DecimalField(max_digits=20, decimal_places=2)
-    length_inches = models.DecimalField(max_digits=20, decimal_places=2)
+    length_feet = models.DecimalField(
+        max_digits=20, decimal_places=2, blank=True, null=True
+    )
+    length_inches = models.DecimalField(
+        max_digits=20, decimal_places=2, blank=True, null=True
+    )
 
     width_feet = models.DecimalField(
         max_digits=20, decimal_places=2, blank=True, null=True
@@ -97,49 +103,48 @@ class Dimension(models.Model):
         return f"{self.name} | {self.project.name}"
 
     def save(self):
-        self.name = self.name.strip().replace(" ", "-")
-        if self.description:
-            self.description = self.description.strip()
+        self.length_feet = Decimal(self.length_feet) if self.length_feet else Decimal(0)
+        self.length_inches = (
+            Decimal(self.length_inches) if self.length_inches else Decimal(0)
+        )
+        self.width_feet = Decimal(self.width_feet) if self.width_feet else Decimal(0)
+        self.width_inches = (
+            Decimal(self.width_inches) if self.width_inches else Decimal(0)
+        )
 
+        # convert feet to inches for easy calculation
+        length = (self.length_feet * 12) + self.length_inches
+        width = (self.width_feet * 12) + self.width_inches
+
+        self.rate = Decimal(self.rate) if self.rate else Decimal(0)
+
+        self.name = self.name.strip().replace(" ", "-")
+        self.description = self.description.strip() if self.description else ""
         self.deleted_on = datetime.now() if self.is_deleted else None
 
-        self.length_feet = self.length_feet or 0
-        self.length_inches = self.length_inches or 0
+        note = "*Running Length*-"
 
-        self.width_feet = self.width_feet or 0
-        self.width_inches = self.width_inches or 0
+        # Calculate Area in sqft and sqm
+        self.sqft = (length * width) / 144 or None
+        self.sqm = self.sqft / Decimal(10.7639) if self.sqft else None
 
-        self.rate = self.rate or 0
+        if self.rate and self.sqft:
+            # Area
+            self.amount = self.rate * self.sqft
+            if self.description:
+                self.description = self.description.replace(note, "")
+        elif not width:
+            # Running Length
+            self.amount = (self.rate * length) / 12
 
-        # Convert length and width to meters
-        length_meters = Decimal(float(self.length_feet) * 0.3048) + Decimal(
-            float(self.length_inches) * 0.0254
-        )
-        width_meters = Decimal(float(self.width_feet) * 0.3048) + Decimal(
-            float(self.width_inches) * 0.0254
-        )
-
-        note = "**NOTE: THIS IS RUNNING LENGTH.**"
-
-        # Add a note to the description if width information is missing
-        if not self.width_feet and not self.width_inches:
-            if self.description and note not in self.description:
-                self.description = f"{note} \n" + str(self.description)
-            else:
-                self.description = note
-
-            self.sqm = length_meters
-            self.sqft = length_meters * Decimal(3.28084)
-        else:
-            # Remove the note from the description if width information is present
             self.description = (
-                self.description.replace(note, "") if self.description else None
+                f"{note}{self.description}"
+                if note not in self.description
+                else self.description
             )
-
-            self.sqm = length_meters * width_meters
-            self.sqft = self.sqm * Decimal(10.7639)
-
-        self.amount = Decimal(0) if self.rate == 0 else self.sqft * Decimal(self.rate)
+        else:
+            # No Rate
+            self.amount = Decimal(0)
 
         return super(Dimension, self).save()
 
