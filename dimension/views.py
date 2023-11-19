@@ -285,8 +285,9 @@ class CheckProjectNameView(BaseAuthClass, APIView):
     """Class view for checking if project name exists"""
     def get(self, request, *args, **kwargs):
         #check project name if already exists
+        organization = request.user.organization
         project_name = request.GET.get('name', None)
         data = {
-            'is_taken': Project.objects.filter(name__iexact=project_name).exists()
+            'is_taken': Project.objects.filter(name__iexact=project_name,is_deleted = False,author__organization = organization).exists()
         }
         return JsonResponse(data)

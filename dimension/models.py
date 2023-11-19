@@ -19,7 +19,7 @@ def meter2feet(meters):
 
 
 class Project(models.Model):
-    name = models.CharField(max_length=30, unique=True, help_text="Name of the project")
+    name = models.CharField(max_length=30, unique=False, help_text="Name of the project")
     author = models.ForeignKey(
         User, on_delete=models.CASCADE, help_text="User who created the project"
     )
