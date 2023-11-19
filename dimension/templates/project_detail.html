@@ -43,7 +43,8 @@
                 Update Project</a>
 
 
-            <a href="{% url 'delete_project' project.id project.name %}" class="list-group-item list-group-item-action">
+            <a href="{% url 'delete_project' project.id project.name %}"
+                class="list-group-item list-group-item-action text-danger">
                 Delete Project</a>
 
         </div>
@@ -51,7 +52,7 @@
         <div class="list-group my-2">
             <a class="list-group-item active fw-bold">Management</a>
             {% if estimator_enabled %}
-                <a href="{% url 'clients' %}" class="list-group-item list-group-item-action">Clients</a>
+            <a href="{% url 'clients' %}" class="list-group-item list-group-item-action">Clients</a>
             {% endif %}
             {% if user.is_staff or user.is_admin %}
             <a href="{% url 'organization' %}" class="list-group-item list-group-item-action">Admin</a>
@@ -66,7 +67,7 @@
 
 {% block body %}
 
-<!-- New Dimentson Modal -->
+<!-- New Dimension Modal -->
 <form action="" method="POST" name="new_dimension" id="new_dimension">
 
     <div class="modal fade" id="newDimension" tabindex="-1" aria-labelledby="newDimentionLabel" aria-hidden="true">
@@ -191,18 +192,20 @@
         </div>
     </div>
 
-    {%if project.description%}
-    <div class="row my-2">
-        <div class="col">
+    <div class="my-2">
+        <div>
+            <span class="badge bg-primary">
+                Created by {{project.author.username}}
+            </span>
+        </div>
+        {%if project.description%}
+        <div>
             <span class="text-light">
                 {{project.description}}
             </span>
         </div>
+        {% endif %}
     </div>
-    {% endif %}
-
-
-
 
     <hr class="text-light">
 
@@ -210,7 +213,7 @@
         <div class="card-body">
             <div class="table-responsive">
 
-                {% if dimentions|length == 0 %}
+                {% if dimensions|length == 0 %}
                 <div class="card">
                     <div class="card-body">
                         <div class=" text-center my-3">
@@ -233,20 +236,19 @@
                 </div>
                 {% endif %}
 
-                {% if dimentions %}
+                {% if dimensions %}
                 <table class="table table-bordered table-hover table-sm">
                     <thead class="table-primary align-middle row-cols-auto">
                         <th class="text-start mx-2 text-nowrap">Tag</th>
                         <th class="text-end mx-2 text-nowrap">Length</th>
                         <th class="text-end mx-2 text-nowrap">Width</th>
                         <th class="text-end mx-2 text-nowrap">Area</th>
-                        <!-- <th class="text-end mx-2 text-nowrap">Area: Sqft</th> -->
                         <th class="text-end mx-2 text-nowrap">Rate</th>
                         <th class="text-end mx-2 text-nowrap">Amount (₹)</th>
                         <th class="text-center mx-2 text-nowrap hide_items_print">Action</th>
                     </thead>
 
-                    {% for item in dimentions %}
+                    {% for item in dimensions %}
                     <tr class="table align-middle font-monospace">
                         <td class="mx-2">
                             {% replaceItem item.name|capfirst %}
@@ -276,8 +278,13 @@
                             {{item.width_feet}}' {{item.width_inches}}"
                             <div>({{item.width_meter}} m)</div>
                         </td>
-                        <td class="text-end mx-2 text-nowrap">{% formatFloat item.sqft %} sqft
+                        <td class="text-end mx-2 text-nowrap">
+                            {% if item.sqft %}
+                            {% formatFloat item.sqft %} sqft
                             <div>({% formatFloat item.sqm %} sqm)</div>
+                            {% else %}
+                            -
+                            {% endif %}
                         </td>
                         <td class="text-end mx-2 text-nowrap">{% formatFloat item.rate %}</td>
                         <td class="text-end mx-2 text-nowrap">{% formatFloat item.amount %}</td>
@@ -294,7 +301,7 @@
                 </table>
                 {% endif %}
             </div>
-            {% if dimentions %}
+            {% if dimensions %}
             <div class="my-1 hide_items_print">
                 <div class="d-grid gap-2">
                     <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#newDimension">

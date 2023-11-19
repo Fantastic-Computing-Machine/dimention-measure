@@ -9,34 +9,34 @@ function changeColors() {
         body.classList.add("alternate-background");
         localStorage.setItem("iconState", "alternate");
         localStorage.setItem("backgroundState", "alternate");
-      } else {
+    } else {
         icon.setAttribute("src", "https://img.icons8.com/fluency/48/black-and-white.png");
         body.classList.remove("alternate-background");
         localStorage.setItem("iconState", "original");
         localStorage.setItem("backgroundState", "original");
-      }
-  }
+    }
+}
 
-  document.addEventListener("DOMContentLoaded", function() {
+document.addEventListener("DOMContentLoaded", function () {
     var iconState = localStorage.getItem("iconState");
     var backgroundState = localStorage.getItem("backgroundState");
     var icon = document.getElementById("icon");
     var body = document.body;
 
     if (iconState === "alternate") {
-      icon.setAttribute("src", "https://img.icons8.com/fluency/48/rgb-circle-3.png");
-      body.classList.add("alternate-background");
+        icon.setAttribute("src", "https://img.icons8.com/fluency/48/rgb-circle-3.png");
+        body.classList.add("alternate-background");
     } else {
-      icon.setAttribute("src", "https://img.icons8.com/fluency/48/black-and-white.png");
-      body.classList.remove("alternate-background");
+        icon.setAttribute("src", "https://img.icons8.com/fluency/48/black-and-white.png");
+        body.classList.remove("alternate-background");
     }
 
     if (backgroundState === "alternate") {
-      body.classList.add("alternate-background");
+        body.classList.add("alternate-background");
     } else {
-      body.classList.remove("alternate-background");
+        body.classList.remove("alternate-background");
     }
-  });
+});
 
 $(document).ready(function () {
 
@@ -51,7 +51,7 @@ $(document).ready(function () {
         e.preventDefault();
         var formData = $(this).serialize();
 
-        //   check if the formData contains the dimentionCheck the add type=dimentions
+        //   check if the formData contains the dimensionCheck the add type=dimensions
         if (document.getElementById("select-dropdown").value == 1) {
             formData = formData + "&type=dimension";
         }
@@ -98,8 +98,8 @@ $(document).ready(function () {
     });
 });
 
-$(document).ready(function(){
-    $('#projectForm').submit(function(e){
+$(document).ready(function () {
+    $('#projectForm').submit(function (e) {
         e.preventDefault();
         var projectName = $('#id_name').val();
         $.ajax({
@@ -108,8 +108,8 @@ $(document).ready(function(){
                 'name': projectName
             },
             dataType: 'json',
-            success: function(data){
-                if(data.is_taken){
+            success: function (data) {
+                if (data.is_taken) {
                     $('#nameError').html(`A project with this name <u>${projectName}</u> already exists.`);
                 } else {
                     $('#nameError').html('');

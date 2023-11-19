@@ -35,7 +35,7 @@ from core.views import BaseAuthClass
 User = user_model()
 
 
-# Caching of static files such as css, js, images
+# TODO:Caching of static files such as css, js, images
 # Like this:
 # [18/Nov/2023 12:38:07] "GET /assets/css/styles.css HTTP/1.1" 200 4385
 # [18/Nov/2023 12:38:07] "GET /assets/img/iconGrey.svg HTTP/1.1" 200 1161
@@ -87,7 +87,7 @@ class DimensionProjectView(BaseAuthClass, CreateView):
     def get_context_data(self, *args, **kwargs):
         project = Project.objects.filter(pk=self.kwargs["pk"])[0]
         dimensions = Dimension.objects.filter(project=project).filter(is_deleted=False)
-        kwargs["dimentions"] = dimensions
+        kwargs["dimensions"] = dimensions
         kwargs["project"] = project
         return super(DimensionProjectView, self).get_context_data(*args, **kwargs)
 
@@ -281,13 +281,12 @@ def download_excel_view(request, project_id, project_name):
     delete_file = os.remove(file_path)
     return file_ecxel
 
+
 class CheckProjectNameView(BaseAuthClass, APIView):
     """Class view for checking if project name exists"""
+
     def get(self, request, *args, **kwargs):
-        #check project name if already exists
-        organization = request.user.organization
-        project_name = request.GET.get('name', None)
-        data = {
-            'is_taken': Project.objects.filter(name__iexact=project_name,is_deleted = False,author__organization = organization).exists()
-        }
+        # check project name if already exists
+        project_name = request.GET.get("name", None)
+        data = {"is_taken": Project.objects.filter(name__iexact=project_name).exists()}
         return JsonResponse(data)

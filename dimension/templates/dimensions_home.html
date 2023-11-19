@@ -30,13 +30,13 @@
 				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 			</div>
 			<div class="modal-body">
-				<form id ="projectForm" action="{% url 'home' %}" method="POST">
+				<form id="projectForm" action="{% url 'home' %}" method="POST">
 					{% csrf_token %}
 					<div class="mb-3">
 						<p>
 							{{form.name.label}}
 							{{form.name}}
-						<span id="nameError" style="color: red;"></span>
+							<span id="nameError" style="color: red;"></span>
 						</p>
 						<p>
 							{{form.description.label}}
@@ -82,11 +82,16 @@
 										</span>
 									</span>
 								</div>
-								{% if item.description %}
 								<div>
-									{{item.description|truncatechars:25|capfirst}}
+									<small>
+										<span class="badge bg-secondary">
+											{{item.author.username}}
+										</span>
+										{% if item.description %}
+										{{item.description|truncatechars:25|capfirst}}
+										{% endif %}
+									</small>
 								</div>
-								{% endif %}
 							</div>
 							<span>
 								<a class="delete_button badge bg-light" id="delete_button{{item.id}}"
