@@ -1,11 +1,14 @@
-from dimension.models import Project as DimensionProject
-from estimator.models import Project as EstimateProject
-
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse
 from django.views.generic import TemplateView
 from rest_framework.views import APIView
 from rest_framework.response import Response
+from django.conf import settings
+
+from dimension.models import Project as DimensionProject
+
+if settings.EXPENSE_ENABLED:
+    from estimator.models import Project as EstimateProject
 
 
 class BaseAuthClass(LoginRequiredMixin):
@@ -30,11 +33,15 @@ class DashboardView(BaseAuthClass, TemplateView):
         ).order_by("-created_on")[:5]
 
         # get data fro estimate section
-        kwargs["estimates"] = EstimateProject.objects.filter(
-            is_deleted=False,
-            client__is_deleted=False,
-            author__organization=self.request.user.organization,
-        ).order_by("-created_on")[:5]
+        try:
+            kwargs["estimates"] = EstimateProject.objects.filter(
+                is_deleted=False,
+                client__is_deleted=False,
+                author__organization=self.request.user.organization,
+            ).order_by("-created_on")[:5]
+        except Exception as e:
+            print(e)
+            kwargs["estimates"] = []
         return super().get_context_data(**kwargs)
 
 
@@ -67,18 +74,22 @@ class SearchView(BaseAuthClass, APIView):
 
             return Response({"success": True, "results": results})
         elif request.data.get("type") == "estimate":
-            estimates = EstimateProject.objects.filter(
-                is_deleted=False, name__icontains=request.data["textToSearch"]
-            )
-            results = []
-            for estimate in estimates:
-                results_item = dict()
-                results_item["title"] = estimate.name.capitalize()
-                results_item["url"] = reverse(
-                    "estimate", args=[str(estimate.pk), str(estimate.name)]
+            try:
+                estimates = EstimateProject.objects.filter(
+                    is_deleted=False, name__icontains=request.data["textToSearch"]
                 )
-                results_item["created_on"] = estimate.created_on.date()
+                results = []
+                for estimate in estimates:
+                    results_item = dict()
+                    results_item["title"] = estimate.name.capitalize()
+                    results_item["url"] = reverse(
+                        "estimate", args=[str(estimate.pk), str(estimate.name)]
+                    )
+                    results_item["created_on"] = estimate.created_on.date()
 
-                results.append(results_item)
-            return Response({"success": True, "results": results})
+                    results.append(results_item)
+                return Response({"success": True, "results": results})
+            except Exception as e:
+                print(e)
+                return Response({"success": False, "results": []})
         return Response({"success": False, "results": []})

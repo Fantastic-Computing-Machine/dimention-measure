@@ -32,6 +32,10 @@ ENV = os.getenv("ENV")
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.getenv("SECRET_KEY")
 
+# check if applications are enabled | conditions -> True/true or False/false or None/Any
+EXPENSE_ENABLED = bool(os.getenv("EXPENSE_ENABLED", "false").lower() == "true")
+ESTIMATE_ENABLED = bool(os.getenv("ESTIMATE_ENABLED", "false").lower() == "true")
+
 ADMINS = [
     ("Aditya Agarwal", "aditya.ag1234@gmail.com"),
     ("Nilesh Kumar Mandal", "s.nileshkm@gmail.com"),
@@ -204,11 +208,11 @@ INSTALLED_APPS = [
     "core",
 ]
 
-if os.getenv("EXPENSE_ENABLED"):
+if EXPENSE_ENABLED:
     print("Expense Enabled")
     INSTALLED_APPS.append("expense")
 
-if os.getenv("ESTIMATE_ENABLED"):
+if EXPENSE_ENABLED:
     print("Estimate Enabled")
     INSTALLED_APPS.append("estimator")
     INSTALLED_APPS.append("client_and_company")
