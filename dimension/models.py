@@ -4,7 +4,7 @@ from django.db import models
 from django.urls import reverse
 
 from decimal import Decimal
-from typing import List, Dict, LiteralString as String
+from typing import List, Dict
 
 from core.templatetags.utility import formatFloat
 
@@ -226,7 +226,7 @@ class Dimension(models.Model):
         super().save(*args, **kwargs)
 
     @property
-    def length_meter(self) -> String:
+    def length_meter(self) -> str:
         """
         Converts length from feet and inches to meters.
 
@@ -241,7 +241,7 @@ class Dimension(models.Model):
         return formatFloat(result)
 
     @property
-    def width_meter(self) -> String:
+    def width_meter(self) -> str:
         """
         Converts width from feet and inches to meters.
 

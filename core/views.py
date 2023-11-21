@@ -32,16 +32,14 @@ class DashboardView(BaseAuthClass, TemplateView):
             author__organization=self.request.user.organization,
         ).order_by("-created_on")[:5]
 
-        # get data fro estimate section
-        try:
-            kwargs["estimates"] = EstimateProject.objects.filter(
-                is_deleted=False,
-                client__is_deleted=False,
-                author__organization=self.request.user.organization,
-            ).order_by("-created_on")[:5]
-        except Exception as e:
-            print(e)
-            kwargs["estimates"] = []
+        # get data from estimate section if enabled
+       
+        kwargs["estimates"] = EstimateProject.objects.filter(
+            is_deleted=False,
+            client__is_deleted=False,
+            author__organization=self.request.user.organization,
+        ).order_by("-created_on")[:5]  if settings.EXPENSE_ENABLED else []
+
         return super().get_context_data(**kwargs)
 
 
@@ -73,8 +71,7 @@ class SearchView(BaseAuthClass, APIView):
                 results.append(results_item)
 
             return Response({"success": True, "results": results})
-        elif request.data.get("type") == "estimate":
-            try:
+        elif settings.EXPENSE_ENABLED and request.data.get("type") == "estimate":
                 estimates = EstimateProject.objects.filter(
                     is_deleted=False, name__icontains=request.data["textToSearch"]
                 )
@@ -89,7 +86,4 @@ class SearchView(BaseAuthClass, APIView):
 
                     results.append(results_item)
                 return Response({"success": True, "results": results})
-            except Exception as e:
-                print(e)
-                return Response({"success": False, "results": []})
         return Response({"success": False, "results": []})
