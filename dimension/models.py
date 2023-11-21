@@ -194,7 +194,7 @@ class Dimension(models.Model):
         length = (self.length_feet * 12) + self.length_inches
         width = (self.width_feet * 12) + self.width_inches
 
-        self.rate = Decimal(self.rate) if self.rate else Decimal(0)
+        self.rate = Decimal(self.rate)
 
         self.name = self.name.strip().replace(" ", "-")
         self.description = self.description.strip() if self.description else ""
@@ -206,7 +206,7 @@ class Dimension(models.Model):
         self.sqft = (length * width) / 144 or None
         self.sqm = self.sqft / Decimal(10.7639) if self.sqft else None
 
-        if self.rate and self.sqft:
+        if self.sqft:
             # Area
             self.amount = self.rate * self.sqft
             if self.description:
@@ -220,9 +220,6 @@ class Dimension(models.Model):
                 if note not in self.description
                 else self.description
             )
-        else:
-            # No Rate
-            self.amount = Decimal(0)
         super().save(*args, **kwargs)
 
     @property

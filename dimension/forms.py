@@ -131,7 +131,7 @@ class NewDimensionForm(BasicFormsFields):
 
     rate = forms.CharField(
         max_length=200,
-        required=False,
+        required=True,
         widget=forms.TextInput(
             attrs={
                 "class": "form-control",
@@ -140,6 +140,7 @@ class NewDimensionForm(BasicFormsFields):
                 "placeholder": "Rate",
                 "step": ".01",
                 "oninput": "areas()",
+                "value":"0.0"
             }
         ),
     )
