@@ -182,7 +182,7 @@ $(document).ready(function () {
             $('#delete_button').prop('disabled', true);
         }
     });
-    console.log("inside main.js loaded");
+
     $("#id_length_feet, #id_length_inches").on('input', function () {
         if ($("#id_length_feet").val() <= 0 && $("#id_length_inches").val() <= 0) {
             $('#dimentions_update_Changes').prop('disabled', true);
