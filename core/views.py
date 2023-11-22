@@ -1,15 +1,19 @@
-from dimension.models import Project as DimensionProject
-from estimator.models import Project as EstimateProject
-
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse
 from django.views.generic import TemplateView
 from rest_framework.views import APIView
 from rest_framework.response import Response
+from django.conf import settings
+
+from dimension.models import Project as DimensionProject
+
+if settings.EXPENSE_ENABLED:
+    from estimator.models import Project as EstimateProject
 
 
 class BaseAuthClass(LoginRequiredMixin):
-    # Class to be inherited by all views that require login
+    """Class to be inherited by all views that require login"""
+
     login_url = "/user/login/"
     redirect_field_name = "next_to"
 
@@ -28,13 +32,25 @@ class DashboardView(BaseAuthClass, TemplateView):
             author__organization=self.request.user.organization,
         ).order_by("-created_on")[:5]
 
-        # get data fro estimate section
-        kwargs["estimates"] = EstimateProject.objects.filter(
-            is_deleted=False,
-            client__is_deleted=False,
-            author__organization=self.request.user.organization,
-        ).order_by("-created_on")[:5]
+        # get data from estimate section if enabled
+
+        kwargs["estimates"] = (
+            EstimateProject.objects.filter(
+                is_deleted=False,
+                client__is_deleted=False,
+                author__organization=self.request.user.organization,
+            ).order_by("-created_on")[:5]
+            if settings.EXPENSE_ENABLED
+            else []
+        )
+
         return super().get_context_data(**kwargs)
+
+
+# TODO: Search for Project name and Tags within the project.
+# For this create a new page and render results on that with toggles b/w
+# 1. Dimension and Estimate
+# 2. Project and Tags
 
 
 class SearchView(BaseAuthClass, APIView):
@@ -59,7 +75,7 @@ class SearchView(BaseAuthClass, APIView):
                 results.append(results_item)
 
             return Response({"success": True, "results": results})
-        elif request.data.get("type") == "estimate":
+        elif settings.EXPENSE_ENABLED and request.data.get("type") == "estimate":
             estimates = EstimateProject.objects.filter(
                 is_deleted=False, name__icontains=request.data["textToSearch"]
             )

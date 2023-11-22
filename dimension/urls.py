@@ -1,6 +1,7 @@
 from django.urls import path
 
 from .views import (
+    CheckProjectNameView,
     DimensionHomeView,
     DimensionProjectView,
     UpdateProjectView,
@@ -37,5 +38,7 @@ urlpatterns = [
     # project_id, project_name
     path("excel/<int:project_id>/<str:project_name>/download_project/",
          download_excel_view, name="download_excel_file"),
+    
+    path('check_project_name/', CheckProjectNameView.as_view(), name='check_project_name'),
 
 ]

@@ -9,37 +9,38 @@ function changeColors() {
         body.classList.add("alternate-background");
         localStorage.setItem("iconState", "alternate");
         localStorage.setItem("backgroundState", "alternate");
-      } else {
+    } else {
         icon.setAttribute("src", "https://img.icons8.com/fluency/48/black-and-white.png");
         body.classList.remove("alternate-background");
         localStorage.setItem("iconState", "original");
         localStorage.setItem("backgroundState", "original");
-      }
-  }
+    }
+}
 
-  document.addEventListener("DOMContentLoaded", function() {
+document.addEventListener("DOMContentLoaded", function () {
     var iconState = localStorage.getItem("iconState");
     var backgroundState = localStorage.getItem("backgroundState");
     var icon = document.getElementById("icon");
     var body = document.body;
 
     if (iconState === "alternate") {
-      icon.setAttribute("src", "https://img.icons8.com/fluency/48/rgb-circle-3.png");
-      body.classList.add("alternate-background");
+        icon.setAttribute("src", "https://img.icons8.com/fluency/48/rgb-circle-3.png");
+        body.classList.add("alternate-background");
     } else {
-      icon.setAttribute("src", "https://img.icons8.com/fluency/48/black-and-white.png");
-      body.classList.remove("alternate-background");
+        icon.setAttribute("src", "https://img.icons8.com/fluency/48/black-and-white.png");
+        body.classList.remove("alternate-background");
     }
 
     if (backgroundState === "alternate") {
-      body.classList.add("alternate-background");
+        body.classList.add("alternate-background");
     } else {
-      body.classList.remove("alternate-background");
+        body.classList.remove("alternate-background");
     }
-  });
+});
 
 $(document).ready(function () {
 
+    // purpose : url redirection on click of the search result
     $(document).on('click', '.result-item', function () {
         var projectUrl = $(this).data('url');
         var absoluteUrl = window.location.origin + projectUrl; // Append at the domain level
@@ -47,11 +48,12 @@ $(document).ready(function () {
         window.location.href = absoluteUrl;
     });
 
+    // purpose : search results using AJAX
     $('#searchForm').submit(function (e) {
         e.preventDefault();
         var formData = $(this).serialize();
 
-        //   check if the formData contains the dimentionCheck the add type=dimentions
+        //   check if the formData contains the dimensionCheck the add type=dimensions
         if (document.getElementById("select-dropdown").value == 1) {
             formData = formData + "&type=dimension";
         }
@@ -96,6 +98,108 @@ $(document).ready(function () {
             }
         });
     });
+
+    // purpose : to check if the project name already exists
+    $('#projectForm').submit(function (e) {
+        e.preventDefault();
+        var projectName = $('#id_name').val();
+        $.ajax({
+            url: 'check_project_name',
+            data: {
+                'name': projectName
+            },
+            dataType: 'json',
+            success: function (data) {
+                if (data.is_taken) {
+                    $('#nameError').html(`A project with this name <u>${projectName}</u> already exists.`);
+                } else {
+                    $('#nameError').html('');
+                    $('#projectForm').unbind('submit').submit();
+                }
+            }
+        });
+    });
+
+    // purpose : to change the image on hover
+    $(".delete_button").hover(function () {
+        $(this).children('img').attr('src', 'https://img.icons8.com/ios/50/000000/delete-forever--v2.gif');
+
+    }, function () {
+        $(this).children('img').attr("src", "https://img.icons8.com/ios/50/000000/delete-forever--v2.png");
+    });
+
+    // purpose : to change the image on hover
+    $(".setting").hover(function () {
+        $(this).children('img').attr('src', 'https://img.icons8.com/ios/28/000000/settings--v2.gif');
+
+    }, function () {
+        $(this).children('img').attr("src", "https://img.icons8.com/ios/28/000000/settings--v2.png");
+
+
+    });
+
+    // purpose : if valid discount is entered then enable the submit button 
+    $("#id_discount").on('input', function () {
+        if ($(this).val() < 0 || $(this).val() > 100) {
+            $('#DiscountError').prop('hidden', false);
+            $('#discountChangeSubmit').prop('disabled', true);
+        }
+        else {
+            $('#DiscountError').prop('hidden', true);
+            $('#discountChangeSubmit').prop('disabled', false);
+        }
+    });
+    // purpose : to disable the length and width field if quantity is entered
+    $("#edit_update_estimate").click(function () {
+        var Q1 = $("#forQuantity").val();
+        var Q2 = $("#id_length").val();
+        var Q3 = $("#id_width").val();
+        if (Q1 != undefined && Q1 != "") {
+            $('#flexRadioDefault2').prop('checked', true);
+            $('#flexRadioDefault1').prop('checked', false);
+            $('#flexRadioDefault1').prop('disable', true);
+            $('#id_length').prop('disabled', true);
+            $('#id_width').prop('disabled', true);
+            $('#sqm_box').prop('hidden', true);
+            $('#sqft_box').prop('hidden', true);
+            // this is comment
+
+        }
+        else {
+            console.log("for area");
+            $('#flexRadioDefault2').prop('disable', true);
+            $('#flexRadioDefault1').prop('checked', true);
+            $('#flexRadioDefault2').prop('checked', false);
+            $('#forQuantity').prop('disabled', true);
+        }
+    });
+
+    // purpose : to disable delete button if no checkbox is selected
+    $('.checkboxSelector').change(function () {
+        if ($('.checkboxSelector:checked').length) {
+            $('#delete_button').prop('disabled', false);
+        } else {
+            $('#delete_button').prop('disabled', true);
+        }
+    });
+
+    $("#id_length_feet, #id_length_inches").on('input', function () {
+        if ($("#id_length_feet").val() <= 0 && $("#id_length_inches").val() <= 0) {
+            $('#dimentions_update_Changes').prop('disabled', true);
+        }
+        else {
+            $('#dimentions_update_Changes').prop('disabled', false);
+        }
+    });
+
+    $('#id_length_feet, #id_length_inches').keyup(function () {
+        if ($('#id_length_feet').val().length != 0 || $('#id_length_inches').val().length != 0) {
+            $('#add_new_dimension').prop('disabled', false);
+        } else {
+            $('#add_new_dimension').prop('disabled', true);
+        }
+    });
+
 });
 
 function mtr_ft() {
@@ -126,45 +230,10 @@ function sqft_sqmtr() {
     document.getElementById("calc_sqmt").value = area * 0.092903;
 }
 
-$(document).ready(function () {
-    $(".delete_button").hover(function () {
-        $(this).children('img').attr('src', 'https://img.icons8.com/ios/50/000000/delete-forever--v2.gif');
-
-    }, function () {
-        $(this).children('img').attr("src", "https://img.icons8.com/ios/50/000000/delete-forever--v2.png");
-
-
-    });
-});
-
-$(document).ready(function () {
-    $(".setting").hover(function () {
-        $(this).children('img').attr('src', 'https://img.icons8.com/ios/28/000000/settings--v2.gif');
-
-    }, function () {
-        $(this).children('img').attr("src", "https://img.icons8.com/ios/28/000000/settings--v2.png");
-
-
-    });
-});
 
 // Dynamically change the year in the footer
 document.getElementById("current_year").innerHTML = new Date().getFullYear();
 
-
-
-$(document).ready(function () {
-    $("#id_discount").on('input', function () {
-        if ($(this).val() < 0 || $(this).val() > 100) {
-            $('#DiscountError').prop('hidden', false);
-            $('#discountChangeSubmit').prop('disabled', true);
-        }
-        else {
-            $('#DiscountError').prop('hidden', true);
-            $('#discountChangeSubmit').prop('disabled', false);
-        }
-    });
-});
 
 function enableNewitemPage() {
     console.log("enableNewitemPage2");
@@ -181,43 +250,6 @@ function enableNewitemPage() {
     document.getElementById('id_room_item_description').disabled = false;
     document.getElementById('form_submit_button').disabled = false;
 }
-
-$(document).ready(function () {
-    $("#edit_update_estimate").click(function () {
-        var Q1 = $("#forQuantity").val();
-        var Q2 = $("#id_length").val();
-        var Q3 = $("#id_width").val();
-        if (Q1 != undefined && Q1 != "") {
-            $('#flexRadioDefault2').prop('checked', true);
-            $('#flexRadioDefault1').prop('checked', false);
-            $('#flexRadioDefault1').prop('disable', true);
-            $('#id_length').prop('disabled', true);
-            $('#id_width').prop('disabled', true);
-            $('#sqm_box').prop('hidden', true);
-            $('#sqft_box').prop('hidden', true);
-            // this is comment
-
-        }
-        else {
-            console.log("for area");
-            $('#flexRadioDefault2').prop('disable', true);
-            $('#flexRadioDefault1').prop('checked', true);
-            $('#flexRadioDefault2').prop('checked', false);
-            $('#forQuantity').prop('disabled', true);
-        }
-    });
-});
-
-$(document).ready(function () {
-    $('.checkboxSelector').change(function () {
-        if ($('.checkboxSelector:checked').length) {
-            $('#delete_button').prop('disabled', false);
-        } else {
-            $('#delete_button').prop('disabled', true);
-        }
-    });
-});
-
 
 
 // document.onkeydown = function (e) {

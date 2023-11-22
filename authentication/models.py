@@ -1,8 +1,6 @@
 from django_countries.fields import CountryField
-from django.core.exceptions import ValidationError
-from django.contrib.auth.models import AbstractUser, AbstractBaseUser
+from django.contrib.auth.models import AbstractBaseUser
 from django.contrib.auth.models import Group as DjangoGroup
-from django.core.validators import RegexValidator
 from django.db import models
 from django.utils.translation import gettext as _
 
@@ -13,6 +11,7 @@ from django.contrib.auth.models import (
     BaseUserManager,
     AbstractBaseUser,
 )
+from datetime import datetime
 
 # Gender and Access levels details
 GENDER = [
@@ -23,9 +22,9 @@ GENDER = [
 ]
 
 ACCESS_LEVEL = [
-    ("SITE_USR", "SITE USER"),
-    ("ORG_ADM", "ORGANIZATION ADMINISTRATOR"),
-    ("ORG_USR", "ORGANIZATION USER"),
+    ("ORG_ADM", "Organization Admin"),
+    ("ORG_MGM", "Organization Management"),
+    ("ORG_USR", "Organization User"),
 ]
 
 
@@ -99,6 +98,10 @@ class Organization(models.Model):
         return str(self.company_name)
 
     def save(self):
+        if self.is_deleted:
+            self.deleted_on = datetime.now()
+        if not self.is_deleted:
+            self.deleted_on = None
         self.address_1 = self.address_1.strip()
         if self.address_2:
             self.address_2 = self.address_2.strip()

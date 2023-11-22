@@ -5,35 +5,36 @@ from django.forms import Textarea
 from .models import Project, Dimension
 
 
-@admin.action(description='Soft-delete')
-def soft_delete(modeladmin, equest, queryset):
+@admin.action(description="Soft-delete")
+def soft_delete(modeladmin, request, queryset):
     queryset.update(is_deleted=True)
 
 
-@admin.action(description='Soft-undelete')
-def soft_undelete(modeladmin, equest, queryset):
+@admin.action(description="Soft-undelete")
+def soft_undelete(modeladmin, request, queryset):
     queryset.update(is_deleted=False)
 
 
 class ProjectAdmin(admin.ModelAdmin):
     formfield_overrides = {
-        models.TextField: {'widget': Textarea(attrs={'rows': 4, 'cols': 40})},
+        models.TextField: {"widget": Textarea(attrs={"rows": 4, "cols": 40})},
     }
     list_display = [
         "name",
         "author",
         "total_amount",
         "total_sqm",
+        "total_running_length",
         "description",
         "created_on",
-        "is_deleted"
+        "is_deleted",
     ]
     search_fields = [
         "author__username",
         "author__first_name",
         "author__last_name",
         "name",
-        "description"
+        "description",
     ]
     search_help_text = "Search by Fields: Author | name | Description"
     date_hierarchy = "created_on"
@@ -47,8 +48,15 @@ class ProjectAdmin(admin.ModelAdmin):
         "total_sqm",
         "total_amount",
     ]
-    readonly_fields = ["deleted_on", "author",
-                       'created_on', "total_sqm", "total_amount", "total_sqft"]
+    readonly_fields = [
+        "deleted_on",
+        "author",
+        "created_on",
+        "total_sqm",
+        "total_amount",
+        "total_running_length",
+        "total_sqft",
+    ]
     actions = [soft_delete, soft_undelete]
     list_filter = [
         "created_on",
@@ -56,21 +64,23 @@ class ProjectAdmin(admin.ModelAdmin):
         "deleted_on",
     ]
     fieldsets = (
-        (None, {
-            'fields': ('name', 'author', 'created_on')
-        }),
-        ('Project Details', {
-            'fields': ('description', 'is_deleted', 'deleted_on')
-        }),
-        ('Statistics', {
-            'fields': ('total_sqm', 'total_sqft', 'total_amount'),
-        }),
+        (None, {"fields": ("name", "author", "created_on")}),
+        ("Project Details", {"fields": ("description", "is_deleted", "deleted_on")}),
+        (
+            "Statistics",
+            {
+                "fields": ("total_sqm", "total_sqft", "total_amount"),
+            },
+        ),
     )
     add_fieldsets = (
-        (None, {
-            'classes': ('wide',),
-            'fields': ('name', 'author', 'description'),
-        }),
+        (
+            None,
+            {
+                "classes": ("wide",),
+                "fields": ("name", "author", "description"),
+            },
+        ),
     )
 
     def save_model(self, request, obj, form, change):
@@ -81,64 +91,54 @@ class ProjectAdmin(admin.ModelAdmin):
 @admin.register(Dimension)
 class DimensionAdmin(admin.ModelAdmin):
     formfield_overrides = {
-        models.TextField: {'widget': Textarea(attrs={'rows': 4, 'cols': 40})},
+        models.TextField: {"widget": Textarea(attrs={"rows": 4, "cols": 40})},
     }
     actions = [soft_delete, soft_undelete]
-    list_display = [
-        "name",
-        "project",
-        "created_on",
-        "is_deleted"
-    ]
+    list_display = ["name", "project", "created_on", "is_deleted"]
     search_fields = [
         "name",
         "project",
         "project__author__first_name",
         "project__author__last_name",
         "project__author__username",
-        "description"
+        "description",
     ]
     search_help_text = "Search by Fields: Project | Name | Username | Description"
     date_hierarchy = "created_on"
     ordering = ["-project", "-is_deleted", "-created_on"]
     show_full_result_count = True
-    list_display_links = [
-        "name",
-        "project",
-        "created_on",
-        "is_deleted"
-    ]
+    list_display_links = ["name", "project", "created_on", "is_deleted"]
     readonly_fields = ["sqm", "sqft", "amount", "deleted_on", "created_on"]
-    list_filter = [
-        "created_on",
-        "is_deleted",
-        "deleted_on",
-        "project"
-    ]
+    list_filter = ["created_on", "is_deleted", "deleted_on", "project"]
     fieldsets = (
-        (None, {'fields': ('project', 'name', 'created_on')}),
+        (None, {"fields": ("project", "name", "created_on")}),
         (
-            'Dimension Details', {
-                'fields': (
-                    'description',
-                    ('length_feet', 'length_inches'),
-                    ('width_feet', 'width_inches'),
-                    ('sqm', 'sqft'),
-                    ('rate', 'amount')
+            "Dimension Details",
+            {
+                "fields": (
+                    "description",
+                    ("length_feet", "length_inches"),
+                    ("width_feet", "width_inches"),
+                    ("sqm", "sqft"),
+                    ("rate", "amount"),
                 )
-            }
+            },
         ),
         (
-            'Deletion Details', {
-                'fields': ('is_deleted', 'deleted_on'),
-            }
+            "Deletion Details",
+            {
+                "fields": ("is_deleted", "deleted_on"),
+            },
         ),
     )
     add_fieldsets = (
-        (None, {
-            'classes': ('wide',),
-            'fields': ('project', 'name', 'description', 'rate')
-        }),
+        (
+            None,
+            {
+                "classes": ("wide",),
+                "fields": ("project", "name", "description", "rate"),
+            },
+        ),
     )
 
     def get_queryset(self, request):

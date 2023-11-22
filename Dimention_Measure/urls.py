@@ -1,4 +1,4 @@
-'''Dimention_Measure URL Configuration
+"""Dimention_Measure URL Configuration
 
 The `urlpatterns` list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/4.0/topics/http/urls/
@@ -12,28 +12,30 @@ Class-based views
 Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
-'''
+"""
 from django.contrib import admin
 from django.conf import settings
 from django.conf.urls.static import static
 from django.urls import path
 from django.urls import include
 
+from dimension.views import CheckProjectNameView
+
 
 urlpatterns = [
-    path('dimension/', include('dimension.urls')),
-    path('admin/doc/', include('django.contrib.admindocs.urls')),
-    path('admin/console/', admin.site.urls),
-    path('settings/', include('settings.urls')),
-    path('client-and-company/', include('client_and_company.urls')),
-    path('user/', include('django.contrib.auth.urls')),
-    path('user/', include('authentication.urls')),
-    path('', include('core.urls')),
-    path('watchman/', include('watchman.urls')),
+    path("dimension/", include("dimension.urls")),
+    path("admin/doc/", include("django.contrib.admindocs.urls")),
+    path("admin/console/", admin.site.urls),
+    path("settings/", include("settings.urls")),
+    path("user/", include("django.contrib.auth.urls")),
+    path("user/", include("authentication.urls")),
+    path("", include("core.urls")),
+    path("watchman/", include("watchman.urls")),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
-if (settings.INSTALLED_APPS.__contains__("expense")):
-    urlpatterns.append(path('expense/', include('expense.urls')))
+if settings.INSTALLED_APPS.__contains__("expense"):
+    urlpatterns.append(path("expense/", include("expense.urls")))
 
-if (settings.INSTALLED_APPS.__contains__("estimator")):
-    urlpatterns.append(path('estimate/', include('estimator.urls')))
+if settings.INSTALLED_APPS.__contains__("estimator"):
+    urlpatterns.append(path("estimate/", include("estimator.urls")))
+    urlpatterns.append(path("client-and-company/", include("client_and_company.urls")))

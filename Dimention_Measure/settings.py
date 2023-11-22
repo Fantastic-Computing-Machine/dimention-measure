@@ -24,13 +24,17 @@ pymysql.install_as_MySQLdb()
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-dotenv_path = BASE_DIR / ".env"
-load_dotenv(dotenv_path=dotenv_path)
+env_path = BASE_DIR / ".env"
+load_dotenv(dotenv_path=env_path)
 
 ENV = os.getenv("ENV")
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.getenv("SECRET_KEY")
+
+# check if applications are enabled | conditions -> True/true or False/false or None/Any
+EXPENSE_ENABLED = bool(os.getenv("EXPENSE_ENABLED", "false").lower() == "true")
+ESTIMATE_ENABLED = bool(os.getenv("ESTIMATE_ENABLED", "false").lower() == "true")
 
 ADMINS = [
     ("Aditya Agarwal", "aditya.ag1234@gmail.com"),
@@ -52,9 +56,8 @@ AUTH_USER_MODEL = "authentication.CompanyUser"
 print("Watchman Enabled...")
 
 if os.getenv("CACHE_ENABLED", "false").lower() == "true":
-
     CACHES = {
-            "default": {
+        "default": {
             "BACKEND": "django.core.cache.backends.redis.RedisCache",
             "LOCATION": os.getenv("REDISCLOUD_URL"),
         }
@@ -64,7 +67,7 @@ if os.getenv("CACHE_ENABLED", "false").lower() == "true":
     print("\tCache Backend: ", CACHES["default"]["BACKEND"])
 else:
     CACHES = {
-            "default": {
+        "default": {
             "BACKEND": "django.core.cache.backends.db.DatabaseCache",
             "LOCATION": "db_cache_table",
         }
@@ -205,11 +208,11 @@ INSTALLED_APPS = [
     "core",
 ]
 
-if os.getenv("EXPENSE_ENABLED"):
+if EXPENSE_ENABLED:
     print("Expense Enabled")
     INSTALLED_APPS.append("expense")
 
-if os.getenv("ESTIMATE_ENABLED"):
+if EXPENSE_ENABLED:
     print("Estimate Enabled")
     INSTALLED_APPS.append("estimator")
     INSTALLED_APPS.append("client_and_company")
@@ -253,7 +256,7 @@ STATIC_ROOT = "static"
 STATICFILES_DIRS = (os.path.join(BASE_DIR, "assets/"),)
 
 
-WSGI_APPLICATION = 'Dimention_Measure.wsgi.application'
+WSGI_APPLICATION = "Dimention_Measure.wsgi.application"
 
 MEDIA_URL = "/media/"
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
