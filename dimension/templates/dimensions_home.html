@@ -95,6 +95,7 @@
 									</small>
 								</div>
 							</div>
+							{% if user.is_staff or user.is_admin %}
 							<span>
 								<a class="delete_button badge bg-light" id="delete_button{{item.id}}"
 									data-bs-toggle="modal" data-bs-target="#delete{{item.id}}Modal">
@@ -102,6 +103,7 @@
 										src="https://img.icons8.com/ios/50/000000/delete-forever--v2.png" />
 								</a>
 							</span>
+							{% endif %}
 						</a>
 					</div>
 				</div>
