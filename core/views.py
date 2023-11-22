@@ -33,12 +33,16 @@ class DashboardView(BaseAuthClass, TemplateView):
         ).order_by("-created_on")[:5]
 
         # get data from estimate section if enabled
-       
-        kwargs["estimates"] = EstimateProject.objects.filter(
-            is_deleted=False,
-            client__is_deleted=False,
-            author__organization=self.request.user.organization,
-        ).order_by("-created_on")[:5]  if settings.EXPENSE_ENABLED else []
+
+        kwargs["estimates"] = (
+            EstimateProject.objects.filter(
+                is_deleted=False,
+                client__is_deleted=False,
+                author__organization=self.request.user.organization,
+            ).order_by("-created_on")[:5]
+            if settings.EXPENSE_ENABLED
+            else []
+        )
 
         return super().get_context_data(**kwargs)
 
@@ -72,18 +76,18 @@ class SearchView(BaseAuthClass, APIView):
 
             return Response({"success": True, "results": results})
         elif settings.EXPENSE_ENABLED and request.data.get("type") == "estimate":
-                estimates = EstimateProject.objects.filter(
-                    is_deleted=False, name__icontains=request.data["textToSearch"]
+            estimates = EstimateProject.objects.filter(
+                is_deleted=False, name__icontains=request.data["textToSearch"]
+            )
+            results = []
+            for estimate in estimates:
+                results_item = dict()
+                results_item["title"] = estimate.name.capitalize()
+                results_item["url"] = reverse(
+                    "estimate", args=[str(estimate.pk), str(estimate.name)]
                 )
-                results = []
-                for estimate in estimates:
-                    results_item = dict()
-                    results_item["title"] = estimate.name.capitalize()
-                    results_item["url"] = reverse(
-                        "estimate", args=[str(estimate.pk), str(estimate.name)]
-                    )
-                    results_item["created_on"] = estimate.created_on.date()
+                results_item["created_on"] = estimate.created_on.date()
 
-                    results.append(results_item)
-                return Response({"success": True, "results": results})
+                results.append(results_item)
+            return Response({"success": True, "results": results})
         return Response({"success": False, "results": []})
