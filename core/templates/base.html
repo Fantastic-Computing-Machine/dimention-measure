@@ -4,7 +4,7 @@
     <head>
         {% load static %}
         <meta charset="UTF-8">
-        <meta name="description" content="To keep a record of dimentions and expenses of construction project.">
+        <meta name="description" content="To keep a record of dimensions and expenses of construction project.">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
         <!-- ========================= Favicon ========================= -->
@@ -90,7 +90,7 @@
                                         aria-label="Select project or dimewent">
                                         <option selected value=1>Dimention</option>
                                         {% if estimator_enabled %}
-                                            <option value=2>Estimate</option>
+                                        <option value=2>Estimate</option>
                                         {% endif %}
                                     </select>
 
@@ -134,9 +134,9 @@
             {% if expense_enabled %}
             <!-- expense button -->
 
-            
-            <a href="{% url 'project_expense' dimension.project.id dimension.project.name %}"
-                type="button" class="btn btn-success btn-lg">
+
+            <a href="{% url 'project_expense' dimension.project.id dimension.project.name %}" type="button"
+                class="btn btn-success btn-lg">
                 <img src="https://img.icons8.com/ios/30/ffffff/money-circulation.png" />
             </a>
 
@@ -147,7 +147,7 @@
             <!-- expense button -->
             {% endif %}
 
-            {% comment %} 
+            {% comment %}
 
             <a href="{%url 'project_detail' project_id project_name %}" type="button" class="btn btn-warning btn-lg">
                 <img alt="project-btn" src="https://img.icons8.com/ios/30/000000/safety-hat.png" />

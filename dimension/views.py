@@ -35,7 +35,7 @@ from core.views import BaseAuthClass
 User = user_model()
 
 
-# Caching of static files such as css, js, images
+# TODO:Caching of static files such as css, js, images
 # Like this:
 # [18/Nov/2023 12:38:07] "GET /assets/css/styles.css HTTP/1.1" 200 4385
 # [18/Nov/2023 12:38:07] "GET /assets/img/iconGrey.svg HTTP/1.1" 200 1161
@@ -87,7 +87,7 @@ class DimensionProjectView(BaseAuthClass, CreateView):
     def get_context_data(self, *args, **kwargs):
         project = Project.objects.filter(pk=self.kwargs["pk"])[0]
         dimensions = Dimension.objects.filter(project=project).filter(is_deleted=False)
-        kwargs["dimentions"] = dimensions
+        kwargs["dimensions"] = dimensions
         kwargs["project"] = project
         return super(DimensionProjectView, self).get_context_data(*args, **kwargs)
 
@@ -244,7 +244,7 @@ def download_excel_view(request, project_id, project_name):
     )
 
     dimension = Dimension.objects.filter(project__id=project_id, is_deleted=False)
-
+    project = Project.objects.get(pk=project_id, is_deleted=False)
     sno = 1
 
     for item in dimension:
@@ -252,25 +252,22 @@ def download_excel_view(request, project_id, project_name):
             [
                 str(sno),
                 item.name,
-                f"{str(float(item.length_feet))}' {str(float(item.length_inches))}\"",
-                f"{str(float(item.width_feet))}'{str(float(item.width_inches))}\"",
-                str(item.sqm),
-                str(item.sqft),
-                str(item.rate),
-                str(item.amount),
+                f"{str(float(item.length_feet))}' {str(float(item.length_inches))}\"" ,
+                f"{str(float(item.width_feet))}'{str(float(item.width_inches))}\"" ,
+                str(item.sqm) if item.sqm else "-",
+                str(item.sqft) if item.sqft else "-",
+                str(item.rate) if item.rate else "-",
+                str(item.amount) if item.amount else "-",
             ]
         )
         sheet.append(["", item.description])
         sno += 1
-
-    sum_sqft = sum(item.sqft for item in dimension)
-    sum_sqm = sum(item.sqm for item in dimension)
-    sum_amount = sum(item.amount for item in dimension)
-
+        
     sheet.append([""])
-    sheet.append(["Total sqm", float(sum_sqm)])
-    sheet.append(["Total sqft", float(sum_sqft)])
-    sheet.append(["Total amount*", float(sum_amount)])
+    sheet.append(["Total sqm", project.total_sqm])
+    sheet.append(["Total sqft", project.total_sqft])
+    sheet.append(["Total running length", project.total_running_length])
+    sheet.append(["Total amount*", project.total_amount])
 
     sheet.append([""])
     sheet.append(["*Calculated using metrics in sqft."])
@@ -278,15 +275,15 @@ def download_excel_view(request, project_id, project_name):
     workbook.save(filename=str(file_path))
     workbook.close()
     file_ecxel = FileResponse(open(file_path, "rb"))
-    delete_file = os.remove(file_path)
+    os.remove(file_path)
     return file_ecxel
+
 
 class CheckProjectNameView(BaseAuthClass, APIView):
     """Class view for checking if project name exists"""
+
     def get(self, request, *args, **kwargs):
-        #check project name if already exists
-        project_name = request.GET.get('name', None)
-        data = {
-            'is_taken': Project.objects.filter(name__iexact=project_name).exists()
-        }
+        # check project name if already exists
+        project_name = request.GET.get("name", None)
+        data = {"is_taken": Project.objects.filter(name__iexact=project_name).exists()}
         return JsonResponse(data)

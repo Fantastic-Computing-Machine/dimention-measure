@@ -79,7 +79,6 @@ class NewDimensionForm(BasicFormsFields):
                 "type": "number",
                 "placeholder": "Length (in feet)",
                 "step": ".01",
-                "oninput": "areas()",
             }
         ),
     )
@@ -94,7 +93,6 @@ class NewDimensionForm(BasicFormsFields):
                 "type": "number",
                 "placeholder": "Length (in inches)",
                 "step": ".01",
-                "oninput": "areas()",
             }
         ),
     )
@@ -109,7 +107,6 @@ class NewDimensionForm(BasicFormsFields):
                 "type": "number",
                 "placeholder": "Width (in feet)",
                 "step": ".01",
-                "oninput": "areas()",
             }
         ),
     )
@@ -124,14 +121,13 @@ class NewDimensionForm(BasicFormsFields):
                 "type": "number",
                 "placeholder": "Width (in inches)",
                 "step": ".01",
-                "oninput": "areas()",
             }
         ),
     )
 
     rate = forms.CharField(
         max_length=200,
-        required=False,
+        required=True,
         widget=forms.TextInput(
             attrs={
                 "class": "form-control",
@@ -139,7 +135,7 @@ class NewDimensionForm(BasicFormsFields):
                 "type": "number",
                 "placeholder": "Rate",
                 "step": ".01",
-                "oninput": "areas()",
+                "value":"0.0"
             }
         ),
     )
@@ -155,10 +151,40 @@ class NewDimensionForm(BasicFormsFields):
             "width_feet",
             "width_inches",
             "rate",
+            "sqm",
+            "sqft",
         )
 
 
 class UpdateDimensionForm(NewDimensionForm):
+    sqm = forms.CharField(
+        max_length=200,
+        required=False,
+        widget=forms.TextInput(
+            attrs={
+                "class": "form-control",
+                "aria-label": ".form-control-sm",
+                "type": "text",
+                "placeholder": "Sqm",
+                "disabled": "true",
+                "readonly": "true"
+            }
+        ),
+    )  
+    sqft = forms.CharField(
+        max_length=200,
+        required=False,
+        widget=forms.TextInput(
+            attrs={
+                "class": "form-control",
+                "aria-label": ".form-control-sm",
+                "type": "text",
+                "placeholder": "Sqft",
+                "disabled": "true",
+                "readonly": "true"
+            }
+        ),
+    )
     class Meta:
         model = Dimension
         fields = (
@@ -169,4 +195,6 @@ class UpdateDimensionForm(NewDimensionForm):
             "width_feet",
             "width_inches",
             "rate",
+            "sqm",
+            "sqft",
         )

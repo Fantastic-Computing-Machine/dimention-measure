@@ -30,13 +30,13 @@
 				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 			</div>
 			<div class="modal-body">
-				<form id ="projectForm" action="{% url 'home' %}" method="POST">
+				<form id="projectForm" action="{% url 'home' %}" method="POST">
 					{% csrf_token %}
 					<div class="mb-3">
 						<p>
 							{{form.name.label}}
 							{{form.name}}
-						<span id="nameError" style="color: red;"></span>
+							<span id="nameError" style="color: red;"></span>
 						</p>
 						<p>
 							{{form.description.label}}
@@ -67,26 +67,33 @@
 	<div class="row">
 		{% for item in projects_list %}
 		<div class="col-md-6 col-sm-12">
-			<div class="m-1 index_project_card" style="height:80px;">
+			<div class="m-1 index_project_card" style="height:100px;">
 				<div class="card-body">
 					<div class="d-flex justify-content-between align-items-start">
 						<a href="{% url 'project_detail' item.id item.name %}">
 							<div class="ms-2 text-dark">
 								<div class="fw-bold">
 									<span>
-										<span>
+										<div>
 											{% replaceItem item.name|capfirst %}
-										</span>
-										<span class="badge bg-primary">
-											{{item.created_on | naturalday}}
-										</span>
+										</div>
+										<div>
+											<span class="badge bg-primary">
+												{{item.created_on | naturalday}}
+											</span>
+											<span class="badge bg-secondary">
+												{{item.author.username}}
+											</span>
+										</div>
 									</span>
 								</div>
-								{% if item.description %}
 								<div>
-									{{item.description|truncatechars:25|capfirst}}
+									<small>
+										{% if item.description %}
+										{{item.description|truncatechars:25|capfirst}}
+										{% endif %}
+									</small>
 								</div>
-								{% endif %}
 							</div>
 							<span>
 								<a class="delete_button badge bg-light" id="delete_button{{item.id}}"

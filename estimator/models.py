@@ -62,7 +62,7 @@ class RoomItemDescription(models.Model):
     def __str__(self):
         return str(self.description)
 
-    def save():
+    def save(self):
         if self.is_deleted:
             self.deleted_on = datetime.now()
         if not self.is_deleted:
@@ -81,8 +81,7 @@ class Project(models.Model):
     discount = models.DecimalField(
         max_digits=20,
         decimal_places=5,
-        default=0,
-        validators=[MinValueValidator(0), MaxValueValidator(100)],
+        validators=zero2hundred,
     )
     reference_number = models.CharField(max_length=225, blank=True, null=True)
 
@@ -139,6 +138,10 @@ class Project(models.Model):
 
 
 class Estimate(models.Model):
+    """Estimate Model
+    Lengths and Widths are in metric units
+    """
+
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
     room = models.ForeignKey(Room, on_delete=models.CASCADE)
     room_item = models.ForeignKey(RoomItem, on_delete=models.CASCADE)
@@ -156,10 +159,9 @@ class Estimate(models.Model):
     discount = models.DecimalField(
         max_digits=20,
         decimal_places=5,
-        default=0,
         validators=zero2hundred,
     )
-    rate = models.DecimalField(max_digits=20, default=0, decimal_places=5)
+    rate = models.DecimalField(max_digits=20, decimal_places=5)
     unit = models.ForeignKey(Unit, on_delete=models.CASCADE, null=True)
 
     created_on = models.DateTimeField(auto_now_add=True)
@@ -169,51 +171,112 @@ class Estimate(models.Model):
     def __str__(self):
         return str(self.project.name) + " | " + str(self.room.name)
 
+    # def save(self):
+    #     if not self.rate:
+    #         self.rate = Decimal(0)
+    #     if not self.unit:
+    #         self.unit = None
+    #     if not self.discount:
+    #         self.discount = Decimal(0)
+    #     if not self.width:
+    #         self.width = Decimal(0)
+    #     if self.is_deleted:
+    #         self.deleted_on = datetime.now()
+    #     if not self.is_deleted:
+    #         self.deleted_on = None
+
+    #     if self.quantity:
+    #         self.length = None
+    #         self.width = None
+    #         self.sqm = None
+    #         self.sqft = None
+    #         self.amount = Decimal(self.quantity) * Decimal(self.rate)
+    #         return super(Estimate, self).save()
+
+    #     else:
+    #         if self.length and (
+    #             self.width == "" or self.width == 0 or self.width == 0.0
+    #         ):
+    #             # when there is no width (RUNNING LENGTH)
+    #             # SECURITY: CHECK FOR EXCEPTIONS LIKE LETTERS/SYMBOLS/NONE-TYPE/EMPTY
+
+    #             self.sqm = self.length
+    #             self.sqft = Decimal(self.length) * Decimal(3.28084)
+    #             self.amount = Decimal(self.length) * Decimal(self.rate)
+
+    #         elif self.width and self.length:
+    #             # AREA
+    #             # SECURITY: CHECK FOR EXCEPTIONS LIKE LETTERS/SYMBOLS/NONE-TYPE/EMPTY
+
+    #             self.sqm = Decimal(self.length) * Decimal(self.width)
+    #             self.sqft = (
+    #                 Decimal(self.length) * Decimal(self.width) * Decimal(10.7639)
+    #             )
+    #             self.amount = Decimal(self.sqft) * Decimal(self.rate)
+
+    #         self.quantity = None
+    #         return super(Estimate, self).save()
+
     def save(self):
-        if self.rate == "" or self.rate == None:
-            self.rate = 0.0
-        if self.unit == "" or self.unit == None:
+        """Business Logic: Save and compute for the estimate"""
+        if not self.rate:
+            self.rate = Decimal(0)
+        if not self.unit:
             self.unit = None
-        if self.discount == "" or self.discount == None:
-            self.discount = 0.0
-        if self.width == "" or self.width == None:
-            self.width = 0.0
+        if not self.discount:
+            self.discount = Decimal(0)
+        if not self.width:
+            self.width = Decimal(0)
         if self.is_deleted:
             self.deleted_on = datetime.now()
         if not self.is_deleted:
             self.deleted_on = None
+
+        if self.width and (isinstance(self.width, float), isinstance(self.width, int)):
+            self.width = Decimal(self.width)
+            self.compute_for_area()
+
+        elif self.quantity and (
+            isinstance(self.quantity, float),
+            isinstance(self.quantity, int),
+        ):
+            self.quantity = Decimal(self.quantity)
+            self.compute_for_quantity()
+
+        else:
+            self.width = None
+            self.compute_for_rft()
+
+    def compute_for_area(self):
+        """Set area of the estimate"""
+        if self.width and self.length:
+            self.sqm = Decimal(self.length) * Decimal(self.width)
+            self.sqft = Decimal(self.length) * Decimal(self.width) * Decimal(10.7639)
+            self.amount = Decimal(self.sqft) * Decimal(self.rate)
+
+    def compute_for_rft(self):
+        """Compute for Running Feet"""
+        if self.length:
+            self.sqm = self.length
+            self.sqft = Decimal(self.length) * Decimal(3.28084)
+            self.amount = Decimal(self.length) * Decimal(self.rate)
+
+    def compute_for_quantity(self):
+        """Compute for Quantity"""
         if self.quantity:
             self.length = None
             self.width = None
             self.sqm = None
             self.sqft = None
             self.amount = Decimal(self.quantity) * Decimal(self.rate)
-            return super(Estimate, self).save()
-
-        else:
-            if self.width == "" or self.width == 0 or self.width == 0.0:
-                # when there is no width (RUNNING LENGTH)
-                # SECURITY: CHECK FOR EXCEPTIONS LIKE LETTERS/SYMBOLS/NONE-TYPE/EMPTY
-
-                self.sqm = self.length
-                self.sqft = Decimal(self.length) * Decimal(3.28084)
-                self.amount = Decimal(self.length) * Decimal(self.rate)
-
-            elif self.width > 0:
-                # AREA
-                # SECURITY: CHECK FOR EXCEPTIONS LIKE LETTERS/SYMBOLS/NONE-TYPE/EMPTY
-
-                self.sqm = self.length * self.width
-                self.sqft = self.length * self.width * Decimal(10.7639)
-                self.amount = Decimal(self.sqft) * Decimal(self.rate)
-
-            self.quantity = None
-            return super(Estimate, self).save()
 
     def calculate_amount(self):
-        if self.quantity is not None:
+        if self.quantity:
             return Decimal(self.quantity) * Decimal(self.rate)
-        return Decimal(self.sqft) * Decimal(self.rate)
+        else:
+            # TODO: Handle case for calculation in case of quantity is present
+            # since at quantity sqft -> none
+            return Decimal(self.sqft) * Decimal(self.rate)
 
     def discount_amount(self):
         return (self.calculate_amount() * self.discount) / 100
