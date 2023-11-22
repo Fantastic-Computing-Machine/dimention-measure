@@ -119,7 +119,10 @@ class Project(models.Model):
         )
         return sum(item.length_feet for item in dims if item.length_feet is not None)
 
-
+    def get_absolute_url(self):
+            return reverse(
+                "project_detail", args=[str(self.pk), str(self.name)]
+            )
 class Dimension(models.Model):
     """
     Represents dimensions associated with a project.
