@@ -44,13 +44,18 @@
                                     <div class="fw-bold">
                                         <span>
                                             <div>{% replaceItem item.name|capfirst %}</div>
-                                            <div class="badge bg-primary">{{item.created_on|naturalday}}</div>
-                                        </span>
+                                            <div>
+                                                <span class="badge bg-primary">{{item.created_on|naturalday}}</span>
+                                                <span class="badge bg-secondary">{{item.author.username}}</span>
+                                            </div>
+
                                     </div>
                                     <span class="wrapword">
                                         {% if item.description %}
                                         {{item.description|truncatechars:20|capfirst}}
                                         {% endif %}
+                                        <div>
+                                        </div>
                                     </span>
                                 </div>
                             </div>
