@@ -192,6 +192,14 @@ $(document).ready(function () {
         }
     });
 
+    $('#id_length_feet, #id_length_inches').keyup(function () {
+        if ($('#id_length_feet').val().length != 0 || $('#id_length_inches').val().length != 0) {
+            $('#add_new_dimension').prop('disabled', false);
+        } else {
+            $('#add_new_dimension').prop('disabled', true);
+        }
+    });
+
 });
 
 function mtr_ft() {
