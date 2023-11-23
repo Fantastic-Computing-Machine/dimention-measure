@@ -182,6 +182,10 @@ class LoggedInUsersAdmin(admin.ModelAdmin):
     )
     list_display_links = None
     actions = None
+    list_filter = (
+        "organization",
+        "last_login",
+    )
 
 
 class LoggedInUser(User):
