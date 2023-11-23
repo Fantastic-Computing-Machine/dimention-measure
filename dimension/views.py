@@ -1,14 +1,11 @@
 from django.contrib.auth import get_user_model as user_model
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.mixins import LoginRequiredMixin
-from django.contrib.auth.models import User
 from django.http import FileResponse, JsonResponse
 from rest_framework.views import APIView
 from django.shortcuts import HttpResponseRedirect, render
 from django.views.generic import (
     CreateView,
     UpdateView,
-    TemplateView,
     ListView,
 )
 from django.views.generic.edit import FormMixin
@@ -18,15 +15,12 @@ import decimal
 import os
 from datetime import datetime
 from openpyxl import Workbook
-import re
-from decimal import Decimal
 from .forms import (
     NewProjectForm,
     UpdateProjectForm,
     NewDimensionForm,
     UpdateDimensionForm,
 )
-from django.contrib import messages
 
 # from .forms import
 from .models import Project, Dimension
@@ -252,8 +246,8 @@ def download_excel_view(request, project_id, project_name):
             [
                 str(sno),
                 item.name,
-                f"{str(float(item.length_feet))}' {str(float(item.length_inches))}\"" ,
-                f"{str(float(item.width_feet))}'{str(float(item.width_inches))}\"" ,
+                f"{str(float(item.length_feet))}' {str(float(item.length_inches))}\"",
+                f"{str(float(item.width_feet))}'{str(float(item.width_inches))}\"",
                 str(item.sqm) if item.sqm else "-",
                 str(item.sqft) if item.sqft else "-",
                 str(item.rate) if item.rate else "-",
@@ -262,7 +256,7 @@ def download_excel_view(request, project_id, project_name):
         )
         sheet.append(["", item.description])
         sno += 1
-        
+
     sheet.append([""])
     sheet.append(["Total sqm", project.total_sqm])
     sheet.append(["Total sqft", project.total_sqft])

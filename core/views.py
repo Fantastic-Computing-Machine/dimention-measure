@@ -1,14 +1,20 @@
+from django.conf import settings
+from django.contrib.auth import get_user_model as user_model
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse
 from django.views.generic import TemplateView
+import django.db
+
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from django.conf import settings
-import django.db
+
 from dimension.models import Project as DimensionProject
 
 if settings.EXPENSE_ENABLED:
     from estimator.models import Project as EstimateProject
+
+
+User = user_model()
 
 
 class BaseAuthClass(LoginRequiredMixin):
@@ -95,8 +101,20 @@ class SearchView(BaseAuthClass, APIView):
 
 class HealthCheckView(APIView):
     def get(self, request, format=None):
-        status = django.db.connection.ensure_connection()
-
-        if not status:
+        if not django.db.connection.ensure_connection():
             return Response({"success": True}, status=200)
         return Response({"success": False}, status=500)
+
+
+class LoggedInUsersView(APIView):
+    """
+    Class view for getting logged in users
+    """
+
+    template_name = "logged_in_users.html"
+
+    def get_context_data(self, **kwargs):
+        active_users = get_active_logged_in_users()
+        kwargs["active_users"] = active_users
+
+        # return super().get_context_data(**kwargs)

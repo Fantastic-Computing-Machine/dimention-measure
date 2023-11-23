@@ -1,35 +1,32 @@
 from django.contrib import admin
 from django.contrib.admin.models import LogEntry
+from django.contrib.auth import get_user_model as user_model
 from django.contrib.auth.admin import GroupAdmin as BaseGroupAdmin
+from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.contrib.auth.models import Group as DjangoGroup
 from django.utils.translation import gettext_lazy as _
 
 from authentication.models import Organization, CompanyUser, Group
 from authentication.forms import UserChangeForm, UserCreationForm
+from .utils import get_active_logged_in_users
 
-# new imports
-from django import forms
-from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
+User = user_model()
 
 
 @admin.register(LogEntry)
 class LogEntryAdmin(admin.ModelAdmin):
-    # to have a date-based drilldown navigation in the admin page
+    # to have a date-based drill-down navigation in the admin page
     date_hierarchy = "action_time"
-
-    # to filter the resultes by users, content types and action flags
+    # to filter the results by users, content types and action flags
     list_filter = ["user", "content_type", "action_flag"]
-
     # when searching the user will be able to search in both object_repr and change_message
     search_fields = ["object_repr", "change_message"]
-
     list_display = [
         "action_time",
         "user",
         "content_type",
         "action_flag",
     ]
-
     readonly_fields = [
         "object_id",
         "object_repr",
@@ -41,10 +38,6 @@ class LogEntryAdmin(admin.ModelAdmin):
     ]
 
 
-admin.site.unregister(DjangoGroup)
-# admin.site.unregister(Group)
-
-
 @admin.register(Group)
 class GroupAdmin(BaseGroupAdmin):
     pass
@@ -54,10 +47,6 @@ class UserAdmin(BaseUserAdmin):
     # The forms to add and change user instances
     form = UserChangeForm
     add_form = UserCreationForm
-
-    # The fields to be used in displaying the User model.
-    # These override the definitions on the base UserAdmin
-    # that reference specific fields on auth.User.
     list_display = (
         "username",
         "email",
@@ -102,8 +91,6 @@ class UserAdmin(BaseUserAdmin):
         ),
         ("Activity", {"fields": ("last_login",)}),
     )
-    # add_fieldsets is not a standard ModelAdmin attribute. UserAdmin
-    # overrides get_fieldsets to use this attribute when creating a user.
     add_fieldsets = (
         ("Authentication", {"fields": ("username", "password1", "password2")}),
         (
@@ -126,14 +113,10 @@ class UserAdmin(BaseUserAdmin):
             {"fields": ("organization", "is_admin", "is_staff", "is_active")},
         ),
     )
-    # readonly
     readonly_fields = ["last_login"]
     search_fields = ("username",)
     ordering = ("username",)
     filter_horizontal = ()
-
-
-admin.site.register(CompanyUser, UserAdmin)
 
 
 class OrganizationAdmin(admin.ModelAdmin):
@@ -185,4 +168,29 @@ class OrganizationAdmin(admin.ModelAdmin):
     )
 
 
+class LoggedInUsersAdmin(admin.ModelAdmin):
+    def current_logged_in_users(self, obj=None):
+        active_users = get_active_logged_in_users()
+        return ", ".join([user.username for user in active_users])
+
+    current_logged_in_users.short_description = "Current Logged In Users"
+
+    list_display = (
+        "current_logged_in_users",
+        "username",
+        "last_login",
+    )
+    list_display_links = None
+    actions = None
+
+
+class LoggedInUser(User):
+    class Meta:
+        proxy = True
+
+
+admin.site.register(LoggedInUser, LoggedInUsersAdmin)
 admin.site.register(Organization, OrganizationAdmin)
+admin.site.register(CompanyUser, UserAdmin)
+admin.site.unregister(DjangoGroup)
+# admin.site.unregister(Group)

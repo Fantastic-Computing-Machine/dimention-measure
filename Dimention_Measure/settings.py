@@ -346,7 +346,7 @@ SECURE_CROSS_ORIGIN_OPENER_POLICY = None
 X_FRAME_OPTIONS = "SAMEORIGIN"
 SILENCED_SYSTEM_CHECKS = ["security.W019"]
 
-SESSION_ENGINE = "django.contrib.sessions.backends.cache"
+SESSION_ENGINE = "django.contrib.sessions.backends.db"
 SESSION_CACHE_ALIAS = "default"
 
 django_heroku.settings(locals())
