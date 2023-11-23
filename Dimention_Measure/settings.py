@@ -199,6 +199,15 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "django.contrib.humanize",
+    # required
+    "health_check",
+    # stock Django health checkers
+    "health_check.db",
+    "health_check.cache",
+    "health_check.storage",
+    "health_check.contrib.migrations",
+    # disk and memory utilization; requires psutil
+    "health_check.contrib.psutil",
     "django_quill",
     "ckeditor",
     "django_countries",
@@ -207,6 +216,13 @@ INSTALLED_APPS = [
     "settings",
     "core",
 ]
+
+# Health Check for PSutil -Health Check API
+HEALTH_CHECK = {
+    "DISK_USAGE_MAX": 90,  # percent
+    "MEMORY_MIN": 100,  # in MB
+}
+
 
 if EXPENSE_ENABLED:
     print("Expense Enabled")

@@ -19,8 +19,7 @@ from django.conf.urls.static import static
 from django.urls import path
 from django.urls import include
 
-from dimension.views import CheckProjectNameView
-
+from core.views import HealthCheckView
 
 urlpatterns = [
     path("dimension/", include("dimension.urls")),
@@ -30,7 +29,6 @@ urlpatterns = [
     path("user/", include("django.contrib.auth.urls")),
     path("user/", include("authentication.urls")),
     path("", include("core.urls")),
-    path("watchman/", include("watchman.urls")),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 if settings.INSTALLED_APPS.__contains__("expense"):
@@ -39,3 +37,11 @@ if settings.INSTALLED_APPS.__contains__("expense"):
 if settings.INSTALLED_APPS.__contains__("estimator"):
     urlpatterns.append(path("estimate/", include("estimator.urls")))
     urlpatterns.append(path("client-and-company/", include("client_and_company.urls")))
+
+health_views = [
+    path("health/", include("health_check.urls")),
+    path("health/ping/", HealthCheckView.as_view(), name="health"),
+    path("health/data/", include("watchman.urls")),
+]
+
+urlpatterns += health_views

@@ -4,7 +4,7 @@ from django.views.generic import TemplateView
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from django.conf import settings
-
+import django.db
 from dimension.models import Project as DimensionProject
 
 if settings.EXPENSE_ENABLED:
@@ -91,3 +91,12 @@ class SearchView(BaseAuthClass, APIView):
                 results.append(results_item)
             return Response({"success": True, "results": results})
         return Response({"success": False, "results": []})
+
+
+class HealthCheckView(APIView):
+    def get(self, request, format=None):
+        status = django.db.connection.ensure_connection()
+
+        if not status:
+            return Response({"success": True}, status=200)
+        return Response({"success": False}, status=500)
