@@ -228,7 +228,7 @@ if EXPENSE_ENABLED:
     print("Expense Enabled")
     INSTALLED_APPS.append("expense")
 
-if EXPENSE_ENABLED:
+if ESTIMATE_ENABLED:
     print("Estimate Enabled")
     INSTALLED_APPS.append("estimator")
     INSTALLED_APPS.append("client_and_company")

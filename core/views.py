@@ -10,7 +10,7 @@ from rest_framework.response import Response
 
 from dimension.models import Project as DimensionProject
 
-if settings.EXPENSE_ENABLED:
+if settings.ESTIMATE_ENABLED:
     from estimator.models import Project as EstimateProject
 
 
@@ -46,7 +46,7 @@ class DashboardView(BaseAuthClass, TemplateView):
                 client__is_deleted=False,
                 author__organization=self.request.user.organization,
             ).order_by("-created_on")[:5]
-            if settings.EXPENSE_ENABLED
+            if settings.ESTIMATE_ENABLED
             else []
         )
 
@@ -81,7 +81,7 @@ class SearchView(BaseAuthClass, APIView):
                 results.append(results_item)
 
             return Response({"success": True, "results": results})
-        elif settings.EXPENSE_ENABLED and request.data.get("type") == "estimate":
+        elif settings.ESTIMATE_ENABLED and request.data.get("type") == "estimate":
             estimates = EstimateProject.objects.filter(
                 is_deleted=False, name__icontains=request.data["textToSearch"]
             )

@@ -31,12 +31,15 @@ urlpatterns = [
     path("", include("core.urls")),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
-if settings.INSTALLED_APPS.__contains__("expense"):
+if settings.EXPENSE_ENABLED:
     urlpatterns.append(path("expense/", include("expense.urls")))
 
-if settings.INSTALLED_APPS.__contains__("estimator"):
-    urlpatterns.append(path("estimate/", include("estimator.urls")))
-    urlpatterns.append(path("client-and-company/", include("client_and_company.urls")))
+if settings.ESTIMATE_ENABLED:
+    estimate_views = [
+        path("estimate/", include("estimator.urls")),
+        path("client-and-company/", include("client_and_company.urls")),
+    ]
+    urlpatterns += estimate_views
 
 health_views = [
     path("health/", include("health_check.urls")),
