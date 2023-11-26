@@ -11,13 +11,12 @@ import pytz
 import django_heroku
 from dotenv import load_dotenv
 from django.core.validators import RegexValidator
-import logging
 import os
 from pathlib import Path
 import pymysql
 import re
-from datetime import datetime, timezone
-import dj_database_url
+from datetime import datetime
+import sentry_sdk
 
 pymysql.install_as_MySQLdb()
 
@@ -27,7 +26,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 env_path = BASE_DIR / ".env"
 load_dotenv(dotenv_path=env_path)
 
-ENV = os.getenv("ENV")
+IS_PRODUCTION = bool(os.getenv("IS_PRODUCTION", "false").lower() == "true")
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.getenv("SECRET_KEY")
@@ -41,12 +40,11 @@ ADMINS = [
     ("Nilesh Kumar Mandal", "s.nileshkm@gmail.com"),
 ]
 
-if ENV == "prod":
+if IS_PRODUCTION:
     print("\n***************************************")
     print("Initializing with Production Settings")
     from .prod_settings import *
-
-elif ENV == "dev":
+else:
     print("\n***************************************")
     print("Initializing with Development Settings")
     from .dev_settings import *
@@ -147,7 +145,7 @@ MIDDLEWARE = [
     "django.middleware.locale.LocaleMiddleware",
 ]
 
-if ENV == "prod":
+if IS_PRODUCTION:
     MIDDLEWARE.insert(1, "whitenoise.middleware.WhiteNoiseMiddleware")
 
 IGNORABLE_404_URLS = [
@@ -348,6 +346,16 @@ SILENCED_SYSTEM_CHECKS = ["security.W019"]
 
 SESSION_ENGINE = "django.contrib.sessions.backends.db"
 SESSION_CACHE_ALIAS = "default"
+
+SENTRY_ENABLED = bool(os.getenv("SENTRY_ENABLED", "false").lower() == "true")
+
+if IS_PRODUCTION and SENTRY_ENABLED:
+    sentry_sdk.init(
+        dsn=os.getenv("SENTRY_LINK"),
+        traces_sample_rate=1.0,
+        profiles_sample_rate=1.0,
+    )
+    print("Sentry Enabled...")
 
 django_heroku.settings(locals())
 
