@@ -1,5 +1,7 @@
 from ckeditor.fields import RichTextField
 from datetime import datetime
+from django.utils import timezone
+from typing import List, Dict, Tuple
 from decimal import Decimal
 
 from django.contrib.auth import get_user_model as user_model
@@ -88,46 +90,52 @@ class Project(models.Model):
     def __str__(self):
         return str(self.reference_number) + " | " + str(self.name)
 
-    def save(self, **kwargs):
+    def save(self, *args, **kwargs):
         self.name = self.name.replace(" ", "-").strip()
         if self.is_deleted:
             self.deleted_on = datetime.now()
         if not self.is_deleted:
             self.deleted_on = None
-        key = not self.id
-        super(Project, self).save(**kwargs)
+        key = not self.pk
+        super().save(*args, **kwargs)
         if key:
             self.reference_number = str(datetime.now().year) + "/" + str(self.pk)
             kwargs["force_insert"] = False
-            super(Project, self).save(**kwargs)
+            super().save(*args, **kwargs)
         return
 
+    @property
     def total_amount(self):
         estimates = Estimate.objects.filter(project=self, is_deleted=False)
         sum_amount = sum(item.total_after_discount() for item in estimates)
         return sum_amount
 
+    @property
     def total_itemized_discount(self):
         estimates = Estimate.objects.filter(project=self, is_deleted=False)
         sum_discount = sum(item.discount_amount() for item in estimates)
         return sum_discount
 
+    @property
     def discount_amount(self):
-        return (self.total_amount() * self.discount) / 100
+        return (self.total_amount * self.discount) / 100
 
+    @property
     def total_after_discount(self):
-        return self.total_amount() - self.discount_amount()
+        return self.total_amount - self.discount_amount
 
+    @property
     def gst_amount(self):
-        return Decimal(format(self.total_after_discount() * Decimal(0.18), ".2f"))
+        return Decimal(format(self.total_after_discount * Decimal(0.18), ".2f"))
 
+    @property
     def total_with_gst(self):
-        return self.total_after_discount() + self.gst_amount()
+        return self.total_after_discount + self.gst_amount
 
     def get_all_rooms(self):
         estimate_room_obj = (
             Estimate.objects.values_list("room__id", "room__name")
-            .filter(project__id=self.id)
+            .filter(project__id=self.pk)
             .distinct()
         )
 
@@ -149,19 +157,27 @@ class Estimate(models.Model):
         RoomItemDescription, on_delete=models.CASCADE
     )
     quantity = models.DecimalField(
-        max_digits=20, decimal_places=5, blank=True, null=True
+        max_digits=20, decimal_places=5, blank=True, null=True, default=Decimal(0)
     )
-    length = models.DecimalField(max_digits=20, decimal_places=5, blank=True, null=True)
-    width = models.DecimalField(max_digits=20, decimal_places=5, blank=True, null=True)
-    sqm = models.DecimalField(max_digits=20, decimal_places=5, blank=True, null=True)
-    sqft = models.DecimalField(max_digits=20, decimal_places=5, blank=True, null=True)
-    amount = models.DecimalField(max_digits=20, decimal_places=5, blank=True, null=True)
+    length = models.DecimalField(
+        max_digits=20, decimal_places=5, blank=True, null=True, default=Decimal(0)
+    )
+    width = models.DecimalField(
+        max_digits=20, decimal_places=5, blank=True, null=True, default=Decimal(0)
+    )
+    sqm = models.DecimalField(
+        max_digits=20, decimal_places=5, blank=True, null=True, default=Decimal(0)
+    )
+    sqft = models.DecimalField(
+        max_digits=20, decimal_places=5, blank=True, null=True, default=Decimal(0)
+    )
+    amount = models.DecimalField(
+        max_digits=20, decimal_places=5, blank=True, null=False, default=Decimal(0)
+    )
     discount = models.DecimalField(
-        max_digits=20,
-        decimal_places=5,
-        validators=zero2hundred,
+        max_digits=20, decimal_places=5, validators=zero2hundred, default=Decimal(0)
     )
-    rate = models.DecimalField(max_digits=20, decimal_places=5)
+    rate = models.DecimalField(max_digits=20, decimal_places=5, default=Decimal(0))
     unit = models.ForeignKey(Unit, on_delete=models.CASCADE, null=True)
 
     created_on = models.DateTimeField(auto_now_add=True)
@@ -171,123 +187,71 @@ class Estimate(models.Model):
     def __str__(self):
         return str(self.project.name) + " | " + str(self.room.name)
 
-    # def save(self):
-    #     if not self.rate:
-    #         self.rate = Decimal(0)
-    #     if not self.unit:
-    #         self.unit = None
-    #     if not self.discount:
-    #         self.discount = Decimal(0)
-    #     if not self.width:
-    #         self.width = Decimal(0)
-    #     if self.is_deleted:
-    #         self.deleted_on = datetime.now()
-    #     if not self.is_deleted:
-    #         self.deleted_on = None
-
-    #     if self.quantity:
-    #         self.length = None
-    #         self.width = None
-    #         self.sqm = None
-    #         self.sqft = None
-    #         self.amount = Decimal(self.quantity) * Decimal(self.rate)
-    #         return super(Estimate, self).save()
-
-    #     else:
-    #         if self.length and (
-    #             self.width == "" or self.width == 0 or self.width == 0.0
-    #         ):
-    #             # when there is no width (RUNNING LENGTH)
-    #             # SECURITY: CHECK FOR EXCEPTIONS LIKE LETTERS/SYMBOLS/NONE-TYPE/EMPTY
-
-    #             self.sqm = self.length
-    #             self.sqft = Decimal(self.length) * Decimal(3.28084)
-    #             self.amount = Decimal(self.length) * Decimal(self.rate)
-
-    #         elif self.width and self.length:
-    #             # AREA
-    #             # SECURITY: CHECK FOR EXCEPTIONS LIKE LETTERS/SYMBOLS/NONE-TYPE/EMPTY
-
-    #             self.sqm = Decimal(self.length) * Decimal(self.width)
-    #             self.sqft = (
-    #                 Decimal(self.length) * Decimal(self.width) * Decimal(10.7639)
-    #             )
-    #             self.amount = Decimal(self.sqft) * Decimal(self.rate)
-
-    #         self.quantity = None
-    #         return super(Estimate, self).save()
-
-    def save(self):
+    def save(self, *args, **kwargs):
         """Business Logic: Save and compute for the estimate"""
-        if not self.rate:
-            self.rate = Decimal(0)
-        if not self.unit:
-            self.unit = None
-        if not self.discount:
-            self.discount = Decimal(0)
-        if not self.width:
-            self.width = Decimal(0)
+
         if self.is_deleted:
-            self.deleted_on = datetime.now()
-        if not self.is_deleted:
+            self.deleted_on = timezone.now()
+            super().save(*args, **kwargs)
+        else:
             self.deleted_on = None
 
-        if self.width and (isinstance(self.width, float), isinstance(self.width, int)):
-            self.width = Decimal(self.width)
-            self.compute_for_area()
+        self.length = Decimal(self.length) if self.length else Decimal(0)
+        self.width = Decimal(self.width) if self.width else Decimal(0)
+        self.quantity = Decimal(self.quantity) if self.quantity else Decimal(0)
+        self.rate = Decimal(self.rate) if self.rate else Decimal(0)
+        self.discount = Decimal(self.discount) if self.discount else Decimal(0)
 
-        elif self.quantity and (
-            isinstance(self.quantity, float),
-            isinstance(self.quantity, int),
-        ):
-            self.quantity = Decimal(self.quantity)
-            self.compute_for_quantity()
-
+        if self.width and self.length and not self.quantity:
+            # compute for area
+            self.sqm, self.sqft, self.amount = self.compute_for_area(
+                self.width, self.length, self.rate
+            )
+        elif self.quantity and not self.width and not self.length:
+            # compute for quantity
+            self.sqm, self.sqft, self.amount = self.compute_for_quantity(
+                self.quantity, self.rate
+            )
         else:
-            self.width = None
-            self.compute_for_rft()
+            # compute for running feet
+            self.sqm, self.sqft, self.amount = self.compute_for_rft(
+                self.length, self.rate
+            )
 
-    def compute_for_area(self):
+        super().save(*args, **kwargs)
+
+    def compute_for_area(
+        self, width: Decimal, length: Decimal, rate: Decimal
+    ) -> Tuple[Decimal, Decimal, Decimal]:
         """Set area of the estimate"""
-        if self.width and self.length:
-            self.sqm = Decimal(self.length) * Decimal(self.width)
-            self.sqft = Decimal(self.length) * Decimal(self.width) * Decimal(10.7639)
-            self.amount = Decimal(self.sqft) * Decimal(self.rate)
+        sqm = Decimal(length) * Decimal(width)
+        sqft = sqm * Decimal(10.7639)
+        amount = sqft * Decimal(rate)
+        return sqm, sqft, amount
 
-    def compute_for_rft(self):
-        """Compute for Running Feet"""
-        if self.length:
-            self.sqm = self.length
-            self.sqft = Decimal(self.length) * Decimal(3.28084)
-            self.amount = Decimal(self.length) * Decimal(self.rate)
-
-    def compute_for_quantity(self):
+    def compute_for_quantity(
+        self, quantity: Decimal, rate: Decimal
+    ) -> Tuple[Decimal, Decimal, Decimal]:
         """Compute for Quantity"""
-        if self.quantity:
-            self.length = None
-            self.width = None
-            self.sqm = None
-            self.sqft = None
-            self.amount = Decimal(self.quantity) * Decimal(self.rate)
+        sqm = Decimal(0)
+        sqft = Decimal(0)
+        amount = Decimal(quantity) * Decimal(rate)
+        return sqm, sqft, amount
 
-    def calculate_amount(self):
-        if self.quantity:
-            return Decimal(self.quantity) * Decimal(self.rate)
-        else:
-            # TODO: Handle case for calculation in case of quantity is present
-            # since at quantity sqft -> none
-            return Decimal(self.sqft) * Decimal(self.rate)
+    def compute_for_rft(
+        self, length: Decimal, rate: Decimal
+    ) -> Tuple[Decimal, Decimal, Decimal]:
+        """Compute for Running Feet"""
+        sqm = length
+        sqft = sqm * Decimal(3.28084)
+        amount = sqft * Decimal(rate)
+        return sqm, sqft, amount
 
     def discount_amount(self):
-        return (self.calculate_amount() * self.discount) / 100
+        return (self.amount * self.discount) / 100
 
     def total_after_discount(self):
-        return self.calculate_amount() - self.discount_amount()
-
-    def get_actual_quantity(self):
-        if self.length:
-            return self.sqft
-        return self.quantity
+        return self.amount - self.discount_amount()
 
     def get_absolute_url(self):
         return reverse("estimate", args=[str(self.project.pk), str(self.project.name)])
