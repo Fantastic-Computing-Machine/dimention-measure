@@ -228,8 +228,8 @@ def download_excel_view(request, project_id, project_name):
         [
             "S.No.",
             "Tag",
-            "Length",
             "Width",
+            "Height",
             "Area | sqm",
             "Area | sqft",
             "Rate",
