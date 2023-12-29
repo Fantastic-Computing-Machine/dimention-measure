@@ -11,13 +11,12 @@ import pytz
 import django_heroku
 from dotenv import load_dotenv
 from django.core.validators import RegexValidator
-import logging
 import os
 from pathlib import Path
 import pymysql
 import re
-from datetime import datetime, timezone
-import dj_database_url
+from datetime import datetime
+import sentry_sdk
 
 pymysql.install_as_MySQLdb()
 
@@ -27,7 +26,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 env_path = BASE_DIR / ".env"
 load_dotenv(dotenv_path=env_path)
 
-ENV = os.getenv("ENV")
+IS_PRODUCTION = bool(os.getenv("IS_PRODUCTION", "false").lower() == "true")
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.getenv("SECRET_KEY")
@@ -41,12 +40,11 @@ ADMINS = [
     ("Nilesh Kumar Mandal", "s.nileshkm@gmail.com"),
 ]
 
-if ENV == "prod":
+if IS_PRODUCTION:
     print("\n***************************************")
     print("Initializing with Production Settings")
     from .prod_settings import *
-
-elif ENV == "dev":
+else:
     print("\n***************************************")
     print("Initializing with Development Settings")
     from .dev_settings import *
@@ -147,7 +145,7 @@ MIDDLEWARE = [
     "django.middleware.locale.LocaleMiddleware",
 ]
 
-if ENV == "prod":
+if IS_PRODUCTION:
     MIDDLEWARE.insert(1, "whitenoise.middleware.WhiteNoiseMiddleware")
 
 IGNORABLE_404_URLS = [
@@ -199,6 +197,15 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "django.contrib.humanize",
+    # required
+    "health_check",
+    # stock Django health checkers
+    "health_check.db",
+    "health_check.cache",
+    "health_check.storage",
+    "health_check.contrib.migrations",
+    # disk and memory utilization; requires psutil
+    "health_check.contrib.psutil",
     "django_quill",
     "ckeditor",
     "django_countries",
@@ -208,11 +215,18 @@ INSTALLED_APPS = [
     "core",
 ]
 
+# Health Check for PSutil -Health Check API
+HEALTH_CHECK = {
+    "DISK_USAGE_MAX": 90,  # percent
+    "MEMORY_MIN": 100,  # in MB
+}
+
+
 if EXPENSE_ENABLED:
     print("Expense Enabled")
     INSTALLED_APPS.append("expense")
 
-if EXPENSE_ENABLED:
+if ESTIMATE_ENABLED:
     print("Estimate Enabled")
     INSTALLED_APPS.append("estimator")
     INSTALLED_APPS.append("client_and_company")
@@ -330,8 +344,18 @@ SECURE_CROSS_ORIGIN_OPENER_POLICY = None
 X_FRAME_OPTIONS = "SAMEORIGIN"
 SILENCED_SYSTEM_CHECKS = ["security.W019"]
 
-SESSION_ENGINE = "django.contrib.sessions.backends.cache"
+SESSION_ENGINE = "django.contrib.sessions.backends.db"
 SESSION_CACHE_ALIAS = "default"
+
+SENTRY_ENABLED = bool(os.getenv("SENTRY_ENABLED", "false").lower() == "true")
+
+if IS_PRODUCTION and SENTRY_ENABLED:
+    sentry_sdk.init(
+        dsn=os.getenv("SENTRY_LINK"),
+        traces_sample_rate=1.0,
+        profiles_sample_rate=1.0,
+    )
+    print("Sentry Enabled...")
 
 django_heroku.settings(locals())
 

@@ -1,14 +1,20 @@
+from django.conf import settings
+from django.contrib.auth import get_user_model as user_model
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse
 from django.views.generic import TemplateView
+import django.db
+
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from django.conf import settings
 
 from dimension.models import Project as DimensionProject
 
-if settings.EXPENSE_ENABLED:
+if settings.ESTIMATE_ENABLED:
     from estimator.models import Project as EstimateProject
+
+
+User = user_model()
 
 
 class BaseAuthClass(LoginRequiredMixin):
@@ -40,7 +46,7 @@ class DashboardView(BaseAuthClass, TemplateView):
                 client__is_deleted=False,
                 author__organization=self.request.user.organization,
             ).order_by("-created_on")[:5]
-            if settings.EXPENSE_ENABLED
+            if settings.ESTIMATE_ENABLED
             else []
         )
 
@@ -75,7 +81,7 @@ class SearchView(BaseAuthClass, APIView):
                 results.append(results_item)
 
             return Response({"success": True, "results": results})
-        elif settings.EXPENSE_ENABLED and request.data.get("type") == "estimate":
+        elif settings.ESTIMATE_ENABLED and request.data.get("type") == "estimate":
             estimates = EstimateProject.objects.filter(
                 is_deleted=False, name__icontains=request.data["textToSearch"]
             )
@@ -91,3 +97,24 @@ class SearchView(BaseAuthClass, APIView):
                 results.append(results_item)
             return Response({"success": True, "results": results})
         return Response({"success": False, "results": []})
+
+
+class HealthCheckView(APIView):
+    def get(self, request, format=None):
+        if not django.db.connection.ensure_connection():
+            return Response({"success": True}, status=200)
+        return Response({"success": False}, status=500)
+
+
+class LoggedInUsersView(APIView):
+    """
+    Class view for getting logged in users
+    """
+
+    template_name = "logged_in_users.html"
+
+    def get_context_data(self, **kwargs):
+        active_users = get_active_logged_in_users()
+        kwargs["active_users"] = active_users
+
+        # return super().get_context_data(**kwargs)
