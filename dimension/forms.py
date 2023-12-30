@@ -77,7 +77,7 @@ class NewDimensionForm(BasicFormsFields):
                 "class": "form-control",
                 "aria-label": ".form-control-sm",
                 "type": "number",
-                "placeholder": "Length (in feet)",
+                "placeholder": "Width (in feet)",
                 "step": ".01",
             }
         ),
@@ -91,7 +91,7 @@ class NewDimensionForm(BasicFormsFields):
                 "class": "form-control",
                 "aria-label": ".form-control-sm",
                 "type": "number",
-                "placeholder": "Length (in inches)",
+                "placeholder": "Width (in inches)",
                 "step": ".01",
             }
         ),
@@ -105,7 +105,7 @@ class NewDimensionForm(BasicFormsFields):
                 "class": "form-control",
                 "aria-label": ".form-control-sm",
                 "type": "number",
-                "placeholder": "Width (in feet)",
+                "placeholder": "Height (in feet)",
                 "step": ".01",
             }
         ),
@@ -119,7 +119,7 @@ class NewDimensionForm(BasicFormsFields):
                 "class": "form-control",
                 "aria-label": ".form-control-sm",
                 "type": "number",
-                "placeholder": "Width (in inches)",
+                "placeholder": "Height (in inches)",
                 "step": ".01",
             }
         ),
@@ -135,7 +135,7 @@ class NewDimensionForm(BasicFormsFields):
                 "type": "number",
                 "placeholder": "Rate",
                 "step": ".01",
-                "value":"0.0"
+                "value": "0.0",
             }
         ),
     )
@@ -167,10 +167,10 @@ class UpdateDimensionForm(NewDimensionForm):
                 "type": "text",
                 "placeholder": "Sqm",
                 "disabled": "true",
-                "readonly": "true"
+                "readonly": "true",
             }
         ),
-    )  
+    )
     sqft = forms.CharField(
         max_length=200,
         required=False,
@@ -181,10 +181,11 @@ class UpdateDimensionForm(NewDimensionForm):
                 "type": "text",
                 "placeholder": "Sqft",
                 "disabled": "true",
-                "readonly": "true"
+                "readonly": "true",
             }
         ),
     )
+
     class Meta:
         model = Dimension
         fields = (
