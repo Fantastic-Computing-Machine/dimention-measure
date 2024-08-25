@@ -2,7 +2,7 @@ from django.urls import reverse_lazy
 from django.contrib.auth import get_user_model as user_model
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
-from django.views.generic import UpdateView
+from django.views.generic import UpdateView, CreateView
 
 from authentication.models import Organization
 from authentication.forms import OrganizationForm
@@ -30,3 +30,16 @@ class OrganizationDetails(BaseAuthClass, LoginRequiredMixin, UpdateView):
             return self.form_valid(form)
         else:
             return self.form_invalid(form)
+
+
+class OrganizationSignup(BaseAuthClass, CreateView):
+    model = Organization
+    form_class = OrganizationForm
+    template_name = "organization/org_signup.html"
+    success_url = reverse_lazy("home")
+
+    def form_valid(self, form):
+        form.instance.admin = self.request.user
+        return super().form_valid(form)
+
+    ...

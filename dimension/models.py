@@ -1,3 +1,6 @@
+from operator import index
+from tabnanny import verbose
+from weakref import proxy
 from django.utils import timezone
 from django.contrib.auth import get_user_model as user_model
 from django.db import models
@@ -7,6 +10,7 @@ from decimal import Decimal
 from typing import List, Dict
 
 from core.templatetags.utility import formatFloat
+import dimension
 
 User = user_model()
 
@@ -16,6 +20,49 @@ def meter2feet(meters):
     feet = float(meters) * 3.28084
     inches = round((feet - int(feet)) * 12, 2)
     return feet, inches
+
+
+class Collection(models.Model):
+    name = models.CharField(max_length=30, unique=False, help_text="Name of Collection")
+    author = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        help_text="User who created the Collection",
+        related_name="dimension_collections",
+    )
+    description = models.TextField(
+        max_length=255, blank=True, null=True, help_text="Description of the Collection"
+    )
+    created_on = models.DateTimeField(
+        auto_now_add=True, help_text="Date and time when the Collection was created"
+    )
+    is_deleted = models.BooleanField(
+        default=False, help_text="Check to soft delete the Collection"
+    )
+    deleted_on = models.DateTimeField(
+        blank=True, null=True, help_text="Date and time when the Collection was deleted"
+    )
+
+    def __str__(self):
+        return f"{self.name}"
+
+    def save(self, *args, **kwargs):
+        """
+        Custom save method to strip and replace spaces in the project name,
+        and handle soft deletion by updating the "deleted_on" field.
+
+        Args:
+            *args: Additional arguments.
+            **kwargs: Additional keyword arguments.
+        """
+        self.name = self.name.strip().replace(" ", "-")
+        self.deleted_on = timezone.now() if self.is_deleted else None
+        super().save(*args, **kwargs)
+
+    class Meta:
+        verbose_name = "Collection"
+        verbose_name_plural = "Collections"
+        app_label = "dimension"
 
 
 class Project(models.Model):
@@ -53,8 +100,10 @@ class Project(models.Model):
         blank=True, null=True, help_text="Date and time when the project was deleted"
     )
 
+    collection = models.ForeignKey(Collection, on_delete=models.CASCADE, null=True)
+
     def __str__(self):
-        return str(self.name)
+        return f"{self.collection} | {self.name}"
 
     def save(self, *args, **kwargs):
         """
@@ -120,9 +169,15 @@ class Project(models.Model):
         return sum(item.length_feet for item in dims if item.length_feet is not None)
 
     def get_absolute_url(self):
-            return reverse(
-                "project_detail", args=[str(self.pk), str(self.name)]
-            )
+        return reverse("project_detail", args=[str(self.pk), str(self.name)])
+
+    class Meta:
+        # abstract = True
+        app_label = "dimension"
+        verbose_name = "Project"
+        verbose_name_plural = "Projects"
+
+
 class Dimension(models.Model):
     """
     Represents dimensions associated with a project.
@@ -150,6 +205,16 @@ class Dimension(models.Model):
     name = models.CharField(max_length=30)
     description = models.TextField(blank=True, null=True)
 
+    author = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        default=None,
+        null=True,
+        blank=True,
+        help_text="User who created the dimension",
+        related_name="dimension_dimensions",
+    )
+
     length_feet = models.DecimalField(
         max_digits=20, decimal_places=2, blank=True, null=True, default=Decimal("0")
     )
@@ -176,6 +241,9 @@ class Dimension(models.Model):
     def __str__(self):
         return f"{self.name} | {self.project.name}"
 
+    def project_author(self):
+        return self.project.author if self.project else None
+
     def save(self, *args, **kwargs):
         """
         Custom save method to handle conversions, calculations, and soft deletion.
@@ -184,6 +252,9 @@ class Dimension(models.Model):
             *args: Additional arguments.
             **kwargs: Additional keyword arguments.
         """
+        if not self.author:
+            self.author = self.project_author()
+
         self.length_feet = Decimal(self.length_feet) if self.length_feet else Decimal(0)
         self.length_inches = (
             Decimal(self.length_inches) if self.length_inches else Decimal(0)
